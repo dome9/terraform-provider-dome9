@@ -1,0 +1,70 @@
+<% wrap_layout :inner do %>
+    <% content_for :sidebar do %>
+        <div class="docs-sidebar hidden-print affix-top" role="complementary">
+            <ul class="nav docs-sidenav">
+                <li<%= sidebar_current("docs-home") %>>
+                    <a href="/docs/providers/index.html">All Providers</a>
+                </li>
+
+                <li<%= sidebar_current("docs-dome9-index") %>>
+                    <a href="/docs/providers/dome9/index.html">Dome9 Provider</a>
+                </li>
+
+                <li<%= sidebar_current("docs-dome9-datasource") %>>
+                    <a href="#">Data Sources</a>
+                    <ul class="nav nav-visible">
+                        <li<%= sidebar_current("docs-datasource-dome9-cloudaccount-aws") %>>
+                            <a href="/docs/providers/dome9/d/cloudaccount_aws.html">dome9_cloudaccount_aws</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-datasource-cloudaccount-azure") %>>
+                            <a href="/docs/providers/dome9/d/cloudaccount_azure.html">dome9_cloudaccount_azure</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-datasource-dome9-cloudaccount-gcp") %>>
+                            <a href="/docs/providers/dome9/d/cloudaccount_gcp.html">dome9_cloudaccount_gcp</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-datasource-dome9-continuous_compliance-policy") %>>
+                            <a href="/docs/providers/dome9/d/continuous_compliance_policy.html">dome9_continuous_compliance_policy</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-datasource-dome9-iplist") %>>
+                            <a href="/docs/providers/dome9/d/iplist.html">dome9_iplist</a>
+                        </li>
+                    </ul>
+                </li>
+                <li<%= sidebar_current("docs-dome9-resource") %>>
+                    <a href="#">Resources</a>
+                    <ul class="nav nav-visible">
+                        <li<%= sidebar_current("docs-resource-dome9-notification-configuration") %>>
+                            <a href="/docs/providers/dome9/r/notification_configuration.html">dome9_notification_configuration</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-resource-dome9-cloudaccount-aws") %>>
+                            <a href="/docs/providers/dome9/r/cloudaccount_aws.html">dome9_cloudaccount_aws</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-resource-cloudaccount-azure") %>>
+                            <a href="/docs/providers/dome9/r/cloudaccount_azure.html">dome9_cloudaccount_azure</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-resource-dome9-cloudaccount-gcp") %>>
+                            <a href="/docs/providers/dome9/r/cloudaccount_gcp.html">dome9_cloudaccount_gcp</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-resource-dome9-continuous_compliance-policy") %>>
+                            <a href="/docs/providers/dome9/r/continuous_compliance_policy.html">dome9_continuous_compliance_policy</a>
+                        </li>
+
+                        <li<%= sidebar_current("docs-resource-dome9-iplist") %>>
+                            <a href="/docs/providers/dome9/r/iplist.html">dome9_iplist</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    <% end %>
+
+    <%= yield %>
+<% end %>
