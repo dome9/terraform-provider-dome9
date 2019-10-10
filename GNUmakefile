@@ -1,7 +1,8 @@
-TEST?=$$(go list ./... | grep -v -e 'vendor' -e 'common')
+PKG_NAME=dome9
+TEST?=$$(go list ./${PKG_NAME} | grep -v -e 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' | grep -v 'vendor')
 WEBSITE_REPO=github.com/hashicorp/terraform-website
-PKG_NAME=dome9
+
 
 default: build
 
