@@ -2,6 +2,7 @@ package structservers
 
 import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
+	"github.com/dome9/dome9-sdk-go/services/iplist"
 )
 
 // cloud account AWS
@@ -15,7 +16,6 @@ func FlattenNetSec(resp *aws.CloudAccountResponse) []interface{} {
 }
 
 func FlattenRegions(resp *aws.CloudAccountResponse) []interface{} {
-	// fixed size interface array
 	netSecRegions := make([]interface{}, len(resp.NetSec.Regions))
 	for i, val := range resp.NetSec.Regions {
 		netSecRegions[i] = map[string]interface{}{
@@ -25,5 +25,18 @@ func FlattenRegions(resp *aws.CloudAccountResponse) []interface{} {
 			"new_group_behavior": val.NewGroupBehavior,
 		}
 	}
+
 	return netSecRegions
+}
+
+func FlattenIpListItems(ipList *iplist.IpList) []interface{} {
+	ipListItems := make([]interface{}, len(ipList.Items))
+	for i, ipListItem := range ipList.Items {
+		ipListItems[i] = map[string]interface{}{
+			"ip":      ipListItem.Ip,
+			"comment": ipListItem.Comment,
+		}
+	}
+
+	return ipListItems
 }

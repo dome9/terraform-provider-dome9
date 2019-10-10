@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 
 	"github.com/dome9/dome9-sdk-go/services/iplist"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/structservers"
 )
 
 func resourceIpList() *schema.Resource {
@@ -50,7 +51,7 @@ func resourceIpList() *schema.Resource {
 	}
 }
 
-func constructIpList(d *schema.ResourceData) *iplist.IpList {
+func expandingIpList(d *schema.ResourceData) *iplist.IpList {
 	// Mandatory field
 	ipList := iplist.IpList{
 		Name: d.Get("name").(string),
@@ -74,7 +75,9 @@ func constructIpList(d *schema.ResourceData) *iplist.IpList {
 				Comment string
 			}{
 				Ip:      ip,
-				Comment: comment})
+				Comment: comment,
+			},
+			)
 
 		}
 		log.Printf("[INFO] ------iip list: %+v ---------\n", ipList)
@@ -85,7 +88,7 @@ func constructIpList(d *schema.ResourceData) *iplist.IpList {
 
 func resourceIpListCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	ipList := constructIpList(d)
+	ipList := expandingIpList(d)
 
 	log.Printf("[INFO] Creating dome9 IP with name %s\n", ipList.Name)
 
@@ -112,27 +115,14 @@ func resourceIpListRead(d *schema.ResourceData, meta interface{}) error {
 
 	_ = d.Set("name", ipList.Name)
 	_ = d.Set("description", ipList.Description)
-
-	// convert list of structs to list of interfaces
-	items := make([]interface{}, 0)
-	if ipList.Items != nil {
-
-		for _, v := range ipList.Items {
-			items = append(items, map[string]interface{}{
-				"ip":      v.Ip,
-				"comment": v.Comment,
-			})
-		}
-	}
-
-	_ = d.Set("items", items)
+	_ = d.Set("items", structservers.FlattenIpListItems(ipList))
 
 	return nil
 }
 
 func resourceIpListUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	ipList := constructIpList(d)
+	ipList := expandingIpList(d)
 
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
