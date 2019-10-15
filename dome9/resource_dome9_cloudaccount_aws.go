@@ -43,9 +43,9 @@ func resourceCloudAccountAWS() *schema.Resource {
 				Computed: true,
 			},
 			"credentials": {
-				Type:     schema.TypeMap,
+				Type:     schema.TypeList,
+				MaxItems: 1,
 				Required: true,
-				ForceNew: true, // Remove once update credentials exists
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"arn": {
@@ -74,7 +74,7 @@ func resourceCloudAccountAWS() *schema.Resource {
 						},
 						"is_read_only": {
 							Type:     schema.TypeBool,
-							Optional: true,
+							Computed: true,
 						},
 					},
 				},
@@ -124,29 +124,16 @@ func resourceCloudAccountAWS() *schema.Resource {
 	}
 }
 
-func constructCloudAccountRequestAWS(d *schema.ResourceData) *aws.CloudAccountRequest {
-	req := aws.CloudAccountRequest{
-		Name: d.Get("name").(string),
-	}
-	if r, ok := d.GetOk("credentials.api_key"); ok {
-		req.Credentials.ApiKey = r.(string)
-	}
-	if r, ok := d.GetOk("credentials.arn"); ok {
-		req.Credentials.Arn = r.(string)
-	}
-	if r, ok := d.GetOk("credentials.secret"); ok {
-		req.Credentials.Secret = r.(string)
-	}
-	if r, ok := d.GetOk("credentials.iam_user"); ok {
-		req.Credentials.IamUser = r.(string)
-	}
-	if r, ok := d.GetOk("credentials.type"); ok {
-		req.Credentials.Type = r.(string)
-	}
-	if r, ok := d.GetOk("credentials.is_read_only"); ok {
-		req.Credentials.IsReadOnly = r.(bool)
-	}
-
+func expandingCloudAccountRequestAWS(d *schema.ResourceData) *aws.CloudAccountRequest {
+	var req aws.CloudAccountRequest
+	req.Name = d.Get("name").(string)
+	req.Credentials.ApiKey = d.Get("credentials.0.api_key").(string)
+	req.Credentials.Arn = d.Get("credentials.0.arn").(string)
+	req.Credentials.Secret = d.Get("credentials.0.secret").(string)
+	req.Credentials.IamUser = d.Get("credentials.0.iam_user").(string)
+	req.Credentials.IamUser = d.Get("credentials.0.iam_user").(string)
+	req.Credentials.Type = d.Get("credentials.0.type").(string)
+	req.Credentials.IsReadOnly = d.Get("credentials.0.is_read_only").(bool)
 	log.Printf("[INFO] Creating AWS Cloud Account request: %+v\n", req)
 
 	return &req
@@ -154,12 +141,13 @@ func constructCloudAccountRequestAWS(d *schema.ResourceData) *aws.CloudAccountRe
 
 func resourceCloudAccountAWSCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	req := constructCloudAccountRequestAWS(d)
+	req := expandingCloudAccountRequestAWS(d)
 	log.Printf("[INFO] Creating AWS Cloud Account with request %+v\n", req)
 	resp, _, err := client.cloudaccountAWS.Create(*req)
 	if err != nil {
 		return err
 	}
+
 	log.Printf("[INFO] Created AWS CloudAccount. ID: %v\n", resp.ID)
 	d.SetId(resp.ID)
 
@@ -184,8 +172,8 @@ func resourceCloudAccountAWSRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("creation_date", resp.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
-	_ = d.Set("credentials", resp.Credentials)
 	_ = d.Set("net_sec", structservers.FlattenNetSec(resp))
+
 	return nil
 }
 
@@ -203,17 +191,40 @@ func resourceCloudAccountAWSDelete(d *schema.ResourceData, meta interface{}) err
 func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
 	log.Println("An updated occurred")
+
 	if d.HasChange("name") {
 		log.Println("The name has been changed")
 
-		if resp, _, err := client.cloudaccountAWS.UpdateName(aws.CloudAccountUpdateNameRequest{
+		if _, _, err := client.cloudaccountAWS.UpdateName(aws.CloudAccountUpdateNameRequest{
 			CloudAccountID:        d.Id(),
 			ExternalAccountNumber: d.Get("external_account_number").(string),
 			Data:                  d.Get("name").(string),
 		}); err != nil {
 			return err
-		} else {
-			log.Printf("resourceCloudAccountAWSUpdate response is: %+v\n", resp)
+		}
+	}
+
+	if d.HasChange("credentials.0") {
+		log.Println("credentials has been changed")
+
+		if _, _, err := client.cloudaccountAWS.UpdateCredentials(aws.CloudAccountUpdateCredentialsRequest{
+			CloudAccountID: d.Id(),
+			Data: struct {
+				Apikey     string `json:"apikey,omitempty"`
+				Arn        string `json:"arn,omitempty"`
+				Secret     string `json:"secret,omitempty"`
+				IamUser    string `json:"iamUser,omitempty"`
+				Type       string `json:"type,omitempty"`
+				IsReadOnly bool   `json:"isReadOnly,omitempty"`
+			}{
+				Apikey:  d.Get("credentials.0.api_key").(string),
+				Arn:     d.Get("credentials.0.arn").(string),
+				Secret:  d.Get("credentials.0.secret").(string),
+				IamUser: d.Get("credentials.0.iam_user").(string),
+				Type:    d.Get("credentials.0.type").(string),
+			},
+		}); err != nil {
+			return err
 		}
 	}
 

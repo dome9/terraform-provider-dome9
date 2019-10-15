@@ -20,7 +20,8 @@ import (
 func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 	var cloudAccountResponse aws.CloudAccountResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWS)
-
+	originalArn := os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn)
+	updatedArn := os.Getenv(environmentvariable.CloudAccountUpdatedAWSEnvVarArn)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -30,21 +31,23 @@ func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSOriginalAccountName),
+				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSOriginalAccountName, originalArn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAWSExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountAWSVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "allow_read_only", "false"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "credentials.0.arn", originalArn),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAWSOriginalAccountName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.#", "1"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.0.region", variable.CloudAccountAWSFetchedRegion),
 				),
 			},
 			{
-				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSUpdatedAccountName),
+				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSUpdatedAccountName, updatedArn),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAWSExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAWSUpdatedAccountName),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "credentials.0.arn", updatedArn),
 				),
 			},
 		},
@@ -80,6 +83,9 @@ func testAccCloudAccountAWSPreCheck(t *testing.T) {
 	if v := os.Getenv(environmentvariable.CloudAccountAWSEnvVarSecret); v == "" {
 		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountAWSEnvVarSecret)
 	}
+	if v := os.Getenv(environmentvariable.CloudAccountUpdatedAWSEnvVarArn); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountUpdatedAWSEnvVarArn)
+	}
 }
 
 func testAccCheckCloudAccountDestroy(s *terraform.State) error {
@@ -104,11 +110,11 @@ func testAccCheckCloudAccountDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, resourceName, arn string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
   name        = "%s"
-  credentials = {
+  credentials {
     arn      = "%s"
     secret   = "%s"
     type     = "RoleBased"
@@ -124,7 +130,7 @@ data "%s" "%s" {
 		resourcetype.CloudAccountAWS,
 		generatedName,
 		resourceName,
-		os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn),
+		arn,
 		os.Getenv(environmentvariable.CloudAccountAWSEnvVarSecret),
 
 		// data source variable

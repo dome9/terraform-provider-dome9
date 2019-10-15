@@ -7,8 +7,9 @@ const (
 
 // AWS environment variable
 const (
-	CloudAccountAWSEnvVarArn    = "ARN"
-	CloudAccountAWSEnvVarSecret = "SECRET"
+	CloudAccountAWSEnvVarArn        = "ARN"
+	CloudAccountUpdatedAWSEnvVarArn = "ARN_UPDATE"
+	CloudAccountAWSEnvVarSecret     = "SECRET"
 )
 
 // Azure environment variable
