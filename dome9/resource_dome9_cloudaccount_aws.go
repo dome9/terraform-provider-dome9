@@ -221,7 +221,7 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 			if d.HasChange(newGroupBehaviorKeyFormat) {
 				if _, _, err := client.cloudaccountAWS.UpdateRegionConfig(aws.CloudAccountUpdateRegionConfigRequest{
 					CloudAccountID: d.Id(),
-					Data: aws.CloudAccountAWSNetSecRegion{
+					Data: aws.CloudAccountNetSecRegion{
 						Region:           regionObject["region"].(string),
 						NewGroupBehavior: regionObject["new_group_behavior"].(string),
 					},
@@ -235,15 +235,15 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 	return nil
 }
 
-func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountAWSRequest {
-	return aws.CloudAccountAWSRequest{
+func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountRequest {
+	return aws.CloudAccountRequest{
 		Name:        d.Get("name").(string),
 		Credentials: expandCloudAccountAWSCredentials(d),
 	}
 }
 
-func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountAWSCredentials {
-	return aws.CloudAccountAWSCredentials{
+func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountCredentials {
+	return aws.CloudAccountCredentials{
 		ApiKey:     d.Get("credentials.0.api_key").(string),
 		Arn:        d.Get("credentials.0.arn").(string),
 		Secret:     d.Get("credentials.0.secret").(string),
@@ -253,7 +253,7 @@ func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountAW
 	}
 }
 
-func flattenCloudAccountAWSNetSec(responseNetSec aws.CloudAccountAWSNetSec) []interface{} {
+func flattenCloudAccountAWSNetSec(responseNetSec aws.CloudAccountNetSec) []interface{} {
 	m := map[string]interface{}{
 		"regions": flattenCloudAccountAWSNetSecRegions(responseNetSec.Regions),
 	}
@@ -261,7 +261,7 @@ func flattenCloudAccountAWSNetSec(responseNetSec aws.CloudAccountAWSNetSec) []in
 	return []interface{}{m}
 }
 
-func flattenCloudAccountAWSNetSecRegions(responseNetSecRegions []aws.CloudAccountAWSNetSecRegion) []interface{} {
+func flattenCloudAccountAWSNetSecRegions(responseNetSecRegions []aws.CloudAccountNetSecRegion) []interface{} {
 	netSecRegions := make([]interface{}, len(responseNetSecRegions))
 	for i, val := range responseNetSecRegions {
 		netSecRegions[i] = map[string]interface{}{
