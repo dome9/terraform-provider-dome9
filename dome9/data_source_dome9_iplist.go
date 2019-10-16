@@ -3,7 +3,6 @@ package dome9
 import (
 	"strconv"
 
-	"github.com/dome9/terraform-provider-dome9/dome9/common/structservers"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -63,7 +62,9 @@ func dataSourceIpListRead(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(strconv.FormatInt(id, 10))
 	_ = d.Set("name", ipList.Name)
 	_ = d.Set("description", ipList.Description)
-	_ = d.Set("items", structservers.FlattenIpListItems(ipList))
+	if err := d.Set("items", flattenIpListItems(ipList)); err != nil {
+		return err
+	}
 
 	return nil
 }
