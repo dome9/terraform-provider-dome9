@@ -19,7 +19,7 @@ import (
 )
 
 func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
-	var cloudAccountResponse aws.CloudAccountResponse
+	var cloudAccountResponse aws.CloudAccountAWSResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWS)
 	originalArn := os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn)
 	updatedArn := os.Getenv(environmentvariable.CloudAccountUpdatedAWSEnvVarArn)
@@ -66,7 +66,7 @@ func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckCloudAccountAWSExists(resource string, cloudAccount *aws.CloudAccountResponse) resource.TestCheckFunc {
+func testAccCheckCloudAccountAWSExists(resource string, cloudAccount *aws.CloudAccountAWSResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {

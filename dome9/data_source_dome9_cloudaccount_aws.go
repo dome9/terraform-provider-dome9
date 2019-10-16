@@ -7,7 +7,6 @@ import (
 
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 
-	"github.com/dome9/terraform-provider-dome9/dome9/common/structservers"
 	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
@@ -105,7 +104,9 @@ func dataSourceAWSRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("creation_date", resp.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
-	_ = d.Set("net_sec", structservers.FlattenNetSec(resp))
+	if err := d.Set("net_sec", flattenCloudAccountAWSNetSec(resp.NetSec)); err != nil {
+		return err
+	}
 
 	return nil
 }

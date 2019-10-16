@@ -11,7 +11,6 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 
 	"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
-	"github.com/dome9/terraform-provider-dome9/dome9/common/structservers"
 )
 
 func resourceCloudAccountAWS() *schema.Resource {
@@ -134,26 +133,11 @@ func resourceCloudAccountAWS() *schema.Resource {
 	}
 }
 
-func expandingCloudAccountRequestAWS(d *schema.ResourceData) *aws.CloudAccountRequest {
-	var req aws.CloudAccountRequest
-	req.Name = d.Get("name").(string)
-	req.Credentials.ApiKey = d.Get("credentials.0.api_key").(string)
-	req.Credentials.Arn = d.Get("credentials.0.arn").(string)
-	req.Credentials.Secret = d.Get("credentials.0.secret").(string)
-	req.Credentials.IamUser = d.Get("credentials.0.iam_user").(string)
-	req.Credentials.IamUser = d.Get("credentials.0.iam_user").(string)
-	req.Credentials.Type = d.Get("credentials.0.type").(string)
-	req.Credentials.IsReadOnly = d.Get("credentials.0.is_read_only").(bool)
-	log.Printf("[INFO] Creating AWS Cloud Account request: %+v\n", req)
-
-	return &req
-}
-
 func resourceCloudAccountAWSCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	req := expandingCloudAccountRequestAWS(d)
-	log.Printf("[INFO] Creating AWS Cloud Account with request %+v\n", req)
-	resp, _, err := client.cloudaccountAWS.Create(*req)
+	req := expandCloudAccountAWSRequest(d)
+	log.Printf("[INFO] Creating AWS Cloud Account with request\n%+v\n", req)
+	resp, _, err := client.cloudaccountAWS.Create(req)
 	if err != nil {
 		return err
 	}
@@ -182,7 +166,9 @@ func resourceCloudAccountAWSRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("creation_date", resp.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
-	_ = d.Set("net_sec", structservers.FlattenNetSec(resp))
+	if err := d.Set("net_sec", flattenCloudAccountAWSNetSec(resp.NetSec)); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -219,20 +205,7 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 
 		if _, _, err := client.cloudaccountAWS.UpdateCredentials(aws.CloudAccountUpdateCredentialsRequest{
 			CloudAccountID: d.Id(),
-			Data: struct {
-				Apikey     string `json:"apikey,omitempty"`
-				Arn        string `json:"arn,omitempty"`
-				Secret     string `json:"secret,omitempty"`
-				IamUser    string `json:"iamUser,omitempty"`
-				Type       string `json:"type,omitempty"`
-				IsReadOnly bool   `json:"isReadOnly,omitempty"`
-			}{
-				Apikey:  d.Get("credentials.0.api_key").(string),
-				Arn:     d.Get("credentials.0.arn").(string),
-				Secret:  d.Get("credentials.0.secret").(string),
-				IamUser: d.Get("credentials.0.iam_user").(string),
-				Type:    d.Get("credentials.0.type").(string),
-			},
+			Data:           expandCloudAccountAWSCredentials(d),
 		}); err != nil {
 			return err
 		}
@@ -248,12 +221,7 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 			if d.HasChange(newGroupBehaviorKeyFormat) {
 				if _, _, err := client.cloudaccountAWS.UpdateRegionConfig(aws.CloudAccountUpdateRegionConfigRequest{
 					CloudAccountID: d.Id(),
-					Data: struct {
-						Region           string `json:"region,omitempty"`
-						Name             string `json:"name,omitempty"`
-						Hidden           bool   `json:"hidden,omitempty"`
-						NewGroupBehavior string `json:"newGroupBehavior,omitempty"`
-					}{
+					Data: aws.CloudAccountAWSNetSecRegion{
 						Region:           regionObject["region"].(string),
 						NewGroupBehavior: regionObject["new_group_behavior"].(string),
 					},
@@ -265,4 +233,44 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	return nil
+}
+
+func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountAWSRequest {
+	return aws.CloudAccountAWSRequest{
+		Name:        d.Get("name").(string),
+		Credentials: expandCloudAccountAWSCredentials(d),
+	}
+}
+
+func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountAWSCredentials {
+	return aws.CloudAccountAWSCredentials{
+		ApiKey:     d.Get("credentials.0.api_key").(string),
+		Arn:        d.Get("credentials.0.arn").(string),
+		Secret:     d.Get("credentials.0.secret").(string),
+		IamUser:    d.Get("credentials.0.iam_user").(string),
+		Type:       d.Get("credentials.0.type").(string),
+		IsReadOnly: d.Get("credentials.0.is_read_only").(bool),
+	}
+}
+
+func flattenCloudAccountAWSNetSec(responseNetSec aws.CloudAccountAWSNetSec) []interface{} {
+	m := map[string]interface{}{
+		"regions": flattenCloudAccountAWSNetSecRegions(responseNetSec.Regions),
+	}
+
+	return []interface{}{m}
+}
+
+func flattenCloudAccountAWSNetSecRegions(responseNetSecRegions []aws.CloudAccountAWSNetSecRegion) []interface{} {
+	netSecRegions := make([]interface{}, len(responseNetSecRegions))
+	for i, val := range responseNetSecRegions {
+		netSecRegions[i] = map[string]interface{}{
+			"region":             val.Region,
+			"name":               val.Name,
+			"hidden":             val.Hidden,
+			"new_group_behavior": val.NewGroupBehavior,
+		}
+	}
+
+	return netSecRegions
 }
