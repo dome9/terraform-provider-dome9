@@ -1,13 +1,16 @@
 package dome9
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 
+	"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
 	"github.com/dome9/terraform-provider-dome9/dome9/common/structservers"
 )
 
@@ -80,19 +83,22 @@ func resourceCloudAccountAWS() *schema.Resource {
 				},
 			},
 			"net_sec": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				MaxItems: 1,
 				Computed: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"regions": {
 							Type:     schema.TypeList,
 							Computed: true,
+							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"region": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validation.StringInSlice(providerconst.AWSRegions, true),
 									},
 									"name": {
 										Type:     schema.TypeString,
@@ -105,6 +111,9 @@ func resourceCloudAccountAWS() *schema.Resource {
 									"new_group_behavior": {
 										Type:     schema.TypeString,
 										Computed: true,
+										Optional: true,
+										// Reset == regionlock
+										ValidateFunc: validation.StringInSlice([]string{"ReadOnly", "FullManage", "Reset"}, true),
 									},
 								},
 							},
@@ -112,6 +121,7 @@ func resourceCloudAccountAWS() *schema.Resource {
 					},
 				},
 			},
+			// TODO: full_protection and allow_read_only are currently computed only since the server always returns false
 			"full_protection": {
 				Type:     schema.TypeBool,
 				Computed: true,
@@ -225,6 +235,32 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 			},
 		}); err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("net_sec.0.regions") {
+		log.Println("NetSec regions has been changed")
+
+		netSecRegionsIterator := d.Get("net_sec.0.regions").([]interface{})
+		for i, val := range netSecRegionsIterator {
+			regionObject := val.(map[string]interface{})
+			newGroupBehaviorKeyFormat := fmt.Sprintf("net_sec.0.regions.%d.new_group_behavior", i)
+			if d.HasChange(newGroupBehaviorKeyFormat) {
+				if _, _, err := client.cloudaccountAWS.UpdateRegionConfig(aws.CloudAccountUpdateRegionConfigRequest{
+					CloudAccountID: d.Id(),
+					Data: struct {
+						Region           string `json:"region,omitempty"`
+						Name             string `json:"name,omitempty"`
+						Hidden           bool   `json:"hidden,omitempty"`
+						NewGroupBehavior string `json:"newGroupBehavior,omitempty"`
+					}{
+						Region:           regionObject["region"].(string),
+						NewGroupBehavior: regionObject["new_group_behavior"].(string),
+					},
+				}); err != nil {
+					return err
+				}
+			}
 		}
 	}
 

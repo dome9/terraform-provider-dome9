@@ -25,7 +25,7 @@ func TestAccDataSourceCloudAccountAWSBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSCreationResourceName, originalArn),
+				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSCreationResourceName, originalArn, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "name", resourceTypeAndName, "name"),
