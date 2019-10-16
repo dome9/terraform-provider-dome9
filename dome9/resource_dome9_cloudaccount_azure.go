@@ -78,45 +78,12 @@ func resourceCloudAccountAzure() *schema.Resource {
 	}
 }
 
-func constructCloudAccountAzureRequest(d *schema.ResourceData) *azure.CloudAccountRequest {
-	req := azure.CloudAccountRequest{
-		Name:           d.Get("name").(string),
-		SubscriptionID: d.Get("subscription_id").(string),
-		TenantID:       d.Get("tenant_id").(string),
-		OperationMode:  d.Get("operation_mode").(string),
-		Credentials: struct {
-			ClientID       string `json:"clientId,omitempty"`
-			ClientPassword string `json:"clientPassword,omitempty"`
-		}{
-			ClientID:       d.Get("credentials.client_id").(string),
-			ClientPassword: d.Get("credentials.client_password").(string),
-		},
-	}
-
-	if r, ok := d.GetOk("creation_date"); ok {
-		formatTemplate := "2006-01-02 15:04:05"
-		t, _ := time.Parse(formatTemplate, r.(string))
-		req.CreationDate = t
-	}
-	if r, ok := d.GetOk("organizational_unit_id"); ok {
-		req.OrganizationalUnitID = r.(string)
-	}
-	if r, ok := d.GetOk("organizational_unit_path"); ok {
-		req.OrganizationalUnitPath = r.(string)
-	}
-	if r, ok := d.GetOk("organizational_unit_name"); ok {
-		req.OrganizationalUnitName = r.(string)
-	}
-	log.Printf("[INFO] Creating Azure Cloud Account request: %+v\n", req)
-
-	return &req
-}
-
 func resourceCloudAccountAzureCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	req := constructCloudAccountAzureRequest(d)
+	req := expandCloudAccountAzureRequest(d)
 	log.Printf("[INFO] Creating Azure Cloud Account with request %+v\n", req)
-	resp, _, err := client.cloudaccountAzure.Create(*req)
+
+	resp, _, err := client.cloudaccountAzure.Create(req)
 	if err != nil {
 		return err
 	}
@@ -171,7 +138,6 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 			Name: d.Get("name").(string),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountAzureUpdate response is: %+v\n", resp)
 		}
@@ -184,7 +150,6 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 			OperationMode: d.Get("operation_mode").(string),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountAzureUpdate response is: %+v\n", resp)
 		}
@@ -198,7 +163,6 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 			ApplicationKey: d.Get("credentials.client_password").(string),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountAzureUpdate response is: %+v\n", resp)
 		}
@@ -211,11 +175,33 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 			OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountAzureUpdate response is: %+v\n", resp)
 		}
 	}
 
 	return nil
+}
+
+func expandCloudAccountAzureRequest(d *schema.ResourceData) azure.CloudAccountRequest {
+	req := azure.CloudAccountRequest{
+		Name:           d.Get("name").(string),
+		SubscriptionID: d.Get("subscription_id").(string),
+		TenantID:       d.Get("tenant_id").(string),
+		OperationMode:  d.Get("operation_mode").(string),
+		Credentials: azure.CloudAccountCredentials{
+			ClientID:       d.Get("credentials.client_id").(string),
+			ClientPassword: d.Get("credentials.client_password").(string),
+		},
+		OrganizationalUnitID:   d.Get("organizational_unit_id").(string),
+		OrganizationalUnitPath: d.Get("organizational_unit_path").(string),
+		OrganizationalUnitName: d.Get("organizational_unit_name").(string),
+	}
+
+	if r, ok := d.GetOk("creation_date"); ok {
+		formatTemplate := "2006-01-02 15:04:05"
+		creationDateTime, _ := time.Parse(formatTemplate, r.(string))
+		req.CreationDate = creationDateTime
+	}
+	return req
 }
