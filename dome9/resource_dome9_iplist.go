@@ -32,7 +32,6 @@ func resourceIpList() *schema.Resource {
 			"items": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ip": {
@@ -50,46 +49,12 @@ func resourceIpList() *schema.Resource {
 	}
 }
 
-func constructIpList(d *schema.ResourceData) *iplist.IpList {
-	// Mandatory field
-	ipList := iplist.IpList{
-		Name: d.Get("name").(string),
-	}
-	// Optional fields
-	if r, ok := d.GetOk("description"); ok {
-		description := r.(string)
-		ipList.Description = description
-	}
-	if itemsInterface, ok := d.GetOk("items"); ok {
-		items := itemsInterface.([]interface{})
-		log.Printf("[INFO] ------items from schema: %+v ---------\n", items)
-
-		for _, item := range items {
-			ipItem := item.(map[string]interface{})
-			ip := ipItem["ip"].(string)
-			comment := ipItem["comment"].(string)
-
-			ipList.Items = append(ipList.Items, struct {
-				Ip      string
-				Comment string
-			}{
-				Ip:      ip,
-				Comment: comment})
-
-		}
-		log.Printf("[INFO] ------iip list: %+v ---------\n", ipList)
-	}
-
-	return &ipList
-}
-
 func resourceIpListCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	ipList := constructIpList(d)
+	ipListRequest := expandIpList(d)
+	log.Printf("[INFO] Creating dome9 IpList with request\n%+v\n", ipListRequest)
 
-	log.Printf("[INFO] Creating dome9 IP with name %s\n", ipList.Name)
-
-	ipList, _, err := client.iplist.Create(ipList)
+	ipList, _, err := client.iplist.Create(&ipListRequest)
 	if err != nil {
 		return err
 	}
@@ -112,38 +77,25 @@ func resourceIpListRead(d *schema.ResourceData, meta interface{}) error {
 
 	_ = d.Set("name", ipList.Name)
 	_ = d.Set("description", ipList.Description)
-
-	// convert list of structs to list of interfaces
-	items := make([]interface{}, 0)
-	if ipList.Items != nil {
-
-		for _, v := range ipList.Items {
-			items = append(items, map[string]interface{}{
-				"ip":      v.Ip,
-				"comment": v.Comment,
-			})
-		}
+	if err := d.Set("items", flattenIpListItems(ipList)); err != nil {
+		return err
 	}
-
-	_ = d.Set("items", items)
 
 	return nil
 }
 
 func resourceIpListUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	ipList := constructIpList(d)
-
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
 		return err
 	}
 
-	ipList.Id = id
-	log.Printf("[INFO] Updating IP list with id %d\n", id)
+	ipListRequest := expandIpList(d)
+	ipListRequest.Id = id
+	log.Printf("[INFO] Updating IpList with name %s\n", ipListRequest.Name)
 
-	_, err = client.iplist.Update(id, ipList)
-	if err != nil {
+	if _, err := client.iplist.Update(id, &ipListRequest); err != nil {
 		return err
 	}
 
@@ -165,4 +117,43 @@ func resourceIpListDelete(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	return nil
+}
+
+func expandIpList(d *schema.ResourceData) iplist.IpList {
+	ipList := iplist.IpList{
+		Name:        d.Get("name").(string),
+		Description: d.Get("description").(string),
+		Items:       expandIpListItems(d),
+	}
+
+	return ipList
+}
+
+func expandIpListItems(d *schema.ResourceData) []iplist.Item {
+	var ipListItems []iplist.Item
+	if itemsInterface, ok := d.GetOk("items"); ok {
+		items := itemsInterface.([]interface{})
+		ipListItems = make([]iplist.Item, len(items))
+		for i, item := range items {
+			ipItem := item.(map[string]interface{})
+			ipListItems[i] = iplist.Item{
+				Ip:      ipItem["ip"].(string),
+				Comment: ipItem["comment"].(string),
+			}
+		}
+	}
+
+	return ipListItems
+}
+
+func flattenIpListItems(ipList *iplist.IpList) []interface{} {
+	ipListItems := make([]interface{}, len(ipList.Items))
+	for i, ipListItem := range ipList.Items {
+		ipListItems[i] = map[string]interface{}{
+			"ip":      ipListItem.Ip,
+			"comment": ipListItem.Comment,
+		}
+	}
+
+	return ipListItems
 }

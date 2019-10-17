@@ -11,6 +11,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 
+	"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
 	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/method"
@@ -20,6 +21,10 @@ import (
 func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 	var cloudAccountResponse aws.CloudAccountResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWS)
+	originalArn := os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn)
+	updatedArn := os.Getenv(environmentvariable.CloudAccountUpdatedAWSEnvVarArn)
+	originalGroupBehavior := variable.CloudAccountAWSReadOnlyGroupBehavior
+	updatedGroupBehavior := variable.CloudAccountAWSFullManageGroupBehavior
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,21 +35,31 @@ func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSOriginalAccountName),
+				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSOriginalAccountName, originalArn, ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAWSExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountAWSVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "allow_read_only", "false"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "credentials.0.arn", originalArn),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAWSOriginalAccountName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.#", "1"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.#", fmt.Sprint(len(providerconst.AWSRegions))),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.0.region", variable.CloudAccountAWSFetchedRegion),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.0.new_group_behavior", originalGroupBehavior),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.1.new_group_behavior", originalGroupBehavior),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.2.new_group_behavior", originalGroupBehavior),
 				),
 			},
 			{
-				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSUpdatedAccountName),
+				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSUpdatedAccountName, updatedArn, testAccCloudAccountAWSNetsecConfig(updatedGroupBehavior)),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAWSExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAWSUpdatedAccountName),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "credentials.0.arn", updatedArn),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.#", fmt.Sprint(len(providerconst.AWSRegions))),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.0.new_group_behavior", updatedGroupBehavior),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.1.new_group_behavior", updatedGroupBehavior),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.2.new_group_behavior", originalGroupBehavior),
 				),
 			},
 		},
@@ -80,6 +95,9 @@ func testAccCloudAccountAWSPreCheck(t *testing.T) {
 	if v := os.Getenv(environmentvariable.CloudAccountAWSEnvVarSecret); v == "" {
 		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountAWSEnvVarSecret)
 	}
+	if v := os.Getenv(environmentvariable.CloudAccountUpdatedAWSEnvVarArn); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountUpdatedAWSEnvVarArn)
+	}
 }
 
 func testAccCheckCloudAccountDestroy(s *terraform.State) error {
@@ -97,22 +115,25 @@ func testAccCheckCloudAccountDestroy(s *terraform.State) error {
 		}
 
 		if receivedCloudAccountResponse != nil {
-			return fmt.Errorf("iplist with id %s exists and wasn't destroyed", rs.Primary.ID)
+			return fmt.Errorf("cloudaccount with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
 
 	return nil
 }
 
-func testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, resourceName, arn, additionalBlock string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
   name        = "%s"
-  credentials = {
+  credentials {
     arn      = "%s"
     secret   = "%s"
     type     = "RoleBased"
   }
+
+  %s
+
 }
 
 data "%s" "%s" {
@@ -124,12 +145,87 @@ data "%s" "%s" {
 		resourcetype.CloudAccountAWS,
 		generatedName,
 		resourceName,
-		os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn),
+		arn,
 		os.Getenv(environmentvariable.CloudAccountAWSEnvVarSecret),
+		additionalBlock,
 
 		// data source variable
 		resourcetype.CloudAccountAWS,
 		generatedName,
 		resourceTypeAndName,
+	)
+}
+
+func testAccCloudAccountAWSNetsecConfig(groupBehavior string) string {
+	return fmt.Sprintf(`
+net_sec {
+    regions {
+      new_group_behavior = "%s"
+      region             = "us_east_1"
+    }
+    regions {
+      new_group_behavior = "%s"
+      region             = "us_west_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "eu_west_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_southeast_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_northeast_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "us_west_2"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "sa_east_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_southeast_2"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "eu_central_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_northeast_2"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_south_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "us_east_2"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ca_central_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "eu_west_2"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "eu_west_3"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "eu_north_1"
+    }
+  }
+`,
+		groupBehavior,
+		groupBehavior,
 	)
 }

@@ -62,21 +62,9 @@ func dataSourceIpListRead(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(strconv.FormatInt(id, 10))
 	_ = d.Set("name", ipList.Name)
 	_ = d.Set("description", ipList.Description)
-
-	// convert list of structs to list of interfaces
-	items := make([]interface{}, 0)
-	if ipList.Items != nil {
-
-		for _, v := range ipList.Items {
-
-			items = append(items, map[string]interface{}{
-				"ip":      v.Ip,
-				"comment": v.Comment,
-			})
-		}
+	if err := d.Set("items", flattenIpListItems(ipList)); err != nil {
+		return err
 	}
-
-	_ = d.Set("items", items)
 
 	return nil
 }

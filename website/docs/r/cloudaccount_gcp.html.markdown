@@ -42,10 +42,25 @@ resource "dome9_cloudaccount_gcp" "gcp_ca" {
 The following arguments are supported:
 
 * `name` - (Required) Google account name in Dome9.
-* `service_account_credentials` - (Required) The service account JSON block (from the GCP console).
 * `gsuite_user` - (Optional) The gsuite user.
+* `service_account_credentials` - (Required) The service account JSON block (from the GCP console).
 * `domain_name` - (Optional) The domain name.
 * `organizational_unit_id` - (Optional) Organizational unit id, Will apply on update state.
+
+### Service Account Credentials
+
+The `service_account_credentials` block supports: 
+
+* `type` - (Required) type. i.e "service_account"
+* `project_id` - (Required) Project ID
+* `private_key_id` - (Required) Private key ID
+* `private_key` - (Required) Private key
+* `client_email` - (Required) GCP client email
+* `client_id` - (Required) Client id
+* `auth_uri` - (Required) Auth URI. i.e "https://accounts.google.com/o/oauth2/auth"
+* `token_uri` - (Required) Token URI. i.e "https://oauth2.googleapis.com/token"
+* `auth_provider_x509_cert_url` - (Required) auth_provider_x509_cert_url. i.e "https://www.googleapis.com/oauth2/v1/certs"
+* `client_x509_cert_url` - (Required) client_x509_cert_url
 
 ## Attributes Reference
 

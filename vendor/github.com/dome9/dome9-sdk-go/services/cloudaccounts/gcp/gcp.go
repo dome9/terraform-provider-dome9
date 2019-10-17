@@ -10,24 +10,12 @@ import (
 
 // refer to API type: GoogleCloudAccountPost
 type CloudAccountRequest struct {
-	Name                      string `json:"name,omitempty"`
-	ServiceAccountCredentials struct {
-		Type                    string `json:"type,omitempty"`
-		ProjectID               string `json:"project_id,omitempty"`
-		PrivateKeyID            string `json:"private_key_id,omitempty"`
-		PrivateKey              string `json:"private_key,omitempty"`
-		ClientEmail             string `json:"client_email,omitempty"`
-		ClientID                string `json:"client_id,omitempty"`
-		AuthURI                 string `json:"auth_uri,omitempty"`
-		TokenURI                string `json:"token_uri,omitempty"`
-		AuthProviderX509CertURL string `json:"auth_provider_x509_cert_url,omitempty"`
-		ClientX509CertURL       string `json:"client_x509_cert_url,omitempty"`
-	} `json:"serviceAccountCredentials,omitempty"`
-	GsuiteUser string `json:"gsuiteUser,omitempty"`
-	DomainName string `json:"domainName,omitempty"`
+	Name                      string                    `json:"name,omitempty"`
+	ServiceAccountCredentials ServiceAccountCredentials `json:"serviceAccountCredentials,omitempty"`
+	GsuiteUser                string                    `json:"gsuiteUser,omitempty"`
+	DomainName                string                    `json:"domainName,omitempty"`
 }
 
-// refer to API type: GoogleCloudAccountGet
 type CloudAccountResponse struct {
 	ID                     string    `json:"id"`
 	Name                   string    `json:"name"`
@@ -36,36 +24,35 @@ type CloudAccountResponse struct {
 	OrganizationalUnitID   string    `json:"organizationalUnitId,omitempty"`
 	OrganizationalUnitPath string    `json:"organizationalUnitPath"`
 	OrganizationalUnitName string    `json:"organizationalUnitName"`
-	GSuite                 struct {
-		GSuiteUser string `json:"gSuiteUser"`
-		DomainName string `json:"domainName"`
-	} `json:"gsuite,omitempty"`
-	Vendor string `json:"vendor"`
+	GSuite                 GSuite    `json:"gSuite,omitempty"`
+	Vendor                 string    `json:"vendor"`
+}
+
+type ServiceAccountCredentials struct {
+	Type                    string `json:"type,omitempty"`
+	ProjectID               string `json:"project_id,omitempty"`
+	PrivateKeyID            string `json:"private_key_id,omitempty"`
+	PrivateKey              string `json:"private_key,omitempty"`
+	ClientEmail             string `json:"client_email,omitempty"`
+	ClientID                string `json:"client_id,omitempty"`
+	AuthURI                 string `json:"auth_uri,omitempty"`
+	TokenURI                string `json:"token_uri,omitempty"`
+	AuthProviderX509CertURL string `json:"auth_provider_x509_cert_url,omitempty"`
+	ClientX509CertURL       string `json:"client_x509_cert_url,omitempty"`
+}
+
+type GSuite struct {
+	GSuiteUser string `json:"gSuiteUser"`
+	DomainName string `json:"domainName"`
 }
 
 type CloudAccountUpdateNameRequest struct {
 	Name string `json:"name,omitempty"`
 }
 
-type CloudAccountUpdateGSuite struct {
-	GsuiteUser string `json:"gsuiteUser,omitempty"`
-	DomainName string `json:"domainName,omitempty"`
-}
-
 type CloudAccountUpdateCredentialsRequest struct {
-	Name                      string `json:"name,omitempty"`
-	ServiceAccountCredentials struct {
-		Type                    string `json:"type,omitempty"`
-		ProjectID               string `json:"project_id,omitempty"`
-		PrivateKeyID            string `json:"private_key_id,omitempty"`
-		PrivateKey              string `json:"private_key,omitempty"`
-		ClientEmail             string `json:"client_email,omitempty"`
-		ClientID                string `json:"client_id,omitempty"`
-		AuthURI                 string `json:"auth_uri,omitempty"`
-		TokenURI                string `json:"token_uri,omitempty"`
-		AuthProviderX509CertURL string `json:"auth_provider_x509_cert_url,omitempty"`
-		ClientX509CertURL       string `json:"client_x509_cert_url,omitempty"`
-	} `json:"serviceAccountCredentials,omitempty"`
+	Name                      string                    `json:"name,omitempty"`
+	ServiceAccountCredentials ServiceAccountCredentials `json:"serviceAccountCredentials,omitempty"`
 }
 
 type CloudAccountUpdateOrganizationalIDRequest struct {
@@ -127,7 +114,7 @@ func (service *Service) UpdateName(id string, body CloudAccountUpdateNameRequest
 	return v, resp, nil
 }
 
-func (service *Service) UpdateAccountGSuite(id string, body CloudAccountUpdateGSuite) (*CloudAccountResponse, *http.Response, error) {
+func (service *Service) UpdateAccountGSuite(id string, body GSuite) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathGCP, id, cloudaccounts.RESTfulServicePathGCPCredentialsGSuite)
 	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)

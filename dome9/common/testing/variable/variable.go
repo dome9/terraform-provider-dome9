@@ -2,11 +2,13 @@ package variable
 
 // AWS resource/data source
 const (
-	CloudAccountAWSCreationResourceName = "test_cloudaccount_aws"
-	CloudAccountAWSVendor               = "aws"
-	CloudAccountAWSOriginalAccountName  = "original_cloud_account_name_before_change"
-	CloudAccountAWSUpdatedAccountName   = "updated_cloud_account_name"
-	CloudAccountAWSFetchedRegion        = "us_east_1"
+	CloudAccountAWSCreationResourceName    = "test_cloudaccount_aws"
+	CloudAccountAWSVendor                  = "aws"
+	CloudAccountAWSOriginalAccountName     = "original_cloud_account_name_before_change"
+	CloudAccountAWSUpdatedAccountName      = "updated_cloud_account_name"
+	CloudAccountAWSFetchedRegion           = "us_east_1"
+	CloudAccountAWSReadOnlyGroupBehavior   = "ReadOnly"
+	CloudAccountAWSFullManageGroupBehavior = "FullManage"
 )
 
 // Azure resource/data source

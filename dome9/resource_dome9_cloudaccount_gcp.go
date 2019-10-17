@@ -99,58 +99,11 @@ func resourceCloudAccountGCP() *schema.Resource {
 	}
 }
 
-func constructCloudAccountRequestGCP(d *schema.ResourceData) *gcp.CloudAccountRequest {
-	req := gcp.CloudAccountRequest{
-		Name: d.Get("name").(string),
-	}
-
-	if r, ok := d.GetOk("gsuite_user"); ok {
-		req.GsuiteUser = r.(string)
-	}
-	if r, ok := d.GetOk("domain_name"); ok {
-		req.DomainName = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.type"); ok {
-		req.ServiceAccountCredentials.Type = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.project_id"); ok {
-		req.ServiceAccountCredentials.ProjectID = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.private_key_id"); ok {
-		req.ServiceAccountCredentials.PrivateKeyID = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.private_key"); ok {
-		req.ServiceAccountCredentials.PrivateKey = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.client_email"); ok {
-		req.ServiceAccountCredentials.ClientEmail = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.client_id"); ok {
-		req.ServiceAccountCredentials.ClientID = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.client_id"); ok {
-		req.ServiceAccountCredentials.ClientID = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.auth_uri"); ok {
-		req.ServiceAccountCredentials.AuthURI = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.auth_provider_x509_cert_url"); ok {
-		req.ServiceAccountCredentials.AuthProviderX509CertURL = r.(string)
-	}
-	if r, ok := d.GetOk("service_account_credentials.client_x509_cert_url"); ok {
-		req.ServiceAccountCredentials.ClientX509CertURL = r.(string)
-	}
-
-	log.Printf("[INFO] Creating GCP Cloud Account request: %+v\n", req)
-
-	return &req
-}
-
 func resourceCloudAccountGCPCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	req := constructCloudAccountRequestGCP(d)
+	req := expandCloudAccountGCPRequest(d)
 	log.Printf("[INFO] Creating GCP Cloud Account with request %+v\n", req)
-	resp, _, err := client.cloudaccountGCP.Create(*req)
+	resp, _, err := client.cloudaccountGCP.Create(req)
 	if err != nil {
 		return err
 	}
@@ -169,6 +122,7 @@ func resourceCloudAccountGCPRead(d *schema.ResourceData, meta interface{}) error
 		return nil
 	}
 
+	log.Printf("[INFO] Reading account response and settings states: %+v\n", resp)
 	d.SetId(resp.ID)
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("project_id", resp.ProjectID)
@@ -206,7 +160,6 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 			Name: d.Get("name").(string),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountGCPUpdate response is: %+v\n", resp)
 		}
@@ -219,7 +172,6 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 			OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountGCPUpdate response is: %+v\n", resp)
 		}
@@ -228,12 +180,11 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 	if d.HasChange("gsuite_user") || d.HasChange("domain_name") {
 		log.Println("The gsuite user or domain name has been changed")
 
-		if resp, _, err := client.cloudaccountGCP.UpdateAccountGSuite(d.Id(), gcp.CloudAccountUpdateGSuite{
-			GsuiteUser: d.Get("gsuite_user").(string),
+		if resp, _, err := client.cloudaccountGCP.UpdateAccountGSuite(d.Id(), gcp.GSuite{
+			GSuiteUser: d.Get("gsuite_user").(string),
 			DomainName: d.Get("domain_name").(string),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountGCPUpdate response is: %+v\n", resp)
 		}
@@ -243,37 +194,39 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 		log.Println("The service account credentials user or domain name has been changed")
 
 		if resp, _, err := client.cloudaccountGCP.UpdateCredentials(d.Id(), gcp.CloudAccountUpdateCredentialsRequest{
-			Name: d.Get("name").(string),
-			ServiceAccountCredentials: struct {
-				Type                    string `json:"type,omitempty"`
-				ProjectID               string `json:"project_id,omitempty"`
-				PrivateKeyID            string `json:"private_key_id,omitempty"`
-				PrivateKey              string `json:"private_key,omitempty"`
-				ClientEmail             string `json:"client_email,omitempty"`
-				ClientID                string `json:"client_id,omitempty"`
-				AuthURI                 string `json:"auth_uri,omitempty"`
-				TokenURI                string `json:"token_uri,omitempty"`
-				AuthProviderX509CertURL string `json:"auth_provider_x509_cert_url,omitempty"`
-				ClientX509CertURL       string `json:"client_x509_cert_url,omitempty"`
-			}{
-				Type:                    d.Get("service_account_credentials.type").(string),
-				ProjectID:               d.Get("service_account_credentials.project_id").(string),
-				PrivateKeyID:            d.Get("service_account_credentials.private_key_id").(string),
-				PrivateKey:              d.Get("service_account_credentials.private_key").(string),
-				ClientEmail:             d.Get("service_account_credentials.client_email").(string),
-				ClientID:                d.Get("service_account_credentials.client_id").(string),
-				AuthURI:                 d.Get("service_account_credentials.auth_uri").(string),
-				TokenURI:                d.Get("service_account_credentials.token_uri").(string),
-				AuthProviderX509CertURL: d.Get("service_account_credentials.auth_provider_x509_cert_url").(string),
-				ClientX509CertURL:       d.Get("service_account_credentials.client_x509_cert_url").(string),
-			},
+			Name:                      d.Get("name").(string),
+			ServiceAccountCredentials: expandServiceAccountCredentials(d),
 		}); err != nil {
 			return err
-
 		} else {
 			log.Printf("resourceCloudAccountGCPUpdate response is: %+v\n", resp)
 		}
 	}
 
 	return nil
+}
+
+func expandCloudAccountGCPRequest(d *schema.ResourceData) gcp.CloudAccountRequest {
+	req := gcp.CloudAccountRequest{
+		Name:                      d.Get("name").(string),
+		ServiceAccountCredentials: expandServiceAccountCredentials(d),
+		GsuiteUser:                d.Get("gsuite_user").(string),
+		DomainName:                d.Get("domain_name").(string),
+	}
+	return req
+}
+
+func expandServiceAccountCredentials(d *schema.ResourceData) gcp.ServiceAccountCredentials {
+	return gcp.ServiceAccountCredentials{
+		Type:                    d.Get("service_account_credentials.type").(string),
+		ProjectID:               d.Get("service_account_credentials.project_id").(string),
+		PrivateKeyID:            d.Get("service_account_credentials.private_key_id").(string),
+		PrivateKey:              d.Get("service_account_credentials.private_key").(string),
+		ClientEmail:             d.Get("service_account_credentials.client_email").(string),
+		ClientID:                d.Get("service_account_credentials.client_id").(string),
+		AuthURI:                 d.Get("service_account_credentials.auth_uri").(string),
+		TokenURI:                d.Get("service_account_credentials.token_uri").(string),
+		AuthProviderX509CertURL: d.Get("service_account_credentials.auth_provider_x509_cert_url").(string),
+		ClientX509CertURL:       d.Get("service_account_credentials.client_x509_cert_url").(string),
+	}
 }

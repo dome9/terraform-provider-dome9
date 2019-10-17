@@ -4,23 +4,21 @@ provider "dome9" {
 }
 
 resource "dome9_iplist" "iplist" {
-  name        = "sendbox"
-  description = "DESC"
+  name        = "ipList test name"
+  description = "this is the descrption of my iplist"
 
-  items = [
-    {
-      ip      = "1.1.4.4"
-      comment = "test-ip1"
-    },
-    {
-      ip      = "1.1.1.5"
-      comment = "test-ip2"
-    },
-    {
-      ip      = "1.1.5.53"
-      comment = "test-ip3"
-    },
-  ]
+  items {
+    ip      = "1.1.4.4/32"
+    comment = "test-ip1"
+  }
+  items {
+    ip      = "1.1.1.5/32"
+    comment = "test-ip2"
+  }
+  items {
+    ip      = "1.1.5.53/32"
+    comment = "test-ip3"
+  }
 }
 
 data "dome9_iplist" "data" {

@@ -8,5 +8,6 @@ import (
 
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: dome9.Provider})
+		ProviderFunc: dome9.Provider,
+	})
 }
