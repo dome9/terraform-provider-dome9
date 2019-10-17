@@ -6,8 +6,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
-
-	"github.com/dome9/terraform-provider-dome9/dome9/common/structservers"
 )
 
 func resourceContinuousCompliancePolicy() *schema.Resource {
@@ -60,61 +58,34 @@ func resourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("external_account_id", resp.ExternalAccountID)
 	_ = d.Set("cloud_account_type", resp.CloudAccountType)
 	_ = d.Set("bundle_id", resp.BundleID)
-	_ = flattenNotificationIDs(resp, d)
+	if err := d.Set("notification_ids", flattenNotificationIDs(resp)); err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func constructContinuousCompliancePolicyRequest(d *schema.ResourceData) *continuous_compliance_policy.ContinuousCompliancePolicyRequest {
-	// Required fields
-	req := continuous_compliance_policy.ContinuousCompliancePolicyRequest{
-		CloudAccountID:    d.Get("cloud_account_id").(string),
-		ExternalAccountID: d.Get("external_account_id").(string),
-		BundleID:          d.Get("bundle_id").(int),
-		NotificationIds:   structservers.FlattenStringList(d, "notification_ids"),
-	}
-
-	// Optional fields
-	if cloudAccountType, ok := d.GetOk("cloud_account_type"); ok {
-		req.CloudAccountType = cloudAccountType.(string)
-	}
-
-	return &req
-}
-
 func resourceContinuousCompliancePolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
-	req := constructContinuousCompliancePolicyRequest(d)
+	req := expandContinuousCompliancePolicyRequest(d)
 	log.Printf("[INFO] Creating compliance policy request %+v\n", req)
-	resp, _, err := client.continuousCompliancePolicy.Create(req)
+	resp, _, err := client.continuousCompliancePolicy.Create(&req)
 	if err != nil {
 		return err
 	}
+
 	log.Printf("[INFO] Created compliance policy with ID: %v\n", resp.ID)
 	d.SetId(resp.ID)
 
 	return resourceContinuousCompliancePolicyRead(d, meta)
 }
 
-func flattenNotificationIDs(resp *continuous_compliance_policy.ContinuousCompliancePolicyResponse, d *schema.ResourceData) error {
-	nIDs := make([]string, len(resp.NotificationIds))
-	for i, nID := range resp.NotificationIds {
-		nIDs[i] = nID
-	}
-	err := d.Set("notification_ids", nIDs)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func resourceContinuousCompliancePolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*Client)
 	log.Printf("[INFO] Updating continuous compliance policy ID: %v\n", d.Id())
-	req := constructContinuousCompliancePolicyRequest(d)
+	req := expandContinuousCompliancePolicyRequest(d)
 
-	if _, _, err := client.continuousCompliancePolicy.Update(d.Id(), req); err != nil {
+	if _, _, err := client.continuousCompliancePolicy.Update(d.Id(), &req); err != nil {
 		return err
 	}
 
@@ -130,4 +101,33 @@ func resourceContinuousCompliancePolicyDelete(d *schema.ResourceData, meta inter
 	}
 
 	return nil
+}
+
+func expandNotificationIDs(d *schema.ResourceData, key string) []string {
+	notificationsIDsData := d.Get(key).([]interface{})
+	notificationIDsList := make([]string, len(notificationsIDsData))
+	for i, notificationID := range notificationsIDsData {
+		notificationIDsList[i] = notificationID.(string)
+	}
+
+	return notificationIDsList
+}
+
+func expandContinuousCompliancePolicyRequest(d *schema.ResourceData) continuous_compliance_policy.ContinuousCompliancePolicyRequest {
+	return continuous_compliance_policy.ContinuousCompliancePolicyRequest{
+		CloudAccountID:    d.Get("cloud_account_id").(string),
+		ExternalAccountID: d.Get("external_account_id").(string),
+		BundleID:          d.Get("bundle_id").(int),
+		NotificationIds:   expandNotificationIDs(d, "notification_ids"),
+		CloudAccountType:  d.Get("cloud_account_type").(string),
+	}
+}
+
+func flattenNotificationIDs(resp *continuous_compliance_policy.ContinuousCompliancePolicyResponse) []string {
+	nIDs := make([]string, len(resp.NotificationIds))
+	for i, nID := range resp.NotificationIds {
+		nIDs[i] = nID
+	}
+
+	return nIDs
 }
