@@ -119,7 +119,6 @@ func resourceCloudAccountAWS() *schema.Resource {
 					},
 				},
 			},
-			// TODO: full_protection and allow_read_only are currently computed only since the server always returns false
 			"full_protection": {
 				Type:     schema.TypeBool,
 				Computed: true,
