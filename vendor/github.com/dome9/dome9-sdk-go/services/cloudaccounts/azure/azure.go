@@ -8,39 +8,32 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 )
 
-// AzureCloudAccountRequest and CloudAccountResponse refer to API type: AzureCloudAccount
 type CloudAccountRequest struct {
-	Name           string `json:"name,omitempty"`
-	SubscriptionID string `json:"subscriptionId,omitempty"`
-	TenantID       string `json:"tenantId,omitempty"`
-	Credentials    struct {
-		ClientID       string `json:"clientId,omitempty"`
-		ClientPassword string `json:"clientPassword,omitempty"`
-	} `json:"credentials,omitempty"`
-	OperationMode          string    `json:"operationMode,omitempty"`
-	Error                  string    `json:"error,omitempty"`
-	CreationDate           time.Time `json:"creationDate,omitempty"`
-	OrganizationalUnitID   string    `json:"organizationalUnitId,omitempty"`
-	OrganizationalUnitPath string    `json:"organizationalUnitPath,omitempty"`
-	OrganizationalUnitName string    `json:"organizationalUnitName,omitempty"`
+	Name                   string                  `json:"name,omitempty"`
+	SubscriptionID         string                  `json:"subscriptionId,omitempty"`
+	TenantID               string                  `json:"tenantId,omitempty"`
+	Credentials            CloudAccountCredentials `json:"credentials,omitempty"`
+	OperationMode          string                  `json:"operationMode,omitempty"`
+	Error                  string                  `json:"error,omitempty"`
+	CreationDate           time.Time               `json:"creationDate,omitempty"`
+	OrganizationalUnitID   string                  `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitPath string                  `json:"organizationalUnitPath,omitempty"`
+	OrganizationalUnitName string                  `json:"organizationalUnitName,omitempty"`
 }
 
 type CloudAccountResponse struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	SubscriptionID string `json:"subscriptionId"`
-	TenantID       string `json:"tenantId"`
-	Credentials    struct {
-		ClientID       string `json:"clientId"`
-		ClientPassword string `json:"clientPassword,omitempty"`
-	} `json:"credentials"`
-	OperationMode          string    `json:"operationMode"`
-	Error                  string    `json:"error,omitempty"`
-	CreationDate           time.Time `json:"creationDate"`
-	OrganizationalUnitID   string    `json:"organizationalUnitId,omitempty"`
-	OrganizationalUnitPath string    `json:"organizationalUnitPath"`
-	OrganizationalUnitName string    `json:"organizationalUnitName"`
-	Vendor                 string    `json:"vendor"`
+	ID                     string                  `json:"id"`
+	Name                   string                  `json:"name"`
+	SubscriptionID         string                  `json:"subscriptionId"`
+	TenantID               string                  `json:"tenantId"`
+	Credentials            CloudAccountCredentials `json:"credentials"`
+	OperationMode          string                  `json:"operationMode"`
+	Error                  string                  `json:"error,omitempty"`
+	CreationDate           time.Time               `json:"creationDate"`
+	OrganizationalUnitID   string                  `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitPath string                  `json:"organizationalUnitPath"`
+	OrganizationalUnitName string                  `json:"organizationalUnitName"`
+	Vendor                 string                  `json:"vendor"`
 }
 
 type CloudAccountUpdateNameRequest struct {
@@ -60,10 +53,16 @@ type CloudAccountUpdateOperationModeRequest struct {
 	OperationMode string `json:"operationMode,omitempty"`
 }
 
+type CloudAccountCredentials struct {
+	ClientID       string `json:"clientId,omitempty"`
+	ClientPassword string `json:"clientPassword,omitempty"`
+}
+
 func (service *Service) Get(options interface{}) (*CloudAccountResponse, *http.Response, error) {
 	if options == nil {
 		return nil, nil, fmt.Errorf("options parameter must be passed")
 	}
+
 	v := new(CloudAccountResponse)
 	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulPathAzure, options, nil, v)
 	if err != nil {
