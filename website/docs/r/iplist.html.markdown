@@ -41,10 +41,12 @@ The following arguments are supported:
 * `description` - (Optional) IP list description, defaults to empty string.
 * `items` - (Optional) Items for IP list, defaults to empty list.
 
-The `items` block supports:
+### Items 
+
+The `items` supports the following arguments:
     
-* `ip` - (Required) IP.
-* `comment` - (Required) Comment.
+* `ip` - (Optional) IP.
+* `comment` - (Optional) Comment.
 
 ## Attributes Reference
 

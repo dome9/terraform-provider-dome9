@@ -33,24 +33,27 @@ resource "dome9_cloudaccount_azure" "test" {
 The following arguments are supported:
 
 * `name` - (Required) The Azure account number.
-* `operation_mode` - (Required) Dome9 operation mode for the Azure account (Read-Only or Managed).
 * `subscription_id` - (Required) Azure subscription id for account.
 * `tenant_id` - (Required) Azure tenant id.
+* `operation_mode` - (Required) Dome9 operation mode for the Azure account (Read-Only or Managed).
 * `credentials` - (Required) Azure account credentials.
 * `organizational_unit_id` - Organizational unit id, will apply on update state.
 
-The `credentials` block supports:
-    
+### Credentials
+
+The `credentials` block supports: 
+
 * `client_id` - (Required) Azure account id.
 * `client_password` - (Required) Password for account.
 
 ## Attributes Reference
 
 * `id` - The ID of the Azure cloud account.
+* `vendor` - The cloud provider (Azure).
 * `creation_date` - Date Azure account was onboarded to a Dome9 account.
 * `organizational_unit_path` - Organizational unit path.
 * `organizational_unit_name` - Organizational unit name.
-* `vendor` - The cloud provider (Azure).
+
 ## Import
 
 Azure cloud account can be imported; use `<Azure CLOUD ACCOUNT ID>` as the import ID. For example:

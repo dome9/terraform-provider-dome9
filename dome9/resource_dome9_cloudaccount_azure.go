@@ -44,7 +44,7 @@ func resourceCloudAccountAzure() *schema.Resource {
 			},
 			"credentials": {
 				Type:     schema.TypeMap,
-				Optional: true,
+				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"client_id": {

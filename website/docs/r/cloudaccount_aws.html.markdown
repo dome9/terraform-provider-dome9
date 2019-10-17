@@ -32,23 +32,33 @@ The following arguments are supported:
 
 * `name` - (Required) The AWS account name.
 * `credentials` - (Required) The information needed for Dome9 System in order to connect to the AWS cloud account.
+* `net_sec` -  (Optional) The network security configuration for the AWS cloud account. If given, must pass all 16 regions. Otherwise, sets to default.
 
-The `credentials` block supports:
-    
+### Credentials
+
+`credentials` supports the following arguments:
+
 * `arn` - (Required) AWS Role ARN (to be assumed by Dome9 System)
 * `secret` - (Required) The AWS role External ID (Dome9 System will have to use this secret in order to assume the role)
 * `type` - (Required) The cloud account onboarding method. Should be set to "RoleBased" as other methods are deprecated.
 
+### Network security configuration
+
+`net_sec` supports the following arguments:
+
+* `Region` - (Required) list of the supported regions, and their configuration:
+    * `new_group_behavior` - (Required) The network security configuration. Can be "ReadOnly", "FullManage" or "Reset".
+    * `region` - (Required) AWS region.
+
 ## Attributes Reference
 
-* `id` - The ID of the AWS cloud account.
 * `vendor` - The cloud provider (AWS).
 * `external_account_number` - The AWS account number.
 * `is_fetching_suspended` - Fetching suspending status.
 * `creation_date` - Account creation date.
 * `full_protection` - The tamper Protection mode for current security groups.
 * `allow_read_only` - The AWS cloud account operation mode. true for "Manage", false for "Readonly".
-* `net_sec` - The network security configuration for the AWS cloud account.
+* `net_sec` - The network security configuration for the AWS cloud account. If not given, sets to default value.
 
 ## Import
 
