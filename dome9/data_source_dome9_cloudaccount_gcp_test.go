@@ -5,9 +5,9 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 
-	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/method"
-	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/variable"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
 func TestAccDataSourceCloudAccountGCPBasic(t *testing.T) {

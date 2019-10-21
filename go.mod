@@ -1,4 +1,4 @@
-module github.com/dome9/terraform-provider-dome9
+module github.com/terraform-providers/terraform-provider-dome9
 
 go 1.13
 
