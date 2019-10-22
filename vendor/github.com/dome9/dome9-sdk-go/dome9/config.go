@@ -10,7 +10,7 @@ import (
 
 const (
 	defaultBaseURL = "https://api.dome9.com/v2/"
-	defaultTimeout = 120 * time.Second
+	defaultTimeout = 240 * time.Second
 	loggerPrefix   = "dome9-logger: "
 )
 
