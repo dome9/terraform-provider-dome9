@@ -33,7 +33,7 @@ test: fmtcheck
 		xargs -t -n4 go test -v $(TESTARGS) -timeout=30s -parallel=4
 
 testacc: fmtcheck
-	TF_ACC=1 go test -v $(TEST) -timeout 120m
+	TF_ACC=1 go test -v $(TEST) -timeout 240m
 
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
