@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 )
 
@@ -45,11 +46,33 @@ func resourceContinuousCompliancePolicy() *schema.Resource {
 	}
 }
 
-func resourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
-	resp, _, err := client.continuousCompliancePolicy.Get(d.Id())
+func resourceContinuousCompliancePolicyCreate(d *schema.ResourceData, meta interface{}) error {
+	d9Client := meta.(*Client)
+	req := expandContinuousCompliancePolicyRequest(d)
+	log.Printf("[INFO] Creating compliance policy request %+v\n", req)
+	resp, _, err := d9Client.continuousCompliancePolicy.Create(&req)
 	if err != nil {
-		return nil
+		return err
+	}
+
+	log.Printf("[INFO] Created compliance policy with ID: %v\n", resp.ID)
+	d.SetId(resp.ID)
+
+	return resourceContinuousCompliancePolicyRead(d, meta)
+}
+
+func resourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interface{}) error {
+	d9Client := meta.(*Client)
+	resp, _, err := d9Client.continuousCompliancePolicy.Get(d.Id())
+
+	if err != nil {
+		if err.(*client.ErrorResponse).IsObjectNotFound() {
+			log.Printf("[WARN] Removing continuous compliance policy %s from state because it no longer exists in Dome9", d.Id())
+			d.SetId("")
+			return nil
+		}
+
+		return err
 	}
 
 	log.Printf("[INFO] Getting continuous compliance policy: %+v\n", resp)
@@ -65,27 +88,12 @@ func resourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func resourceContinuousCompliancePolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
-	req := expandContinuousCompliancePolicyRequest(d)
-	log.Printf("[INFO] Creating compliance policy request %+v\n", req)
-	resp, _, err := client.continuousCompliancePolicy.Create(&req)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[INFO] Created compliance policy with ID: %v\n", resp.ID)
-	d.SetId(resp.ID)
-
-	return resourceContinuousCompliancePolicyRead(d, meta)
-}
-
 func resourceContinuousCompliancePolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Printf("[INFO] Updating continuous compliance policy ID: %v\n", d.Id())
 	req := expandContinuousCompliancePolicyRequest(d)
 
-	if _, _, err := client.continuousCompliancePolicy.Update(d.Id(), &req); err != nil {
+	if _, _, err := d9Client.continuousCompliancePolicy.Update(d.Id(), &req); err != nil {
 		return err
 	}
 
@@ -93,10 +101,10 @@ func resourceContinuousCompliancePolicyUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceContinuousCompliancePolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting continuous compliance policy ID: %v\n", d.Id())
 
-	if _, err := client.continuousCompliancePolicy.Delete(d.Id()); err != nil {
+	if _, err := d9Client.continuousCompliancePolicy.Delete(d.Id()); err != nil {
 		return err
 	}
 

@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 )
@@ -79,11 +80,11 @@ func resourceCloudAccountAzure() *schema.Resource {
 }
 
 func resourceCloudAccountAzureCreate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	req := expandCloudAccountAzureRequest(d)
 	log.Printf("[INFO] Creating Azure Cloud Account with request %+v\n", req)
 
-	resp, _, err := client.cloudaccountAzure.Create(req)
+	resp, _, err := d9Client.cloudaccountAzure.Create(req)
 	if err != nil {
 		return err
 	}
@@ -95,11 +96,18 @@ func resourceCloudAccountAzureCreate(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceCloudAccountAzureRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: d.Id()}
-	resp, _, err := client.cloudaccountAzure.Get(&getCloudAccountQueryParams)
+	resp, _, err := d9Client.cloudaccountAzure.Get(&getCloudAccountQueryParams)
+
 	if err != nil {
-		return nil
+		if err.(*client.ErrorResponse).IsObjectNotFound() {
+			log.Printf("[WARN] Removing Azure cloud account %s from state because it no longer exists in Dome9", d.Id())
+			d.SetId("")
+			return nil
+		}
+
+		return err
 	}
 
 	d.SetId(resp.ID)
@@ -118,9 +126,9 @@ func resourceCloudAccountAzureRead(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceCloudAccountAzureDelete(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting Azure Cloud Account ID: %v\n", d.Id())
-	if _, err := client.cloudaccountAzure.Delete(d.Id()); err != nil {
+	if _, err := d9Client.cloudaccountAzure.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -128,13 +136,13 @@ func resourceCloudAccountAzureDelete(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Println("An updated occurred")
 
 	if d.HasChange("name") {
 		log.Println("The name has been changed")
 
-		if resp, _, err := client.cloudaccountAzure.UpdateName(d.Id(), azure.CloudAccountUpdateNameRequest{
+		if resp, _, err := d9Client.cloudaccountAzure.UpdateName(d.Id(), azure.CloudAccountUpdateNameRequest{
 			Name: d.Get("name").(string),
 		}); err != nil {
 			return err
@@ -146,7 +154,7 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 	if d.HasChange("operation_mode") {
 		log.Println("The operation mode has been changed")
 
-		if resp, _, err := client.cloudaccountAzure.UpdateOperationMode(d.Id(), azure.CloudAccountUpdateOperationModeRequest{
+		if resp, _, err := d9Client.cloudaccountAzure.UpdateOperationMode(d.Id(), azure.CloudAccountUpdateOperationModeRequest{
 			OperationMode: d.Get("operation_mode").(string),
 		}); err != nil {
 			return err
@@ -158,7 +166,7 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 	if d.HasChange("credentials") {
 		log.Println("The credentials has been changed")
 
-		if resp, _, err := client.cloudaccountAzure.UpdateCredentials(d.Id(), azure.CloudAccountUpdateCredentialsRequest{
+		if resp, _, err := d9Client.cloudaccountAzure.UpdateCredentials(d.Id(), azure.CloudAccountUpdateCredentialsRequest{
 			ApplicationID:  d.Get("credentials.client_id").(string),
 			ApplicationKey: d.Get("credentials.client_password").(string),
 		}); err != nil {
@@ -171,7 +179,7 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 	if d.HasChange("organizational_unit_id") {
 		log.Println("The organizational unit id has been changed")
 
-		if resp, _, err := client.cloudaccountAzure.UpdateOrganizationalID(d.Id(), azure.CloudAccountUpdateOrganizationalIDRequest{
+		if resp, _, err := d9Client.cloudaccountAzure.UpdateOrganizationalID(d.Id(), azure.CloudAccountUpdateOrganizationalIDRequest{
 			OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 		}); err != nil {
 			return err

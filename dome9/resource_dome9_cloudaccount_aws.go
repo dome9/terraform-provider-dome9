@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 
@@ -132,10 +133,10 @@ func resourceCloudAccountAWS() *schema.Resource {
 }
 
 func resourceCloudAccountAWSCreate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	req := expandCloudAccountAWSRequest(d)
 	log.Printf("[INFO] Creating AWS Cloud Account with request\n%+v\n", req)
-	resp, _, err := client.cloudaccountAWS.Create(req)
+	resp, _, err := d9Client.cloudaccountAWS.Create(req)
 	if err != nil {
 		return err
 	}
@@ -147,12 +148,19 @@ func resourceCloudAccountAWSCreate(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceCloudAccountAWSRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 
 	getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: d.Id()}
-	resp, _, err := client.cloudaccountAWS.Get(&getCloudAccountQueryParams)
+	resp, _, err := d9Client.cloudaccountAWS.Get(&getCloudAccountQueryParams)
+
 	if err != nil {
-		return nil
+		if err.(*client.ErrorResponse).IsObjectNotFound() {
+			log.Printf("[WARN] Removing AWS cloud account %s from state because it no longer exists in Dome9", d.Id())
+			d.SetId("")
+			return nil
+		}
+
+		return err
 	}
 
 	log.Printf("[INFO] Reading account response and settings states: %+v\n", resp)
@@ -172,10 +180,10 @@ func resourceCloudAccountAWSRead(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceCloudAccountAWSDelete(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting AWS Cloud Account ID: %v\n", d.Id())
 
-	if _, err := client.cloudaccountAWS.Delete(d.Id()); err != nil {
+	if _, err := d9Client.cloudaccountAWS.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -183,13 +191,13 @@ func resourceCloudAccountAWSDelete(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Println("An updated occurred")
 
 	if d.HasChange("name") {
 		log.Println("The name has been changed")
 
-		if _, _, err := client.cloudaccountAWS.UpdateName(aws.CloudAccountUpdateNameRequest{
+		if _, _, err := d9Client.cloudaccountAWS.UpdateName(aws.CloudAccountUpdateNameRequest{
 			CloudAccountID:        d.Id(),
 			ExternalAccountNumber: d.Get("external_account_number").(string),
 			Data:                  d.Get("name").(string),
@@ -201,7 +209,7 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 	if d.HasChange("credentials.0") {
 		log.Println("credentials has been changed")
 
-		if _, _, err := client.cloudaccountAWS.UpdateCredentials(aws.CloudAccountUpdateCredentialsRequest{
+		if _, _, err := d9Client.cloudaccountAWS.UpdateCredentials(aws.CloudAccountUpdateCredentialsRequest{
 			CloudAccountID: d.Id(),
 			Data:           expandCloudAccountAWSCredentials(d),
 		}); err != nil {
@@ -217,7 +225,7 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 			regionObject := val.(map[string]interface{})
 			newGroupBehaviorKeyFormat := fmt.Sprintf("net_sec.0.regions.%d.new_group_behavior", i)
 			if d.HasChange(newGroupBehaviorKeyFormat) {
-				if _, _, err := client.cloudaccountAWS.UpdateRegionConfig(aws.CloudAccountUpdateRegionConfigRequest{
+				if _, _, err := d9Client.cloudaccountAWS.UpdateRegionConfig(aws.CloudAccountUpdateRegionConfigRequest{
 					CloudAccountID: d.Id(),
 					Data: aws.CloudAccountNetSecRegion{
 						Region:           regionObject["region"].(string),

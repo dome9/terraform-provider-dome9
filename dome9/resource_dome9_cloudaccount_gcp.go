@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
 )
@@ -100,10 +101,10 @@ func resourceCloudAccountGCP() *schema.Resource {
 }
 
 func resourceCloudAccountGCPCreate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	req := expandCloudAccountGCPRequest(d)
 	log.Printf("[INFO] Creating GCP Cloud Account with request %+v\n", req)
-	resp, _, err := client.cloudaccountGCP.Create(req)
+	resp, _, err := d9Client.cloudaccountGCP.Create(req)
 	if err != nil {
 		return err
 	}
@@ -115,11 +116,18 @@ func resourceCloudAccountGCPCreate(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceCloudAccountGCPRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: d.Id()}
-	resp, _, err := client.cloudaccountGCP.Get(&getCloudAccountQueryParams)
+	resp, _, err := d9Client.cloudaccountGCP.Get(&getCloudAccountQueryParams)
+
 	if err != nil {
-		return nil
+		if err.(*client.ErrorResponse).IsObjectNotFound() {
+			log.Printf("[WARN] Removing GCP cloud account %s from state because it no longer exists in Dome9", d.Id())
+			d.SetId("")
+			return nil
+		}
+
+		return err
 	}
 
 	log.Printf("[INFO] Reading account response and settings states: %+v\n", resp)
@@ -139,10 +147,10 @@ func resourceCloudAccountGCPRead(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceCloudAccountGCPDelete(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting GCP Cloud Account ID: %v\n", d.Id())
 
-	if _, err := client.cloudaccountGCP.Delete(d.Id()); err != nil {
+	if _, err := d9Client.cloudaccountGCP.Delete(d.Id()); err != nil {
 		return err
 	}
 
@@ -150,13 +158,13 @@ func resourceCloudAccountGCPDelete(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	log.Println("An updated occurred")
 
 	if d.HasChange("name") {
 		log.Println("The name has been changed")
 
-		if resp, _, err := client.cloudaccountGCP.UpdateName(d.Id(), gcp.CloudAccountUpdateNameRequest{
+		if resp, _, err := d9Client.cloudaccountGCP.UpdateName(d.Id(), gcp.CloudAccountUpdateNameRequest{
 			Name: d.Get("name").(string),
 		}); err != nil {
 			return err
@@ -168,7 +176,7 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 	if d.HasChange("organizational_unit_id") {
 		log.Println("The organizational unit id has been changed")
 
-		if resp, _, err := client.cloudaccountGCP.UpdateOrganizationalID(d.Id(), gcp.CloudAccountUpdateOrganizationalIDRequest{
+		if resp, _, err := d9Client.cloudaccountGCP.UpdateOrganizationalID(d.Id(), gcp.CloudAccountUpdateOrganizationalIDRequest{
 			OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 		}); err != nil {
 			return err
@@ -180,7 +188,7 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 	if d.HasChange("gsuite_user") || d.HasChange("domain_name") {
 		log.Println("The gsuite user or domain name has been changed")
 
-		if resp, _, err := client.cloudaccountGCP.UpdateAccountGSuite(d.Id(), gcp.GSuite{
+		if resp, _, err := d9Client.cloudaccountGCP.UpdateAccountGSuite(d.Id(), gcp.GSuite{
 			GSuiteUser: d.Get("gsuite_user").(string),
 			DomainName: d.Get("domain_name").(string),
 		}); err != nil {
@@ -193,7 +201,7 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 	if d.HasChange("service_account_credentials") {
 		log.Println("The service account credentials user or domain name has been changed")
 
-		if resp, _, err := client.cloudaccountGCP.UpdateCredentials(d.Id(), gcp.CloudAccountUpdateCredentialsRequest{
+		if resp, _, err := d9Client.cloudaccountGCP.UpdateCredentials(d.Id(), gcp.CloudAccountUpdateCredentialsRequest{
 			Name:                      d.Get("name").(string),
 			ServiceAccountCredentials: expandServiceAccountCredentials(d),
 		}); err != nil {

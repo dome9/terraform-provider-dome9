@@ -90,7 +90,6 @@ func dataSourceAWSRead(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[INFO] Getting data for cloud account %s with id %s\n", variable.CloudAccountAWSVendor, id)
 
 	resp, _, err := client.cloudaccountAWS.Get(cloudaccounts.QueryParameters{ID: id})
-
 	if err != nil {
 		return err
 	}

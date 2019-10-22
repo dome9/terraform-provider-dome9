@@ -66,7 +66,6 @@ func dataSourceAzureRead(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("Getting data for cloud account %s with id %s\n", variable.CloudAccountAzureVendor, id)
 
 	azureCloudAccount, _, err := client.cloudaccountAzure.Get(cloudaccounts.QueryParameters{ID: id})
-
 	if err != nil {
 		return err
 	}

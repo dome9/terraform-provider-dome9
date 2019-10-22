@@ -47,7 +47,7 @@ func dataSourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta inter
 
 	resp, _, err := client.continuousCompliancePolicy.Get(policyID)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	d.SetId(resp.ID)

@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/iplist"
 )
 
@@ -50,11 +51,11 @@ func resourceIpList() *schema.Resource {
 }
 
 func resourceIpListCreate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	ipListRequest := expandIpList(d)
 	log.Printf("[INFO] Creating dome9 IpList with request\n%+v\n", ipListRequest)
 
-	ipList, _, err := client.iplist.Create(&ipListRequest)
+	ipList, _, err := d9Client.iplist.Create(&ipListRequest)
 	if err != nil {
 		return err
 	}
@@ -64,15 +65,21 @@ func resourceIpListCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceIpListRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
 		return err
 	}
 
-	ipList, _, err := client.iplist.Get(id)
+	ipList, _, err := d9Client.iplist.Get(id)
 	if err != nil {
-		return nil
+		if err.(*client.ErrorResponse).IsObjectNotFound() {
+			log.Printf("[WARN] Removing ip list %s from state because it no longer exists in Dome9", d.Id())
+			d.SetId("")
+			return nil
+		}
+
+		return err
 	}
 
 	_ = d.Set("name", ipList.Name)
@@ -85,7 +92,7 @@ func resourceIpListRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceIpListUpdate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
 		return err
@@ -95,7 +102,7 @@ func resourceIpListUpdate(d *schema.ResourceData, meta interface{}) error {
 	ipListRequest.Id = id
 	log.Printf("[INFO] Updating IpList with name %s\n", ipListRequest.Name)
 
-	if _, err := client.iplist.Update(id, &ipListRequest); err != nil {
+	if _, err := d9Client.iplist.Update(id, &ipListRequest); err != nil {
 		return err
 	}
 
@@ -103,7 +110,7 @@ func resourceIpListUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceIpListDelete(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 
 	id, err := strconv.ParseInt(d.Id(), 10, 64)
 	if err != nil {
@@ -112,7 +119,7 @@ func resourceIpListDelete(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[INFO] Deleting IP list with id %v\n", id)
 
-	if _, err := client.iplist.Delete(id); err != nil {
+	if _, err := d9Client.iplist.Delete(id); err != nil {
 		return err
 	}
 

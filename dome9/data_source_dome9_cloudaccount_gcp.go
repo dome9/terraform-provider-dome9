@@ -66,7 +66,6 @@ func dataSourceGCPRead(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("Getting data for %s cloud account with id %s\n", variable.CloudAccountGCPVendor, id)
 
 	GCPCloudAccount, _, err := client.cloudaccountGCP.Get(cloudaccounts.QueryParameters{ID: id})
-
 	if err != nil {
 		return err
 	}
