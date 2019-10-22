@@ -26,3 +26,8 @@ func checkErrorInResponse(res *http.Response) error {
 	}
 	return errorResponse
 }
+
+// IsObjectNotFound returns true on missing object error (404).
+func (r ErrorResponse) IsObjectNotFound() bool {
+	return r.Response.StatusCode == 404
+}
