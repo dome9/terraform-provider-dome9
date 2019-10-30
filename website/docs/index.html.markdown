@@ -6,7 +6,7 @@ description: |-
   The Check Point Cloud Guard Dome9 provider is used to interact with Dome9 resources. The provider needs to be configured with the proper credentials before it can be used.
 ---
 
-# Check Point Cloud Guard Dome9 Provider
+# Check Point CloudGuard Dome9 Provider
 
 The Check Point Cloud Guard Dome9 provider is used to interact with the many resources
 supported by [Check Point Cloud Guard Dome9](https://www.dome9.com).
