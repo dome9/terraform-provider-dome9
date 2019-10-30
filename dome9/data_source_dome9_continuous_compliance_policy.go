@@ -41,11 +41,12 @@ func dataSourceContinuousCompliancePolicy() *schema.Resource {
 }
 
 func dataSourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
+
 	policyID := d.Get("id").(string)
 	log.Printf("Getting data for Continuous Compliance Policy id: %s\n", policyID)
 
-	resp, _, err := client.continuousCompliancePolicy.Get(policyID)
+	resp, _, err := d9Client.continuousCompliancePolicy.Get(policyID)
 	if err != nil {
 		return err
 	}

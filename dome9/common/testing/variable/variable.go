@@ -36,3 +36,21 @@ const (
 	IPListDescriptionResource       = "acceptance-test"
 	IPListUpdateDescriptionResource = "update-acceptance-test"
 )
+
+// Continuous Compliance Notification resource/data source
+const (
+	ContinuousComplianceNotificationName               = "test_notification"
+	ContinuousComplianceNotificationDescription        = "this notification for testing"
+	ContinuousComplianceNotificationAlertsConsole      = true
+	ContinuousComplianceNotificationEnabled            = "Enabled"
+	ContinuousComplianceNotificationDisabled           = "Disabled"
+	ContinuousComplianceNotificationCronExpression     = "0 0 10 1/1 * ? *"
+	ContinuousComplianceNotificationType               = "Detailed"
+	ContinuousComplianceNotificationRecipient          = "test@test.com"
+	ContinuousComplianceNotificationJsonWithFullEntity = "JsonWithFullEntity"
+
+	// Update const
+	ContinuousComplianceNotificationUpdateName          = "test_notification_update"
+	ContinuousComplianceNotificationUpdateDescription   = "this notification for update testing"
+	ContinuousComplianceNotificationUpdateAlertsConsole = false
+)

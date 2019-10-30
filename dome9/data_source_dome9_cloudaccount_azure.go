@@ -15,7 +15,7 @@ func dataSourceCloudAccountAzure() *schema.Resource {
 		Read: dataSourceAzureRead,
 
 		Schema: map[string]*schema.Schema{
-			"account_id": {
+			"id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -60,12 +60,12 @@ func dataSourceCloudAccountAzure() *schema.Resource {
 }
 
 func dataSourceAzureRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 
-	id := d.Get("account_id").(string)
+	id := d.Get("id").(string)
 	log.Printf("Getting data for cloud account %s with id %s\n", variable.CloudAccountAzureVendor, id)
 
-	azureCloudAccount, _, err := client.cloudaccountAzure.Get(cloudaccounts.QueryParameters{ID: id})
+	azureCloudAccount, _, err := d9Client.cloudaccountAzure.Get(cloudaccounts.QueryParameters{ID: id})
 	if err != nil {
 		return err
 	}

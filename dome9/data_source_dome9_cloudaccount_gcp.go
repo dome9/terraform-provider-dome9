@@ -15,7 +15,7 @@ func dataSourceCloudAccountGCP() *schema.Resource {
 		Read: dataSourceGCPRead,
 
 		Schema: map[string]*schema.Schema{
-			"account_id": {
+			"id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -60,12 +60,12 @@ func dataSourceCloudAccountGCP() *schema.Resource {
 }
 
 func dataSourceGCPRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
 
-	id := d.Get("account_id").(string)
+	id := d.Get("id").(string)
 	log.Printf("Getting data for %s cloud account with id %s\n", variable.CloudAccountGCPVendor, id)
 
-	GCPCloudAccount, _, err := client.cloudaccountGCP.Get(cloudaccounts.QueryParameters{ID: id})
+	GCPCloudAccount, _, err := d9Client.cloudaccountGCP.Get(cloudaccounts.QueryParameters{ID: id})
 	if err != nil {
 		return err
 	}

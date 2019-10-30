@@ -135,10 +135,10 @@ resource "%s" "%s" {
 }
 
 data "%s" "%s" {
-  account_id = "${%s.id}"
+  id = "${%s.id}"
 }
 `,
-		// resource variable
+		// resource variables
 		resourcetype.CloudAccountGCP,
 		generatedName,
 		resourceName,
@@ -153,7 +153,7 @@ data "%s" "%s" {
 		variable.CloudAccountGCPAuthProviderX509CertURL,
 		os.Getenv(environmentvariable.CloudAccountGCPEnvVarClientX509CertUrl),
 
-		// data source variable
+		// data source variables
 		resourcetype.CloudAccountGCP,
 		generatedName,
 		resourceTypeAndName,

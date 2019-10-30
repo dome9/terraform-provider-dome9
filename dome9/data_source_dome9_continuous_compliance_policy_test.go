@@ -17,13 +17,12 @@ func TestAccDataSourceContinuousCompliancePolicyBasic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 			testAccCloudAccountAzureEnvVarsPreCheck(t) // Azure account used as an input for policy creation thus this check is required
-			testAccContinuousCompliancePolicyEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckContinuousCompliancePolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName),
+				Config: testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName, getNotificationIDsConfig()),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "id", policyResourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "cloud_account_id", policyResourceTypeAndName, "cloud_account_id"),

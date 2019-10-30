@@ -37,19 +37,21 @@ func Provider() terraform.ResourceProvider {
 				terraform resource name: resource schema
 				resource formation: provider-resourcename-subresource
 			*/
-			resourcetype.IPList:                     resourceIpList(),
-			resourcetype.CloudAccountAWS:            resourceCloudAccountAWS(),
-			resourcetype.CloudAccountGCP:            resourceCloudAccountGCP(),
-			resourcetype.CloudAccountAzure:          resourceCloudAccountAzure(),
-			resourcetype.ContinuousCompliancePolicy: resourceContinuousCompliancePolicy(),
+			resourcetype.IPList:                           resourceIpList(),
+			resourcetype.CloudAccountAWS:                  resourceCloudAccountAWS(),
+			resourcetype.CloudAccountGCP:                  resourceCloudAccountGCP(),
+			resourcetype.CloudAccountAzure:                resourceCloudAccountAzure(),
+			resourcetype.ContinuousCompliancePolicy:       resourceContinuousCompliancePolicy(),
+			resourcetype.ContinuousComplianceNotification: resourceContinuousComplianceNotification(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
-			resourcetype.IPList:                     dataSourceIpList(),
-			resourcetype.CloudAccountAWS:            dataSourceCloudAccountAWS(),
-			resourcetype.CloudAccountGCP:            dataSourceCloudAccountGCP(),
-			resourcetype.CloudAccountAzure:          dataSourceCloudAccountAzure(),
-			resourcetype.ContinuousCompliancePolicy: dataSourceContinuousCompliancePolicy(),
+			resourcetype.IPList:                           dataSourceIpList(),
+			resourcetype.CloudAccountAWS:                  dataSourceCloudAccountAWS(),
+			resourcetype.CloudAccountGCP:                  dataSourceCloudAccountGCP(),
+			resourcetype.CloudAccountAzure:                dataSourceCloudAccountAzure(),
+			resourcetype.ContinuousCompliancePolicy:       dataSourceContinuousCompliancePolicy(),
+			resourcetype.ContinuousComplianceNotification: dataSourceContinuousComplianceNotification(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

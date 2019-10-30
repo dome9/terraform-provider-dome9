@@ -19,7 +19,7 @@ func TestAccDataSourceCloudAccountAWSBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountAWSPreCheck(t)
+			testAccCloudAccountAWSEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudAccountDestroy,

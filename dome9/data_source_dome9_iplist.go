@@ -48,13 +48,14 @@ func dataSourceIpList() *schema.Resource {
 }
 
 func dataSourceIpListRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*Client)
+	d9Client := meta.(*Client)
+
 	id, err := strconv.ParseInt(d.Get("id").(string), 10, 64)
 	if err != nil {
 		return err
 	}
 
-	ipList, _, err := client.iplist.Get(id)
+	ipList, _, err := d9Client.iplist.Get(id)
 	if err != nil {
 		return err
 	}

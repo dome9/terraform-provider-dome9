@@ -25,28 +25,29 @@ func TestAccResourceContinuousCompliancePolicyBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountAzureEnvVarsPreCheck(t) // Azure account used as an input for policy creation thus this check is required
-			testAccContinuousCompliancePolicyEnvVarsPreCheck(t)
+			testAccCloudAccountAzureEnvVarsPreCheck(t)                // Azure account used as an input for policy creation thus this check is required
+			testAccContinuousComplianceNotificationEnvVarsPreCheck(t) // Continuous compliance notifications IDs used as an input for test policy creation thus this check is required
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckContinuousCompliancePolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName),
+				Config: testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName, getNotificationIDsConfig()),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckContinuousCompliancePolicyExists(policyResourceTypeAndName, &continuousCompliancePolicyResponse),
 					resource.TestCheckResourceAttr(policyResourceTypeAndName, "cloud_account_type", strings.Title(variable.CloudAccountAzureVendor)),
 					resource.TestCheckResourceAttr(policyResourceTypeAndName, "notification_ids.#", "1"),
 				),
 			},
+			{
+				Config: testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName, getUpdateNotificationIDsConfig()),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckContinuousCompliancePolicyExists(policyResourceTypeAndName, &continuousCompliancePolicyResponse),
+					resource.TestCheckResourceAttr(policyResourceTypeAndName, "notification_ids.#", "2"),
+				),
+			},
 		},
 	})
-}
-
-func testAccContinuousCompliancePolicyEnvVarsPreCheck(t *testing.T) {
-	if v := os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId)
-	}
 }
 
 func testAccCheckContinuousCompliancePolicyExists(resource string, cloudAccount *continuous_compliance_policy.ContinuousCompliancePolicyResponse) resource.TestCheckFunc {
@@ -73,9 +74,8 @@ func testAccCheckContinuousCompliancePolicyExists(resource string, cloudAccount 
 
 func testAccCheckContinuousCompliancePolicyDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
-
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.CloudAccountAWS {
+		if rs.Type != resourcetype.ContinuousCompliancePolicy {
 			continue
 		}
 
@@ -86,33 +86,33 @@ func testAccCheckContinuousCompliancePolicyDestroy(s *terraform.State) error {
 		}
 
 		if receivedCloudAccountResponse != nil {
-			return fmt.Errorf("iplist with id %s exists and wasn't destroyed", rs.Primary.ID)
+			return fmt.Errorf("continuous compliance policy with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
 
 	return nil
 }
 
-func testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName string) string {
-	return fmt.Sprintf(`
-resource "%s" "%s" {
-  credentials = {
-    client_id = "%s"
-    client_password = "%s"
-  }
-
-  name = "%s"
-  operation_mode = "%s"
-  subscription_id = "%s"
-  tenant_id = "%s"
+func testAccContinuousComplianceNotificationEnvVarsPreCheck(t *testing.T) {
+	if v := os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId1); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId1)
+	}
+	if v := os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId2); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId2)
+	}
 }
+
+func testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName, NotificationIDsConfig string) string {
+	return fmt.Sprintf(`
+// azure cloud account creation
+%s
 
 // continuous compliance policy creation
 resource "%s" "%s" {
-  cloud_account_id = "${%s.id}"
+  cloud_account_id    = "${%s.id}"
   external_account_id = "${%s.subscription_id}"
-  cloud_account_type = "%s"
-  notification_ids = ["%s"]
+  cloud_account_type  = "%s"
+  notification_ids    = %s
 }
 
 // continuous compliance policy data source
@@ -120,27 +120,28 @@ data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
-		// Azure cloud account resource variable
-		resourcetype.CloudAccountAzure,
-		cloudAccountGeneratedName,
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientId),
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientPassword),
-		variable.CloudAccountAzureCreationResourceName,
-		variable.CloudAccountAzureOperationMode,
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarSubscriptionId),
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId),
+		// Azure cloud account
+		getCloudAccountAzureConfig(cloudAccountGeneratedName, cloudAccountResourceTypeAndName),
 
-		// Continuous Compliance Policy resource
+		// Continuous compliance policy resource variables
 		resourcetype.ContinuousCompliancePolicy,
 		policyGeneratedName,
 		cloudAccountResourceTypeAndName,
 		cloudAccountResourceTypeAndName,
 		strings.Title(variable.CloudAccountAzureVendor),
-		os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId),
+		NotificationIDsConfig,
 
-		// Continuous Compliance Policy data source
+		// Continuous compliance policy data source variables
 		resourcetype.ContinuousCompliancePolicy,
 		policyGeneratedName,
 		policyResourceTypeAndName,
 	)
+}
+
+func getNotificationIDsConfig() string {
+	return fmt.Sprintf("[\"%s\"]", os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId1))
+}
+
+func getUpdateNotificationIDsConfig() string {
+	return fmt.Sprintf("[\"%s\", \"%s\"]", os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId1), os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId2))
 }
