@@ -118,34 +118,45 @@ func testAccCheckCloudAccountAzureExists(resource string, resp *azure.CloudAccou
 
 func testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, resourceName string) string {
 	return fmt.Sprintf(`
-resource "%s" "%s" {
-  credentials = {
-    client_id = "%s"
-    client_password = "%s"
-  }
+// azure cloud account creation
+%s
 
-  name = "%s"
-  operation_mode = "%s"
-  subscription_id = "%s"
-  tenant_id = "%s"
-}
 data "%s" "%s" {
-  account_id = "${%s.id}"
+  id = "${%s.id}"
 }
 `,
-		// resource variable
-		resourcetype.CloudAccountAzure,
-		generatedName,
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientId),
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientPassword),
-		resourceName,
-		variable.CloudAccountAzureOperationMode,
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarSubscriptionId),
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId),
+		// azure cloud account
+		getCloudAccountAzureResourceHCL(generatedName, resourceName),
 
-		// data source variable
+		// data source variables
 		resourcetype.CloudAccountAzure,
 		generatedName,
 		resourceTypeAndName,
+	)
+}
+
+func getCloudAccountAzureResourceHCL(cloudAccountName, generatedAName string) string {
+	return fmt.Sprintf(`
+resource "%s" "%s" {
+  credentials = {
+    client_id       = "%s"
+    client_password = "%s"
+  }
+
+  name            = "%s"
+  operation_mode  = "%s"
+  subscription_id = "%s"
+  tenant_id       = "%s"
+}
+`,
+		// azure cloud account variables
+		resourcetype.CloudAccountAzure,
+		cloudAccountName,
+		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientId),
+		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientPassword),
+		generatedAName,
+		variable.CloudAccountAzureOperationMode,
+		os.Getenv(environmentvariable.CloudAccountAzureEnvVarSubscriptionId),
+		os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId),
 	)
 }

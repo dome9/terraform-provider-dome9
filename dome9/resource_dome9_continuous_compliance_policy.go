@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
@@ -30,8 +31,9 @@ func resourceContinuousCompliancePolicy() *schema.Resource {
 				ForceNew: true,
 			},
 			"cloud_account_type": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringInSlice([]string{"Azure", "Aws", "Google", "Kubernetes"}, false),
 			},
 			"bundle_id": {
 				Type:     schema.TypeInt,
@@ -40,7 +42,8 @@ func resourceContinuousCompliancePolicy() *schema.Resource {
 			"notification_ids": {
 				Type:     schema.TypeList,
 				Required: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				// ForceNew: true,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 		},
 	}
@@ -107,7 +110,6 @@ func resourceContinuousCompliancePolicyDelete(d *schema.ResourceData, meta inter
 	if _, err := d9Client.continuousCompliancePolicy.Delete(d.Id()); err != nil {
 		return err
 	}
-
 	return nil
 }
 

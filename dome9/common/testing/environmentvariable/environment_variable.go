@@ -32,5 +32,6 @@ const (
 
 // Continuous Compliance Policy environment variable
 const (
-	ContinuousCompliancePolicyEnvVarNotificationId = "CONTINUOUS_COMPLIANCE_NOTIFICATION_ID"
+	ContinuousCompliancePolicyEnvVarNotificationId1 = "CONTINUOUS_COMPLIANCE_NOTIFICATION_ID1"
+	ContinuousCompliancePolicyEnvVarNotificationId2 = "CONTINUOUS_COMPLIANCE_NOTIFICATION_ID2"
 )

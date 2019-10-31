@@ -29,7 +29,7 @@ func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountAWSPreCheck(t)
+			testAccCloudAccountAWSEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudAccountDestroy,
@@ -88,7 +88,7 @@ func testAccCheckCloudAccountAWSExists(resource string, cloudAccount *aws.CloudA
 	}
 }
 
-func testAccCloudAccountAWSPreCheck(t *testing.T) {
+func testAccCloudAccountAWSEnvVarsPreCheck(t *testing.T) {
 	if v := os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn); v == "" {
 		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountAWSEnvVarArn)
 	}
@@ -141,7 +141,7 @@ data "%s" "%s" {
 }
 
 `,
-		// resource variable
+		// resource variables
 		resourcetype.CloudAccountAWS,
 		generatedName,
 		resourceName,
@@ -149,7 +149,7 @@ data "%s" "%s" {
 		os.Getenv(environmentvariable.CloudAccountAWSEnvVarSecret),
 		additionalBlock,
 
-		// data source variable
+		// data source variables
 		resourcetype.CloudAccountAWS,
 		generatedName,
 		resourceTypeAndName,

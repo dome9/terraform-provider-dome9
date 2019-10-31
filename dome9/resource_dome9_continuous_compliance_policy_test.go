@@ -2,7 +2,6 @@ package dome9
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"testing"
 
@@ -12,41 +11,50 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
 func TestAccResourceContinuousCompliancePolicyBasic(t *testing.T) {
 	var continuousCompliancePolicyResponse continuous_compliance_policy.ContinuousCompliancePolicyResponse
-	policyResourceTypeAndName, _, policyGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousCompliancePolicy)
-	cloudAccountResourceTypeAndName, _, cloudAccountGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAzure)
+	policyTypeAndName, _, policyGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousCompliancePolicy)
+	azureTypeAndName, _, azureGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAzure)
+	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
+	notificationUpdateTypeAndName, _, notificationUpdateGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
+
+	azureHCL := getCloudAccountAzureResourceHCL(azureGeneratedName, variable.CloudAccountAzureCreationResourceName)
+	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
+	// notificationHCL := getUpdateContinuousCompliancePolicyResourceHCL1(azureHCL, azureTypeAndName, notificationHCL, notificationTypeAndName, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
+	notificationUpdateHCL := getContinuousComplianceNotificationResourceHCL(notificationUpdateGeneratedName, continuousComplianceNotificationUpdateConfig())
+	policyHCL := getContinuousCompliancePolicyResourceHCL(azureHCL, azureTypeAndName, notificationHCL, notificationTypeAndName, policyGeneratedName)
+	updatePolicyHCL := getUpdateContinuousCompliancePolicyResourceHCL(azureHCL, azureTypeAndName, notificationHCL, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
 			testAccCloudAccountAzureEnvVarsPreCheck(t) // Azure account used as an input for policy creation thus this check is required
-			testAccContinuousCompliancePolicyEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckContinuousCompliancePolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName),
+				Config: testAccCheckContinuousCompliancePolicyBasic(policyHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckContinuousCompliancePolicyExists(policyResourceTypeAndName, &continuousCompliancePolicyResponse),
-					resource.TestCheckResourceAttr(policyResourceTypeAndName, "cloud_account_type", strings.Title(variable.CloudAccountAzureVendor)),
-					resource.TestCheckResourceAttr(policyResourceTypeAndName, "notification_ids.#", "1"),
+					testAccCheckContinuousCompliancePolicyExists(policyTypeAndName, &continuousCompliancePolicyResponse),
+					resource.TestCheckResourceAttr(policyTypeAndName, "cloud_account_type", strings.Title(variable.CloudAccountAzureVendor)),
+					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
+				),
+			},
+
+			{
+				Config: testAccCheckContinuousCompliancePolicyBasic(updatePolicyHCL, policyGeneratedName, policyTypeAndName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckContinuousCompliancePolicyExists(policyTypeAndName, &continuousCompliancePolicyResponse),
+					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
 				),
 			},
 		},
 	})
-}
-
-func testAccContinuousCompliancePolicyEnvVarsPreCheck(t *testing.T) {
-	if v := os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId)
-	}
 }
 
 func testAccCheckContinuousCompliancePolicyExists(resource string, cloudAccount *continuous_compliance_policy.ContinuousCompliancePolicyResponse) resource.TestCheckFunc {
@@ -73,9 +81,8 @@ func testAccCheckContinuousCompliancePolicyExists(resource string, cloudAccount 
 
 func testAccCheckContinuousCompliancePolicyDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
-
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.CloudAccountAWS {
+		if rs.Type != resourcetype.ContinuousCompliancePolicy && rs.Type != resourcetype.ContinuousComplianceNotification && rs.Type != resourcetype.CloudAccountAzure {
 			continue
 		}
 
@@ -86,61 +93,95 @@ func testAccCheckContinuousCompliancePolicyDestroy(s *terraform.State) error {
 		}
 
 		if receivedCloudAccountResponse != nil {
-			return fmt.Errorf("iplist with id %s exists and wasn't destroyed", rs.Primary.ID)
+			return fmt.Errorf("continuous compliance policy with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
 
 	return nil
 }
 
-func testAccCheckContinuousCompliancePolicyBasic(policyGeneratedName, cloudAccountGeneratedName, cloudAccountResourceTypeAndName, policyResourceTypeAndName string) string {
+func testAccCheckContinuousCompliancePolicyBasic(policyHCL, policyName, policyTypeAndName string) string {
 	return fmt.Sprintf(`
-resource "%s" "%s" {
-  credentials = {
-    client_id = "%s"
-    client_password = "%s"
-  }
-
-  name = "%s"
-  operation_mode = "%s"
-  subscription_id = "%s"
-  tenant_id = "%s"
-}
-
-// continuous compliance policy creation
-resource "%s" "%s" {
-  cloud_account_id = "${%s.id}"
-  external_account_id = "${%s.subscription_id}"
-  cloud_account_type = "%s"
-  notification_ids = ["%s"]
-}
+// continuous compliance policy resource
+%s
 
 // continuous compliance policy data source
 data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
-		// Azure cloud account resource variable
-		resourcetype.CloudAccountAzure,
-		cloudAccountGeneratedName,
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientId),
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientPassword),
-		variable.CloudAccountAzureCreationResourceName,
-		variable.CloudAccountAzureOperationMode,
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarSubscriptionId),
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId),
-
-		// Continuous Compliance Policy resource
+		// continuous compliance policy resource
+		policyHCL,
+		// Continuous compliance policy data source variables
 		resourcetype.ContinuousCompliancePolicy,
-		policyGeneratedName,
-		cloudAccountResourceTypeAndName,
-		cloudAccountResourceTypeAndName,
+		policyName,
+		policyTypeAndName,
+	)
+}
+
+func getContinuousCompliancePolicyResourceHCL(cloudAccountHCL, cloudAccountTypeAndName, notificationHCL, notificationTypeAndName, policyName string) string {
+	return fmt.Sprintf(`
+// azure cloud account resource
+%s
+
+// continuous compliance notification resource
+%s
+
+// continuous compliance policy creation
+resource "%s" "%s" {
+  cloud_account_id    = "${%s.id}"
+  external_account_id = "${%s.subscription_id}"
+  cloud_account_type  = "%s"
+  notification_ids    = ["${%s.id}"]
+}
+`,
+		// azure cloud account resource
+		cloudAccountHCL,
+
+		// continuous compliance notification resource
+		notificationHCL,
+
+		// Continuous compliance policy resource variables
+		resourcetype.ContinuousCompliancePolicy,
+		policyName,
+		cloudAccountTypeAndName,
+		cloudAccountTypeAndName,
 		strings.Title(variable.CloudAccountAzureVendor),
-		os.Getenv(environmentvariable.ContinuousCompliancePolicyEnvVarNotificationId),
+		notificationTypeAndName,
+	)
+}
 
-		// Continuous Compliance Policy data source
+func getUpdateContinuousCompliancePolicyResourceHCL(cloudAccountHCL, cloudAccountTypeAndName, notificationHCL, updateNotificationTypeAndName, updateNotificationHCL, policyName string) string {
+	return fmt.Sprintf(`
+// azure cloud account resource
+%s
+
+// continuous compliance notification resource
+%s
+
+%s
+
+// continuous compliance policy creation
+resource "%s" "%s" {
+  cloud_account_id    = "${%s.id}"
+  external_account_id = "${%s.subscription_id}"
+  cloud_account_type  = "%s"
+  notification_ids    = ["${%s.id}"]
+}
+`,
+		// azure cloud account resource
+		cloudAccountHCL,
+
+		// continuous compliance notification resource
+		notificationHCL,
+		updateNotificationHCL,
+
+		// Continuous compliance policy resource variables
 		resourcetype.ContinuousCompliancePolicy,
-		policyGeneratedName,
-		policyResourceTypeAndName,
+		policyName,
+		cloudAccountTypeAndName,
+		cloudAccountTypeAndName,
+		strings.Title(variable.CloudAccountAzureVendor),
+		updateNotificationTypeAndName,
 	)
 }

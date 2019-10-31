@@ -119,13 +119,13 @@ data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
-		// resource variable
+		// resource variables
 		resourcetype.IPList,
 		generatedName,
 		variable.IPListCreationResourceName,
 		description,
 
-		// data source variable
+		// data source variables
 		resourcetype.IPList,
 		generatedName,
 		resourceTypeAndName,
