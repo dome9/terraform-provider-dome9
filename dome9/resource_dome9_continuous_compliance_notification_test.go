@@ -17,7 +17,7 @@ import (
 
 func TestAccResourceContinuousComplianceNotificationBasic(t *testing.T) {
 	var continuousComplianceNotificationResponse continuous_compliance_notification.ContinuousComplianceNotificationResponse
-	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
+	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -27,26 +27,26 @@ func TestAccResourceContinuousComplianceNotificationBasic(t *testing.T) {
 		CheckDestroy: testAccCheckContinuousComplianceNotificationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckContinuousComplianceNotificationBasic(resourceTypeAndName, generatedName, continuousComplianceNotificationConfig()),
+				Config: testAccCheckContinuousComplianceNotificationBasic(notificationTypeAndName, notificationGeneratedName, continuousComplianceNotificationConfig()),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckContinuousComplianceNotificationExists(resourceTypeAndName, &continuousComplianceNotificationResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.ContinuousComplianceNotificationName),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "description", variable.ContinuousComplianceNotificationDescription),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationAlertsConsole)),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "scheduled_report.#", "1"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "change_detection.#", "1"),
+					testAccCheckContinuousComplianceNotificationExists(notificationTypeAndName, &continuousComplianceNotificationResponse),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationName),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "description", variable.ContinuousComplianceNotificationDescription),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationAlertsConsole)),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "scheduled_report.#", "1"),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "change_detection.#", "1"),
 				),
 			},
 			{
 				// update name test
-				Config: testAccCheckContinuousComplianceNotificationBasic(resourceTypeAndName, generatedName, continuousComplianceNotificationUpdateConfig()),
+				Config: testAccCheckContinuousComplianceNotificationBasic(notificationTypeAndName, notificationGeneratedName, continuousComplianceNotificationUpdateConfig()),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckContinuousComplianceNotificationExists(resourceTypeAndName, &continuousComplianceNotificationResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.ContinuousComplianceNotificationUpdateName),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "description", variable.ContinuousComplianceNotificationUpdateDescription),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationUpdateAlertsConsole)),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "scheduled_report.#", "0"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "change_detection.#", "1"),
+					testAccCheckContinuousComplianceNotificationExists(notificationTypeAndName, &continuousComplianceNotificationResponse),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationUpdateName),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "description", variable.ContinuousComplianceNotificationUpdateDescription),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationUpdateAlertsConsole)),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "scheduled_report.#", "0"),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "change_detection.#", "1"),
 				),
 			},
 		},
@@ -99,6 +99,25 @@ func testAccCheckContinuousComplianceNotificationDestroy(s *terraform.State) err
 
 func testAccCheckContinuousComplianceNotificationBasic(resourceTypeAndName, generatedName, additionalBlock string) string {
 	return fmt.Sprintf(`
+// continuous compliance notification resource
+%s
+
+data "%s" "%s" {
+  id = "${%s.id}"
+}
+`,
+		// continuous compliance notification resource
+		getContinuousComplianceNotificationResourceHCL(generatedName, additionalBlock),
+
+		// data source variables
+		resourcetype.ContinuousComplianceNotification,
+		generatedName,
+		resourceTypeAndName,
+	)
+}
+
+func getContinuousComplianceNotificationResourceHCL(generatedName, additionalBlock string) string {
+	return fmt.Sprintf(`
 // continuous compliance notification creation
 resource "%s" "%s" {
   %s
@@ -120,10 +139,6 @@ resource "%s" "%s" {
     }
   }
 }
-
-data "%s" "%s" {
-  id = "${%s.id}"
-}
 `,
 		// resource variables
 		resourcetype.ContinuousComplianceNotification,
@@ -142,14 +157,8 @@ data "%s" "%s" {
 
 		variable.ContinuousComplianceNotificationRecipient,
 		variable.ContinuousComplianceNotificationJsonWithFullEntity,
-
-		// data source variables
-		resourcetype.ContinuousComplianceNotification,
-		generatedName,
-		resourceTypeAndName,
 	)
 }
-
 func continuousComplianceNotificationConfig() string {
 	return fmt.Sprintf(`
 name           = "%s"

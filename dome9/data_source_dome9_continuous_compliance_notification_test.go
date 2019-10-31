@@ -9,7 +9,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 )
 
-func TestAccDataSourceNotificationBasic(t *testing.T) {
+func TestAccDataSourceContinuousComplianceNotificationBasic(t *testing.T) {
 	resourceTypeAndName, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 
 	resource.Test(t, resource.TestCase{

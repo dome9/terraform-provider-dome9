@@ -42,7 +42,8 @@ func resourceContinuousCompliancePolicy() *schema.Resource {
 			"notification_ids": {
 				Type:     schema.TypeList,
 				Required: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				// ForceNew: true,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 		},
 	}
@@ -109,7 +110,6 @@ func resourceContinuousCompliancePolicyDelete(d *schema.ResourceData, meta inter
 	if _, err := d9Client.continuousCompliancePolicy.Delete(d.Id()); err != nil {
 		return err
 	}
-
 	return nil
 }
 

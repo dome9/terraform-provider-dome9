@@ -370,7 +370,7 @@ func resourceContinuousComplianceNotificationDelete(d *schema.ResourceData, meta
 	if _, err := d9Client.continuousComplianceNotification.Delete(d.Id()); err != nil {
 		return err
 	}
-
+	
 	return nil
 }
 

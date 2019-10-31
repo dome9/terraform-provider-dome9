@@ -126,7 +126,7 @@ data "%s" "%s" {
 }
 `,
 		// azure cloud account
-		getCloudAccountAzureConfig(generatedName, resourceName),
+		getCloudAccountAzureResourceHCL(generatedName, resourceName),
 
 		// data source variables
 		resourcetype.CloudAccountAzure,
@@ -135,7 +135,7 @@ data "%s" "%s" {
 	)
 }
 
-func getCloudAccountAzureConfig(generatedName, resourceName string) string {
+func getCloudAccountAzureResourceHCL(cloudAccountName, generatedAName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
   credentials = {
@@ -151,10 +151,10 @@ resource "%s" "%s" {
 `,
 		// azure cloud account variables
 		resourcetype.CloudAccountAzure,
-		generatedName,
+		cloudAccountName,
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientId),
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientPassword),
-		resourceName,
+		generatedAName,
 		variable.CloudAccountAzureOperationMode,
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarSubscriptionId),
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId),
