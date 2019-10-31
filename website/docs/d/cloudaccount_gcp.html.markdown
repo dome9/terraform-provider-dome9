@@ -1,14 +1,14 @@
 ---
 layout: "dome9"
-page_title: "Check Point Cloud Guard Dome9: dome9_cloudaccount_gcp"
+page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_gcp"
 sidebar_current: "docs-datasource-dome9-cloudaccount-gcp"
 description: |-
-  Get information on GCP cloud account.
+  Get information about a GCP cloud account onboarded to Dome9.
 ---
 
 # Data Source: dome9_cloudaccount_gcp
 
-Use this data source to get information about GCP cloud account.
+Use this data source to get information about a GCP cloud account onboarded to Dome9.
 
 ## Example Usage
 
@@ -22,13 +22,13 @@ data "dome9_cloudaccount_gcp" "test" {
 
 The following arguments are supported:
 
-* `account_id` - (Required) Account id in Dome9.
+* `account_id` - (Required) The Dome9  id for the GCP account.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `name` - Google account name in Dome9.
+* `name` - GCP account name in Dome9.
 * `project_id` - the Google project id (that will be onboarded).
 * `creation_date` - creation date for project in Google.
 * `organizational_unit_id` - Organizational unit id.

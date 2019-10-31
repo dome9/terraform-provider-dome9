@@ -1,14 +1,14 @@
 ---
 layout: "dome9"
-page_title: "Check Point Cloud Guard Dome9: dome9_iplist"
+page_title: "Check Point CloudGuard Dome9: dome9_iplist"
 sidebar_current: "docs-resource-dome9-iplist"
 description: |-
-  Manages IP list.
+  Create IP lists in Dome9
 ---
 
 # dome9_iplist
 
-The IpList resource has methods to create and manage IP lists in Dome9. IP lists are groups of IP addresses (typically in customer cloud environments), on which common actions are applied. For example, a Security Group could be applied to a list, instead of applying it to each IP address in the list individually.
+This resource is used  to create and manage IP lists in Dome9. IP lists are groups of IP addresses (typically in customer cloud environments), on which common actions are applied. For example, a Security Group could be applied to a list, instead of applying it to each IP address in the list individually.
 
 ## Example Usage
 
@@ -37,24 +37,26 @@ resource "dome9_iplist" "iplist" {
 
 The following arguments are supported:
 
-* `name` - (Required) The IP list name.
-* `description` - (Optional) IP list description, defaults to empty string.
-* `items` - (Optional) Items for IP list, defaults to empty list.
+* `name` - (Required) The name of the IP list in Dome9
+* `description` - (Optional) A description of the list (what it represents); defaults to empty string
+* `items` - (Optional) the individual IP addresses for the list; defaults to empty list
 
 ### Items 
 
 The `items` supports the following arguments:
     
-* `ip` - (Optional) IP.
-* `comment` - (Optional) Comment.
+* `ip` - (Optional) IP address
+* `comment` - (Optional) Comment
 
 ## Attributes Reference
 
-* `id` - IP list Id.
+* `id` - IP list Id
 
 ## Import
 
-IP list can be imported; use `<IP LIST ID>` as the import ID. For example:
+IP list can be imported; use `<IP LIST ID>` as the import ID. 
+
+For example:
 
 ```shell
 terraform import dome9_iplist.test 00000
