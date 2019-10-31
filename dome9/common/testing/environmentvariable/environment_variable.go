@@ -29,9 +29,3 @@ const (
 	CloudAccountGCPEnvVarClientId          = "CLIENT_ID"
 	CloudAccountGCPEnvVarClientX509CertUrl = "CLIENT_X509_CERT_URL"
 )
-
-// Continuous Compliance Policy environment variable
-const (
-	ContinuousCompliancePolicyEnvVarNotificationId1 = "CONTINUOUS_COMPLIANCE_NOTIFICATION_ID1"
-	ContinuousCompliancePolicyEnvVarNotificationId2 = "CONTINUOUS_COMPLIANCE_NOTIFICATION_ID2"
-)
