@@ -100,6 +100,3 @@ this data is passed using exported environment variables, your environment must 
 - `CLIENT_EMAIL=;`
 - `CLIENT_ID=;`
 - `CLIENT_X509_CERT_URL=;`
-
-### Continuous Compliance Policy environment variables:
-- `CONTINUOUS_COMPLIANCE_NOTIFICATION_ID=;`
