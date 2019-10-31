@@ -70,8 +70,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dimchansky/utfbom v1.0.0/go.mod h1:rO41eb7gLfo8SF1jd9F8HplJm1Fewwi4mQvIirEdv+8=
 github.com/dnaeon/go-vcr v0.0.0-20180920040454-5637cf3d8a31/go.mod h1:aBB1+wY4s93YsC3HHjMBMrwTj2R9FHDzUr9KyGc8n1E=
-github.com/dome9/dome9-sdk-go v1.2.3 h1:7LyQpKnuJZv7BoIbRnz0z4MGqZSkDPhTYWRgsWfFDWo=
-github.com/dome9/dome9-sdk-go v1.2.3/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
+github.com/dome9/dome9-sdk-go v1.2.4 h1:McRer7kD4TmG0ktIeAA2khe2SdA8lltjfSnfxqDyfSo=
+github.com/dome9/dome9-sdk-go v1.2.4/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
 github.com/dylanmei/iso8601 v0.1.0/go.mod h1:w9KhXSgIyROl1DefbMYIE7UVSIvELTbMrCfx+QkYnoQ=
 github.com/dylanmei/winrmtest v0.0.0-20190225150635-99b7fe2fddf1/go.mod h1:lcy9/2gH1jn/VCLouHA6tOEwLoNVd4GW6zhuKLmHC2Y=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
