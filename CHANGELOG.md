@@ -4,7 +4,7 @@
 
 FEATURES:
 
-* **New Resource:** `dome9_continuous_compliance_notification`
-* **New Data Source:** `dome9_continuous_compliance_notification`
+* **New Resource:** `dome9_continuous_compliance_notification` [GH-2]
+* **New Data Source:** `dome9_continuous_compliance_notification`[GH-2]
 
 ## 1.11.1 (October 28, 2019)
