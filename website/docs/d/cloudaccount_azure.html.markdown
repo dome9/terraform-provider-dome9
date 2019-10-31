@@ -1,14 +1,14 @@
 ---
 layout: "dome9"
-page_title: "Check Point Cloud Guard Dome9: dome9_cloudaccount_azure"
+page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_azure"
 sidebar_current: "docs-datasource-cloudaccount-azure"
 description: |-
-  Get information on Azure cloud account.
+  Get information about Azure cloud account onboarded to Dome9.
 ---
 
 # Data Source: dome9_cloudaccount_azure
 
-Use this data source to get information about Azure cloud account.
+Use this data source to get information about an Azure cloud account onboarded to Dome9.
 
 ## Example Usage
 
@@ -22,7 +22,7 @@ data "dome9_cloudaccount_azure" "test" {
 
 The following arguments are supported:
 
-* `account_id` - (Required) Account id in Dome9.
+* `account_id` - (Required) The Dome9  id for the Azure account.
 
 ## Attributes Reference
 

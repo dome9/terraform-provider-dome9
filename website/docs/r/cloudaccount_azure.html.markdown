@@ -1,14 +1,14 @@
 ---
 layout: "dome9"
-page_title: "Check Point Cloud Guard Dome9: dome9_cloudaccount_azure"
+page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_azure"
 sidebar_current: "docs-resource-dome9-cloudaccount-azure"
 description: |-
-  Manages Azure cloud account.
+  Onboard Azure cloud account
 ---
 
 # dome9_cloudaccount_azure
 
-The AzureCloudAccounts resource has methods to onboard Azure cloud accounts to Dome9 and to manage some of their settings.
+This resource is used to onboard Azure cloud accounts to Dome9. This is the first and pre-requisite step in order to apply  Dome9 features, such as compliance testing, on the account.
 
 ## Example Usage
 
@@ -32,31 +32,33 @@ resource "dome9_cloudaccount_azure" "test" {
 
 The following arguments are supported:
 
-* `name` - (Required) The Azure account number.
-* `subscription_id` - (Required) Azure subscription id for account.
-* `tenant_id` - (Required) Azure tenant id.
-* `operation_mode` - (Required) Dome9 operation mode for the Azure account (Read-Only or Managed).
-* `credentials` - (Required) Azure account credentials.
-* `organizational_unit_id` - Organizational unit id, will apply on update state.
+* `name` - (Required) The name of the Azure account in Dome9
+* `subscription_id` - (Required) The Azure subscription id for account
+* `tenant_id` - (Required) The Azure tenant id
+* `operation_mode` - (Required) Dome9 operation mode for the Azure account ("Read-Only" or "Managed")
+* `credentials` - (Required) Azure account credentials
+* `organizational_unit_id` - Organizational unit id, will apply on update state
 
 ### Credentials
 
 The `credentials` block supports: 
 
-* `client_id` - (Required) Azure account id.
-* `client_password` - (Required) Password for account.
+* `client_id` - (Required) Azure account id
+* `client_password` - (Required) Password for account
 
 ## Attributes Reference
 
-* `id` - The ID of the Azure cloud account.
-* `vendor` - The cloud provider (Azure).
-* `creation_date` - Date Azure account was onboarded to a Dome9 account.
-* `organizational_unit_path` - Organizational unit path.
-* `organizational_unit_name` - Organizational unit name.
+* `id` - The ID of the Azure cloud account
+* `vendor` - The cloud provider ("Azure")
+* `creation_date` - Date the account was onboarded to Dome9
+* `organizational_unit_path` - Organizational unit path
+* `organizational_unit_name` - Organizational unit name
 
 ## Import
 
-Azure cloud account can be imported; use `<Azure CLOUD ACCOUNT ID>` as the import ID. For example:
+Azure cloud account can be imported; use `<Azure CLOUD ACCOUNT ID>` as the import ID. 
+
+For example:
 
 ```shell
 terraform import dome9_cloudaccount_Azure.test 00000000-0000-0000-0000-000000000000

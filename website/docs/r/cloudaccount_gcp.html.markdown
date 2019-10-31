@@ -1,14 +1,14 @@
 ---
 layout: "dome9"
-page_title: "Check Point Cloud Guard Dome9: dome9_cloudaccount_gcp"
+page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_gcp"
 sidebar_current: "docs-resource-dome9-cloudaccount-gcp"
 description: |-
-  Manages GCP cloud account.
+  Onboard GCP cloud account
 ---
 
 # dome9_cloudaccount_gcp
 
-The GoogleCloudAccount resource has methods to onboard Google cloud accounts to a Dome9 account, and to get details for a Google accounts Dome9.
+This resource is used to onboard GCP cloud accounts to Dome9. This is the first and pre-requisite step in order to apply  Dome9 features, such as compliance testing, on the account.
 
 ## Example Usage
 
@@ -41,11 +41,11 @@ resource "dome9_cloudaccount_gcp" "gcp_ca" {
 
 The following arguments are supported:
 
-* `name` - (Required) Google account name in Dome9.
-* `gsuite_user` - (Optional) The gsuite user.
-* `service_account_credentials` - (Required) The service account JSON block (from the GCP console).
-* `domain_name` - (Optional) The domain name.
-* `organizational_unit_id` - (Optional) Organizational unit id, Will apply on update state.
+* `name` - (Required) Google account name in Dome9
+* `gsuite_user` - (Optional) The gsuite user
+* `service_account_credentials` - (Required) The service account JSON block (from the GCP console)
+* `domain_name` - (Optional) The domain name
+* `organizational_unit_id` - (Optional) Organizational unit id, Will apply on update state
 
 ### Service Account Credentials
 
@@ -64,7 +64,7 @@ The `service_account_credentials` block supports:
 
 ## Attributes Reference
 
-* `id` - The ID of the GCP cloud account.
+* `id` - The ID of the GCP cloud account
 * `creation_date` - creation date for project in Google.
 * `vendor` - The cloud provider (gcp).
 * `organizational_unit_path` - Organizational unit path.
@@ -72,7 +72,9 @@ The `service_account_credentials` block supports:
 
 ## Import
 
-GCP cloud account can be imported; use `<GCP CLOUD ACCOUNT ID>` as the import ID. For example:
+GCP cloud account can be imported; use `<GCP CLOUD ACCOUNT ID>` as the import ID. 
+
+For example:
 
 ```shell
 terraform import dome9_cloudaccount_gcp.test 00000000-0000-0000-0000-000000000000
