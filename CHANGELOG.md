@@ -1,4 +1,4 @@
-## 1.11.2 (Unreleased)
+## 1.12.0 (Unreleased)
 
 FEATURES:
 
