@@ -1,4 +1,8 @@
 ## 1.12.1 (Unreleased)
+
+IMPROVEMENTS:
+* Documentation addition for `dome9_continuous_compliance_notification` resource and data source.
+
 ## 1.12.0 (November 01, 2019)
 
 FEATURES:
