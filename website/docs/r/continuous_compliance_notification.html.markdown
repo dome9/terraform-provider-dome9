@@ -53,7 +53,7 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 * `alerts_console` - (Optional) send  findings (also) to the Dome9 web app alerts console (Boolean); default is False.
 
 * `scheduled_report` - Scheduled email report notification  block:
-    * `email_sending_state` - send schedule report of findings by email; can be  "Enabled" or "Disabled.
+    * `email_sending_state` - send schedule report of findings by email; can be  "Enabled" or "Disabled".
 	
 		if `email_sending_state` is Enabled, the following must be included:
 	
@@ -86,7 +86,7 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 			* `sns_topic_arn` - SNS topic ARN
 			* `sns_output_format` - SNS output format; can be  "JsonWithFullEntity", "JsonWithBasicEntity", or "PlainText".
     
-	* `external_ticket_creating_state` - send each finding to an external ticketing system; can be  "Enabled" or "Disabled.
+	* `external_ticket_creating_state` - send each finding to an external ticketing system; can be  "Enabled" or "Disabled".
     
 		if `external_ticket_creating_state`  is Enabled, the following must be included:
 	
@@ -100,7 +100,7 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 			* `issue_type` - issue type (Jira)
 	
    
-    * `webhook_integration_state` - send findings to an HTTP endpoint (webhook); can be  "Enabled" or "Disabled.
+    * `webhook_integration_state` - send findings to an HTTP endpoint (webhook); can be  "Enabled" or "Disabled".
 	
 		if `webhook_integration_state`  is Enabled, the following must be included:
 		
@@ -112,7 +112,7 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 			* `password` - password in endpoint system
 			* `format_type` - format for JSON block for finding; can be "Basic" or "ServiceNow"
 		
-	 * `aws_security_hub_integration_state` - send findings to AWS Secure Hub; can be "Enabled" or "Disabled.
+	 * `aws_security_hub_integration_state` - send findings to AWS Secure Hub; can be "Enabled" or "Disabled".
 	
 		if `aws_security_hub_integration_state`  is Enabled, the following must be included:
 		
@@ -120,7 +120,7 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 			* `external_account_id` - (Required) external account id
 			* `region` - (Required) AWS region	
 		
-`gcp_security_command_center_integration` is a Change Detection option
+`gcp_security_command_center_integration` is a change_detection option
 
 * `gcp_security_command_center_integration` - GCP security command center details
     * `state` - send findings to the GCP Security Command Center; can be "Enabled" or "Disabled" 
