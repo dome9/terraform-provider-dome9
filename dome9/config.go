@@ -12,6 +12,11 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/iplist"
 )
 
+func init() {
+	// remove timestamp from Dome9 provider logger, use the timestamp from the default terraform logger
+	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
+}
+
 type Client struct {
 	iplist                           iplist.Service
 	cloudaccountAWS                  aws.Service
