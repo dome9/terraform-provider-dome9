@@ -1,10 +1,14 @@
 ## 1.12.1 (Unreleased)
+
+IMPROVEMENTS:
+* Documentation addition for `dome9_continuous_compliance_notification` resource and data source ([#7](https://github.com/terraform-providers/terraform-provider-dome9/issues/7))
+
 ## 1.12.0 (November 01, 2019)
 
 FEATURES:
 
-* **New Resource:** `dome9_continuous_compliance_notification` ([#2](https://github.com/terraform-providers/terraform-provider-github/issues/2))
-* **New Data Source:** `dome9_continuous_compliance_notification`([#2](https://github.com/terraform-providers/terraform-provider-github/issues/2))
+* **New Resource:** `dome9_continuous_compliance_notification` ([#2](https://github.com/terraform-providers/terraform-provider-dome9/issues/2))
+* **New Data Source:** `dome9_continuous_compliance_notification`([#2](https://github.com/terraform-providers/terraform-provider-dome9/issues/2))
 
 BUG FIXES:
 
