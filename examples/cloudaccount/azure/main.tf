@@ -1,8 +1,3 @@
-provider "dome9" {
-  dome9_access_id  = "--"
-  dome9_secret_key = "--"
-}
-
 resource "dome9_cloudaccount_azure" "azure_ca" {
   credentials = {
     client_id       = "CLIENT_ID"

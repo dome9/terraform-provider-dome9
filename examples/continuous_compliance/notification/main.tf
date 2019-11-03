@@ -1,8 +1,3 @@
-provider "dome9" {
-  dome9_access_id  = "--"
-  dome9_secret_key = "--"
-}
-
 resource "dome9_continuouscompliance_notification" "test_notification" {
   name           = "NOTIFICATION_NAME"
   description    = "NOTIFICATION_DESCRIPTION"
