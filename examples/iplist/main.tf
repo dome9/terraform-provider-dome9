@@ -1,8 +1,3 @@
-provider "dome9" {
-  dome9_access_id  = ""
-  dome9_secret_key = ""
-}
-
 resource "dome9_iplist" "iplist" {
   name        = "ipList test name"
   description = "this is the descrption of my iplist"
