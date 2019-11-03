@@ -3,6 +3,7 @@
 IMPROVEMENTS:
 * Documentation addition for `dome9_continuous_compliance_notification` resource and data source ([#7](https://github.com/terraform-providers/terraform-provider-dome9/issues/7))
 * Remove double timestamp from logger ([#11](https://github.com/terraform-providers/terraform-provider-dome9/issues/11))
+* Update examples to be more understandable and follow same convention ([#12](https://github.com/terraform-providers/terraform-provider-dome9/issues/12))
 
 ## 1.12.0 (November 01, 2019)
 
