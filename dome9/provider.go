@@ -1,8 +1,6 @@
 package dome9
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 
@@ -22,6 +20,7 @@ func Provider() terraform.ResourceProvider {
 			providerconst.ProviderSecretKey: {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc(providerconst.ProviderSecretKeyEnvVariable, nil),
 				Description: "dome9 api secret",
 			},
@@ -64,6 +63,5 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		BaseURL:   d.Get(providerconst.ProviderBaseURL).(string),
 	}
 
-	log.Println("initializing dome9 client with config:", config)
 	return config.Client()
 }
