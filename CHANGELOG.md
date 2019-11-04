@@ -1,3 +1,4 @@
+## 1.12.2 (Unreleased)
 ## 1.12.1 (November 04, 2019)
 
 IMPROVEMENTS:
