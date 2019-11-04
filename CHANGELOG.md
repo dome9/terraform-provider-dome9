@@ -1,4 +1,4 @@
-## 1.12.1 (Unreleased)
+## 1.12.1 (November 04, 2019)
 
 IMPROVEMENTS:
 * Documentation addition for `dome9_continuous_compliance_notification` resource and data source ([#14](https://github.com/terraform-providers/terraform-provider-dome9/issues/7))
