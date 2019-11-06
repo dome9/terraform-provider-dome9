@@ -6,12 +6,15 @@ WEBSITE_REPO=github.com/hashicorp/terraform-website
 
 default: build
 
-tools:
-	GO111MODULE=off go get -u github.com/client9/misspell/cmd/misspell
-	GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-
 build: fmtcheck
 	go install
+
+tools:
+	@echo "==> installing required tooling..."
+	@sh "$(CURDIR)/scripts/gogetcookie.sh"
+	GO111MODULE=off go get -u github.com/client9/misspell/cmd/misspell
+	GO111MODULE=off go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
+	GO111MODULE=off go get -u github.com/bflad/tfproviderlint/cmd/tfproviderlint
 
 errcheck:
 	@sh -c "'$(CURDIR)/scripts/errcheck.sh'"
@@ -26,6 +29,31 @@ fmtcheck:
 lint:
 	@echo "==> Checking source code against linters..."
 	golangci-lint run  --timeout=5m ./$(PKG_NAME)/...
+
+tflint:
+	@echo "==> Checking source code against terraform provider linters..."
+	@tfproviderlint \
+		-c 1 \
+		-AT001 \
+		-AT002 \
+		-S001 \
+		-S002 \
+		-S003 \
+		-S004 \
+		-S005 \
+		-S007 \
+		-S008 \
+		-S009 \
+		-S010 \
+		-S011 \
+		-S012 \
+		-S013 \
+		-S014 \
+		-S015 \
+		-S016 \
+		-S017 \
+		-S019 \
+		./$(PKG_NAME)
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1
