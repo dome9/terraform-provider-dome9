@@ -56,7 +56,7 @@ func dataSourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta inter
 	_ = d.Set("external_account_id", resp.ExternalAccountID)
 	_ = d.Set("cloud_account_type", resp.CloudAccountType)
 	_ = d.Set("bundle_id", resp.BundleID)
-	if err := d.Set("notification_ids", flattenNotificationIDs(resp)); err != nil {
+	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
 		return err
 	}
 

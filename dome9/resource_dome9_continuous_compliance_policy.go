@@ -84,7 +84,7 @@ func resourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("external_account_id", resp.ExternalAccountID)
 	_ = d.Set("cloud_account_type", resp.CloudAccountType)
 	_ = d.Set("bundle_id", resp.BundleID)
-	if err := d.Set("notification_ids", flattenNotificationIDs(resp)); err != nil {
+	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
 		return err
 	}
 
@@ -131,13 +131,4 @@ func expandContinuousCompliancePolicyRequest(d *schema.ResourceData) continuous_
 		NotificationIds:   expandNotificationIDs(d, "notification_ids"),
 		CloudAccountType:  d.Get("cloud_account_type").(string),
 	}
-}
-
-func flattenNotificationIDs(resp *continuous_compliance_policy.ContinuousCompliancePolicyResponse) []string {
-	nIDs := make([]string, len(resp.NotificationIds))
-	for i, nID := range resp.NotificationIds {
-		nIDs[i] = nID
-	}
-
-	return nIDs
 }
