@@ -596,19 +596,10 @@ func flattenScheduleData(respScheduleData *continuous_compliance_notification.Sc
 	m := map[string]interface{}{
 		"cron_expression": respScheduleData.CronExpression,
 		"type":            respScheduleData.Type,
-		"recipients":      flattenRecipients(respScheduleData.Recipients),
+		"recipients":      respScheduleData.Recipients,
 	}
 
 	return []interface{}{m}
-}
-
-func flattenRecipients(generalRecipients []string) []string {
-	recipients := make([]string, len(generalRecipients))
-	for i, val := range generalRecipients {
-		recipients[i] = val
-	}
-
-	return recipients
 }
 
 func flattenChangeDetection(respChangeDetection *continuous_compliance_notification.ChangeDetection) []interface{} {
@@ -695,7 +686,7 @@ func flattenSnsData(respSNSData *continuous_compliance_notification.SNSData) []i
 
 func flattenEmailData(respEmailData *continuous_compliance_notification.EmailData) []interface{} {
 	m := map[string]interface{}{
-		"recipients": flattenRecipients(respEmailData.Recipients),
+		"recipients": respEmailData.Recipients,
 	}
 
 	return []interface{}{m}
@@ -703,7 +694,7 @@ func flattenEmailData(respEmailData *continuous_compliance_notification.EmailDat
 
 func flattenEmailPerFindingData(respEmailPerFindingData *continuous_compliance_notification.EmailPerFindingData) []interface{} {
 	m := map[string]interface{}{
-		"recipients":                 flattenRecipients(respEmailPerFindingData.Recipients),
+		"recipients":                 respEmailPerFindingData.Recipients,
 		"notification_output_format": respEmailPerFindingData.NotificationOutputFormat,
 	}
 
