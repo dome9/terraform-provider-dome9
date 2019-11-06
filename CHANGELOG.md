@@ -1,4 +1,13 @@
 ## 1.12.2 (Unreleased)
+
+IMPROVEMENTS:
+* .travis.yml: Add tflint process ([#22](https://github.com/terraform-providers/terraform-provider-dome9/issues/22))
+
+BUG FIXES:
+* Don't print API secret key when provider is configured. API secret key now marked as sensitive in schema ([#18](https://github.com/terraform-providers/terraform-provider-dome9/issues/18))
+* Removed linting issues ([#21](https://github.com/terraform-providers/terraform-provider-dome9/issues/21))
+* .travis.yml now runs with go 1.13.x ([#22](https://github.com/terraform-providers/terraform-provider-dome9/issues/22))
+
 ## 1.12.1 (November 04, 2019)
 
 IMPROVEMENTS:
