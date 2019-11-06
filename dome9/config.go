@@ -33,9 +33,7 @@ type Config struct {
 }
 
 func (c *Config) Client() (*Client, error) {
-
 	config, err := dome9.NewConfig(c.AccessID, c.SecretKey, c.BaseURL)
-
 	if err != nil {
 		return nil, err
 	}
@@ -49,6 +47,6 @@ func (c *Config) Client() (*Client, error) {
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
 	}
 
-	log.Println("initialized client")
+	log.Println("[INFO] initialized Dome9 client")
 	return client, nil
 }
