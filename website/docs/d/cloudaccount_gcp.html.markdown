@@ -14,7 +14,7 @@ Use this data source to get information about a GCP cloud account onboarded to D
 
 ```hcl
 data "dome9_cloudaccount_gcp" "test" {
-  account_id         = "my-dome9-id"
+  id = "d9-gcp-cloud-account-id"
 }
 ```
 
@@ -22,7 +22,7 @@ data "dome9_cloudaccount_gcp" "test" {
 
 The following arguments are supported:
 
-* `account_id` - (Required) The Dome9  id for the GCP account.
+* `id` - (Required) The Dome9  id for the GCP account.
 
 ## Attributes Reference
 

@@ -14,7 +14,7 @@ Use this data source to get information about an IP list in Dome9.
 
 ```hcl
 data "dome9_iplist" "test" {
-  id        = "IP List Id"
+  id = "d9-ip-list-id"
 }
 
 ```

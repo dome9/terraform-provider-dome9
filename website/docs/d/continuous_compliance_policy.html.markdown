@@ -14,7 +14,7 @@ Use this data source to get information about a Dome9 continuous compliance poli
 
 ```hcl
 data "dome9_continuous_compliance_policy" "test" {
-  id = "${%s.id}"
+  id = "d9-continuous-compliance-policy-id"
 }
 ```
 

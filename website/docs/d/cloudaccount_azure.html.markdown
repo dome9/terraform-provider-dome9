@@ -14,7 +14,7 @@ Use this data source to get information about an Azure cloud account onboarded t
 
 ```hcl
 data "dome9_cloudaccount_azure" "test" {
-  account_id         = "my-dome9-id"
+  id = "d9-azure-cloud-account-id"
 }
 ```
 
@@ -22,7 +22,7 @@ data "dome9_cloudaccount_azure" "test" {
 
 The following arguments are supported:
 
-* `account_id` - (Required) The Dome9  id for the Azure account.
+* `id` - (Required) The Dome9 id for the Azure account.
 
 ## Attributes Reference
 
