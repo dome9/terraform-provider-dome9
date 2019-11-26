@@ -46,5 +46,5 @@ The policy can be imported; use `<POLICY ID>` as the import ID.
 For example:
 
 ```shell
-terraform import dome9_continuouscompliance_policy.test 00000000-0000-0000-0000-000000000000
+terraform import dome9_continuous_compliance_policy.test 00000000-0000-0000-0000-000000000000
 ```
