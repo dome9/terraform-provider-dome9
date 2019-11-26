@@ -1,4 +1,9 @@
-## 1.12.2 (Unreleased)
+## 1.13.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** `dome9_rule_set` ([#28](https://github.com/terraform-providers/terraform-provider-dome9/pull/28))
+* **New Data Source:** `dome9_rule_set`([#28](https://github.com/terraform-providers/terraform-provider-dome9/pull/28))
 
 IMPROVEMENTS:
 * .travis.yml: Add tflint process ([#22](https://github.com/terraform-providers/terraform-provider-dome9/issues/22))
