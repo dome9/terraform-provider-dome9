@@ -14,7 +14,7 @@ Use this data source to get information about a Dome9 continuous compliance noti
 
 ```hcl
 data "dome9_continuous_compliance_notification" "test" {
-  id = "${%s.id}"
+  id = "d9-continuous-compliance-notification-id"
 }
 ```
 

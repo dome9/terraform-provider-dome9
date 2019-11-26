@@ -16,11 +16,7 @@ resource "dome9_cloudaccount_gcp" "gcp_ca" {
 }
 
 data "dome9_cloudaccount_gcp" "gcp_ds" {
-  account_id = "ACOUNT_ID"
-}
-
-output "get_account_id" {
-  value = "${data.dome9_cloudaccount_gcp.gcp_ds.account_id}"
+  id = "D9_CLOUD_ACOUNT_ID"
 }
 
 output "get_name" {

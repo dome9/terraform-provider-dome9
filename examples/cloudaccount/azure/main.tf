@@ -11,11 +11,7 @@ resource "dome9_cloudaccount_azure" "azure_ca" {
 }
 
 data "dome9_cloudaccount_azure" "azure_ds" {
-  account_id = "ACCOUNT_ID"
-}
-
-output "get_account_id" {
-  value = "${data.dome9_cloudaccount_azure.azure_ds.account_id}"
+  id = "D9_CLOUD_ACCOUNT_ID"
 }
 
 output "get_name" {
