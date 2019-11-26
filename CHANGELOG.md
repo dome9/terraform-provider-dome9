@@ -7,6 +7,7 @@ FEATURES:
 
 IMPROVEMENTS:
 * .travis.yml: Add tflint process ([#22](https://github.com/terraform-providers/terraform-provider-dome9/issues/22))
+* Align documentation code in GCP and AWS data resources and fixed continuous compliance documentation typo ([#23](https://github.com/terraform-providers/terraform-provider-dome9/issues/23), [#26](https://github.com/terraform-providers/terraform-provider-dome9/issues/26))
 
 BUG FIXES:
 * Don't print API secret key when provider is configured. API secret key now marked as sensitive in schema ([#18](https://github.com/terraform-providers/terraform-provider-dome9/issues/18))
@@ -19,7 +20,6 @@ IMPROVEMENTS:
 * Documentation addition for `dome9_continuous_compliance_notification` resource and data source ([#14](https://github.com/terraform-providers/terraform-provider-dome9/issues/7))
 * Remove double timestamp from logger ([#11](https://github.com/terraform-providers/terraform-provider-dome9/issues/11))
 * Update examples to be more understandable and follow same convention ([#12](https://github.com/terraform-providers/terraform-provider-dome9/issues/12))
-* Align documentation code in GCP and AWS data resources
 
 ## 1.12.0 (November 01, 2019)
 
