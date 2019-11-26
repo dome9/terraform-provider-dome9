@@ -15,7 +15,7 @@ This  resource is used to  create and modify compliance policies in Dome9 for co
 Basic usage:
 
 ```hcl
-resource "dome9_continuouscompliance_policy" "test_policy" {
+resource "dome9_continuous_compliance_policy" "test_policy" {
   cloud_account_id    = "CLOUD ACCOUNT ID"
   external_account_id = "EXTERNAL ACCOUNT ID"
   bundle_id           = 00000
