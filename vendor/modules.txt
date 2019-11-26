@@ -61,7 +61,7 @@ github.com/blang/semver
 github.com/bmatcuk/doublestar
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/dome9/dome9-sdk-go v1.2.4
+# github.com/dome9/dome9-sdk-go v1.3.0
 github.com/dome9/dome9-sdk-go/dome9
 github.com/dome9/dome9-sdk-go/dome9/client
 github.com/dome9/dome9-sdk-go/services/cloudaccounts
@@ -71,6 +71,7 @@ github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp
 github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification
 github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy
 github.com/dome9/dome9-sdk-go/services/iplist
+github.com/dome9/dome9-sdk-go/services/rulebundles
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
 # github.com/golang/protobuf v1.3.2
