@@ -1,11 +1,12 @@
 package continuous_compliance_policy
 
 import (
+	"fmt"
 	"net/http"
 )
 
 const (
-	path = "Compliance/ContinuousCompliancePolicy/"
+	continuousComplianceResourcePath = "Compliance/ContinuousCompliancePolicy"
 )
 
 type ContinuousCompliancePolicyRequest struct {
@@ -27,7 +28,8 @@ type ContinuousCompliancePolicyResponse struct {
 
 func (service *Service) Get(id string) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new(ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("GET", path+id, nil, nil, v)
+	path := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
+	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -37,7 +39,7 @@ func (service *Service) Get(id string) (*ContinuousCompliancePolicyResponse, *ht
 
 func (service *Service) GetAll() (*[]ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new([]ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	resp, err := service.Client.NewRequestDo("GET", continuousComplianceResourcePath, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -47,7 +49,7 @@ func (service *Service) GetAll() (*[]ContinuousCompliancePolicyResponse, *http.R
 
 func (service *Service) Create(body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new(ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", path, nil, body, v)
+	resp, err := service.Client.NewRequestDo("POST", continuousComplianceResourcePath, nil, body, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -57,7 +59,8 @@ func (service *Service) Create(body *ContinuousCompliancePolicyRequest) (*Contin
 
 func (service *Service) Update(id string, body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new(ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("PUT", path+id, nil, body, v)
+	path := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
+	resp, err := service.Client.NewRequestDo("PUT", path, nil, body, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -66,7 +69,8 @@ func (service *Service) Update(id string, body *ContinuousCompliancePolicyReques
 }
 
 func (service *Service) Delete(id string) (*http.Response, error) {
-	resp, err := service.Client.NewRequestDo("DELETE", path+id, nil, nil, nil)
+	path := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
+	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -54,3 +54,10 @@ const (
 	ContinuousComplianceNotificationUpdateDescription   = "this notification for update testing"
 	ContinuousComplianceNotificationUpdateAlertsConsole = false
 )
+
+// Ruleset resource/data source
+const (
+	RuleSetName              = "test_rule_set"
+	RuleSetDescription       = "this is acceptance test"
+	RuleSetDescriptionUpdate = "this is acceptance test"
+)

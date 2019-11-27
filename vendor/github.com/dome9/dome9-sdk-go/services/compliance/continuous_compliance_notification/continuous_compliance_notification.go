@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	path = "Compliance/ContinuousComplianceNotification"
+	continuousComplianceResourcePath = "Compliance/ContinuousComplianceNotification"
 )
 
 type ContinuousComplianceNotificationRequest struct {
@@ -100,7 +100,7 @@ type GCPSecurityCommandCenterIntegration struct {
 
 func (service *Service) Get(id string) (*ContinuousComplianceNotificationResponse, *http.Response, error) {
 	v := new(ContinuousComplianceNotificationResponse)
-	relativeURL := fmt.Sprintf("%s/%s", path, id)
+	relativeURL := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
 	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
@@ -111,7 +111,7 @@ func (service *Service) Get(id string) (*ContinuousComplianceNotificationRespons
 
 func (service *Service) GetAll() (*[]ContinuousComplianceNotificationResponse, *http.Response, error) {
 	v := new([]ContinuousComplianceNotificationResponse)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	resp, err := service.Client.NewRequestDo("GET", continuousComplianceResourcePath, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -121,7 +121,7 @@ func (service *Service) GetAll() (*[]ContinuousComplianceNotificationResponse, *
 
 func (service *Service) Create(body *ContinuousComplianceNotificationRequest) (*ContinuousComplianceNotificationResponse, *http.Response, error) {
 	v := new(ContinuousComplianceNotificationResponse)
-	resp, err := service.Client.NewRequestDo("POST", path, nil, body, v)
+	resp, err := service.Client.NewRequestDo("POST", continuousComplianceResourcePath, nil, body, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -131,7 +131,7 @@ func (service *Service) Create(body *ContinuousComplianceNotificationRequest) (*
 
 func (service *Service) Update(id string, body *ContinuousComplianceNotificationRequest) (*ContinuousComplianceNotificationResponse, *http.Response, error) {
 	v := new(ContinuousComplianceNotificationResponse)
-	relativeURL := fmt.Sprintf("%s/%s", path, id)
+	relativeURL := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
 	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
@@ -141,7 +141,7 @@ func (service *Service) Update(id string, body *ContinuousComplianceNotification
 }
 
 func (service *Service) Delete(id string) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s", path, id)
+	relativeURL := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
 	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
 	if err != nil {
 		return nil, err
