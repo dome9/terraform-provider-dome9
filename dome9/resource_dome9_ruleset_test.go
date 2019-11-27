@@ -94,24 +94,24 @@ func testAccCheckRuleSetExists(resource string, ruleSet *rulebundles.RuleBundleR
 func testAccCheckRuleSetConfigure(resourceTypeAndName, generatedName, description string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-	name        = "%s"
-	description = "%s"
-	cloud_vendor = "aws"
-	language = "en"
+	name               = "%s"
+	description        = "%s"
+	cloud_vendor       = "aws"
+	language           = "en"
 	hide_in_compliance = false
-	is_template = false
+	is_template        = false
 	rules {
-		name = "some_rule2"
-		logic = "EC2 should x"
-		severity = "High"
-		description = "rule description here"
-        compliance_tag = "ct"
-        domain = "test"
-        priority = "high"
-        control_title = "ct"
-        rule_id = ""
-        is_default = false
-    }
+		name           = "some_rule2"
+		logic          = "EC2 should x"
+		severity       = "High"
+		description    = "rule description here"
+		compliance_tag = "ct"
+		domain         = "test"
+		priority       = "high"
+		control_title  = "ct"
+		rule_id        = ""
+		is_default     = false
+	}
 }
 
 data "%s" "%s" {
