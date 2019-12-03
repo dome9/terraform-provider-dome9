@@ -1,4 +1,4 @@
-resource "dome9_rule_set" "ruleset" {
+resource "dome9_ruleset" "ruleset" {
   name               = "some_ruleset"
   description        = "this is the descrption of my ruleset"
   cloud_vendor       = "aws"
@@ -19,14 +19,14 @@ resource "dome9_rule_set" "ruleset" {
   }
 }
 
-data "dome9_rule_set" "data1" {
-  id = dome9_rule_set.ruleset.id
+data "dome9_ruleset" "data1" {
+  id = dome9_ruleset.ruleset.id
 }
 
 output "getId" {
-  value = "${data.dome9_rule_set.data1.id}"
+  value = "${data.dome9_ruleset.data1.id}"
 }
 
 output "getDescription" {
-  value = "${data.dome9_rule_set.data1.description}"
+  value = "${data.dome9_ruleset.data1.description}"
 }
