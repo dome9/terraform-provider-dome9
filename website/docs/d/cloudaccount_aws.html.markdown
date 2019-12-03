@@ -38,3 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 * `full_protection` - The tamper Protection mode for current security groups.
 * `allow_read_only` - The AWS cloud account operation mode. true for "Manage", false for "Readonly".
 * `net_sec` - The network security configuration for the AWS cloud account.
+* `organizational_unit_id` - Organizational unit id.
+

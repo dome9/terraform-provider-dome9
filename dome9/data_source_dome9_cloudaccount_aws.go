@@ -46,6 +46,10 @@ func dataSourceCloudAccountAWS() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
+			"organizational_unit_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"net_sec": {
 				Type:     schema.TypeSet,
 				MaxItems: 1,
@@ -103,6 +107,7 @@ func dataSourceAWSRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("creation_date", resp.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
+	_ = d.Set("organizational_unit_id", resp.OrganizationalUnitID)
 	if err := d.Set("net_sec", flattenCloudAccountAWSNetSec(resp.NetSec)); err != nil {
 		return err
 	}

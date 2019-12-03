@@ -23,6 +23,9 @@ resource "dome9_cloudaccount_aws" "test" {
     secret = "SECRET"
     type   = "RoleBased"
   }
+
+  organizational_unit_id = "ORGANIZATIONAL UNIT ID"
+
   net_sec {
     regions {
       new_group_behavior = "ReadOnly"
@@ -89,7 +92,6 @@ resource "dome9_cloudaccount_aws" "test" {
       region             = "eu_north_1"
     }
   }
-
 }
 ```
 
@@ -99,7 +101,7 @@ The following arguments are supported:
 
 * `name` - (Required) The name of AWS account in Dome9
 * `credentials` - (Required) The information needed for Dome9 System in order to connect to the AWS cloud account
-
+* `organizational_unit_id` - (Optional) The Organizational Unit that this cloud account will be attached to
 
 ### Credentials
 

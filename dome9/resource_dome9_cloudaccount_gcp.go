@@ -220,6 +220,7 @@ func expandCloudAccountGCPRequest(d *schema.ResourceData) gcp.CloudAccountReques
 		ServiceAccountCredentials: expandServiceAccountCredentials(d),
 		GsuiteUser:                d.Get("gsuite_user").(string),
 		DomainName:                d.Get("domain_name").(string),
+		OrganizationalUnitID:      d.Get("organizational_unit_id").(string),
 	}
 
 	return req
