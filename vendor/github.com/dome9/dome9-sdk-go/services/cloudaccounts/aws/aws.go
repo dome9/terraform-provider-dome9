@@ -162,7 +162,6 @@ func (service *Service) UpdateRegionConfig(body CloudAccountUpdateRegionConfigRe
 	return v, resp, nil
 }
 
-// TODO: not implemented in TF provider due to bug https://dome9-security.atlassian.net/browse/DOME-12538
 func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdateOrganizationalIDRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, id, cloudaccounts.RESTfulServicePathAWSOrganizationalUnit)
