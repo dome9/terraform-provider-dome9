@@ -1,19 +1,19 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_rule_set"
-sidebar_current: "docs-datasource-dome9-rule-set"
+page_title: "Check Point CloudGuard Dome9: dome9_ruleset"
+sidebar_current: "docs-datasource-dome9-ruleset"
 description: |-
   Get information about a rule set in Dome9.
 ---
 
-# Data Source: dome9_rule_set
+# Data Source: dome9_ruleset
 
 Use this data source to get information about a rule set in Dome9.
 
 ## Example Usage
 
 ```hcl
-data "dome9_rule_set" "test" {
+data "dome9_ruleset" "test" {
   id        = "d9-rule-set-id"
 }
 

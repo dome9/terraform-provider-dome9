@@ -1,12 +1,12 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_rule_set"
-sidebar_current: "docs-resource-dome9-rule-set"
+page_title: "Check Point CloudGuard Dome9: dome9_ruleset"
+sidebar_current: "docs-resource-dome9-ruleset"
 description: |-
   Create rule set in Dome9
 ---
 
-# dome9_rule_set
+# dome9_ruleset
 
 This resource is used to create and manage rule sets in Dome9. Rule sets are a bundle of compliance rules.
 
@@ -15,7 +15,7 @@ This resource is used to create and manage rule sets in Dome9. Rule sets are a b
 Basic usage:
 
 ```hcl
-resource "dome9_rule_set" "ruleset" {
+resource "dome9_ruleset" "ruleset" {
   name        = "some_ruleset"
   description = "this is the descrption of my ruleset"
   cloud_vendor = "aws"
