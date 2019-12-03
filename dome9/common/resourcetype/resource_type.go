@@ -8,5 +8,5 @@ const (
 	IPList                           = "dome9_iplist"
 	ContinuousCompliancePolicy       = "dome9_continuous_compliance_policy"
 	ContinuousComplianceNotification = "dome9_continuous_compliance_notification"
-	RuleSet                          = "dome9_rule_set"
+	RuleSet                          = "dome9_ruleset"
 )
