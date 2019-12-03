@@ -45,7 +45,7 @@ The following arguments are supported:
 * `gsuite_user` - (Optional) The gsuite user
 * `service_account_credentials` - (Required) The service account JSON block (from the GCP console)
 * `domain_name` - (Optional) The domain name
-* `organizational_unit_id` - (Optional) Organizational unit id, Will apply on update state
+* `organizational_unit_id` - (Optional) Organizational Unit that this cloud account will be attached to
 
 ### Service Account Credentials
 

@@ -37,7 +37,7 @@ The following arguments are supported:
 * `tenant_id` - (Required) The Azure tenant id
 * `operation_mode` - (Required) Dome9 operation mode for the Azure account ("Read-Only" or "Managed")
 * `credentials` - (Required) Azure account credentials
-* `organizational_unit_id` - Organizational unit id, will apply on update state
+* `organizational_unit_id` - (Optional) Organizational Unit that this cloud account will be attached to
 
 ### Credentials
 

@@ -128,6 +128,10 @@ func resourceCloudAccountAWS() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
+			"organizational_unit_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -172,6 +176,7 @@ func resourceCloudAccountAWSRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("creation_date", resp.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
+	_ = d.Set("organizational_unit_id", resp.OrganizationalUnitID)
 	if err := d.Set("net_sec", flattenCloudAccountAWSNetSec(resp.NetSec)); err != nil {
 		return err
 	}
@@ -201,6 +206,16 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 			CloudAccountID:        d.Id(),
 			ExternalAccountNumber: d.Get("external_account_number").(string),
 			Data:                  d.Get("name").(string),
+		}); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("organizational_unit_id") {
+		log.Println("The Organizational Unit ID has been changed")
+
+		if _, _, err := d9Client.cloudaccountAWS.UpdateOrganizationalID(d.Id(), aws.CloudAccountUpdateOrganizationalIDRequest{
+			OrganizationalUnitId: d.Get("organizational_unit_id").(string),
 		}); err != nil {
 			return err
 		}
@@ -243,8 +258,9 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 
 func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountRequest {
 	return aws.CloudAccountRequest{
-		Name:        d.Get("name").(string),
-		Credentials: expandCloudAccountAWSCredentials(d),
+		Name:                 d.Get("name").(string),
+		Credentials:          expandCloudAccountAWSCredentials(d),
+		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 	}
 }
 
