@@ -306,6 +306,7 @@ func expandServices(d *schema.ResourceData) securitygroupaws.ServicesRequest {
 		}
 	}
 
+	// api must get service field
 	return securitygroupaws.ServicesRequest{
 		Inbound:  []securitygroupaws.BoundServicesRequest{},
 		Outbound: []securitygroupaws.BoundServicesRequest{},
