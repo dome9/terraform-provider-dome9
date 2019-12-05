@@ -124,6 +124,26 @@ func testAccCheckCloudAccountDestroy(s *terraform.State) error {
 
 func testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, resourceName, arn, additionalBlock string) string {
 	return fmt.Sprintf(`
+// aws cloud account creation
+%s
+
+data "%s" "%s" {
+  id = "${%s.id}"
+}
+
+`,
+		// aws cloud account
+		getCloudAccountAWSResourceHCL(generatedName, resourceName, arn, additionalBlock),
+
+		// data source variables
+		resourcetype.CloudAccountAWS,
+		generatedName,
+		resourceTypeAndName,
+	)
+}
+
+func getCloudAccountAWSResourceHCL(generatedName, resourceName, arn, additionalBlock string) string {
+	return fmt.Sprintf(`
 resource "%s" "%s" {
   name        = "%s"
   credentials {
@@ -135,24 +155,14 @@ resource "%s" "%s" {
   %s
 
 }
-
-data "%s" "%s" {
-  id = "${%s.id}"
-}
-
 `,
-		// resource variables
+		// aws cloud account variables
 		resourcetype.CloudAccountAWS,
 		generatedName,
 		resourceName,
 		arn,
 		os.Getenv(environmentvariable.CloudAccountAWSEnvVarSecret),
 		additionalBlock,
-
-		// data source variables
-		resourcetype.CloudAccountAWS,
-		generatedName,
-		resourceTypeAndName,
 	)
 }
 
