@@ -51,7 +51,7 @@ func testAccCheckRuleSetDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.IPList {
+		if rs.Type != resourcetype.RuleSet {
 			continue
 		}
 

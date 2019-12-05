@@ -69,3 +69,11 @@ const (
 	AWSSecurityGroupRegionID    = "us_east_1"
 	AWSSecurityGroupTagValue    = "value1"
 )
+
+// Users resource/data source
+const (
+	UserEmail        = "user_test@test.com"
+	UserFirstName    = "first_name_for_test"
+	UserLastName     = "last_name_for_test"
+	UserIsSsoEnabled = false
+)

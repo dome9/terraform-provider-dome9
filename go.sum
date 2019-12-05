@@ -76,6 +76,8 @@ github.com/dome9/dome9-sdk-go v1.3.1 h1:1Iv+g5QxXfXX1k31n7+hGUGiH1z5Vp+sRuCLzP7W
 github.com/dome9/dome9-sdk-go v1.3.1/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
 github.com/dome9/dome9-sdk-go v1.4.0 h1:fioOV9UIzPLVx1W+eewP6tFbp9astMpH6X3/kRsyZXQ=
 github.com/dome9/dome9-sdk-go v1.4.0/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
+github.com/dome9/dome9-sdk-go v1.4.1 h1:KBYn4zSB+C5Sd5oP5qYXB3DMFSMyw31jCCSOieinNBQ=
+github.com/dome9/dome9-sdk-go v1.4.1/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
 github.com/dylanmei/iso8601 v0.1.0/go.mod h1:w9KhXSgIyROl1DefbMYIE7UVSIvELTbMrCfx+QkYnoQ=
 github.com/dylanmei/winrmtest v0.0.0-20190225150635-99b7fe2fddf1/go.mod h1:lcy9/2gH1jn/VCLouHA6tOEwLoNVd4GW6zhuKLmHC2Y=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
