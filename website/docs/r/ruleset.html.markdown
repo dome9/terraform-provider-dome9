@@ -3,12 +3,12 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_ruleset"
 sidebar_current: "docs-resource-dome9-ruleset"
 description: |-
-  Create rule set in Dome9
+  Create ruleset in Dome9
 ---
 
 # dome9_ruleset
 
-This resource is used to create and manage rule sets in Dome9. Rule sets are a bundle of compliance rules.
+This resource is used to create and manage rulesets in Dome9. Rulesets are sets of compliance rules.
 
 ## Example Usage
 
@@ -28,11 +28,7 @@ resource "dome9_ruleset" "ruleset" {
     severity = "High"
     description = "rule description here"
     compliance_tag = "ct"
-    domain = "test"
-    priority = "high"
-    control_title = "ct"
-    rule_id = ""
-    is_default = false
+  
   }
 }
 
@@ -42,35 +38,30 @@ resource "dome9_ruleset" "ruleset" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the rule set in Dome9.
-* `description` - (Optional) A description of the rule set (what it represents); defaults to empty string.
-* `cloud_vendor` - (Required) Cloud vendor that the rule set is associated with.
-* `language` - (Optional) Language of the rules; defaults to english.
-* `hide_in_compliance` - (Optional) Whether or not a rule set is hidden in compliance assessment; defaults to false.
-* `is_template` - (Optional) Template or costume rule set; defaults to false.
+* `name` - (Required) The name of the ruleset in Dome9.
+* `description` - (Optional) A description of the ruleset (what it represents); defaults to empty string.
+* `cloud_vendor` - (Required) Cloud vendor that the ruleset is associated with.
+* `language` - (Optional) Language of the rules; defaults to 'en' (English).
+
 
 ### Rules 
 
 The `rules` supports the following arguments:
     
-* `name` - (Optional) Rule name.
-* `logic` - (Optional) Rule logic.
-* `severity` - (Optional) Rule severity.
-* `description` - (Optional) Rule description.
-* `compliance_tag` - (Optional) Compliance tag.
-* `domain` - (Optional) Rule domain.
-* `priority` - (Optional) Rule priority.
-* `control_title` - (Optional) Rule control title.
-* `rule_id` - (Optional) Rule ID.
-* `is_default` - (Optional) Is rule default.
+* `name` - (Required) Rule name
+* `logic` - (Optional) Rule GSL logic. This is the text of the rule, using Dome9 GSL syntax
+* `severity` - (Optional) Rule severity
+* `description` - (Optional) Rule description
+* `compliance_tag` - (Optional) A reference to a compliance standard
+
 
 ## Attributes Reference
 
-* `id` - Rule set Id
+* `id` - Ruleset Id
 
 ## Import
 
-Rule set can be imported; use `<RULE SET ID>` as the import ID. 
+Ruleset can be imported; use `<RULE SET ID>` as the import ID. 
 
 For example:
 

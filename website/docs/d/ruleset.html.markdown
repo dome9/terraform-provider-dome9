@@ -3,12 +3,12 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_ruleset"
 sidebar_current: "docs-datasource-dome9-ruleset"
 description: |-
-  Get information about a rule set in Dome9.
+  Get information about a ruleset in Dome9.
 ---
 
 # Data Source: dome9_ruleset
 
-Use this data source to get information about a rule set in Dome9.
+Use this data source to get information about a ruleset in Dome9.
 
 ## Example Usage
 
@@ -23,17 +23,15 @@ data "dome9_ruleset" "test" {
 
 The following arguments are supported:
 
-* `id` - (Required) The id of the rule set in Dome9.
+* `id` - (Required) The id of the ruleset in Dome9.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `name	` - The rule set name.
-* `description` - The rule set description.
-* `cloud_vendor` - Cloud vendor that the rule set is associated with.
-* `hide_in_compliance` - Whether or not a rule set is hidden in compliance assessment.
-* `is_template` - Template or costume rule set.
+* `name	` - The ruleset name.
+* `description` - The ruleset description.
+* `cloud_vendor` - Cloud vendor that the ruleset is associated with.
 * `created_time` - Rule set creation time.
 * `updated_time` - Rule set last update time.
-* `rules` - Rules in the rule set.
+* `rules` - List of rules in the ruleset.
