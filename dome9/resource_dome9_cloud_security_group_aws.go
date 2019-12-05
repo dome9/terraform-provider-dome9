@@ -210,7 +210,7 @@ func resourceCloudSecurityGroupAWSCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	log.Printf("[INFO] Created AWS security group request. ID: %v\n", resp.ID)
+	log.Printf("[INFO] Created AWS security group. ID: %v\n", resp.ID)
 	d.SetId(strconv.Itoa(resp.ID))
 
 	return resourceCloudSecurityGroupAWSRead(d, meta)
@@ -295,43 +295,20 @@ func expandCloudSecurityGroupRequest(d *schema.ResourceData) securitygroupaws.Cl
 }
 
 func expandServices(d *schema.ResourceData) securitygroupaws.ServicesRequest {
-	var serviceRequest securitygroupaws.ServicesRequest
 
 	if services, ok := d.GetOk("services"); ok {
 		servicesItem := services.(*schema.Set).List()[0]
 		service := servicesItem.(map[string]interface{})
 
-		serviceRequest = securitygroupaws.ServicesRequest{
+		return securitygroupaws.ServicesRequest{
 			Inbound:  expandBoundServicesRequest(service["inbound"].([]interface{})),
 			Outbound: expandBoundServicesRequest(service["outbound"].([]interface{})),
 		}
-	} else {
-		// set default inbound outbound
-		serviceRequest.Inbound = []securitygroupaws.BoundServicesRequest{}
-		serviceRequest.Outbound = defaultOutbound()
 	}
 
-	return serviceRequest
-}
-
-func defaultOutbound() []securitygroupaws.BoundServicesRequest {
-	return []securitygroupaws.BoundServicesRequest{
-		securitygroupaws.BoundServicesRequest{
-			Name:         "All Traffic",
-			Description:  "",
-			ProtocolType: "ALL",
-			Port:         "",
-			OpenForAll:   true,
-			Scope: []securitygroupaws.Scope{
-				securitygroupaws.Scope{
-					Type: "CIDR",
-					Data: map[string]interface{}{
-						"cidr": "0.0.0.0/0",
-						"note": "Allow All Traffic",
-					},
-				},
-			},
-		},
+	return securitygroupaws.ServicesRequest{
+		Inbound:  []securitygroupaws.BoundServicesRequest{},
+		Outbound: []securitygroupaws.BoundServicesRequest{},
 	}
 }
 
