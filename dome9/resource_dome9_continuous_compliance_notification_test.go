@@ -159,6 +159,7 @@ resource "%s" "%s" {
 		variable.ContinuousComplianceNotificationJsonWithFullEntity,
 	)
 }
+
 func continuousComplianceNotificationConfig() string {
 	return fmt.Sprintf(`
 name           = "%s"

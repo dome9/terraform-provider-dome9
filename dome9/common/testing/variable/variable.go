@@ -61,3 +61,11 @@ const (
 	RuleSetDescription       = "this is acceptance test"
 	RuleSetDescriptionUpdate = "this is acceptance test"
 )
+
+// AWS security group resource/data source
+const (
+	AWSSecurityGroupName        = "test_aws_security"
+	AWSSecurityGroupDescription = "this is aws security group test"
+	AWSSecurityGroupRegionID    = "us_east_1"
+	AWSSecurityGroupTagValue    = "value1"
+)

@@ -8,7 +8,7 @@ description: |-
 
 # Data Source: dome9_cloudaccount_aws
 
-Use this data source to get information about an  AWS cloud account onboarded to Dome9.
+Use this data source to get information about an AWS cloud account onboarded to Dome9.
 
 ## Example Usage
 
@@ -39,4 +39,3 @@ In addition to all arguments above, the following attributes are exported:
 * `allow_read_only` - The AWS cloud account operation mode. true for "Manage", false for "Readonly".
 * `net_sec` - The network security configuration for the AWS cloud account.
 * `organizational_unit_id` - Organizational unit id.
-

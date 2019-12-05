@@ -7,6 +7,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
+	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 	"github.com/dome9/dome9-sdk-go/services/iplist"
@@ -26,6 +27,7 @@ type Client struct {
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
 	ruleSet                          rulebundles.Service
+	awsSecurityGroup                 securitygroupaws.Service
 }
 
 type Config struct {
@@ -48,6 +50,7 @@ func (c *Config) Client() (*Client, error) {
 		continuousCompliancePolicy:       *continuous_compliance_policy.New(config),
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
 		ruleSet:                          *rulebundles.New(config),
+		awsSecurityGroup:                 *securitygroupaws.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
