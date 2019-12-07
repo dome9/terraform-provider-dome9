@@ -69,3 +69,12 @@ const (
 	AWSSecurityGroupRegionID    = "us_east_1"
 	AWSSecurityGroupTagValue    = "value1"
 )
+
+// Role resource/data source
+const (
+	RoleName        = "test_role"
+	RoleDescription = "this is role test"
+
+	// Update const
+	RoleUpdateDescription = "this is update role test"
+)
