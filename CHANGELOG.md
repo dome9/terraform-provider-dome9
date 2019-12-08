@@ -4,6 +4,8 @@ FEATURES:
 
 * **New Resource:** `dome9_aws_security_group` ([#33](https://github.com/terraform-providers/terraform-provider-dome9/pull/33))
 * **New Data Source:** `dome9_aws_security_group`([#33](https://github.com/terraform-providers/terraform-provider-dome9/pull/33))
+* **New Resource:** `dome9_aws_role` ([#35](https://github.com/terraform-providers/terraform-provider-dome9/pull/35))
+* **New Data Source:** `dome9_aws_role`([#35](https://github.com/terraform-providers/terraform-provider-dome9/pull/35))
 
 IMPROVEMENTS:
 * Resource `dome9_rule_set` renamed to `dome9_ruleset`([#30](https://github.com/terraform-providers/terraform-provider-dome9/pull/30))
