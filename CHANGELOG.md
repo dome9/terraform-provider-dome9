@@ -1,4 +1,16 @@
-## 1.13.1 (Unreleased)
+## 1.14.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** `dome9_aws_security_group` ([#33](https://github.com/terraform-providers/terraform-provider-dome9/pull/33))
+* **New Data Source:** `dome9_aws_security_group`([#33](https://github.com/terraform-providers/terraform-provider-dome9/pull/33))
+
+IMPROVEMENTS:
+* Resource `dome9_rule_set` renamed to `dome9_ruleset`([#30](https://github.com/terraform-providers/terraform-provider-dome9/pull/30))
+
+BUG FIXES:
+* Support attachment of cloud account resources to organizational unit on creation ([#29](https://github.com/terraform-providers/terraform-provider-dome9/pull/29))
+
 ## 1.13.0 (December 02, 2019)
 
 FEATURES:
