@@ -44,6 +44,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.ContinuousComplianceNotification: resourceContinuousComplianceNotification(),
 			resourcetype.RuleSet:                          resourceRuleSet(),
 			resourcetype.CloudAccountAWSSecurityGroup:     resourceCloudSecurityGroupAWS(),
+			resourcetype.Role:                             resourceRole(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
@@ -55,6 +56,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.ContinuousComplianceNotification: dataSourceContinuousComplianceNotification(),
 			resourcetype.RuleSet:                          dataSourceRuleSet(),
 			resourcetype.CloudAccountAWSSecurityGroup:     dataSourceCloudSecurityGroupAWS(),
+			resourcetype.Role:                             dataSourceRole(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
