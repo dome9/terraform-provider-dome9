@@ -256,7 +256,6 @@ func resourceCloudSecurityGroupAWSUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("is_protected") {
 		protectionMode := getProtectionMode(d.Get("is_protected").(bool))
 		log.Printf("[INFO] Updating security group protection mode to: %s", protectionMode)
-
 		if _, _, err := d9Client.awsSecurityGroup.UpdateProtectionMode(d.Id(), protectionMode); err != nil {
 			return err
 		}
@@ -281,9 +280,9 @@ func resourceCloudSecurityGroupAWSUpdate(d *schema.ResourceData, meta interface{
 
 func getProtectionMode(isProtected bool) (protectionMode string) {
 	if isProtected {
-		protectionMode = "FullManage"
+		protectionMode = providerconst.FullManage
 	} else {
-		protectionMode = "ReadOnly"
+		protectionMode = providerconst.ReadOnly
 	}
 
 	return

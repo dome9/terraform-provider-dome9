@@ -41,7 +41,7 @@ func TestAccResourceCloudSecurityGroupAWSBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.tag_key", variable.AWSSecurityGroupTagValue),
 				),
 			},
-
+			// update test
 			{
 				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName, variable.AWSSecurityGroupUpdateTagValue),
 				Check: resource.ComposeTestCheckFunc(
@@ -96,7 +96,7 @@ func testAccCheckCloudSecurityGroupAWSDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsCloudAccountTypeAndName, securityGroupResourceName, securityGroupTypeAndName, tagVale string) string {
+func testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsCloudAccountTypeAndName, securityGroupResourceName, securityGroupTypeAndName, tagValue string) string {
 	return fmt.Sprintf(`
 // aws cloud account resource
 %s
@@ -126,7 +126,7 @@ data "%s" "%s" {
 		variable.AWSSecurityGroupDescription,
 		variable.AWSSecurityGroupRegionID,
 		awsCloudAccountTypeAndName,
-		tagVale,
+		tagValue,
 
 		// data source variables
 		resourcetype.CloudAccountAWSSecurityGroup,
