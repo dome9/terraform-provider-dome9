@@ -86,7 +86,11 @@ type UpdateProtectionModeQueryParameters struct {
 	ProtectionMode string `json:"protectionMode"`
 }
 
-func (service *Service) GetSecurityGroup(d9SecurityGroupID string) (*CloudSecurityGroupResponse, *http.Response, error) {
+type UpdateTagsQueryParameters struct {
+	Tags map[string]interface{} `json:"tags"`
+}
+
+func (service *Service) Get(d9SecurityGroupID string) (*CloudSecurityGroupResponse, *http.Response, error) {
 	v := new(CloudSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, d9SecurityGroupID)
 
@@ -122,17 +126,6 @@ func (service *Service) GetAllInRegion(d9CloudAccountID, awsRegionName string) (
 func (service *Service) GetAll() (*[]CloudSecurityGroupResponse, *http.Response, error) {
 	v := new([]CloudSecurityGroupResponse)
 	resp, err := service.Client.NewRequestDo("GET", awsSgResourcePath, nil, nil, v)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return v, resp, nil
-}
-
-func (service *Service) Get(id string) (*CloudSecurityGroupResponse, *http.Response, error) {
-	v := new(CloudSecurityGroupResponse)
-	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -181,6 +174,22 @@ func (service *Service) UpdateProtectionMode(d9SecurityGroupID, protectionMode s
 	}
 
 	return v, resp, nil
+}
+
+// update tags is post api call
+func (service *Service) UpdateTags(d9SecurityGroupID string, tags map[string]interface{}) (*map[string]string, *http.Response, error) {
+	updatedTags := new(map[string]string)
+	relativeURL := fmt.Sprintf("%s/%s/%s", awsSgResourcePath, d9SecurityGroupID, awsSgResourceTags)
+	body := UpdateTagsQueryParameters{
+		Tags: tags,
+	}
+
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, updatedTags)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return updatedTags, resp, nil
 }
 
 // create and attach or update bound service (post api call)

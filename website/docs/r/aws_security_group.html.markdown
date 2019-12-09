@@ -60,7 +60,8 @@ The following arguments are supported:
 * `dome9_cloud_account_id` - (Required) Cloud account id in Dome9.
 * `description` - (Optional) Security group description.
 * `aws_region_id` - (Optional) AWS region; in AWS format (e.g., "us-east-1"); default is us_east_1.
-* `is_protected` - (Optional) Is security group protected; default (Boolean) is true.
+* `is_protected` - (Optional) Is security group protected.
+    * Note: Creating security group with desired protection mode, first `post` new security group then update the `is_protected` field to `true` for `FullManage` mode and `false` for `ReadOnly` mode; by default the security group mode is `FullManage`
 * `vpc_id` - (Optional) Security group id.
 * `vpc_name` - (Optional) Security group vpc name.
 * `tags` - (Optional) Security group tags.
@@ -83,12 +84,12 @@ The configuration of inbound and outbound is:
       * `type` - (Required) scope type.
       * `data` - (Required) scope data.
         
-
 ## Attributes Reference
 
 * `cloud_account_name` - AWS cloud account name.
 * `external_id` - Security group external id.
 
+* Note: Just the following fields can be updated: services (inbound / outbound), tags and protection mode. 
 ## Import
 
 The security group can be imported; use `<SESCURITY GROUP ID>` as the import ID. 

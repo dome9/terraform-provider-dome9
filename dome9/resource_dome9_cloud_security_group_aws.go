@@ -17,8 +17,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCloudSecurityGroupAWSCreate,
 		Read:   resourceCloudSecurityGroupAWSRead,
-		// TODO: Update
-		Update: nil,
+		Update: resourceCloudSecurityGroupAWSUpdate,
 		Delete: resourceCloudSecurityGroupAWSDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -27,33 +26,26 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 			"dome9_security_group_name": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 			"dome9_cloud_account_id": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
-				// Remove force new once implementing update
-				ForceNew: true,
 			},
 			"aws_region_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "us_east_1",
-				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice(providerconst.AWSRegions, true),
 			},
 			// Always true in creation.
 			"is_protected": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  true,
-				// Remove force new once implementing update
-				ForceNew: true,
+				Computed: true,
 			},
 			"cloud_account_name": {
 				Type:     schema.TypeString,
@@ -63,13 +55,11 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
-				ForceNew: true,
 			},
 			"vpc_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
-				ForceNew: true,
 			},
 			"external_id": {
 				Type:     schema.TypeString,
@@ -78,8 +68,6 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 			"tags": {
 				Type:     schema.TypeMap,
 				Optional: true,
-				// Remove force new once implementing update
-				ForceNew: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{},
 				},
@@ -218,7 +206,7 @@ func resourceCloudSecurityGroupAWSCreate(d *schema.ResourceData, meta interface{
 
 func resourceCloudSecurityGroupAWSRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	resp, _, err := d9Client.awsSecurityGroup.GetSecurityGroup(d.Id())
+	resp, _, err := d9Client.awsSecurityGroup.Get(d.Id())
 	if err != nil {
 		if err.(*client.ErrorResponse).IsObjectNotFound() {
 			log.Printf("[WARN] Removing AWS cloud account security group %s from state because it no longer exists in Dome9", d.Id())
@@ -240,7 +228,10 @@ func resourceCloudSecurityGroupAWSRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("vpc_id", resp.VpcID)
 	_ = d.Set("external_id", resp.VpcID)
 	_ = d.Set("tags", resp.Tags)
-	_ = d.Set("services", flattenServices(resp.Services))
+
+	if err := d.Set("services", flattenCloudSecurityGroupAWSServices(resp.Services)); err != nil {
+		return err
+	}
 
 	if resp.VpcName != nil {
 		_ = d.Set("vpc_name", *resp.VpcName)
@@ -258,6 +249,44 @@ func resourceCloudSecurityGroupAWSDelete(d *schema.ResourceData, meta interface{
 	}
 
 	return nil
+}
+
+func resourceCloudSecurityGroupAWSUpdate(d *schema.ResourceData, meta interface{}) error {
+	d9Client := meta.(*Client)
+	if d.HasChange("is_protected") {
+		protectionMode := getProtectionMode(d.Get("is_protected").(bool))
+		log.Printf("[INFO] Updating security group protection mode to: %s", protectionMode)
+
+		if _, _, err := d9Client.awsSecurityGroup.UpdateProtectionMode(d.Id(), protectionMode); err != nil {
+			return err
+		}
+	}
+	if d.HasChange("tags") {
+		log.Printf("[INFO] Updating security group tags")
+
+		if _, _, err := d9Client.awsSecurityGroup.UpdateTags(d.Id(), d.Get("tags").(map[string]interface{})); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("services") {
+		log.Printf("[INFO] Updating inbound/outbound services")
+		if _, _, err := d9Client.awsSecurityGroup.Update(d.Id(), expandCloudSecurityGroupRequest(d)); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func getProtectionMode(isProtected bool) (protectionMode string) {
+	if isProtected {
+		protectionMode = "FullManage"
+	} else {
+		protectionMode = "ReadOnly"
+	}
+
+	return
 }
 
 func expandCloudSecurityGroupRequest(d *schema.ResourceData) securitygroupaws.CloudSecurityGroupRequest {
@@ -345,7 +374,7 @@ func expandScope(scopeRequest []interface{}) []securitygroupaws.Scope {
 	return scopes
 }
 
-func flattenServices(servicesResponse securitygroupaws.ServicesResponse) []interface{} {
+func flattenCloudSecurityGroupAWSServices(servicesResponse securitygroupaws.ServicesResponse) []interface{} {
 	m := map[string]interface{}{
 		"inbound":  flattenBoundServicesResponse(servicesResponse.Inbound),
 		"outbound": flattenBoundServicesResponse(servicesResponse.Outbound),
