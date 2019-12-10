@@ -58,7 +58,7 @@ The `permissions` supports the following arguments:
 * `on_boarding` - (Optional) View permission SRL.
 * `cross_account_access` - (Optional) Cross account access.
 
-* Note: to create a role, create it with no permisssion, then updated it with the desired permissions.
+* Note: to create a role, create it with no permissions, then updated it with the desired permissions.
     
     To understand the roles/permissions refer to to following: `https://gist.github.com/froyke/70ea7d91d01c3ba765a604edf910ebd5`
 
