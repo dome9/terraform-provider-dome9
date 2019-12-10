@@ -8,7 +8,7 @@ description: |-
 
 # dome9_role
 
-he Role resource has methods to create and manage Dome9 roles. Roles are used to manage access permissions for Dome9 users.
+The Role resource is used to create and manage Dome9 roles. Roles are used to manage access permissions for Dome9 users.
 
 ## Example Usage
 
@@ -58,9 +58,7 @@ The `permissions` supports the following arguments:
 * `on_boarding` - (Optional) View permission SRL.
 * `cross_account_access` - (Optional) Cross account access.
 
-* Note: Creating a new role is a 2 step process:
-    * first we create (post) a new role with empty permissions
-    * then we update (put) this role with the desired permissions
+* Note: to create a role, create it with no permisssion, then updated it with the desired permissions.
     
     To understand the roles/permissions refer to to following: `https://gist.github.com/froyke/70ea7d91d01c3ba765a604edf910ebd5`
 
