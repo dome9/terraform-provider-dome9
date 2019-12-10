@@ -4,5 +4,5 @@ go 1.13
 
 require (
 	github.com/dome9/dome9-sdk-go v1.5.1
-	github.com/hashicorp/terraform v0.12.10
+	github.com/hashicorp/terraform-plugin-sdk v1.1.0
 )

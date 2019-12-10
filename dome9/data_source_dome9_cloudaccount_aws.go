@@ -3,7 +3,7 @@ package dome9
 import (
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 
