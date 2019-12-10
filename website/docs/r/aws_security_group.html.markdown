@@ -3,12 +3,12 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_aws_security_group"
 sidebar_current: "docs-resource-dome9-aws-security-group"
 description: |-
-  Creates aws security group in Dome9
+  Creates AWS Security Group in Dome9
 ---
 
 # dome9_aws_security_group
 
-This resource has methods to add and manage security groups in a cloud account that is managed by Dome9.
+This resource has methods to add and manage Security Groups in a cloud account that is managed by Dome9.
 
 ## Example Usage
 
@@ -56,18 +56,18 @@ resource "dome9_aws_security_group" "aws_sg" {
 
 The following arguments are supported:
 
-* `dome9_security_group_name` - (Required) Name of the security group.
+* `dome9_security_group_name` - (Required) Name of the Security Group.
 * `dome9_cloud_account_id` - (Required) Cloud account id in Dome9.
-* `description` - (Optional) Security group description.
-* `aws_region_id` - (Optional) AWS region; in AWS format (e.g., "us-east-1"); default is us_east_1.
-* `is_protected` - (Optional) Is security group protected.
-    * Note: Creating security group with desired protection mode, first `post` new security group then update the `is_protected` field to `true` for `FullManage` mode and `false` for `ReadOnly` mode; by default the security group mode is `FullManage`
-* `vpc_id` - (Optional) Security group id.
-* `vpc_name` - (Optional) Security group vpc name.
-* `tags` - (Optional) Security group tags.
-* `services` - (Optional) Security group services.
+* `description` - (Optional) Security Group description.
+* `aws_region_id` - (Optional) AWS region, in AWS format (e.g., "us-east-1"); default is us_east_1.
+* `is_protected` - (Optional) Indicates the Security Group is in Protected mode.
+    * Note: to set the protection mode, first create the Security Group, then update it with the desired protection mode value ('true' for Protected).
+* `vpc_id` - (Optional) VPC id for VPC containing the Security Group.
+* `vpc_name` - (Optional) Security Group VPC name.
+* `tags` - (Optional) Security Group tags.
+* `services` - (Optional) Security Group services.
 
-### Security group services
+### Security Group services
 
 `services` has the these arguments:
 
@@ -77,8 +77,8 @@ The following arguments are supported:
 The configuration of inbound and outbound is:
    * `name` - (Required) Service name.
    * `description` - (Optional) Service description.
-   * `protocol_type` - (Required) Service protocol type. Select "ALL", "HOPOPT", "ICMP", "IGMP", "GGP", "IPV4", "ST", "TCP", "CBT", "EGP", "IGP", "BBN_RCC_MON", "NVP2", "PUP", "ARGUS", "EMCON", "XNET", "CHAOS", "UDP", "MUX", "DCN_MEAS", "HMP", "PRM", "XNS_IDP", "TRUNK1", "TRUNK2", "LEAF1", "LEAF2", "RDP", "IRTP", "ISO_TP4", "NETBLT", "MFE_NSP", "MERIT_INP", "DCCP", "ThreePC", "IDPR", "XTP", "DDP", "IDPR_CMTP", "TPplusplus", "IL", "IPV6", "SDRP", "IPV6_ROUTE", "IPV6_FRAG", "IDRP", "RSVP", "GRE", "DSR", "BNA", "ESP", "AH", "I_NLSP", "SWIPE", "NARP", "MOBILE", "TLSP", "SKIP", "ICMPV6", "IPV6_NONXT", "IPV6_OPTS", "CFTP", "SAT_EXPAK", "KRYPTOLAN", "RVD", "IPPC", "SAT_MON", "VISA", "IPCV", "CPNX", "CPHB", "WSN", "PVP", "BR_SAT_MON", "SUN_ND", "WB_MON", "WB_EXPAK", "ISO_IP", "VMTP", "SECURE_VMTP", "VINES", "TTP", "NSFNET_IGP", "DGP", "TCF", "EIGRP", "OSPFIGP", "SPRITE_RPC", "LARP", "MTP", "AX25", "IPIP", "MICP", "SCC_SP", "ETHERIP", "ENCAP", "GMTP", "IFMP", "PNNI", "PIM", "ARIS", "SCPS", "QNX", "AN", "IPCOMP", "SNP", "COMPAQ_PEER", "IPX_IN_IP", "VRRP", "PGM", "L2TP", "DDX", "IATP", "STP", "SRP", "UTI", "SMP", "SM", "PTP", "ISIS", "FIRE", "CRTP", "CRUDP", "SSCOPMCE", "IPLT", "SPS", "PIPE", "SCTP", "FC", "RSVP_E2E_IGNORE", "MOBILITY_HEADER", "UDPLITE", "MPLS_IN_IP", "MANET", "HIP", "SHIM6", "WESP" or "ROHC".
-   * `port` - (Optional) Type.
+   * `protocol_type` - (Required) Service protocol type. Select from "ALL", "HOPOPT", "ICMP", "IGMP", "GGP", "IPV4", "ST", "TCP", "CBT", "EGP", "IGP", "BBN_RCC_MON", "NVP2", "PUP", "ARGUS", "EMCON", "XNET", "CHAOS", "UDP", "MUX", "DCN_MEAS", "HMP", "PRM", "XNS_IDP", "TRUNK1", "TRUNK2", "LEAF1", "LEAF2", "RDP", "IRTP", "ISO_TP4", "NETBLT", "MFE_NSP", "MERIT_INP", "DCCP", "ThreePC", "IDPR", "XTP", "DDP", "IDPR_CMTP", "TPplusplus", "IL", "IPV6", "SDRP", "IPV6_ROUTE", "IPV6_FRAG", "IDRP", "RSVP", "GRE", "DSR", "BNA", "ESP", "AH", "I_NLSP", "SWIPE", "NARP", "MOBILE", "TLSP", "SKIP", "ICMPV6", "IPV6_NONXT", "IPV6_OPTS", "CFTP", "SAT_EXPAK", "KRYPTOLAN", "RVD", "IPPC", "SAT_MON", "VISA", "IPCV", "CPNX", "CPHB", "WSN", "PVP", "BR_SAT_MON", "SUN_ND", "WB_MON", "WB_EXPAK", "ISO_IP", "VMTP", "SECURE_VMTP", "VINES", "TTP", "NSFNET_IGP", "DGP", "TCF", "EIGRP", "OSPFIGP", "SPRITE_RPC", "LARP", "MTP", "AX25", "IPIP", "MICP", "SCC_SP", "ETHERIP", "ENCAP", "GMTP", "IFMP", "PNNI", "PIM", "ARIS", "SCPS", "QNX", "AN", "IPCOMP", "SNP", "COMPAQ_PEER", "IPX_IN_IP", "VRRP", "PGM", "L2TP", "DDX", "IATP", "STP", "SRP", "UTI", "SMP", "SM", "PTP", "ISIS", "FIRE", "CRTP", "CRUDP", "SSCOPMCE", "IPLT", "SPS", "PIPE", "SCTP", "FC", "RSVP_E2E_IGNORE", "MOBILITY_HEADER", "UDPLITE", "MPLS_IN_IP", "MANET", "HIP", "SHIM6", "WESP" or "ROHC".
+   * `port` - (Optional) Service type (port).
    * `open_for_all` - (Optional) Is open for all.
    * `scope` - (Optional) Service scope which has the following configuration:
       * `type` - (Required) scope type.
@@ -87,7 +87,7 @@ The configuration of inbound and outbound is:
 ## Attributes Reference
 
 * `cloud_account_name` - AWS cloud account name.
-* `external_id` - Security group external id.
+* `external_id` - Security Group external id.
 
 * Note: Just the following fields can be updated: services (inbound / outbound), tags and protection mode. 
 ## Import
