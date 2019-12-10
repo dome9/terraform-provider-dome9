@@ -26,7 +26,7 @@ func TestAccDataSourceCloudSecurityGroupAWSBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudSecurityGroupAWSDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, resourceName, resourceTypeAndName),
+				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, resourceName, resourceTypeAndName, variable.AWSSecurityGroupTagValue),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "dome9_security_group_name", resourceTypeAndName, "dome9_security_group_name"),

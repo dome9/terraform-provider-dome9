@@ -189,7 +189,7 @@ func dataSourceSecurityGroupAWSRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("vpc_id", resp.VpcID)
 	_ = d.Set("external_id", resp.VpcID)
 	_ = d.Set("tags", resp.Tags)
-	_ = d.Set("services", flattenServices(resp.Services))
+	_ = d.Set("services", flattenCloudSecurityGroupAWSServices(resp.Services))
 
 	if resp.VpcName != nil {
 		_ = d.Set("vpc_name", *resp.VpcName)
