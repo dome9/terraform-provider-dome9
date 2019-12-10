@@ -54,8 +54,9 @@ func resourceCloudAccountAzure() *schema.Resource {
 							Required: true,
 						},
 						"client_password": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:      schema.TypeString,
+							Required:  true,
+							Sensitive: true,
 						},
 					},
 				},
