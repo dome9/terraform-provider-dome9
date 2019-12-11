@@ -12,6 +12,7 @@ IMPROVEMENTS:
 
 BUG FIXES:
 * Support attachment of cloud account resources to organizational unit on creation ([#29](https://github.com/terraform-providers/terraform-provider-dome9/pull/29))
+* Sensitive strings will be hidden in Terraform plan for Azure and GCP cloud account onboarding ([#40](https://github.com/terraform-providers/terraform-provider-dome9/pull/40))
 
 ## 1.13.0 (December 02, 2019)
 
