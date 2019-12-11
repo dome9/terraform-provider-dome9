@@ -14,9 +14,12 @@ const (
 // Azure resource/data source
 const (
 	CloudAccountAzureCreationResourceName = "test_cloudaccount_azure"
-	CloudAccountAzureUpdatedAccountName   = "updated_cloud_account_name"
 	CloudAccountAzureOperationMode        = "Read"
 	CloudAccountAzureVendor               = "azure"
+
+	// Update const
+	CloudAccountAzureUpdatedAccountName  = "updated_cloud_account_name"
+	CloudAccountAzureUpdateOperationMode = "Manage"
 )
 
 // GCP resource/data source
@@ -63,6 +66,19 @@ const (
 	AWSSecurityGroupDescription = "this is aws security group test"
 	AWSSecurityGroupRegionID    = "us_east_1"
 	AWSSecurityGroupTagValue    = "tag_val_1"
+)
+
+// Azure security group resource/data source
+const (
+	AzureSecurityGroupDescription       = "this is azure security group test"
+	AzureSecurityGroupRegion            = "australiaeast"
+	AzureSecurityGroupTagValue          = "tag_val_1"
+	AzureSecurityGroupIsTamperProtected = false
+
+	// Update const
+	AzureSecurityGroupUpdateDescription       = "this is azure security group test (update)"
+	AzureSecurityGroupUpdateIsTamperProtected = true
+	AzureSecurityGroupUpdateTagValue          = "tag_val_2"
 )
 
 // Role resource/data source

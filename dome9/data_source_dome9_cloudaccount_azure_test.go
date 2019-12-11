@@ -22,7 +22,7 @@ func TestAccDataSourceCloudAccountAzureBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountAzureDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureCreationResourceName),
+				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureCreationResourceName, variable.CloudAccountAzureOperationMode),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "name", resourceTypeAndName, "name"),

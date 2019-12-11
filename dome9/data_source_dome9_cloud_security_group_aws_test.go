@@ -23,7 +23,7 @@ func TestAccDataSourceCloudSecurityGroupAWSBasic(t *testing.T) {
 			testAccCloudAccountAWSEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCloudSecurityGroupAWSDestroy,
+		CheckDestroy: testAccCheckAWSCloudSecurityGroupDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, resourceName, resourceTypeAndName, variable.AWSSecurityGroupTagValue),

@@ -29,3 +29,8 @@ const (
 	CloudAccountGCPEnvVarClientId          = "CLIENT_ID"
 	CloudAccountGCPEnvVarClientX509CertUrl = "CLIENT_X509_CERT_URL"
 )
+
+// Azure security group
+const (
+	AzureSecurityGroupResourceGroup = "AZURE_RESOURCE_GROUP"
+)
