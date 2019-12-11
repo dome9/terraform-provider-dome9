@@ -38,12 +38,14 @@ func resourceCloudAccountGCP() *schema.Resource {
 							Required: true,
 						},
 						"private_key_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:      schema.TypeString,
+							Required:  true,
+							Sensitive: true,
 						},
 						"private_key": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:      schema.TypeString,
+							Required:  true,
+							Sensitive: true,
 						},
 						"client_email": {
 							Type:     schema.TypeString,
