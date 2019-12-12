@@ -11,4 +11,5 @@ const (
 	RuleSet                          = "dome9_ruleset"
 	CloudAccountAWSSecurityGroup     = "dome9_aws_security_group"
 	Role                             = "dome9_role"
+	OrganizationalUnit               = "dome9_organizational_unit"
 )

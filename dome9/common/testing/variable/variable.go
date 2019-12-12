@@ -78,3 +78,11 @@ const (
 	// Update const
 	RoleUpdateDescription = "this is update role test"
 )
+
+// OrganizationalUnit resource/data source
+const (
+	OrganizationalUnitName       = "test_ou"
+	OrganizationalUnitNameUpdate = "test_ou_update"
+	ParentID                     = "" // empty string as parent id creates ou under Dome9 main root ou
+	Dome9RootOuID                = "00000000-0000-0000-0000-000000000000"
+)

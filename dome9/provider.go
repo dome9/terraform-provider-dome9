@@ -45,6 +45,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.RuleSet:                          resourceRuleSet(),
 			resourcetype.CloudAccountAWSSecurityGroup:     resourceCloudSecurityGroupAWS(),
 			resourcetype.Role:                             resourceRole(),
+			resourcetype.OrganizationalUnit:               resourceOrganizationalUnit(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
@@ -57,6 +58,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.RuleSet:                          dataSourceRuleSet(),
 			resourcetype.CloudAccountAWSSecurityGroup:     dataSourceCloudSecurityGroupAWS(),
 			resourcetype.Role:                             dataSourceRole(),
+			resourcetype.OrganizationalUnit:               dataSourceOrganizationalUnit(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
