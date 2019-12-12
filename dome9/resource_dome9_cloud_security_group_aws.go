@@ -260,16 +260,9 @@ func resourceCloudSecurityGroupAWSUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 	}
-	if d.HasChange("tags") {
-		log.Printf("[INFO] Updating security group tags")
+	if d.HasChange("tags") || d.HasChange("services") {
+		log.Println("[INFO] Tags or services has been changed")
 
-		if _, _, err := d9Client.awsSecurityGroup.UpdateTags(d.Id(), d.Get("tags").(map[string]interface{})); err != nil {
-			return err
-		}
-	}
-
-	if d.HasChange("services") {
-		log.Printf("[INFO] Updating inbound/outbound services")
 		if _, _, err := d9Client.awsSecurityGroup.Update(d.Id(), expandCloudSecurityGroupRequest(d)); err != nil {
 			return err
 		}
