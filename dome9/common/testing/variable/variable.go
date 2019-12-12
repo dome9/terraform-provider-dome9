@@ -64,7 +64,6 @@ const (
 
 // AWS security group resource/data source
 const (
-	AWSSecurityGroupName           = "test_aws_security_group"
 	AWSSecurityGroupDescription    = "this is aws security group test"
 	AWSSecurityGroupRegionID       = "us_east_1"
 	AWSSecurityGroupTagValue       = "tag_val_1"

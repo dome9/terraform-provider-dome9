@@ -35,7 +35,7 @@ func TestAccResourceCloudSecurityGroupAWSBasic(t *testing.T) {
 				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName, variable.AWSSecurityGroupTagValue),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudSecurityGroupAWSExists(securityGroupTypeAndName, &cloudSecurityGroupAWSResponse),
-					resource.TestCheckResourceAttr(securityGroupTypeAndName, "dome9_security_group_name", variable.AWSSecurityGroupName),
+					resource.TestCheckResourceAttr(securityGroupTypeAndName, "dome9_security_group_name", securityGroupGeneratedName),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "description", variable.AWSSecurityGroupDescription),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "aws_region_id", variable.AWSSecurityGroupRegionID),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.tag_key", variable.AWSSecurityGroupTagValue),
@@ -122,7 +122,7 @@ data "%s" "%s" {
 		// resource variables
 		resourcetype.CloudAccountAWSSecurityGroup,
 		securityGroupResourceName,
-		variable.AWSSecurityGroupName,
+		securityGroupResourceName,
 		variable.AWSSecurityGroupDescription,
 		variable.AWSSecurityGroupRegionID,
 		awsCloudAccountTypeAndName,
