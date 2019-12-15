@@ -1,6 +1,6 @@
 resource "dome9_organizational_unit" "test_ou" {
-  name               = "some_organizational_unit"
-  parent_id          = "00000000-0000-0000-0000-000000000000"
+  name      = "SOME_ORGANIZATIONAL_UNIT"
+  parent_id = "00000000-0000-0000-0000-000000000000"
 }
 
 data "dome9_organizational_unit" "test_ou_ds" {

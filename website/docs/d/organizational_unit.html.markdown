@@ -14,7 +14,7 @@ Use this data source to get information about a Organizational Unit in Dome9.
 
 ```hcl
 data "dome9_organizational_unit" "test" {
-  id        = "d9-organizational-unit-id"
+  id = "d9-organizational-unit-id"
 }
 
 ```

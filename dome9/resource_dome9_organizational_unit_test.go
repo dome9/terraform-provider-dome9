@@ -51,13 +51,13 @@ func testAccCheckOrganizationalUnitDestroy(s *terraform.State) error {
 			continue
 		}
 
-		ipList, _, err := apiClient.ruleSet.Get(rs.Primary.ID)
+		organizationalUnit, _, err := apiClient.organizationalUnit.Get(rs.Primary.ID)
 
 		if err == nil {
 			return fmt.Errorf("id %s already exists", rs.Primary.ID)
 		}
 
-		if ipList != nil {
+		if organizationalUnit != nil {
 			return fmt.Errorf("organizational unit with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}

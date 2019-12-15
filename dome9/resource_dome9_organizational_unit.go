@@ -96,7 +96,7 @@ func resourceOrganizationalUnitCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	log.Printf("[INFO] Created AWS CloudAccount. ID: %v\n", resp.Item.ID)
+	log.Printf("[INFO] Created Organizational Unit. ID: %v\n", resp.Item.ID)
 	d.SetId(resp.Item.ID)
 
 	return resourceOrganizationalUnitRead(d, meta)
@@ -104,7 +104,6 @@ func resourceOrganizationalUnitCreate(d *schema.ResourceData, meta interface{}) 
 
 func resourceOrganizationalUnitRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-
 	resp, _, err := d9Client.organizationalUnit.Get(d.Id())
 
 	if err != nil {

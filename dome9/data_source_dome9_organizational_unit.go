@@ -87,7 +87,7 @@ func dataSourceOrganizationalUnitRead(d *schema.ResourceData, meta interface{}) 
 	d9Client := meta.(*Client)
 
 	id := d.Get("id").(string)
-	log.Printf("[INFO] Getting data for Organizational Unit ID%s\n", id)
+	log.Printf("[INFO] Getting data for Organizational Unit ID %s\n", id)
 
 	resp, _, err := d9Client.organizationalUnit.Get(id)
 	if err != nil {
