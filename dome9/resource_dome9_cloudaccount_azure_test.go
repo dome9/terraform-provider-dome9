@@ -138,15 +138,12 @@ data "%s" "%s" {
 func getCloudAccountAzureResourceHCL(cloudAccountName, generatedAName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-  credentials = {
-    client_id       = "%s"
-    client_password = "%s"
-  }
-
-  name            = "%s"
-  operation_mode  = "%s"
-  subscription_id = "%s"
-  tenant_id       = "%s"
+	client_id       = "%s"
+	client_password = "%s"
+	name            = "%s"
+	operation_mode  = "%s"
+	subscription_id = "%s"
+	tenant_id       = "%s"
 }
 `,
 		// azure cloud account variables

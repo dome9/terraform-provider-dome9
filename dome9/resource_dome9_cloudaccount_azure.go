@@ -44,22 +44,14 @@ func resourceCloudAccountAzure() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"credentials": {
-				Type:     schema.TypeMap,
+			"client_id": {
+				Type:     schema.TypeString,
 				Required: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"client_id": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"client_password": {
-							Type:      schema.TypeString,
-							Required:  true,
-							Sensitive: true,
-						},
-					},
-				},
+			},
+			"client_password": {
+				Type:      schema.TypeString,
+				Required:  true,
+				Sensitive: true,
 			},
 			"creation_date": {
 				Type:     schema.TypeString,
@@ -116,7 +108,6 @@ func resourceCloudAccountAzureRead(d *schema.ResourceData, meta interface{}) err
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("subscription_id", resp.SubscriptionID)
 	_ = d.Set("tenant_id", resp.TenantID)
-	_ = d.Set("credentials", resp.Credentials)
 	_ = d.Set("operation_mode", resp.OperationMode)
 	_ = d.Set("vendor", resp.Vendor)
 	_ = d.Set("creation_date", resp.CreationDate)
@@ -165,12 +156,12 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 		}
 	}
 
-	if d.HasChange("credentials") {
+	if d.HasChange("client_id") || d.HasChange("client_password") {
 		log.Println("The credentials has been changed")
 
 		if resp, _, err := d9Client.cloudaccountAzure.UpdateCredentials(d.Id(), azure.CloudAccountUpdateCredentialsRequest{
-			ApplicationID:  d.Get("credentials.client_id").(string),
-			ApplicationKey: d.Get("credentials.client_password").(string),
+			ApplicationID:  d.Get("client_id").(string),
+			ApplicationKey: d.Get("client_password").(string),
 		}); err != nil {
 			return err
 		} else {
@@ -200,8 +191,8 @@ func expandCloudAccountAzureRequest(d *schema.ResourceData) azure.CloudAccountRe
 		TenantID:       d.Get("tenant_id").(string),
 		OperationMode:  d.Get("operation_mode").(string),
 		Credentials: azure.CloudAccountCredentials{
-			ClientID:       d.Get("credentials.client_id").(string),
-			ClientPassword: d.Get("credentials.client_password").(string),
+			ClientID:       d.Get("client_id").(string),
+			ClientPassword: d.Get("client_password").(string),
 		},
 		OrganizationalUnitID:   d.Get("organizational_unit_id").(string),
 		OrganizationalUnitPath: d.Get("organizational_unit_path").(string),

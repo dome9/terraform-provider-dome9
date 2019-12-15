@@ -16,14 +16,12 @@ Basic usage:
 
 ```hcl
 resource "dome9_cloudaccount_azure" "test" {
-  name            = "NAME"
-  operation_mode  = "OPERATION MODE"
-  subscription_id = "SUBSCRIPTION ID"
-  tenant_id       = "TENANT ID"
-  credentials = {
-    client_id       = "CLIENT ID"
-    client_password = "CLIENT PASSWORD"
-  }
+  name                   = "NAME"
+  operation_mode         = "OPERATION MODE"
+  subscription_id        = "SUBSCRIPTION ID"
+  tenant_id              = "TENANT ID"
+  client_id              = "CLIENT ID"
+  client_password        = "CLIENT PASSWORD"
   organizational_unit_id = "ORGANIZATIONAL UNIT ID"
 }
 ```
@@ -33,18 +31,12 @@ resource "dome9_cloudaccount_azure" "test" {
 The following arguments are supported:
 
 * `name` - (Required) The name of the Azure account in Dome9
+* `operation_mode` - (Required) Dome9 operation mode for the Azure account ("Read-Only" or "Managed")
 * `subscription_id` - (Required) The Azure subscription id for account
 * `tenant_id` - (Required) The Azure tenant id
-* `operation_mode` - (Required) Dome9 operation mode for the Azure account ("Read-Only" or "Managed")
-* `credentials` - (Required) Azure account credentials
-* `organizational_unit_id` - (Optional) Organizational Unit that this cloud account will be attached to
-
-### Credentials
-
-The `credentials` block supports: 
-
 * `client_id` - (Required) Azure account id
-* `client_password` - (Required) Password for account
+* `client_password` - (Required) Password for account* 
+* `organizational_unit_id` - (Optional) Organizational Unit that this cloud account will be attached to
 
 ## Attributes Reference
 
