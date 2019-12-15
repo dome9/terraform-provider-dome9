@@ -64,10 +64,9 @@ const (
 
 // AWS security group resource/data source
 const (
-	AWSSecurityGroupDescription    = "this is aws security group test"
-	AWSSecurityGroupRegionID       = "us_east_1"
-	AWSSecurityGroupTagValue       = "tag_val_1"
-	AWSSecurityGroupUpdateTagValue = "tag_val_2"
+	AWSSecurityGroupDescription = "this is aws security group test"
+	AWSSecurityGroupRegionID    = "us_east_1"
+	AWSSecurityGroupTagValue    = "tag_val_1"
 )
 
 // Role resource/data source

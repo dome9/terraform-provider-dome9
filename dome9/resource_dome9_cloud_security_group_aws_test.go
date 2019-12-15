@@ -41,14 +41,6 @@ func TestAccResourceCloudSecurityGroupAWSBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.tag_key", variable.AWSSecurityGroupTagValue),
 				),
 			},
-			// update test
-			{
-				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName, variable.AWSSecurityGroupUpdateTagValue),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudSecurityGroupAWSExists(securityGroupTypeAndName, &cloudSecurityGroupAWSResponse),
-					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.tag_key", variable.AWSSecurityGroupUpdateTagValue),
-				),
-			},
 		},
 	})
 }
