@@ -1,18 +1,11 @@
 resource "dome9_cloudaccount_gcp" "gcp_ca" {
-  name = "sandbox"
-
-  service_account_credentials = {
-    auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
-    auth_uri                    = "https://accounts.google.com/o/oauth2/auth"
-    client_email                = "EMAIL@ADDRESS.COM"
-    client_id                   = "CID"
-    client_x509_cert_url        = "CERT URL"
-    private_key                 = "KEY"
-    private_key_id              = "PRIVATE"
-    project_id                  = "ID"
-    token_uri                   = "https://oauth2.googleapis.com/token"
-    type                        = "service_account"
-  }
+  name                        = "sandbox"
+  project_id                  = "ID"
+  private_key_id              = "PRIVATE"
+  private_key                 = "KEY"
+  client_email                = "EMAIL@ADDRESS.COM"
+  client_id                   = "CID"
+  auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
 }
 
 data "dome9_cloudaccount_gcp" "gcp_ds" {
