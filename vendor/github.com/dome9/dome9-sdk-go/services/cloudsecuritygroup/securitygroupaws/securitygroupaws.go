@@ -143,7 +143,7 @@ func (service *Service) Create(body CloudSecurityGroupRequest) (*CloudSecurityGr
 	return v, resp, nil
 }
 
-// update aws security group, in order to update the field isProtected we should call the function UpdateProtectionMode
+// update aws security group, in order to update the field isProtected we should call the function UpdateProtectionMode, otherwise use this function.
 func (service *Service) Update(d9SecurityGroupID string, body CloudSecurityGroupRequest) (*CloudSecurityGroupResponse, *http.Response, error) {
 	v := new(CloudSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, d9SecurityGroupID)
@@ -174,22 +174,6 @@ func (service *Service) UpdateProtectionMode(d9SecurityGroupID, protectionMode s
 	}
 
 	return v, resp, nil
-}
-
-// update tags is post api call
-func (service *Service) UpdateTags(d9SecurityGroupID string, tags map[string]interface{}) (*map[string]string, *http.Response, error) {
-	updatedTags := new(map[string]string)
-	relativeURL := fmt.Sprintf("%s/%s/%s", awsSgResourcePath, d9SecurityGroupID, awsSgResourceTags)
-	body := UpdateTagsQueryParameters{
-		Tags: tags,
-	}
-
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, updatedTags)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return updatedTags, resp, nil
 }
 
 // create and attach or update bound service (post api call)
