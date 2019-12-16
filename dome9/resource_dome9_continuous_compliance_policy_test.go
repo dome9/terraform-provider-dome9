@@ -22,7 +22,7 @@ func TestAccResourceContinuousCompliancePolicyBasic(t *testing.T) {
 	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 	notificationUpdateTypeAndName, _, notificationUpdateGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 
-	azureHCL := getCloudAccountAzureResourceHCL(azureGeneratedName, variable.CloudAccountAzureCreationResourceName)
+	azureHCL := getCloudAccountAzureResourceHCL(azureGeneratedName, variable.CloudAccountAzureCreationResourceName, variable.CloudAccountAzureOperationMode)
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
 	// notificationHCL := getUpdateContinuousCompliancePolicyResourceHCL1(azureHCL, azureTypeAndName, notificationHCL, notificationTypeAndName, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
 	notificationUpdateHCL := getContinuousComplianceNotificationResourceHCL(notificationUpdateGeneratedName, continuousComplianceNotificationUpdateConfig())

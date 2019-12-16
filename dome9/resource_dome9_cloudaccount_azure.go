@@ -5,10 +5,12 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
 
 func resourceCloudAccountAzure() *schema.Resource {
@@ -37,8 +39,9 @@ func resourceCloudAccountAzure() *schema.Resource {
 				ForceNew: true,
 			},
 			"operation_mode": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringInSlice(providerconst.OperationMode, true),
 			},
 			"vendor": {
 				Type:     schema.TypeString,

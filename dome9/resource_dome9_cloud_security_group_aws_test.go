@@ -29,7 +29,7 @@ func TestAccResourceCloudSecurityGroupAWSBasic(t *testing.T) {
 			testAccCloudAccountAWSEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCloudSecurityGroupAWSDestroy,
+		CheckDestroy: testAccCheckAWSCloudSecurityGroupDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName, variable.AWSSecurityGroupTagValue),
@@ -67,7 +67,7 @@ func testAccCheckCloudSecurityGroupAWSExists(resource string, securityGroup *sec
 	}
 }
 
-func testAccCheckCloudSecurityGroupAWSDestroy(s *terraform.State) error {
+func testAccCheckAWSCloudSecurityGroupDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {

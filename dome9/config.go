@@ -8,6 +8,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws"
+	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 	"github.com/dome9/dome9-sdk-go/services/iplist"
@@ -32,6 +33,7 @@ type Client struct {
 	awsSecurityGroup                 securitygroupaws.Service
 	role                             roles.Service
 	organizationalUnit               organizationalunits.Service
+	azureSecurityGroup               securitygroupazure.Service
 }
 
 type Config struct {
@@ -57,6 +59,7 @@ func (c *Config) Client() (*Client, error) {
 		awsSecurityGroup:                 *securitygroupaws.New(config),
 		role:                             *roles.New(config),
 		organizationalUnit:               *organizationalunits.New(config),
+		azureSecurityGroup:               *securitygroupazure.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")

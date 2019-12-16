@@ -14,9 +14,12 @@ const (
 // Azure resource/data source
 const (
 	CloudAccountAzureCreationResourceName = "test_cloudaccount_azure"
-	CloudAccountAzureUpdatedAccountName   = "updated_cloud_account_name"
 	CloudAccountAzureOperationMode        = "Read"
 	CloudAccountAzureVendor               = "azure"
+
+	// Update const
+	CloudAccountAzureUpdatedAccountName  = "updated_cloud_account_name"
+	CloudAccountAzureUpdateOperationMode = "Manage"
 )
 
 // GCP resource/data source
@@ -65,6 +68,14 @@ const (
 	AWSSecurityGroupTagValue    = "tag_val_1"
 )
 
+// Azure security group resource/data source
+const (
+	AzureSecurityGroupDescription       = "this is azure security group test"
+	AzureSecurityGroupRegion            = "australiaeast"
+	AzureSecurityGroupTagValue          = "tag_val_1"
+	AzureSecurityGroupIsTamperProtected = false
+)
+
 // Role resource/data source
 const (
 	RoleName        = "test_role"
@@ -74,10 +85,9 @@ const (
 	RoleUpdateDescription = "this is update role test"
 )
 
-// OrganizationalUnit resource/data source
+// Organizational unit resource/data source
 const (
 	OrganizationalUnitName       = "test_ou"
 	OrganizationalUnitNameUpdate = "test_ou_update"
 	ParentID                     = "" // empty string as parent id creates ou under Dome9 main root ou
-	Dome9RootOuID                = "00000000-0000-0000-0000-000000000000"
 )
