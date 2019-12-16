@@ -21,13 +21,9 @@ const (
 
 // GCP resource/data source
 const (
-	CloudAccountGCPCreationResourceName    = "test_cloudaccount_gcp"
-	CloudAccountGCPUpdatedAccountName      = "updated_cloud_account_name"
-	CloudAccountGCPType                    = "service_account"
-	CloudAccountGCPVendor                  = "google"
-	CloudAccountGCPAuthURL                 = "https://accounts.google.com/o/oauth2/auth"
-	CloudAccountGCPTokenURL                = "https://oauth2.googleapis.com/token"
-	CloudAccountGCPAuthProviderX509CertURL = "https://www.googleapis.com/oauth2/v1/certs"
+	CloudAccountGCPCreationResourceName = "test_cloudaccount_gcp"
+	CloudAccountGCPUpdatedAccountName   = "updated_cloud_account_name"
+	CloudAccountGCPVendor               = "google"
 )
 
 // IpList resource/data source

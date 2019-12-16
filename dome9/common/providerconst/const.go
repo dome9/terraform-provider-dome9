@@ -13,6 +13,14 @@ const (
 	ProviderBaseURL   = "base_url"
 )
 
+// GCP onboarding
+const (
+	GCPCloudAccountType                    = "service_account"
+	GCPCloudAccountAuthUri                 = "https://accounts.google.com/o/oauth2/auth"
+	GCPCloudAccountTokenUri                = "https://oauth2.googleapis.com/token"
+	GCPCloudAccountAuthProviderX509CertUrl = "https://www.googleapis.com/oauth2/v1/certs"
+)
+
 // AWS security group protection mode
 const (
 	FullManage = "FullManage"
