@@ -83,7 +83,7 @@ The configuration of inbound and outbound is:
    * `destination_scopes` - (Required) List of destination scopes for the service (CIDR / IP List / Tag).
       * `type` - (Required) scope type.
       * `data` - (Required) scope data.
-   * `is_default` - .
+   * `is_default` - Gets or sets the default security rules of network security group.
         
 ## Attributes Reference
 

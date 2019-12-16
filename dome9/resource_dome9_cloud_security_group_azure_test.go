@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure"
+
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
@@ -19,7 +20,6 @@ import (
 
 func TestAccResourceAzureSecurityGroupBasic(t *testing.T) {
 	var azureSecurityGroupResponse securitygroupazure.AzureSecurityGroupResponse
-	// time.Sleep(20 * time.Second)
 	securityGroupTypeAndName, _, securityGroupGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAzureSecurityGroup)
 	azureTypeAndName, _, azureGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAzure)
 	azureCloudAccountHCL := getCloudAccountAzureResourceHCL(azureGeneratedName, variable.CloudAccountAzureCreationResourceName, variable.CloudAccountAzureUpdateOperationMode)
@@ -41,16 +41,6 @@ func TestAccResourceAzureSecurityGroupBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "description", variable.AzureSecurityGroupDescription),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "is_tamper_protected", strconv.FormatBool(variable.AzureSecurityGroupIsTamperProtected)),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.0.value", variable.AzureSecurityGroupTagValue),
-				),
-			},
-			// Update test
-			{
-				Config: testAccCheckAzureSecurityGroupBasic(azureCloudAccountHCL, azureTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName, azureSecurityGroupUpdateAdditionalBlock()),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAzureSecurityGroupExists(securityGroupTypeAndName, &azureSecurityGroupResponse),
-					resource.TestCheckResourceAttr(securityGroupTypeAndName, "description", variable.AzureSecurityGroupUpdateDescription),
-					resource.TestCheckResourceAttr(securityGroupTypeAndName, "is_tamper_protected", strconv.FormatBool(variable.AzureSecurityGroupUpdateIsTamperProtected)),
-					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.0.value", variable.AzureSecurityGroupUpdateTagValue),
 				),
 			},
 		},
@@ -120,7 +110,7 @@ resource "%s" "%s" {
  %s
 }
 
-// azure sequrity group data source
+// azure security group data source
 data "%s" "%s" {
   id = "${%s.id}"
 }
@@ -157,21 +147,5 @@ tags {
 		variable.AzureSecurityGroupDescription,
 		strconv.FormatBool(variable.AzureSecurityGroupIsTamperProtected),
 		variable.AzureSecurityGroupTagValue,
-	)
-}
-
-func azureSecurityGroupUpdateAdditionalBlock() string {
-	return fmt.Sprintf(`
-description    = "%s"
-is_tamper_protected = "%s"
-tags {
-	key = "tag_key"
-	value = "%s"
-}
-
-`,
-		variable.AzureSecurityGroupUpdateDescription,
-		strconv.FormatBool(variable.AzureSecurityGroupUpdateIsTamperProtected),
-		variable.AzureSecurityGroupUpdateTagValue,
 	)
 }

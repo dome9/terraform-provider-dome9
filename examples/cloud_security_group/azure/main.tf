@@ -30,6 +30,31 @@ resource "dome9_azure_security_group" "azure_sg" {
     }
     is_default = false
   }
+
+  outbound {
+    name               = "NAME"
+    description        = "DESCRIPTION"
+    priority           = 0
+    access             = "ACCESS"
+    protocol           = "PRIORITY"
+    source_port_ranges = ["SOURCE_PORT_RANGES"]
+
+    source_scopes {
+      type = "TYPE"
+      data = {
+        //        data fields
+      }
+    }
+    destination_port_ranges = ["20-90"]
+
+    destination_scopes {
+      type = "TYPE"
+      data = {
+        //          data fields
+      }
+    }
+    is_default = false
+  }
 }
 
 data "dome9_azure_security_group" "azure_sg_ds" {

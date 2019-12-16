@@ -74,11 +74,6 @@ const (
 	AzureSecurityGroupRegion            = "australiaeast"
 	AzureSecurityGroupTagValue          = "tag_val_1"
 	AzureSecurityGroupIsTamperProtected = false
-
-	// Update const
-	AzureSecurityGroupUpdateDescription       = "this is azure security group test (update)"
-	AzureSecurityGroupUpdateIsTamperProtected = true
-	AzureSecurityGroupUpdateTagValue          = "tag_val_2"
 )
 
 // Role resource/data source
@@ -90,10 +85,9 @@ const (
 	RoleUpdateDescription = "this is update role test"
 )
 
-// OrganizationalUnit resource/data source
+// Organizational unit resource/data source
 const (
 	OrganizationalUnitName       = "test_ou"
 	OrganizationalUnitNameUpdate = "test_ou_update"
 	ParentID                     = "" // empty string as parent id creates ou under Dome9 main root ou
-	Dome9RootOuID                = "00000000-0000-0000-0000-000000000000"
 )
