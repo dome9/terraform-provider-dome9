@@ -16,13 +16,13 @@ Basic usage:
 
 ```hcl
 resource "dome9_cloudaccount_gcp" "gcp_ca" {
-  name                        = "sandbox"
-  project_id                  = "ID"
-  private_key_id              = "PRIVATE"
-  private_key                 = "KEY"
-  client_email                = "EMAIL@ADDRESS.COM"
-  client_id                   = "CID"
-  auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
+  name                 = "sandbox"
+  project_id           = "ID"
+  private_key_id       = "PRIVATE"
+  private_key          = "KEY"
+  client_email         = "EMAIL@ADDRESS.COM"
+  client_id            = "CID"
+  client_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
 }
 
 ```

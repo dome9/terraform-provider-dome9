@@ -177,7 +177,7 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
-	if d.HasChange("project_id") || d.HasChange("private_key_id") || d.HasChange("private_key") || d.HasChange("client_email") || d.HasChange("client_id") || d.HasChange("client_x509_cert_url") {
+	if credentialsHasChange(d) {
 		log.Println("The service account credentials user or domain name has been changed")
 
 		if resp, _, err := d9Client.cloudaccountGCP.UpdateCredentials(d.Id(), gcp.CloudAccountUpdateCredentialsRequest{
@@ -191,6 +191,10 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	return nil
+}
+
+func credentialsHasChange(d *schema.ResourceData) bool {
+	return d.HasChange("project_id") || d.HasChange("private_key_id") || d.HasChange("private_key") || d.HasChange("client_email") || d.HasChange("client_id") || d.HasChange("client_x509_cert_url")
 }
 
 func expandCloudAccountGCPRequest(d *schema.ResourceData) gcp.CloudAccountRequest {
