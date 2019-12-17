@@ -13,4 +13,5 @@ const (
 	Role                             = "dome9_role"
 	OrganizationalUnit               = "dome9_organizational_unit"
 	CloudAccountAzureSecurityGroup   = "dome9_azure_security_group"
+	AttachIAMSafeToAwsCloudAccount   = "dome9_attach_iam_safe"
 )
