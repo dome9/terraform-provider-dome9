@@ -19,6 +19,11 @@ type CloudAccountRequest struct {
 	LambdaScanner          bool                    `json:"lambdaScanner,omitempty"`
 }
 
+type AttachIamSafeRequest struct {
+	CloudAccountID string `json:"cloudAccountId"`
+	Data           Data   `json:"data"`
+}
+
 type CloudAccountResponse struct {
 	ID                     string                  `json:"id"`
 	Vendor                 string                  `json:"vendor"`
@@ -28,7 +33,7 @@ type CloudAccountResponse struct {
 	IsFetchingSuspended    bool                    `json:"isFetchingSuspended"`
 	CreationDate           time.Time               `json:"creationDate"`
 	Credentials            CloudAccountCredentials `json:"credentials"`
-	IamSafe                CloudAccountIamSafe     `json:"iamSafe,omitempty"`
+	IamSafe                *CloudAccountIamSafe     `json:"iamSafe"`
 	NetSec                 CloudAccountNetSec      `json:"netSec,omitempty"`
 	Magellan               bool                    `json:"magellan"`
 	FullProtection         bool                    `json:"fullProtection"`
@@ -37,6 +42,21 @@ type CloudAccountResponse struct {
 	OrganizationalUnitPath string                  `json:"organizationalUnitPath"`
 	OrganizationalUnitName string                  `json:"organizationalUnitName"`
 	LambdaScanner          bool                    `json:"lambdaScanner"`
+}
+
+type CloudAccountCredentials struct {
+	ApiKey     string `json:"apikey,omitempty"`
+	Arn        string `json:"arn,omitempty"`
+	Secret     string `json:"secret,omitempty"`
+	IamUser    string `json:"iamUser,omitempty"`
+	Type       string `json:"type,omitempty"`
+	IsReadOnly bool   `json:"isReadOnly,omitempty"`
+}
+
+type Data struct {
+	AwsGroupArn  string `json:"AwsGroupArn"`
+	AwsPolicyArn string `json:"AwsPolicyArn"`
+	Mode         string `json:"Mode,omitempty"`
 }
 
 type CloudAccountUpdateRegionConfigRequest struct {
@@ -59,15 +79,6 @@ type CloudAccountUpdateNameRequest struct {
 	CloudAccountID        string `json:"cloudAccountId,omitempty"`
 	ExternalAccountNumber string `json:"externalAccountNumber,omitempty"`
 	Data                  string `json:"data,omitempty"`
-}
-
-type CloudAccountCredentials struct {
-	ApiKey     string `json:"apikey,omitempty"`
-	Arn        string `json:"arn,omitempty"`
-	Secret     string `json:"secret,omitempty"`
-	IamUser    string `json:"iamUser,omitempty"`
-	Type       string `json:"type,omitempty"`
-	IsReadOnly bool   `json:"isReadOnly,omitempty"`
 }
 
 type CloudAccountNetSec struct {
@@ -129,6 +140,16 @@ func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse,
 	return v, resp, nil
 }
 
+func (service *Service) AttachIAMSafeToCloudAccount(body AttachIamSafeRequest) (*CloudAccountResponse, *http.Response, error) {
+	v := new(CloudAccountResponse)
+	path := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAWSCloudAccounts, cloudaccounts.RESTfulServicePathAWSIAMSafe)
+	resp, err := service.Client.NewRequestDo("PUT", path, nil, body, v)
+	if err != nil {
+		return nil, nil, err
+	}
+	return v, resp, err
+}
+
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, id)
 	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
@@ -138,6 +159,15 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 	}
 
 	return resp, nil
+}
+
+func (service *Service) DetachIAMSafeToCloudAccount(id string) (*http.Response, error) {
+	path := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulServicePathAWSCloudAccounts, id, cloudaccounts.RESTfulServicePathAWSIAMSafe)
+	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, err
 }
 
 func (service *Service) UpdateName(body CloudAccountUpdateNameRequest) (*CloudAccountResponse, *http.Response, error) {

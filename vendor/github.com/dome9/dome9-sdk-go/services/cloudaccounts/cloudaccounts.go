@@ -12,6 +12,8 @@ const (
 	RESTfulServicePathAWSRegionConfig       = "region-conf"
 	RESTfulServicePathAWSOrganizationalUnit = "organizationalUnit"
 	RESTfulServicePathAWSCredentials        = "credentials"
+	RESTfulServicePathAWSCloudAccounts      = "cloudaccounts"
+	RESTfulServicePathAWSIAMSafe            = "iam-safe"
 )
 
 // Azure service paths
