@@ -120,6 +120,26 @@ func resourceCloudAccountAWS() *schema.Resource {
 					},
 				},
 			},
+			"iam_safe": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"aws_group_arn": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"aws_policy_arn": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"mode": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
 			"full_protection": {
 				Type:     schema.TypeBool,
 				Computed: true,
@@ -177,8 +197,15 @@ func resourceCloudAccountAWSRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
 	_ = d.Set("organizational_unit_id", resp.OrganizationalUnitID)
+
 	if err := d.Set("net_sec", flattenCloudAccountAWSNetSec(resp.NetSec)); err != nil {
 		return err
+	}
+
+	if resp.IamSafe != nil {
+		if err := d.Set("iam_safe", flattenCloudAccountIAMSafe(*resp.IamSafe)); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -278,6 +305,16 @@ func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountCr
 func flattenCloudAccountAWSNetSec(responseNetSec aws.CloudAccountNetSec) []interface{} {
 	m := map[string]interface{}{
 		"regions": flattenCloudAccountAWSNetSecRegions(responseNetSec.Regions),
+	}
+
+	return []interface{}{m}
+}
+
+func flattenCloudAccountIAMSafe(responseIAMSafe aws.CloudAccountIamSafe) []interface{} {
+	m := map[string]interface{}{
+		"aws_group_arn":  responseIAMSafe.AwsGroupArn,
+		"aws_policy_arn": responseIAMSafe.AwsPolicyArn,
+		"mode":           responseIAMSafe.Mode,
 	}
 
 	return []interface{}{m}
