@@ -32,7 +32,7 @@ func TestAccResourceAttachIAMSafeBasic(t *testing.T) {
 		CheckDestroy: testAccCheckAttachIAMSafeDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckAttachIAMSafeConfigure(awsCloudAccountHCL, awsTypeAndName, resourceTypeAndName, generatedName),
+				Config: testAccCheckAttachIAMSafeConfigure(awsCloudAccountHCL, awsTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAttachIAMSafeExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "aws_group_arn", os.Getenv(environmentvariable.AttachIAMSafeEnvVarGroupArn)),
@@ -96,7 +96,7 @@ func testAccAttachIAMSafeEnvVarsPreCheck(t *testing.T) {
 	}
 }
 
-func testAccCheckAttachIAMSafeConfigure(awsCloudAccountHCL, awsCloudAccountTypeAndName, resourceTypeAndName, generatedName string) string {
+func testAccCheckAttachIAMSafeConfigure(awsCloudAccountHCL, awsCloudAccountTypeAndName, generatedName string) string {
 	return fmt.Sprintf(`
 // aws cloud account resource
 %s
@@ -105,10 +105,6 @@ resource "%s" "%s" {
   aws_cloud_account_id = "${%s.id}"
   aws_group_arn        = "%s"
   aws_policy_arn       = "%s"
-}
-
-data "%s" "%s" {
-  id = "${%s.id}"
 }
 `,
 		awsCloudAccountHCL,
@@ -119,10 +115,5 @@ data "%s" "%s" {
 		awsCloudAccountTypeAndName,
 		os.Getenv(environmentvariable.AttachIAMSafeEnvVarGroupArn),
 		os.Getenv(environmentvariable.AttachIAMSafeEnvVarPolicyArn),
-
-		// data source variables
-		resourcetype.AttachIAMSafeToAwsCloudAccount,
-		generatedName,
-		resourceTypeAndName,
 	)
 }
