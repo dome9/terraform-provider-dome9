@@ -62,7 +62,6 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.Role:                             dataSourceRole(),
 			resourcetype.OrganizationalUnit:               dataSourceOrganizationalUnit(),
 			resourcetype.CloudAccountAzureSecurityGroup:   dataSourceSecurityGroupAzure(),
-			resourcetype.AttachIAMSafeToAwsCloudAccount:   dataSourceAttachIAMSafe(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
