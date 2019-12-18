@@ -83,6 +83,26 @@ func dataSourceCloudAccountAWS() *schema.Resource {
 					},
 				},
 			},
+			"iam_safe": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"aws_group_arn": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"aws_policy_arn": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"mode": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -108,8 +128,15 @@ func dataSourceAWSRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
 	_ = d.Set("organizational_unit_id", resp.OrganizationalUnitID)
+
 	if err := d.Set("net_sec", flattenCloudAccountAWSNetSec(resp.NetSec)); err != nil {
 		return err
+	}
+
+	if resp.IamSafe != nil {
+		if err := d.Set("iam_safe", flattenCloudAccountIAMSafe(*resp.IamSafe)); err != nil {
+			return err
+		}
 	}
 
 	return nil
