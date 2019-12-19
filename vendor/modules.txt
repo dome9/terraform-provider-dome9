@@ -71,6 +71,7 @@ github.com/dome9/dome9-sdk-go/services/iplist
 github.com/dome9/dome9-sdk-go/services/organizationalunits
 github.com/dome9/dome9-sdk-go/services/roles
 github.com/dome9/dome9-sdk-go/services/rulebundles
+github.com/dome9/dome9-sdk-go/services/users
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
 # github.com/golang/protobuf v1.3.2

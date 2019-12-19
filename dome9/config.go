@@ -15,6 +15,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/organizationalunits"
 	"github.com/dome9/dome9-sdk-go/services/roles"
 	"github.com/dome9/dome9-sdk-go/services/rulebundles"
+	"github.com/dome9/dome9-sdk-go/services/users"
 )
 
 func init() {
@@ -34,6 +35,7 @@ type Client struct {
 	role                             roles.Service
 	organizationalUnit               organizationalunits.Service
 	azureSecurityGroup               securitygroupazure.Service
+	users                            users.Service
 }
 
 type Config struct {
@@ -60,6 +62,7 @@ func (c *Config) Client() (*Client, error) {
 		role:                             *roles.New(config),
 		organizationalUnit:               *organizationalunits.New(config),
 		azureSecurityGroup:               *securitygroupazure.New(config),
+		users:                            *users.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
