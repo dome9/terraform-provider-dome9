@@ -32,13 +32,12 @@ func TestAccResourceCloudSecurityGroupAWSBasic(t *testing.T) {
 		CheckDestroy: testAccCheckAWSCloudSecurityGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName, variable.AWSSecurityGroupTagValue),
+				Config: testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudSecurityGroupAWSExists(securityGroupTypeAndName, &cloudSecurityGroupAWSResponse),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "dome9_security_group_name", securityGroupGeneratedName),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "description", variable.AWSSecurityGroupDescription),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "aws_region_id", variable.AWSSecurityGroupRegionID),
-					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.tag_key", variable.AWSSecurityGroupTagValue),
 				),
 			},
 		},
@@ -88,7 +87,7 @@ func testAccCheckAWSCloudSecurityGroupDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsCloudAccountTypeAndName, securityGroupResourceName, securityGroupTypeAndName, tagValue string) string {
+func testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsCloudAccountTypeAndName, securityGroupResourceName, securityGroupTypeAndName string) string {
 	return fmt.Sprintf(`
 // aws cloud account resource
 %s
@@ -100,9 +99,6 @@ resource "%s" "%s" {
   aws_region_id             = "%s"
   dome9_cloud_account_id    = "${%s.id}"
   is_protected              = true
-  tags = {
-    tag_key = "%s"
-  }
 }
 
 data "%s" "%s" {
@@ -118,7 +114,6 @@ data "%s" "%s" {
 		variable.AWSSecurityGroupDescription,
 		variable.AWSSecurityGroupRegionID,
 		awsCloudAccountTypeAndName,
-		tagValue,
 
 		// data source variables
 		resourcetype.CloudAccountAWSSecurityGroup,
