@@ -90,3 +90,10 @@ const (
 	OrganizationalUnitNameUpdate = "test_ou_update"
 	ParentID                     = "" // empty string as parent id creates ou under Dome9 main root ou
 )
+
+// Users resource/data source
+const (
+	UserFirstName    = "first_name_for_test"
+	UserLastName     = "last_name_for_test"
+	UserIsSsoEnabled = false
+)

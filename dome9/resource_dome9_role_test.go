@@ -89,6 +89,25 @@ func testAccCheckRoleExists(resource string, role *roles.RoleResponse) resource.
 
 func testAccCheckRoleConfigure(resourceTypeAndName, generatedName, description string) string {
 	return fmt.Sprintf(`
+// role resource
+%s
+
+data "%s" "%s" {
+  id = "${%s.id}"
+}
+`,
+		// resource variables
+		RoleResourceHCL(generatedName, description),
+
+		// data source variables
+		resourcetype.Role,
+		generatedName,
+		resourceTypeAndName,
+	)
+}
+
+func RoleResourceHCL(generatedName, description string) string {
+	return fmt.Sprintf(`
 resource "%s" "%s" {
   name        = "%s"
   description = "%s"
@@ -105,20 +124,11 @@ resource "%s" "%s" {
     cross_account_access = []
   }
 }
-
-data "%s" "%s" {
-  id = "${%s.id}"
-}
 `,
 		// resource variables
 		resourcetype.Role,
 		generatedName,
 		variable.RoleName,
 		description,
-
-		// data source variables
-		resourcetype.Role,
-		generatedName,
-		resourceTypeAndName,
 	)
 }
