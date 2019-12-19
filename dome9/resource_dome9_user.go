@@ -242,7 +242,7 @@ func resourceUserUpdate(d *schema.ResourceData, meta interface{}) error {
 
 			log.Printf("User with ID %s now is owner", d.Id())
 		} else {
-			// to make the user un owner, we must set another user to be owner, so is_owner filed in the tf state must stay true.
+			// to drop ownership from user, we must set another user to be owner, so is_owner field in the tf state must stay true
 			_ = d.Set("is_owner", true)
 		}
 	}
