@@ -65,7 +65,6 @@ const (
 const (
 	AWSSecurityGroupDescription = "this is aws security group test"
 	AWSSecurityGroupRegionID    = "us_east_1"
-	AWSSecurityGroupTagValue    = "tag_val_1"
 )
 
 // Azure security group resource/data source
