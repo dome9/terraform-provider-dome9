@@ -7,8 +7,8 @@ FEATURES:
 * **New Resource:** `dome9_organizational_unit` ([#44](https://github.com/terraform-providers/terraform-provider-dome9/pull/44))
 * **New Data Source:** `dome9_organizational_unit`([#44](https://github.com/terraform-providers/terraform-provider-dome9/pull/44))
 * **New Resource:** `dome9_attach_iam_safe` ([#49](https://github.com/terraform-providers/terraform-provider-dome9/pull/49))
-* **New Resource:** `dome9_attach_user` ([#54](https://github.com/terraform-providers/terraform-provider-dome9/pull/54))
-* **New Data Source:** `dome9_organizational_user`([#54](https://github.com/terraform-providers/terraform-provider-dome9/pull/54))
+* **New Resource:** `dome9_user` ([#54](https://github.com/terraform-providers/terraform-provider-dome9/pull/54))
+* **New Data Source:** `dome9_user`([#54](https://github.com/terraform-providers/terraform-provider-dome9/pull/54))
 
 IMPROVEMENTS:
 * Schema structure change for `dome9_cloudaccount_azure` and `dome9_cloudaccount_gcp`([#47](https://github.com/terraform-providers/terraform-provider-dome9/pull/47)) ([#48](https://github.com/terraform-providers/terraform-provider-dome9/pull/48))
