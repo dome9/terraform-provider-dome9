@@ -3,12 +3,12 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_organizational_unit"
 sidebar_current: "docs-resource-dome9-organizational-unit"
 description: |-
-  Create organizational unit in Dome9
+  Create Organizational Units in Dome9
 ---
 
 # dome9_ruleset
 
-This resource is used to create and manage Organizational Unit in Dome9. An Organizational Unit is a group of cloud accounts representing, for example, a business unit or geographical region.
+This resource is used to create and manage Organizational Units in Dome9. An Organizational Unit is a group of cloud accounts representing, for example, a business unit or a geographical region.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ resource "dome9_organizational_unit" "test_ou" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name of the organizational unit in Dome9.
-* `parent_id` - (Optional) The organizational unit parent ID.
+* `name` - (Required) The name of the Organizational Unit in Dome9.
+* `parent_id` - (Optional) The Organizational Unit parent ID.
 
 ## Attributes Reference
 
-* `id` - Organizational unit Id
+* `id` - Organizational Unit Id
 * `account_id` - Dome9 internal account ID.
 * `path` - Organizational Unit full path (IDs).
 * `path_str` - Organizational Unit full path (names).
@@ -43,7 +43,7 @@ The following arguments are supported:
 * `aws_aggregated_cloud_accounts_count` - Number of AWS cloud accounts in the Organizational Unit and its children.
 * `azure_aggregate_cloud_accounts_count` - Number of Azure cloud accounts in the Organizational Unit and its children.
 * `google_aggregate_cloud_accounts_count` - Number of GCP cloud accounts in the Organizational Unit and its children.
-* `is_root` - Is Organizational Unit root.
+* `is_root` - Is Organizational Unit root. The root is the highest level in the hierarchy.
 * `is_parent_root` - Is the parent of Organizational Unit root.
 
 

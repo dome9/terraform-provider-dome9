@@ -3,7 +3,7 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_attach_iam_safe"
 sidebar_current: "docs-resource-dome9-attach-iam-safe"
 description: |-
-  Attach IAM safe to AWS cloud account.
+  Attach Dome9 IAM Safety to an AWS cloud account.
 ---
 
 # dome9_attach_iam_safe
@@ -27,9 +27,9 @@ resource "dome9_attach_iam_safe" "test" {
 
 The following arguments are supported:
 
-* `aws_cloud_account_id` - (Required) AWS cloud account to attach IAM safe to it. 
-* `aws_group_arn` - (Required) AWS group arn.
-* `aws_policy_arn` - (Required) AWS policy arn.
+* `aws_cloud_account_id` - (Required) AWS cloud account to which IAM safety will be attached. 
+* `aws_group_arn` - (Required) AWS group ARN.
+* `aws_policy_arn` - (Required) AWS policy ARN.
 
 ## Attributes Reference
 
@@ -37,7 +37,7 @@ The following arguments are supported:
 
 ## Import
 
-Cloud account IAM safe can be imported; use `<AWS CLOUD ACCOUNT ID>` as the import ID. 
+Cloud account IAM safety can be imported; use `<AWS CLOUD ACCOUNT ID>` as the import ID. 
 
 For example:
 

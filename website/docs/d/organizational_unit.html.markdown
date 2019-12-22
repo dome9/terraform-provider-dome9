@@ -8,7 +8,7 @@ description: |-
 
 # Data Source: dome9_organizational_unit
 
-Use this data source to get information about a Organizational Unit in Dome9.
+Use this data source to get information about an Organizational Unit in Dome9.
 
 ## Example Usage
 
@@ -23,7 +23,7 @@ data "dome9_organizational_unit" "test" {
 
 The following arguments are supported:
 
-* `id` - (Required) The ID of the organizational unit in Dome9.
+* `id` - (Required) The ID of the Organizational Unit in Dome9.
 
 ## Attributes Reference
 

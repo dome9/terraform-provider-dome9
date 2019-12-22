@@ -3,7 +3,7 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_user"
 sidebar_current: "docs-resource-dome9-user"
 description: |-
-  Create user in Dome9
+  Create users in Dome9
 ---
 
 # dome9_user
@@ -28,14 +28,14 @@ resource "dome9_user" "user_sg" {
 
 The following arguments are supported:
 
-* `email` - (Required) user email. 
-* `first_name` - (Required) userfirst name. 
+* `email` - (Required) user email address. 
+* `first_name` - (Required) user first name. 
 * `last_name` - (Required) user last name. 
-* `is_sso_enabled` - (Required) user has enabled SSO sign-on. 
+* `is_sso_enabled` - (Required) indicates user has enabled SSO sign-on. 
 
-Note: There are two filed that can be updated in user, `is_owner` and `role_ids` that occur in two steps:
+Note: The fields  `is_owner` and `role_ids` should be set only after the user is created. So, perform two operations:
 * Create user.
-* Then update the desired field.
+* Update the fields.
 
 ## Attributes Reference
 
@@ -43,7 +43,7 @@ Note: There are two filed that can be updated in user, `is_owner` and `role_ids`
 * `is_suspended` - user is suspended.
 * `is_owner` - user is account owner.
 * `is_super_user` - user is Super User.
-* `is_auditor` - user is auditor user.
+* `is_auditor` - user is auditor.
 * `has_api_key` - user has generated an API Key - V1 or V2.
 * `has_api_key_v1` - user has generated an API Key - V1.
 * `has_api_key_v2` - user has generated an API Key - V2.

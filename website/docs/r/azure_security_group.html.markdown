@@ -3,7 +3,7 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_azure_security_group"
 sidebar_current: "docs-resource-dome9-azure-security-group"
 description: |-
-  Creates azure security group in Dome9
+  Creates Azure Security Groups in Dome9
 ---
 
 # dome9_azure_security_group
@@ -58,16 +58,16 @@ resource "dome9_azure_security_group" "azure_sg" {
 The following arguments are supported:
 
 * `dome9_security_group_name` - (Required) Name of the security group.
-* `region` - (Required) Region can be one of the following: `centralus`, `eastus`, `eastus2`, `usgovlowa`, `usgovvirginia`, `northcentralus`, `southcentralus`, `westus`, `westus2`, `westcentralus`, `northeurope`, `westeurope`, `eastasia`, `southeastasia`, `japaneast`, `japanwest`, `brazilsouth`, `australiaeast`, `australiasoutheast`, `centralindia`, `southindia`, `westindia`, `chinaeast`, `chinanorth`, `canadacentral`, `canadaeast`, `germanycentral`, `germanynortheast`, `koreacentral`, `uksouth`, `ukwest`, `koreasout`
+* `region` - (Required) Azure region, can be one of the following: `centralus`, `eastus`, `eastus2`, `usgovlowa`, `usgovvirginia`, `northcentralus`, `southcentralus`, `westus`, `westus2`, `westcentralus`, `northeurope`, `westeurope`, `eastasia`, `southeastasia`, `japaneast`, `japanwest`, `brazilsouth`, `australiaeast`, `australiasoutheast`, `centralindia`, `southindia`, `westindia`, `chinaeast`, `chinanorth`, `canadacentral`, `canadaeast`, `germanycentral`, `germanynortheast`, `koreacentral`, `uksouth`, `ukwest`, `koreasout`
 * `resource_group` - (Required) Azure resource group name.
 * `dome9_cloud_account_id` - (Required) Cloud account id in Dome9.
-* `description` - (Optional) Security group description.
-* `is_tamper_protected` - (Optional) Is security group tamper protected.
-* `tags` - (Optional) Security group tags list of `key`, `value`:
+* `description` - (Optional) Security Group description.
+* `is_tamper_protected` - (Optional) Is Security Group tamper protected.
+* `tags` - (Optional) Security Group tags list of `key`, `value`:
     * `key` - (Required) Tag key. 
     * `value` - (Required) Tag value.
-* `inbound` - (Optional) Security group services.
-* `outbound` - (Optional) Security group services.
+* `inbound` - (Optional) Security Group services.
+* `outbound` - (Optional) Security Group services.
 
 The configuration of inbound and outbound is:
    * `name` - (Required) Service name.
@@ -87,9 +87,9 @@ The configuration of inbound and outbound is:
         
 ## Attributes Reference
 
-* `external_security_group_id` - Azure external security group id.
+* `external_security_group_id` - Azure external Security Group id.
 * `cloud_account_name` - Azure cloud account name.
-* `last_updated_by_dome9` - Last updated by dome9.
+* `last_updated_by_dome9` - Date last updated by dome9.
  
 ## Import
 

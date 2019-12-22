@@ -29,7 +29,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `email` - user email. 
+* `email` - user email address. 
 * `is_suspended` - user is suspended.
 * `is_owner` - user is account owner.
 * `is_super_user` - user is Super User.
@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
         * `external_account_number` - external account number 
         * `last_lease_time` - last lease time 
         * `state` - state 
-        * `iam_entities` - iam entities 
-        * `iam_entities_last_lease_time` - (list) iam entities last lease time supports:
-            * `iam_entity` - iam entity 
+        * `iam_entities` - IAM entities 
+        * `iam_entities_last_lease_time` - (list) IAM entities last lease time supports:
+            * `iam_entity` - IAM entity 
             * `last_lease_time` - last lease time 
         * `cloud_account_state` - cloud account state 
-        * `iam_entity` - iam entity 
+        * `iam_entity` - IAM entity 
 * `can_switch_role` - user can switch roles.
 * `is_locked` - is locked.
 * `last_login` - last login.
