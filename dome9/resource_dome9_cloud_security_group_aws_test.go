@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -38,6 +39,14 @@ func TestAccResourceCloudSecurityGroupAWSBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "dome9_security_group_name", securityGroupGeneratedName),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "description", variable.AWSSecurityGroupDescription),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "aws_region_id", variable.AWSSecurityGroupRegionID),
+				),
+			},
+			{
+				PreConfig: func() { time.Sleep(time.Second * variable.WaitUntilSecurityGroupCreated) },
+				Config:    testAccCheckCloudSecurityGroupAWSUpdateBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCloudSecurityGroupAWSExists(securityGroupTypeAndName, &cloudSecurityGroupAWSResponse),
+					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.key", variable.AWSSecurityGroupTagValue),
 				),
 			},
 		},
@@ -119,5 +128,35 @@ data "%s" "%s" {
 		resourcetype.CloudAccountAWSSecurityGroup,
 		securityGroupResourceName,
 		securityGroupTypeAndName,
+	)
+}
+
+func testAccCheckCloudSecurityGroupAWSUpdateBasic(awsCloudAccountHCL, awsCloudAccountTypeAndName, securityGroupResourceName, securityGroupTypeAndName string) string {
+	return fmt.Sprintf(`
+// aws cloud account resource
+%s
+
+// aws security group creation
+resource "%s" "%s" {
+  dome9_security_group_name = "%s"
+  description               = "%s"
+  aws_region_id             = "%s"
+  dome9_cloud_account_id    = "${%s.id}"
+  is_protected              = true
+  tags = {
+    key = "%s"
+  }
+}
+`,
+		awsCloudAccountHCL,
+
+		// resource variables
+		resourcetype.CloudAccountAWSSecurityGroup,
+		securityGroupResourceName,
+		securityGroupResourceName,
+		variable.AWSSecurityGroupDescription,
+		variable.AWSSecurityGroupRegionID,
+		awsCloudAccountTypeAndName,
+		variable.AWSSecurityGroupTagValue,
 	)
 }

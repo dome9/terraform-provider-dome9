@@ -63,8 +63,12 @@ const (
 
 // aws security group resource/data source
 const (
-	AWSSecurityGroupDescription = "this is aws security group test"
-	AWSSecurityGroupRegionID    = "us_east_1"
+	AWSSecurityGroupDescription   = "this is aws security group test"
+	AWSSecurityGroupRegionID      = "us_east_1"
+	WaitUntilSecurityGroupCreated = 45
+
+	// Update
+	AWSSecurityGroupTagValue = "value"
 )
 
 // azure security group resource/data source
@@ -102,10 +106,10 @@ const (
 
 // iam entity resource
 const (
-	WaitUntilAttachIAMSafeDone = 180
 	IAMSafeEntityProtect       = "Protect"
 	IAMSafeEntityTypeUser      = "User"
 	IAMSafeEntityName          = "user_for_testing_dont_remove"
+	WaitUntilAttachIAMSafeDone = 180
 
 	// 	update const
 	IAMSafeEntityProtectWithElevation = "ProtectWithElevation"
