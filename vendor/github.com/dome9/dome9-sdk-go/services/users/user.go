@@ -23,10 +23,11 @@ var gUserEmailID = map[string]string{}
 var onlyOnce sync.Once
 
 type UserRequest struct {
-	Email      string `json:"email"`
-	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
-	SsoEnabled bool   `json:"ssoEnabled"`
+	Email       string      `json:"email"`
+	FirstName   string      `json:"firstName"`
+	LastName    string      `json:"lastName"`
+	SsoEnabled  bool        `json:"ssoEnabled"`
+	Permissions Permissions `json:"permissions"`
 }
 
 type UserResponse struct {
@@ -95,6 +96,7 @@ type Permissions struct {
 	AlertActions       []string `json:"alertActions"`
 	Create             []string `json:"create"`
 	View               []string `json:"view"`
+	OnBoarding         []string `json:"onBoarding"`
 	CrossAccountAccess []string `json:"crossAccountAccess"`
 }
 

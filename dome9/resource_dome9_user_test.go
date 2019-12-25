@@ -42,6 +42,7 @@ func TestAccResourceUsersBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckUserExists(resourceTypeAndName, &usersResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "role_ids.#", "1"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "permit_alert_actions", strconv.FormatBool(variable.RoleUpdateToPermittedAlertActions)),
 				),
 			},
 		},
@@ -127,11 +128,12 @@ func testAccCheckUsersUpdateConfigure(roleHCL, roleTypeAndName, resourceTypeAndN
 %s
 
 resource "%s" "%s" {
-  email          = "%s"
-  first_name     = "%s"
-  last_name      = "%s"
-  is_sso_enabled = "%s"
-  role_ids       = ["${%s.id}"]
+  email                = "%s"
+  first_name           = "%s"
+  last_name            = "%s"
+  is_sso_enabled       = "%s"
+  role_ids             = ["${%s.id}"]
+  permit_alert_actions = "%s"
 }
 
 data "%s" "%s" {
@@ -149,6 +151,7 @@ data "%s" "%s" {
 		variable.UserLastName,
 		strconv.FormatBool(variable.UserIsSsoEnabled),
 		roleTypeAndName,
+		strconv.FormatBool(variable.RoleUpdateToPermittedAlertActions),
 
 		// data source variables
 		resourcetype.User,

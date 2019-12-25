@@ -146,11 +146,11 @@ func expandRoleCreateRequest(d *schema.ResourceData) roles.RoleRequest {
 	return roles.RoleRequest{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
-		Permissions: expandPermissions(d),
+		Permissions: expandRolePermissions(d),
 	}
 }
 
-func expandPermissions(d *schema.ResourceData) roles.Permissions {
+func expandRolePermissions(d *schema.ResourceData) roles.Permissions {
 	permissions := roles.Permissions{
 		Access:             generateSRL(d.Get("access").([]interface{})),
 		Manage:             generateSRL(d.Get("manage").([]interface{})),

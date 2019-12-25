@@ -141,6 +141,39 @@ func dataSourceUser() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
+			"permit_rulesets": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"permit_notifications": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"permit_policies": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"permit_alert_actions": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"permit_on_boarding": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"cross_account_access": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"create": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"access": srlDescriptorDataSchema(),
+			"view":   srlDescriptorDataSchema(),
+			"manage": srlDescriptorDataSchema(),
 		},
 	}
 }
@@ -173,6 +206,17 @@ func dataSourceUsersRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("is_locked", resp.IsLocked)
 	_ = d.Set("last_login", resp.LastLogin.Format("2006-01-02 15:04:05"))
 	_ = d.Set("is_mobile_device_paired", resp.IsMobileDevicePaired)
+	// set permissions
+	_ = d.Set("access", breakSRL(resp.Permissions.Access))
+	_ = d.Set("manage", breakSRL(resp.Permissions.Manage))
+	_ = d.Set("view", breakSRL(resp.Permissions.View))
+	_ = d.Set("permit_rulesets", isEmpty(resp.Permissions.Rulesets))
+	_ = d.Set("permit_notifications", isEmpty(resp.Permissions.Notifications))
+	_ = d.Set("permit_policies", isEmpty(resp.Permissions.Policies))
+	_ = d.Set("permit_alert_actions", isEmpty(resp.Permissions.AlertActions))
+	_ = d.Set("permit_on_boarding", isEmpty(resp.Permissions.OnBoarding))
+	_ = d.Set("create", resp.Permissions.Create)
+	_ = d.Set("cross_account_access", resp.Permissions.CrossAccountAccess)
 
 	return nil
 }
