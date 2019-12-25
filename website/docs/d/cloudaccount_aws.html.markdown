@@ -39,3 +39,10 @@ In addition to all arguments above, the following attributes are exported:
 * `allow_read_only` - The AWS cloud account operation mode. true for "Manage", false for "Readonly".
 * `net_sec` - The network security configuration for the AWS cloud account.
 * `organizational_unit_id` - Organizational unit id.
+* `iam_safe` - IAM safe entity details
+    * `aws_group_arn` - Aws group arn  
+    * `aws_policy_arn` - Aws policy arn  
+    * `mode` - Mode  
+    * `restricted_iam_entities` - Restricted iam safe entities which has the following:  
+		* `roles_arns` - Restricted iam safe entities roles arns
+		* `users_arns` - Restricted iam safe entities users arns

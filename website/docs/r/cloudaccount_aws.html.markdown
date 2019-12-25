@@ -128,6 +128,13 @@ The following arguments are supported:
 * `full_protection` - The protection mode for existing security groups in the account.
 * `allow_read_only` - The AWS cloud account operation mode. true for "Full-Manage", false for "Readonly".
 * `net_sec` - The network security configuration for the AWS cloud account. If not given, sets to default value.
+* `iam_safe` - IAM safe entity details
+    * `aws_group_arn` - Aws group arn  
+    * `aws_policy_arn` - Aws policy arn  
+    * `mode` - Mode  
+    * `restricted_iam_entities` - Restricted iam safe entities which has the following:  
+		* `roles_arns` - Restricted iam safe entities roles arns
+		* `users_arns` - Restricted iam safe entities users arns
 
 ## Import
 
