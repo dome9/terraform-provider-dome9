@@ -102,7 +102,7 @@ const (
 
 // iam entity resource
 const (
-	WaitUntilAttachIAMSafeDone = 150
+	WaitUntilAttachIAMSafeDone = 180
 	IAMSafeEntityProtect       = "Protect"
 	IAMSafeEntityTypeUser      = "User"
 	IAMSafeEntityName          = "user_for_testing_dont_remove"
