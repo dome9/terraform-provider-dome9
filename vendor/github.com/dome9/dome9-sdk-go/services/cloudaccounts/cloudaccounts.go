@@ -14,6 +14,9 @@ const (
 	RESTfulServicePathAWSCredentials        = "credentials"
 	RESTfulServicePathAWSCloudAccounts      = "cloudaccounts"
 	RESTfulServicePathAWSIAMSafe            = "iam-safe"
+	RESTfulPathRestrictedIamEntities        = "restrictedIamEntities"
+	RESTfulPathUser                         = "user"
+	RESTfulPathIAM                          = "iam"
 )
 
 // Azure service paths

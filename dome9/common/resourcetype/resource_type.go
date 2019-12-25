@@ -15,4 +15,5 @@ const (
 	CloudAccountAzureSecurityGroup   = "dome9_azure_security_group"
 	AttachIAMSafeToAwsCloudAccount   = "dome9_attach_iam_safe"
 	User                             = "dome9_user"
+	IAMSafeEntity                    = "dome9_iam_safe_entity"
 )
