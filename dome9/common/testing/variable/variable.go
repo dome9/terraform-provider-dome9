@@ -77,6 +77,11 @@ const (
 	AzureSecurityGroupRegion            = "australiaeast"
 	AzureSecurityGroupTagValue          = "tag_val_1"
 	AzureSecurityGroupIsTamperProtected = false
+
+	// 	update const
+	AzureSecurityGroupUpdateDescription       = "this is azure security group update test"
+	AzureSecurityGroupUpdateIsTamperProtected = true
+	AzureSecurityGroupUpdateTagValue          = "val"
 )
 
 // role resource/data source
