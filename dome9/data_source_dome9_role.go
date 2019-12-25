@@ -23,64 +23,39 @@ func dataSourceRole() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"permissions": {
-				Type:     schema.TypeSet,
+			"permit_rulesets": {
+				Type:     schema.TypeBool,
 				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"access": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"manage": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"rulesets": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"notifications": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"policies": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"alert_actions": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"create": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"view": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"on_boarding": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"cross_account_access": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-					},
-				},
 			},
+			"permit_notifications": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"permit_policies": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"permit_alert_actions": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"permit_on_boarding": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"cross_account_access": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"create": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"access": srlDescriptorDataSchema(),
+			"view":   srlDescriptorDataSchema(),
+			"manage": srlDescriptorDataSchema(),
 		},
 	}
 }
@@ -99,7 +74,16 @@ func dataSourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(strconv.Itoa(resp.ID))
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("description", resp.Description)
-	_ = d.Set("permissions", flattenPermission(resp.Permissions))
+	_ = d.Set("access", breakSRL(resp.Permissions.Access))
+	_ = d.Set("manage", breakSRL(resp.Permissions.Manage))
+	_ = d.Set("view", breakSRL(resp.Permissions.View))
+	_ = d.Set("permit_rulesets", isEmpty(resp.Permissions.Rulesets))
+	_ = d.Set("permit_notifications", isEmpty(resp.Permissions.Notifications))
+	_ = d.Set("permit_policies", isEmpty(resp.Permissions.Policies))
+	_ = d.Set("permit_alert_actions", isEmpty(resp.Permissions.AlertActions))
+	_ = d.Set("permit_on_boarding", isEmpty(resp.Permissions.OnBoarding))
+	_ = d.Set("create", resp.Permissions.Create)
+	_ = d.Set("cross_account_access", resp.Permissions.CrossAccountAccess)
 
 	return nil
 }
