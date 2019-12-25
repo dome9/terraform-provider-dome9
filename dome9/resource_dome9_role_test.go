@@ -2,12 +2,14 @@ package dome9
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"github.com/dome9/dome9-sdk-go/services/roles"
+
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
@@ -23,20 +25,22 @@ func TestAccResourceRoleBasic(t *testing.T) {
 		CheckDestroy: testAccCheckRoleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckRoleConfigure(resourceTypeAndName, generatedName, variable.RoleDescription),
+				Config: testAccCheckRoleConfigure(resourceTypeAndName, generatedName, variable.RoleDescription, variable.RoleToPermittedAlertActions),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRoleExists(resourceTypeAndName, &role),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.RoleName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "description", variable.RoleDescription),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "permit_alert_actions", strconv.FormatBool(variable.RoleToPermittedAlertActions)),
 				),
 			},
 
 			// Update test
 			{
-				Config: testAccCheckRoleConfigure(resourceTypeAndName, generatedName, variable.RoleUpdateDescription),
+				Config: testAccCheckRoleConfigure(resourceTypeAndName, generatedName, variable.RoleUpdateDescription, variable.RoleUpdateToPermittedAlertActions),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRoleExists(resourceTypeAndName, &role),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "description", variable.RoleUpdateDescription),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "permit_alert_actions", strconv.FormatBool(variable.RoleUpdateToPermittedAlertActions)),
 				),
 			},
 		},
@@ -87,7 +91,7 @@ func testAccCheckRoleExists(resource string, role *roles.RoleResponse) resource.
 	}
 }
 
-func testAccCheckRoleConfigure(resourceTypeAndName, generatedName, description string) string {
+func testAccCheckRoleConfigure(resourceTypeAndName, generatedName, description string, toPermittedAlertActions bool) string {
 	return fmt.Sprintf(`
 // role resource
 %s
@@ -97,7 +101,7 @@ data "%s" "%s" {
 }
 `,
 		// resource variables
-		RoleResourceHCL(generatedName, description),
+		RoleResourceHCL(generatedName, description, toPermittedAlertActions),
 
 		// data source variables
 		resourcetype.Role,
@@ -106,23 +110,12 @@ data "%s" "%s" {
 	)
 }
 
-func RoleResourceHCL(generatedName, description string) string {
+func RoleResourceHCL(generatedName, description string, toPermittedAlertActions bool) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-  name        = "%s"
-  description = "%s"
-  permissions {
-    access               = []
-    manage               = []
-    rulesets             = []
-    notifications        = []
-    policies             = []
-    alert_actions        = []
-    create               = []
-    view                 = []
-    on_boarding          = []
-    cross_account_access = []
-  }
+  name                 = "%s"
+  description          = "%s"
+  permit_alert_actions = "%s"
 }
 `,
 		// resource variables
@@ -130,5 +123,6 @@ resource "%s" "%s" {
 		generatedName,
 		variable.RoleName,
 		description,
+		strconv.FormatBool(toPermittedAlertActions),
 	)
 }

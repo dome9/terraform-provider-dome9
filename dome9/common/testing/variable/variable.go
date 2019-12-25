@@ -77,11 +77,13 @@ const (
 
 // role resource/data source
 const (
-	RoleName        = "test_role"
-	RoleDescription = "this is role test"
+	RoleName                    = "test_role"
+	RoleDescription             = "this is role test"
+	RoleToPermittedAlertActions = false
 
 	// update const
-	RoleUpdateDescription = "this is update role test"
+	RoleUpdateDescription             = "this is update role test"
+	RoleUpdateToPermittedAlertActions = true
 )
 
 // organizational unit resource/data source

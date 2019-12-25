@@ -20,7 +20,7 @@ func TestAccResourceUsersBasic(t *testing.T) {
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.User)
 
 	roleTypeAndName, _, roleName := method.GenerateRandomSourcesTypeAndName(resourcetype.Role)
-	roleHCL := RoleResourceHCL(roleName, variable.RoleDescription)
+	roleHCL := RoleResourceHCL(roleName, variable.RoleDescription, variable.RoleToPermittedAlertActions)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -95,9 +95,9 @@ func testAccCheckUserExists(resource string, user *users.UserResponse) resource.
 func testAccCheckUsersConfigure(resourceTypeAndName, generatedName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-  email = "%s"
-  first_name = "%s"
-  last_name = "%s"
+  email          = "%s"
+  first_name     = "%s"
+  last_name      = "%s"
   is_sso_enabled = "%s"
 }
 
@@ -127,15 +127,15 @@ func testAccCheckUsersUpdateConfigure(roleHCL, roleTypeAndName, resourceTypeAndN
 %s
 
 resource "%s" "%s" {
-  email = "%s"
-  first_name = "%s"
-  last_name = "%s"
+  email          = "%s"
+  first_name     = "%s"
+  last_name      = "%s"
   is_sso_enabled = "%s"
-  role_ids = ["${%s.id}"]
+  role_ids       = ["${%s.id}"]
 }
 
 data "%s" "%s" {
-	id = "${%s.id}"
+  id = "${%s.id}"
 }
 `,
 		// role resource HCL

@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -19,12 +20,12 @@ func TestAccDataSourceRoleBasic(t *testing.T) {
 		CheckDestroy: testAccCheckRoleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckRoleConfigure(resourceTypeAndName, generatedName, variable.RoleDescription),
+				Config: testAccCheckRoleConfigure(resourceTypeAndName, generatedName, variable.RoleDescription, variable.RoleToPermittedAlertActions),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "name", resourceTypeAndName, "name"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "description", resourceTypeAndName, "description"),
-					resource.TestCheckResourceAttr(dataSourceTypeAndName, "permissions.#", "1"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "permit_alert_actions", strconv.FormatBool(variable.RoleToPermittedAlertActions)),
 				),
 			},
 		},
