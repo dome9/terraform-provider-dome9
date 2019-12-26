@@ -1,13 +1,16 @@
 package dome9
 
 import (
+	"fmt"
 	"log"
 	"strconv"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"strings"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/roles"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
 
 func resourceRole() *schema.Resource {
@@ -19,7 +22,6 @@ func resourceRole() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -29,64 +31,44 @@ func resourceRole() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"permissions": {
-				Type:     schema.TypeSet,
+			"permit_rulesets": {
+				Type:     schema.TypeBool,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"access": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"manage": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"rulesets": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"notifications": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"policies": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"alert_actions": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"create": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"view": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"on_boarding": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-						"cross_account_access": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-						},
-					},
-				},
+				Default:  false,
 			},
+			"permit_notifications": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"permit_policies": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"permit_alert_actions": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"permit_on_boarding": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"cross_account_access": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"create": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"access": srlDescriptorSchema(),
+			"view":   srlDescriptorSchema(),
+			"manage": srlDescriptorSchema(),
 		},
 	}
 }
@@ -122,7 +104,16 @@ func resourceRoleRead(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(strconv.Itoa(resp.ID))
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("description", resp.Description)
-	_ = d.Set("permissions", flattenPermission(resp.Permissions))
+	_ = d.Set("access", breakSRL(resp.Permissions.Access))
+	_ = d.Set("manage", breakSRL(resp.Permissions.Manage))
+	_ = d.Set("view", breakSRL(resp.Permissions.View))
+	_ = d.Set("permit_rulesets", isEmpty(resp.Permissions.Rulesets))
+	_ = d.Set("permit_notifications", isEmpty(resp.Permissions.Notifications))
+	_ = d.Set("permit_policies", isEmpty(resp.Permissions.Policies))
+	_ = d.Set("permit_alert_actions", isEmpty(resp.Permissions.AlertActions))
+	_ = d.Set("permit_on_boarding", isEmpty(resp.Permissions.OnBoarding))
+	_ = d.Set("create", resp.Permissions.Create)
+	_ = d.Set("cross_account_access", resp.Permissions.CrossAccountAccess)
 
 	return nil
 }
@@ -155,29 +146,36 @@ func expandRoleCreateRequest(d *schema.ResourceData) roles.RoleRequest {
 	return roles.RoleRequest{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
-		Permissions: expandPermissions(d),
+		Permissions: expandRolePermissions(d),
 	}
 }
 
-func expandPermissions(d *schema.ResourceData) roles.Permissions {
-	if permissions, ok := d.GetOk("permissions"); ok {
-		permissionItem := permissions.(*schema.Set).List()[0]
-		permission := permissionItem.(map[string]interface{})
-
-		return roles.Permissions{
-			Access:             expandList(permission["access"].([]interface{})),
-			Manage:             expandList(permission["manage"].([]interface{})),
-			Rulesets:           expandList(permission["rulesets"].([]interface{})),
-			Notifications:      expandList(permission["notifications"].([]interface{})),
-			Policies:           expandList(permission["policies"].([]interface{})),
-			AlertActions:       expandList(permission["alert_actions"].([]interface{})),
-			Create:             expandList(permission["create"].([]interface{})),
-			View:               expandList(permission["view"].([]interface{})),
-			OnBoarding:         expandList(permission["on_boarding"].([]interface{})),
-			CrossAccountAccess: expandList(permission["cross_account_access"].([]interface{})),
-		}
+func expandRolePermissions(d *schema.ResourceData) roles.Permissions {
+	permissions := roles.Permissions{
+		Access:             generateSRL(d.Get("access").([]interface{})),
+		Manage:             generateSRL(d.Get("manage").([]interface{})),
+		Create:             expandList(d.Get("create").([]interface{})),
+		View:               generateSRL(d.Get("view").([]interface{})),
+		CrossAccountAccess: expandList(d.Get("cross_account_access").([]interface{})),
 	}
-	return roles.Permissions{}
+
+	if permitRulesets, ok := d.GetOk("permit_rulesets"); ok {
+		permissions.Rulesets = convertBoolToSRL(permitRulesets.(bool))
+	}
+	if permitNotifications, ok := d.GetOk("permit_notifications"); ok {
+		permissions.Notifications = convertBoolToSRL(permitNotifications.(bool))
+	}
+	if permitPolicies, ok := d.GetOk("permit_policies"); ok {
+		permissions.Policies = convertBoolToSRL(permitPolicies.(bool))
+	}
+	if permitAlertActions, ok := d.GetOk("permit_alert_actions"); ok {
+		permissions.AlertActions = convertBoolToSRL(permitAlertActions.(bool))
+	}
+	if permitOnBoarding, ok := d.GetOk("permit_on_boarding"); ok {
+		permissions.OnBoarding = convertBoolToSRL(permitOnBoarding.(bool))
+	}
+
+	return permissions
 }
 
 func expandList(permissionsLst []interface{}) []string {
@@ -189,19 +187,114 @@ func expandList(permissionsLst []interface{}) []string {
 	return permissions
 }
 
-func flattenPermission(respPermission roles.Permissions) []interface{} {
-	m := map[string]interface{}{
-		"access":               respPermission.Access,
-		"manage":               respPermission.Manage,
-		"rulesets":             respPermission.Rulesets,
-		"notifications":        respPermission.Notifications,
-		"policies":             respPermission.Policies,
-		"alert_actions":        respPermission.AlertActions,
-		"create":               respPermission.Create,
-		"view":                 respPermission.View,
-		"on_boarding":          respPermission.OnBoarding,
-		"cross_account_access": respPermission.CrossAccountAccess,
+func convertBoolToSRL(status bool) []string {
+	if status {
+		return []string{""}
+	}
+	return []string{}
+}
+
+func generateSRL(attributes []interface{}) []string {
+	srlList := make([]string, len(attributes))
+	for i, attr := range attributes {
+		if attr != nil {
+			dict := attr.(map[string]interface{})
+
+			// Checking value not empty since d.Get() returns empty strings as default for un given optional fields
+			if val := dict["type"].(string); val != "" {
+				srlList[i] = providerconst.SRlType[val]
+			}
+			if val := dict["main_id"].(string); val != "" {
+				appendSRLMember(&srlList[i], val)
+			}
+			if val := dict["region"].(string); val != "" {
+				appendSRLMember(&srlList[i], "rg")
+				appendSRLMember(&srlList[i], providerconst.AWSRegionsEnum[val])
+			}
+			if val := dict["security_group_id"].(string); val != "" {
+				appendSRLMember(&srlList[i], "sg")
+				appendSRLMember(&srlList[i], val)
+			}
+			if val := dict["traffic"].(string); val != "" {
+				appendSRLMember(&srlList[i], providerconst.PermissionTrafficType[val])
+			}
+		}
+	}
+	log.Printf("[DEBUG] SRL list %v generated", srlList)
+	return srlList
+}
+
+func appendSRLMember(srl *string, addition string) {
+	if addition != "" {
+		*srl = fmt.Sprintf("%s%s%s", *srl, "|", addition)
+	}
+}
+
+func breakSRL(srlList []string) []map[string]string {
+	// this function is used for breaking SRL string into data structure to fit resource schema
+	ret := make([]map[string]string, len(srlList))
+	for i, val := range srlList {
+		log.Printf("[DEBUG] SRL List Lenght %v ", len(srlList))
+		srlSplit := strings.Split(val, "|")
+		tempMap := make(map[string]string)
+
+		for _, srlMember := range providerconst.SRLStructure {
+			if len(srlSplit) == 0 {
+				break
+
+			} else {
+				log.Printf("[DEBUG] SRL split list %v generated", srlSplit)
+				x := srlSplit[0]
+
+				switch srlMember {
+				case "type":
+					tempMap[srlMember] = getKeyByValue(providerconst.SRlType, x)
+
+				case "main_id", "security_group_id":
+					tempMap[srlMember] = x
+
+				case "rg", "sg":
+					srlSplit = srlSplit[1:] // chopping srl
+					continue
+
+				case "region":
+					tempMap[srlMember] = getKeyByValue(providerconst.AWSRegionsEnum, x)
+
+				case "traffic":
+					tempMap[srlMember] = getKeyByValue(providerconst.PermissionTrafficType, x)
+
+				default:
+					log.Printf("unrecognized SRL member")
+				}
+				srlSplit = srlSplit[1:] // chopping srl
+			}
+		}
+		ret[i] = tempMap
 	}
 
-	return []interface{}{m}
+	log.Printf("[DEBUG] RET: %#v generated", ret)
+	return ret
+}
+
+func getKeyByValue(m map[string]string, value string) (key string) {
+	key, ok := mapKey(m, value)
+	if !ok {
+		log.Printf("value %s does not exist in map", key)
+	}
+	return key
+}
+
+func mapKey(m map[string]string, value string) (key string, ok bool) {
+	for k, v := range m {
+		if v == value {
+			key = k
+			ok = true
+			return
+		}
+	}
+	return
+}
+
+func isEmpty(lst []string) bool {
+	return len(lst) != 0
 }

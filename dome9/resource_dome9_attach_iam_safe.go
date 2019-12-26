@@ -97,7 +97,7 @@ func expandAttachIAMSafeRequest(d *schema.ResourceData) aws.AttachIamSafeRequest
 
 func resourceAttachIAMSafeDelete(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	log.Printf("[INFO] Detach attach IAM safe to AWS Cloud Account ID: %v\n", d.Id())
+	log.Printf("[INFO] Detach IAM safe to AWS Cloud Account ID: %v\n", d.Id())
 
 	if _, err := d9Client.cloudaccountAWS.DetachIAMSafeToCloudAccount(d.Id()); err != nil {
 		return err

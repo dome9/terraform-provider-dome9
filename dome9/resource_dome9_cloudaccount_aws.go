@@ -137,6 +137,28 @@ func resourceCloudAccountAWS() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"restricted_iam_entities": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"roles_arns": {
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"users_arns": {
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -312,9 +334,19 @@ func flattenCloudAccountAWSNetSec(responseNetSec aws.CloudAccountNetSec) []inter
 
 func flattenCloudAccountIAMSafe(responseIAMSafe aws.CloudAccountIamSafe) []interface{} {
 	m := map[string]interface{}{
-		"aws_group_arn":  responseIAMSafe.AwsGroupArn,
-		"aws_policy_arn": responseIAMSafe.AwsPolicyArn,
-		"mode":           responseIAMSafe.Mode,
+		"aws_group_arn":           responseIAMSafe.AwsGroupArn,
+		"aws_policy_arn":          responseIAMSafe.AwsPolicyArn,
+		"mode":                    responseIAMSafe.Mode,
+		"restricted_iam_entities": flattenRestrictedIamEntities(responseIAMSafe.RestrictedIamEntities),
+	}
+
+	return []interface{}{m}
+}
+
+func flattenRestrictedIamEntities(restrictedIamEntities aws.CloudAccountIamEntities) []interface{} {
+	m := map[string]interface{}{
+		"roles_arns": restrictedIamEntities.RolesArn,
+		"users_arns": restrictedIamEntities.UsersArn,
 	}
 
 	return []interface{}{m}

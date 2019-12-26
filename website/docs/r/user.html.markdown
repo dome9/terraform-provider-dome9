@@ -15,11 +15,18 @@ The User resource has methods to create and manage Dome9 users.
 Basic usage:
 
 ```hcl
-resource "dome9_user" "user_sg" {
-  email = "EMAIL"
-  first_name = "FIRST_NAME"
-  last_name = "LAST_NAME"
-  is_sso_enabled = false
+resource "dome9_users" "users_sg" {
+  email                = "EMAIL"
+  first_name           = "FIRST_NAME"
+  last_name            = "LAST_NAME"
+  is_sso_enabled       = false
+  permit_notifications = false
+  permit_rulesets      = false
+  permit_policies      = false
+  permit_alert_actions = false
+  permit_on_boarding   = false
+  create               = []
+  cross_account_access = []
 }
 
 ```
@@ -32,8 +39,19 @@ The following arguments are supported:
 * `first_name` - (Required) userfirst name. 
 * `last_name` - (Required) user last name. 
 * `is_sso_enabled` - (Required) user has enabled SSO sign-on. 
+* permission fields:
+    * `permit_rulesets` - Is permitted permit rulesets (Optional) .
+    * `permit_notifications` - Is permitted permit notifications (Optional) .
+    * `permit_policies` - Is permitted permit policies (Optional) .
+    * `permit_alert_actions` - Is permitted permit alert actions (Optional) .
+    * `permit_on_boarding` - Is permitted permit on boarding (Optional)  .
+    * `cross_account_access` - (Optional) Cross account access.
+    * `create` - (Optional) Create permission list.
+    * `access` - (Optional) Access permission list ([SRL](#SRL) Type).
+    * `view` - (Optional) View permission list ([SRL](#SRL) Type).
+    * `manage` - (Optional) Manage permission list ([SRL](#SRL) Type).
 
-Note: There are two filed that can be updated in user, `is_owner` and `role_ids` that occur in two steps:
+Note: The filed that can be updated are `is_owner`, `role_ids` and "permission" fields. The update occur in two steps:
 * Create user.
 * Then update the desired field.
 

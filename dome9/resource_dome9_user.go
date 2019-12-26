@@ -47,6 +47,45 @@ func resourceUser() *schema.Resource {
 				Computed: true,
 				Optional: true,
 			},
+			"permit_rulesets": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"permit_notifications": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"permit_policies": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"permit_alert_actions": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"permit_on_boarding": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"cross_account_access": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"create": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"access": srlDescriptorSchema(),
+			"view":   srlDescriptorSchema(),
+			"manage": srlDescriptorSchema(),
+			// computed fields
 			"is_suspended": {
 				Type:     schema.TypeBool,
 				Computed: true,
@@ -207,6 +246,17 @@ func resourceUserRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("is_locked", resp.IsLocked)
 	_ = d.Set("last_login", resp.LastLogin.Format("2006-01-02 15:04:05"))
 	_ = d.Set("is_mobile_device_paired", resp.IsMobileDevicePaired)
+	// set permissions
+	_ = d.Set("access", breakSRL(resp.Permissions.Access))
+	_ = d.Set("manage", breakSRL(resp.Permissions.Manage))
+	_ = d.Set("view", breakSRL(resp.Permissions.View))
+	_ = d.Set("permit_rulesets", isEmpty(resp.Permissions.Rulesets))
+	_ = d.Set("permit_notifications", isEmpty(resp.Permissions.Notifications))
+	_ = d.Set("permit_policies", isEmpty(resp.Permissions.Policies))
+	_ = d.Set("permit_alert_actions", isEmpty(resp.Permissions.AlertActions))
+	_ = d.Set("permit_on_boarding", isEmpty(resp.Permissions.OnBoarding))
+	_ = d.Set("create", resp.Permissions.Create)
+	_ = d.Set("cross_account_access", resp.Permissions.CrossAccountAccess)
 
 	return nil
 }
@@ -226,14 +276,6 @@ func resourceUserUpdate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	log.Printf("[INFO] Updating user with ID: %v\n", d.Id())
 
-	if d.HasChange("role_ids") {
-		log.Println("[INFO] Roles has been changed")
-		req := expandUpdateRequest(d)
-		if _, err := d9Client.users.Update(d.Id(), &req); err != nil {
-			return err
-		}
-	}
-
 	if d.HasChange("is_owner") {
 		if d.Get("is_owner").(bool) {
 			if _, err := d9Client.users.SetUserAsOwner(d.Id()); err != nil {
@@ -245,6 +287,12 @@ func resourceUserUpdate(d *schema.ResourceData, meta interface{}) error {
 			// to drop ownership from user, we must set another user to be owner, so is_owner field in the tf state must stay true
 			_ = d.Set("is_owner", true)
 		}
+	} else {
+		log.Println("[INFO] Roles id's or permissions has been changed")
+		req := expandUpdateRequest(d)
+		if _, err := d9Client.users.Update(d.Id(), &req); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -252,29 +300,47 @@ func resourceUserUpdate(d *schema.ResourceData, meta interface{}) error {
 
 func expandUserRequest(d *schema.ResourceData) users.UserRequest {
 	return users.UserRequest{
-		Email:      d.Get("email").(string),
-		FirstName:  d.Get("first_name").(string),
-		LastName:   d.Get("last_name").(string),
-		SsoEnabled: d.Get("is_sso_enabled").(bool),
+		Email:       d.Get("email").(string),
+		FirstName:   d.Get("first_name").(string),
+		LastName:    d.Get("last_name").(string),
+		SsoEnabled:  d.Get("is_sso_enabled").(bool),
+		Permissions: expandUsersPermissions(d),
 	}
 }
 
 func expandUpdateRequest(d *schema.ResourceData) users.UserUpdate {
 	return users.UserUpdate{
-		RoleIds: expandRoles(d.Get("role_ids").([]interface{})),
-		// permissions must be passed
-		Permissions: users.Permissions{
-			Access:             []string{},
-			Manage:             []string{},
-			Rulesets:           []string{},
-			Notifications:      []string{},
-			Policies:           []string{},
-			AlertActions:       []string{},
-			Create:             []string{},
-			View:               []string{},
-			CrossAccountAccess: []string{},
-		},
+		RoleIds:     expandRoles(d.Get("role_ids").([]interface{})),
+		Permissions: expandUsersPermissions(d),
 	}
+}
+
+func expandUsersPermissions(d *schema.ResourceData) users.Permissions {
+	permissions := users.Permissions{
+		Access:             generateSRL(d.Get("access").([]interface{})),
+		Manage:             generateSRL(d.Get("manage").([]interface{})),
+		Create:             expandList(d.Get("create").([]interface{})),
+		View:               generateSRL(d.Get("view").([]interface{})),
+		CrossAccountAccess: expandList(d.Get("cross_account_access").([]interface{})),
+	}
+
+	if permitRulesets, ok := d.GetOk("permit_rulesets"); ok {
+		permissions.Rulesets = convertBoolToSRL(permitRulesets.(bool))
+	}
+	if permitNotifications, ok := d.GetOk("permit_notifications"); ok {
+		permissions.Notifications = convertBoolToSRL(permitNotifications.(bool))
+	}
+	if permitPolicies, ok := d.GetOk("permit_policies"); ok {
+		permissions.Policies = convertBoolToSRL(permitPolicies.(bool))
+	}
+	if permitAlertActions, ok := d.GetOk("permit_alert_actions"); ok {
+		permissions.AlertActions = convertBoolToSRL(permitAlertActions.(bool))
+	}
+	if permitOnBoarding, ok := d.GetOk("permit_on_boarding"); ok {
+		permissions.OnBoarding = convertBoolToSRL(permitOnBoarding.(bool))
+	}
+
+	return permissions
 }
 
 func expandRoles(generalRoles []interface{}) []int {

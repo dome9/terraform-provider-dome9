@@ -13,7 +13,9 @@ FEATURES:
 
 IMPROVEMENTS:
 * Schema structure change for `dome9_cloudaccount_azure` and `dome9_cloudaccount_gcp`([#47](https://github.com/terraform-providers/terraform-provider-dome9/pull/47)) ([#48](https://github.com/terraform-providers/terraform-provider-dome9/pull/48))
-* New field `iam_safe` in `dome9_cloudaccount_aws` resource
+* New field `iam_safe` in `dome9_cloudaccount_aws` resource ([#51](https://github.com/terraform-providers/terraform-provider-dome9/pull/51))
+* `dome9_user` and `dome9_aws_role` supports additional permission fields ([#57](https://github.com/terraform-providers/terraform-provider-dome9/pull/57)) ([#62](https://github.com/terraform-providers/terraform-provider-dome9/pull/62))
+* `dome9_cloudaccount_aws` supports `restricted_iam_entities` fields ([#63](https://github.com/terraform-providers/terraform-provider-dome9/pull/63))
 
 BUG FIXES:
 * Sensitive strings will be hidden in Terraform plan for Azure and GCP cloud account onboarding ([#47](https://github.com/terraform-providers/terraform-provider-dome9/pull/47)) ([#48](https://github.com/terraform-providers/terraform-provider-dome9/pull/48))
