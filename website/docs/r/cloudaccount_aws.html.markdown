@@ -1,12 +1,12 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_aws"
-sidebar_current: "docs-resource-dome9-cloudaccount-aws"
+page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_AWS"
+sidebar_current: "docs-resource-dome9-cloudaccount-AWS"
 description: |-
   Onboard AWS cloud account
 ---
 
-# dome9_cloudaccount_aws
+# dome9_cloudaccount_AWS
 
 This resource is used to onboard AWS cloud accounts to Dome9. This is the first and pre-requisite step in order to apply  Dome9 features, such as compliance testing, on the account.
 
@@ -15,11 +15,11 @@ This resource is used to onboard AWS cloud accounts to Dome9. This is the first 
 Basic usage:
 
 ```hcl
-resource "dome9_cloudaccount_aws" "test" {
+resource "dome9_cloudaccount_AWS" "test" {
   name  = "ACCOUNT NAME"
  
   credentials  {
-    arn    = "ARN"
+    ARN    = "ARN"
     secret = "SECRET"
     type   = "RoleBased"
   }
@@ -107,7 +107,7 @@ The following arguments are supported:
 
 `credentials` has the following arguments:
 
-* `arn` - (Required) AWS Role ARN (to be assumed by Dome9)
+* `ARN` - (Required) AWS Role ARN (to be assumed by Dome9)
 * `secret` - (Required) The AWS role External ID (Dome9  will have to use this secret in order to assume the role)
 * `type` - (Required) The cloud account onboarding method. Set to "RoleBased".
 
@@ -128,13 +128,13 @@ The following arguments are supported:
 * `full_protection` - The protection mode for existing security groups in the account.
 * `allow_read_only` - The AWS cloud account operation mode. true for "Full-Manage", false for "Readonly".
 * `net_sec` - The network security configuration for the AWS cloud account. If not given, sets to default value.
-* `iam_safe` - IAM safe entity details
-    * `aws_group_arn` - Aws group arn  
-    * `aws_policy_arn` - Aws policy arn  
+* `IAM_safe` - IAM safe entity details
+    * `AWS_group_ARN` - AWS group ARN  
+    * `AWS_policy_ARN` - AWS policy ARN  
     * `mode` - Mode  
-    * `restricted_iam_entities` - Restricted iam safe entities which has the following:  
-		* `roles_arns` - Restricted iam safe entities roles arns
-		* `users_arns` - Restricted iam safe entities users arns
+    * `restricted_IAM_entities` - Restricted IAM safe entities, which have the following fields:  
+		* `roles_ARNs` - Restricted IAM safe entities roles ARNs
+		* `users_ARNs` - Restricted IAM safe entities users ARNs
 
 ## Import
 
@@ -143,5 +143,5 @@ AWS cloud account can be imported; use `<AWS CLOUD ACCOUNT ID>` as the import ID
 For example:
 
 ```shell
-terraform import dome9_cloudaccount_aws.test 00000000-0000-0000-0000-000000000000
+terraform import dome9_cloudaccount_AWS.test 00000000-0000-0000-0000-000000000000
 ```
