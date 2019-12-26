@@ -37,8 +37,8 @@ The following arguments are supported:
 * `private_key` - (Required) Private key
 * `client_email` - (Required) GCP client email
 * `client_id` - (Required) Client id
-* `client_x509_cert_url` - (Required) client_x509_cert_url
-* `gsuite_user` - (Optional) The gsuite user
+* `client_x509_cert_url` - (Required) client x509 certificate URL
+* `gsuite_user` - (Optional) The Gsuite user
 * `domain_name` - (Optional) The domain name
 * `organizational_unit_id` - (Optional) Organizational Unit that this cloud account will be attached to
 

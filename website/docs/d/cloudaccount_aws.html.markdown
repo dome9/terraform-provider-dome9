@@ -1,20 +1,20 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_aws"
-sidebar_current: "docs-datasource-dome9-cloudaccount-aws"
+page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_AWS"
+sidebar_current: "docs-datasource-dome9-cloudaccount-AWS"
 description: |-
   Get information about  AWS cloud account onboarded to Dome9.
 ---
 
-# Data Source: dome9_cloudaccount_aws
+# Data Source: dome9_cloudaccount_AWS
 
 Use this data source to get information about an AWS cloud account onboarded to Dome9.
 
 ## Example Usage
 
 ```hcl
-data "dome9_cloudaccount_aws" "test" {
-  id = "d9-aws-cloud-account-id"
+data "dome9_cloudaccount_AWS" "test" {
+  id = "d9-AWS-cloud-account-id"
 }
 
 ```
@@ -39,10 +39,10 @@ In addition to all arguments above, the following attributes are exported:
 * `allow_read_only` - The AWS cloud account operation mode. true for "Manage", false for "Readonly".
 * `net_sec` - The network security configuration for the AWS cloud account.
 * `organizational_unit_id` - Organizational unit id.
-* `iam_safe` - IAM safe entity details
-    * `aws_group_arn` - Aws group arn  
-    * `aws_policy_arn` - Aws policy arn  
+* `IAM_safe` - IAM safe entity details
+    * `AWS_group_ARN` - AWS group ARN  
+    * `AWS_policy_ARN` - AWS policy ARN  
     * `mode` - Mode  
-    * `restricted_iam_entities` - Restricted iam safe entities which has the following:  
-		* `roles_arns` - Restricted iam safe entities roles arns
-		* `users_arns` - Restricted iam safe entities users arns
+    * `restricted_IAM_entities` - Restricted IAM safe entities which has the following:  
+		* `roles_ARNs` - Restricted IAM safe entities roles ARNs
+		* `users_ARNs` - Restricted IAM safe entities users ARNs

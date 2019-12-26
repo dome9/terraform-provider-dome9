@@ -30,7 +30,7 @@ In addition to all arguments above, the following attributes are exported:
 * `aws_region_id` - AWS region; in AWS format (e.g., "us-east-1").
 * `is_protected` - indicates whether the Security Group is protected.
 * `vpc_id` - Security Group id.
-* `vpc_name` - name of VPC containing the Security Group .
+* `vpc_name` - name of VPC containing the Security Group.
 * `tags` - Security Group tags.
 * `services` - Security Group services.
 * `cloud_account_name` - AWS cloud account name.
