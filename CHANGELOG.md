@@ -1,4 +1,4 @@
-## 1.16.0 (Unreleased)
+## 1.16.0 (December 29, 2019)
 
 IMPROVEMENTS:
 * `dome9_user` and `dome9_aws_role` supports additional permission fields ([#57](https://github.com/terraform-providers/terraform-provider-dome9/pull/57)) ([#62](https://github.com/terraform-providers/terraform-provider-dome9/pull/62))
