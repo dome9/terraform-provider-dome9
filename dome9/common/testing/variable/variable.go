@@ -114,7 +114,7 @@ const (
 	IAMSafeEntityProtect       = "Protect"
 	IAMSafeEntityTypeUser      = "User"
 	IAMSafeEntityName          = "user_for_testing_dont_remove"
-	WaitUntilAttachIAMSafeDone = 180
+	WaitUntilAttachIAMSafeDone = 300
 
 	// 	update const
 	IAMSafeEntityProtectWithElevation = "ProtectWithElevation"
