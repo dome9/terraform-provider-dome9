@@ -70,20 +70,20 @@ The following arguments are supported:
 * `outbound` - (Optional) Security group services.
 
 The configuration of inbound and outbound is:
-   * `name` - (Required) Service name.
-   * `description` - (Optional) Service description.
-   * `priority` - (Required) Service priority (a number between 100 and 4096)
-   * `access` - (Optional) 	Service access (Allow / Deny).
-   * `protocol` - (Required) Service protocol (UDP / TCP / ANY).
-   * `source_port_ranges` - (Required) Source port ranges.
-   * `destination_port_ranges` - (Required) Destination port ranges.
-   * `source_scopes` - (Required) List of source scopes for the service (CIDR / IP List / Tag):
-      * `type` - (Required) scope type.
-      * `data` - (Required) scope data.
-   * `destination_scopes` - (Required) List of destination scopes for the service (CIDR / IP List / Tag).
-      * `type` - (Required) scope type.
-      * `data` - (Required) scope data.
-   * `is_default` - Gets or sets the default security rules of network security group.
+* `name` - (Required) Service name.
+* `description` - (Optional) Service description.
+* `priority` - (Required) Service priority (a number between 100 and 4096)
+* `access` - (Optional) 	Service access (Allow / Deny).
+* `protocol` - (Required) Service protocol (UDP / TCP / ANY).
+* `source_port_ranges` - (Required) Source port ranges.
+* `destination_port_ranges` - (Required) Destination port ranges.
+* `source_scopes` - (Required) List of source scopes for the service (CIDR / IP List / Tag):
+    * `type` - (Required) scope type.
+    * `data` - (Required) scope data.
+* `destination_scopes` - (Required) List of destination scopes for the service (CIDR / IP List / Tag).
+    * `type` - (Required) scope type.
+    * `data` - (Required) scope data.
+* `is_default` - Gets or sets the default security rules of network security group.
         
 ## Attributes Reference
 
