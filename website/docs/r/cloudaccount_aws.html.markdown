@@ -121,6 +121,7 @@ The following arguments are supported:
 
 ## Attributes Reference
 
+* `id` - The id of the account in Dome9.
 * `vendor` - The cloud provider ("AWS").
 * `external_account_number` - The AWS account number.
 * `is_fetching_suspended` - Fetching suspending status.
