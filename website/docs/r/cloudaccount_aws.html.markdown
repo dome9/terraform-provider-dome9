@@ -107,7 +107,7 @@ The following arguments are supported:
 
 `credentials` has the following arguments:
 
-* `ARN` - (Required) AWS Role ARN (to be assumed by Dome9)
+* `arn` - (Required) AWS Role ARN (to be assumed by Dome9)
 * `secret` - (Required) The AWS role External ID (Dome9  will have to use this secret in order to assume the role)
 * `type` - (Required) The cloud account onboarding method. Set to "RoleBased".
 
