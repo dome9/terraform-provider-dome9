@@ -86,9 +86,6 @@ type UpdateProtectionModeQueryParameters struct {
 	ProtectionMode string `json:"protectionMode"`
 }
 
-type UpdateTagsQueryParameters struct {
-	Tags map[string]interface{} `json:"tags"`
-}
 
 func (service *Service) Get(d9SecurityGroupID string) (*CloudSecurityGroupResponse, *http.Response, error) {
 	v := new(CloudSecurityGroupResponse)

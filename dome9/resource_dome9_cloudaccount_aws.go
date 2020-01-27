@@ -237,7 +237,7 @@ func resourceCloudAccountAWSDelete(d *schema.ResourceData, meta interface{}) err
 	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting AWS Cloud Account ID: %v\n", d.Id())
 
-	if _, err := d9Client.cloudaccountAWS.Delete(d.Id()); err != nil {
+	if _, err := d9Client.cloudaccountAWS.ForceDelete(d.Id()); err != nil {
 		return err
 	}
 
