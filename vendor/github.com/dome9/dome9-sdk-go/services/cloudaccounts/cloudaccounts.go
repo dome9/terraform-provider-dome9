@@ -17,6 +17,7 @@ const (
 	RESTfulPathRestrictedIamEntities        = "restrictedIamEntities"
 	RESTfulPathUser                         = "user"
 	RESTfulPathIAM                          = "iam"
+	DeleteForce                             = "DeleteForce"
 )
 
 // Azure service paths

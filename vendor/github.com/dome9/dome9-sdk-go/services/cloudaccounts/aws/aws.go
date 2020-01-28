@@ -177,6 +177,17 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 	return resp, nil
 }
 
+func (service *Service) ForceDelete(id string) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, id, cloudaccounts.DeleteForce)
+	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func (service *Service) UpdateName(body CloudAccountUpdateNameRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, cloudaccounts.RESTfulServicePathAWSName)
