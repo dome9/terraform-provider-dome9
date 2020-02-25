@@ -1,6 +1,10 @@
 ## 1.18.0 (Unreleased)
+
+* Cloud vendors in ruleset are sensitive ([#73](https://github.com/terraform-providers/terraform-provider-dome9/pull/73))
+
 ## 1.17.0 (February 24, 2020)
-* Version bump
+
+* Google cloud vendor fix ([#69](https://github.com/terraform-providers/terraform-provider-dome9/pull/69))
 
 ## 1.16.0 (December 29, 2019)
 
