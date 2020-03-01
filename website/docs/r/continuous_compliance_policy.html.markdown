@@ -32,7 +32,7 @@ The following arguments are supported:
 * `cloud_account_id` - (Required) The cloud account id.
 * `external_account_id` - (Required) The account number.
 * `bundle_id` - (Required) The bundle id for the bundle that will be used in the policy.
-* `cloud_account_type` - (Required) The cloud account provider ("AWS", "Azure", "Google").
+* `cloud_account_type` - (Required) The cloud account provider ("Aws", "Azure", "Google").
 * `notification_ids` - (Required) The notification policy id's for the policy [list].
     
 ## Attributes Reference

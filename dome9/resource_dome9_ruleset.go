@@ -34,7 +34,7 @@ func resourceRuleSet() *schema.Resource {
 			"cloud_vendor": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice(providerconst.CloudVendors, true),
+				ValidateFunc: validation.StringInSlice(providerconst.CloudVendors, false),
 			},
 			"language": {
 				Type:     schema.TypeString,
