@@ -226,7 +226,7 @@ func resourceCloudSecurityGroupAWSRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("is_protected", resp.IsProtected)
 	_ = d.Set("cloud_account_name", resp.CloudAccountName)
 	_ = d.Set("vpc_id", resp.VpcID)
-	_ = d.Set("external_id", resp.VpcID)
+	_ = d.Set("external_id", resp.ExternalID)
 	_ = d.Set("tags", resp.Tags)
 
 	if err := d.Set("services", flattenCloudSecurityGroupAWSServices(resp.Services)); err != nil {
