@@ -1,3 +1,4 @@
+## 1.19.0 (Unreleased)
 ## 1.18.0 (April 02, 2020)
 
 * Cloud vendors in ruleset are sensitive ([#73](https://github.com/terraform-providers/terraform-provider-dome9/pull/73))
