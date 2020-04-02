@@ -2,6 +2,9 @@
 
 * Cloud vendors in ruleset are sensitive ([#73](https://github.com/terraform-providers/terraform-provider-dome9/pull/73))
 
+BUG FIXES:
+* The dome9_aws_security_group.external_id property does not return the AWS security group ID, it does return the VPC ID instead ([#75](https://github.com/terraform-providers/terraform-provider-dome9/issues/75))
+
 ## 1.17.0 (February 24, 2020)
 
 * Google cloud vendor fix ([#69](https://github.com/terraform-providers/terraform-provider-dome9/pull/69))
