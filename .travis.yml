@@ -17,6 +17,8 @@ matrix:
       script: make lint
     - name: "Code tflint"
       script: make tflint
+    - name: "Vit"
+      script: make vet
     - name: "Code UnitTest"
       script: make test
     - name: "Website"
