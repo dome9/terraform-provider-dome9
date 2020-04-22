@@ -18,6 +18,9 @@ matrix:
     - name: "Website"
       script:
         - make website-test
+    - name: "Vet"
+      script:
+        - make vet
 
 install:
   # This script is used by the Travis build to install a cookie for
