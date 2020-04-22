@@ -13,16 +13,14 @@ matrix:
   allow_failures:
     - go: tip
   include:
-    - name: "Code lint"
-      script: make lint
-    - name: "Code tflint"
-      script: make tflint
     - name: "Code UnitTest"
       script: make test
     - name: "Website"
       script:
         - make website-test
-        - make website-lint
+    - name: "Vet"
+      script:
+        - make vet
 
 install:
   # This script is used by the Travis build to install a cookie for
@@ -30,7 +28,6 @@ install:
   # packages that live there.
   # See: https://github.com/golang/go/issues/12933
   - bash scripts/gogetcookie.sh
-  - make tools
 
 branches:
   only:
