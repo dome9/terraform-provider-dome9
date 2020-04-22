@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -47,6 +48,9 @@ func resourceAttachIAMSafe() *schema.Resource {
 func resourceAttachIAMSafeCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	req := expandAttachIAMSafeRequest(d)
+	a := 5
+	fmt.Println(a)
+	a = a = 6
 	log.Printf("[INFO] Attach IAM safe with request\n%+v\n", req)
 	resp, _, err := d9Client.cloudaccountAWS.AttachIAMSafeToCloudAccount(req)
 	if err != nil {
