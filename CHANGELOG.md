@@ -1,4 +1,4 @@
-## 1.18.1 (Unreleased)
+## 1.18.1 (April 22, 2020)
 
 * IMPROVEMENTS:
     - Support new two aws regions: Bahrain (me-south-1) and Hong Kong (ap-east-1)
