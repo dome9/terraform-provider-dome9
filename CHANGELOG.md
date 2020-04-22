@@ -1,4 +1,8 @@
-## 1.19.0 (Unreleased)
+## 1.18.1 (Unreleased)
+
+* IMPROVEMENTS:
+    - Support new two aws regions: Bahrain (me-south-1) and Hong Kong (ap-east-1)
+    - Using go vet rather than go lint
 ## 1.18.0 (April 02, 2020)
 
 * Cloud vendors in ruleset are sensitive ([#73](https://github.com/terraform-providers/terraform-provider-dome9/pull/73))
