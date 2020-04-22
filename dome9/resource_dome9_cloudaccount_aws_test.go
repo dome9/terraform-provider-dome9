@@ -20,6 +20,7 @@ import (
 
 func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 	var cloudAccountResponse aws.CloudAccountResponse
+	println("hi")
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWS)
 	originalArn := os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn)
 	updatedArn := os.Getenv(environmentvariable.CloudAccountUpdatedAWSEnvVarArn)
