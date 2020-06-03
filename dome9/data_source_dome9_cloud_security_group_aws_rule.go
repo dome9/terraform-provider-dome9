@@ -7,9 +7,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func dataSourceCloudSecurityGroupAWSRole() *schema.Resource {
+func dataSourceCloudSecurityGroupAWSRule() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceSecurityGroupAWSRoleRead,
+		Read: dataSourceSecurityGroupAWSRuleRead,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -125,7 +125,7 @@ func dataSourceCloudSecurityGroupAWSRole() *schema.Resource {
 	}
 }
 
-func dataSourceSecurityGroupAWSRoleRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceSecurityGroupAWSRuleRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 
 	id := d.Get("id").(string)

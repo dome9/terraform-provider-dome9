@@ -13,12 +13,12 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
 
-func resourceCloudSecurityGroupAWSRole() *schema.Resource {
+func resourceCloudSecurityGroupAWSRule() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceCloudSecurityGroupAWSRoleCreate,
-		Read:   resourceCloudSecurityGroupAWSRoleRead,
-		Update: resourceCloudSecurityGroupAWSRoleUpdate,
-		Delete: resourceCloudSecurityGroupAWSRoleDelete,
+		Create: resourceCloudSecurityGroupAWSRuleCreate,
+		Read:   resourceCloudSecurityGroupAWSRuleRead,
+		Update: resourceCloudSecurityGroupAWSRuleUpdate,
+		Delete: resourceCloudSecurityGroupAWSRuleDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -144,7 +144,7 @@ func resourceCloudSecurityGroupAWSRole() *schema.Resource {
 	}
 }
 
-func resourceCloudSecurityGroupAWSRoleCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudSecurityGroupAWSRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	req := expandBoundServices(d)
 	log.Printf("[INFO] Bounding service to AWS security group request:%+v\n", req)
@@ -157,10 +157,10 @@ func resourceCloudSecurityGroupAWSRoleCreate(d *schema.ResourceData, meta interf
 	log.Printf("[INFO] Bounding service to AWS security group. ID: %v\n", resp.ID)
 	d.SetId(strconv.Itoa(resp.ID))
 
-	return resourceCloudSecurityGroupAWSRoleRead(d, meta)
+	return resourceCloudSecurityGroupAWSRuleRead(d, meta)
 }
 
-func resourceCloudSecurityGroupAWSRoleRead(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudSecurityGroupAWSRuleRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	resp, _, err := d9Client.awsSecurityGroup.Get(d.Id())
 	if err != nil {
@@ -183,9 +183,9 @@ func resourceCloudSecurityGroupAWSRoleRead(d *schema.ResourceData, meta interfac
 	return nil
 }
 
-func resourceCloudSecurityGroupAWSRoleDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudSecurityGroupAWSRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	log.Printf("[INFO] Dettach all the inbounts and outbounds from AWS security group ID: %v", d.Id())
+	log.Printf("[INFO] Dettach all the inbounds and outbounds from AWS security group ID: %v", d.Id())
 	cloudAccountID := d.Get("dome9_security_group_id").(string)
 
 	// detach all the input and outbound
@@ -204,7 +204,7 @@ func resourceCloudSecurityGroupAWSRoleDelete(d *schema.ResourceData, meta interf
 	return nil
 }
 
-func resourceCloudSecurityGroupAWSRoleUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudSecurityGroupAWSRuleUpdate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	cloudAccountID := d.Get("dome9_security_group_id").(string)
 	if _, _, err := d9Client.awsSecurityGroup.UpdateBoundService(cloudAccountID, expandBoundServices(d)); err != nil {

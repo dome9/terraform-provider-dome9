@@ -1,4 +1,4 @@
-resource "dome9_cloud_security_group_role" "aws_sg_role" {
+resource "dome9_cloud_security_group_rule" "aws_sg_rule" {
   dome9_security_group_id = "dome9_security_group_id"
 
   services {
@@ -34,6 +34,6 @@ resource "dome9_cloud_security_group_role" "aws_sg_role" {
   }
 }
 
-data "dome9_cloud_security_group_role" "aws_sg_role" {
+data "dome9_cloud_security_group_rule" "aws_sg_rule" {
   id = "dome9_security_group_id"
 }

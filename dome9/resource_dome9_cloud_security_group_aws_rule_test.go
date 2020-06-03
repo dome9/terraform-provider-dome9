@@ -13,9 +13,9 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
-func TestAccResourceCloudSecurityGroupAWSRoleBasic(t *testing.T) {
+func TestAccResourceCloudSecurityGroupAWSRuleBasic(t *testing.T) {
 	securityGroupTypeAndName, _, securityGroupGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWSSecurityGroup)
-	securityGroupRoleTypeAndName, _, securityGroupRoleGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWSSecurityGroupRole)
+	securityGroupRuleTypeAndName, _, securityGroupRuleGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWSSecurityGroupRule)
 	awsTypeAndName, _, awsGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWS)
 
 	awsCloudAccountHCL := getCloudAccountAWSResourceHCL(awsGeneratedName, variable.CloudAccountAWSOriginalAccountName, os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn), "")
@@ -25,16 +25,16 @@ func TestAccResourceCloudSecurityGroupAWSRoleBasic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudSecurityGroupAWSRoleBasic(awsCloudAccountHCL, awsSecurityGroupHCL, securityGroupTypeAndName, securityGroupRoleGeneratedName),
+				Config: testAccCheckCloudSecurityGroupAWSRuleBasic(awsCloudAccountHCL, awsSecurityGroupHCL, securityGroupTypeAndName, securityGroupRuleGeneratedName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(securityGroupRoleTypeAndName, "services.#", "1"),
+					resource.TestCheckResourceAttr(securityGroupRuleTypeAndName, "services.#", "1"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckCloudSecurityGroupAWSRoleBasic(awsCloudAccountHCL, awsSecurityGroupHCL, securityGroupTypeAndName, securityGroupRoleGeneratedName string) string {
+func testAccCheckCloudSecurityGroupAWSRuleBasic(awsCloudAccountHCL, awsSecurityGroupHCL, securityGroupTypeAndName, securityGroupRuleGeneratedName string) string {
 	return fmt.Sprintf(`
 // aws cloud account resource
 %s
@@ -46,8 +46,8 @@ resource "%s" "%s" {
   dome9_security_group_id = "${%s.id}"
   services {
     inbound {
-      name          = "inbound-test-aws-sg-role"
-      description   = "inbound-test-aws-sg-role"
+      name          = "inbound-test-aws-sg-rule"
+      description   = "inbound-test-aws-sg-rule"
       protocol_type = "ALL"
       port          = ""
       open_for_all  = true
@@ -66,8 +66,8 @@ resource "%s" "%s" {
 		awsSecurityGroupHCL,
 
 		// resource variables
-		resourcetype.CloudAccountAWSSecurityGroupRole,
-		securityGroupRoleGeneratedName,
+		resourcetype.CloudAccountAWSSecurityGroupRule,
+		securityGroupRuleGeneratedName,
 		securityGroupTypeAndName,
 	)
 }

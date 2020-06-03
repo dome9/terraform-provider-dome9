@@ -52,6 +52,66 @@ resource "dome9_aws_security_group" "aws_sg" {
 
 ```
 
+Example for security group circular dependencies
+
+```hcl
+resource "dome9_aws_security_group" "aws_sg1" {
+  dome9_security_group_name = "dome9_security_group_name"
+  description               = "description"
+  aws_region_id             = "aws_region_id"
+  dome9_cloud_account_id    = "dome9_cloud_account_id"
+}
+
+resource "dome9_cloud_security_group_rule" "aws_sg1" {
+  dome9_security_group_id = "${dome9_aws_security_group.aws_sg1.id}"
+  services {
+    outbound {
+      name          = "HTTPS"
+      description   = "HTTPS (TCP)"
+      protocol_type = "TCP"
+      port          = "8443"
+      open_for_all  = false
+      scope {
+        type = "AWS"
+        data = {
+          extid = "${dome9_aws_security_group.aws_sg2.external_id}"
+          note = "${dome9_aws_security_group.aws_sg2.external_id}"
+        }
+      }
+    }
+  }
+}
+
+##################
+
+resource "dome9_aws_security_group" "aws_sg2" {
+  dome9_security_group_name = "dome9_security_group_name"
+  description               = "description"
+  aws_region_id             = "aws_region_id"
+  dome9_cloud_account_id    = "dome9_cloud_account_id"
+}
+
+resource "dome9_cloud_security_group_rule" "aws_sg2" {
+  dome9_security_group_id = "${dome9_aws_security_group.aws_sg2.id}"
+  services {
+    outbound {
+      name          = "HTTPS"
+      description   = "HTTPS (TCP)"
+      protocol_type = "TCP"
+      port          = "8443"
+      open_for_all  = false
+      scope {
+        type = "AWS"
+        data = {
+          extid = "${dome9_aws_security_group.aws_sg1.external_id}"
+          note = "${dome9_aws_security_group.aws_sg1.external_id}"
+        }
+      }
+    }
+  }
+}
+
+```
 ## Argument Reference
 
 The following arguments are supported:

@@ -1,12 +1,12 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_cloud_security_group_role"
-sidebar_current: "docs-resource-dome9-aws-security-group-role"
+page_title: "Check Point CloudGuard Dome9: dome9_cloud_security_group_rule"
+sidebar_current: "docs-resource-dome9-aws-security-group-rule"
 description: |-
   Bound input and output services to AWS Security Group in Dome9
 ---
 
-# dome9_cloud_security_group_role
+# dome9_cloud_security_group_rule
 
 This resource has methods to add and manage input and output services to Security Groups in a cloud account that is managed by Dome9.
 
@@ -15,7 +15,7 @@ This resource has methods to add and manage input and output services to Securit
 Basic usage:
 
 ```hcl
-resource "dome9_cloud_security_group_role" "aws_sg_role" {
+resource "dome9_cloud_security_group_rule" "aws_sg_rule" {
   dome9_security_group_id    = "dome9_security_group_id"
   
   services {
