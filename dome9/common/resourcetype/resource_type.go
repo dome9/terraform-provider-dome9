@@ -10,6 +10,7 @@ const (
 	ContinuousComplianceNotification = "dome9_continuous_compliance_notification"
 	RuleSet                          = "dome9_ruleset"
 	CloudAccountAWSSecurityGroup     = "dome9_aws_security_group"
+	CloudAccountAWSSecurityGroupRole = "dome9_cloud_security_group_role"
 	Role                             = "dome9_role"
 	OrganizationalUnit               = "dome9_organizational_unit"
 	CloudAccountAzureSecurityGroup   = "dome9_azure_security_group"

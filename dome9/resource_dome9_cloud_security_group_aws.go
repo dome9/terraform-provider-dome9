@@ -315,23 +315,18 @@ func expandCloudSecurityGroupRequest(d *schema.ResourceData) securitygroupaws.Cl
 	return cloudSecurityGroupRequest
 }
 
-func expandServices(d *schema.ResourceData) securitygroupaws.ServicesRequest {
-
+func expandServices(d *schema.ResourceData) *securitygroupaws.ServicesRequest {
 	if services, ok := d.GetOk("services"); ok {
 		servicesItem := services.(*schema.Set).List()[0]
 		service := servicesItem.(map[string]interface{})
 
-		return securitygroupaws.ServicesRequest{
+		return &securitygroupaws.ServicesRequest{
 			Inbound:  expandBoundServicesRequest(service["inbound"].([]interface{})),
 			Outbound: expandBoundServicesRequest(service["outbound"].([]interface{})),
 		}
 	}
 
-	// api must get service field
-	return securitygroupaws.ServicesRequest{
-		Inbound:  []securitygroupaws.BoundServicesRequest{},
-		Outbound: []securitygroupaws.BoundServicesRequest{},
-	}
+	return nil
 }
 
 func expandBoundServicesRequest(boundServicesRequest []interface{}) []securitygroupaws.BoundServicesRequest {

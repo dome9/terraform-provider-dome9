@@ -9,7 +9,6 @@ const (
 	awsSgResourcePath           = "CloudSecurityGroup"
 	awsSgResourceProtectionMode = "protection-mode"
 	awsSgResourceServices       = "services"
-	awsSgResourceTags           = "tags"
 )
 
 // There is a bug when we pass nil inbound or outbound, ticket link: https://dome9-security.atlassian.net/browse/DOME-12727
@@ -21,7 +20,7 @@ type CloudSecurityGroupRequest struct {
 	IsProtected       bool                   `json:"isProtected,omitempty"`
 	VpcId             string                 `json:"VpcId,omitempty"`
 	VpcName           string                 `json:"VpcName,omitempty"`
-	Services          ServicesRequest        `json:"services,omitempty"`
+	Services          *ServicesRequest       `json:"services,omitempty"`
 	Tags              map[string]interface{} `json:"tags,omitempty"`
 }
 
@@ -38,6 +37,10 @@ type CloudSecurityGroupResponse struct {
 	CloudAccountName  string            `json:"cloudAccountName"`
 	Services          ServicesResponse  `json:"services,omitempty"`
 	Tags              map[string]string `json:"tags,omitempty"`
+}
+
+type UpdateBoundServiceRequest struct {
+	Services ServicesRequest `json:"services"`
 }
 
 type ServicesRequest struct {
@@ -85,7 +88,6 @@ type GetSecurityGroupQueryParameters struct {
 type UpdateProtectionModeQueryParameters struct {
 	ProtectionMode string `json:"protectionMode"`
 }
-
 
 func (service *Service) Get(d9SecurityGroupID string) (*CloudSecurityGroupResponse, *http.Response, error) {
 	v := new(CloudSecurityGroupResponse)
@@ -166,6 +168,18 @@ func (service *Service) UpdateProtectionMode(d9SecurityGroupID, protectionMode s
 	}
 
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, v)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return v, resp, nil
+}
+
+func (service *Service) UpdateBoundService(d9SecurityGroupID string, body UpdateBoundServiceRequest) (*CloudSecurityGroupResponse, *http.Response, error) {
+	v := new(CloudSecurityGroupResponse)
+	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, d9SecurityGroupID)
+
+	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
 	if err != nil {
 		return nil, nil, err
 	}
