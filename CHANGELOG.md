@@ -1,4 +1,4 @@
-## 1.19.0 (Unreleased)
+## 1.19.0 (June 04, 2020)
 * **New Resource:** `dome9_aws_security_group_rule` ([#84](https://github.com/terraform-providers/terraform-provider-dome9/pull/84))
 * **New Data Source:** `dome9_aws_security_group_rule`([#84](https://github.com/terraform-providers/terraform-provider-dome9/pull/84))
 ## 1.18.1 (April 22, 2020)
