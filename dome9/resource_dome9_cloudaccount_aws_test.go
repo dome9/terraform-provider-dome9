@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
@@ -124,6 +124,26 @@ func testAccCheckCloudAccountDestroy(s *terraform.State) error {
 
 func testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, resourceName, arn, additionalBlock string) string {
 	return fmt.Sprintf(`
+// aws cloud account creation
+%s
+
+data "%s" "%s" {
+  id = "${%s.id}"
+}
+
+`,
+		// aws cloud account
+		getCloudAccountAWSResourceHCL(generatedName, resourceName, arn, additionalBlock),
+
+		// data source variables
+		resourcetype.CloudAccountAWS,
+		generatedName,
+		resourceTypeAndName,
+	)
+}
+
+func getCloudAccountAWSResourceHCL(generatedName, resourceName, arn, additionalBlock string) string {
+	return fmt.Sprintf(`
 resource "%s" "%s" {
   name        = "%s"
   credentials {
@@ -135,24 +155,14 @@ resource "%s" "%s" {
   %s
 
 }
-
-data "%s" "%s" {
-  id = "${%s.id}"
-}
-
 `,
-		// resource variables
+		// aws cloud account variables
 		resourcetype.CloudAccountAWS,
 		generatedName,
 		resourceName,
 		arn,
 		os.Getenv(environmentvariable.CloudAccountAWSEnvVarSecret),
 		additionalBlock,
-
-		// data source variables
-		resourcetype.CloudAccountAWS,
-		generatedName,
-		resourceTypeAndName,
 	)
 }
 
@@ -222,6 +232,14 @@ net_sec {
     regions {
       new_group_behavior = "ReadOnly"
       region             = "eu_north_1"
+    }
+	regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_east_1"
+    }
+	regions {
+      new_group_behavior = "ReadOnly"
+      region             = "me_south_1"
     }
   }
 `,

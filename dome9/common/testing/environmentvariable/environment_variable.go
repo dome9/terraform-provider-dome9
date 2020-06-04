@@ -29,3 +29,14 @@ const (
 	CloudAccountGCPEnvVarClientId          = "CLIENT_ID"
 	CloudAccountGCPEnvVarClientX509CertUrl = "CLIENT_X509_CERT_URL"
 )
+
+// Azure security group
+const (
+	AzureSecurityGroupResourceGroup = "AZURE_RESOURCE_GROUP"
+)
+
+// Attach IAM safe
+const (
+	AttachIAMSafeEnvVarGroupArn  = "ATTACH_IAM_SAFE_GROUP_ARN"
+	AttachIAMSafeEnvVarPolicyArn = "ATTACH_IAM_SAFE_POLICY_ARN"
+)

@@ -1,5 +1,36 @@
+<<<<<<< HEAD
 ## 1.15.0 (Unreleased)
 FEATURES: 
+=======
+## 1.19.0 (Unreleased)
+## 1.18.1 (April 22, 2020)
+
+* IMPROVEMENTS:
+    - Support new two aws regions: Bahrain (me-south-1) and Hong Kong (ap-east-1)
+    - Using go vet rather than go lint
+## 1.18.0 (April 02, 2020)
+
+* Cloud vendors in ruleset are sensitive ([#73](https://github.com/terraform-providers/terraform-provider-dome9/pull/73))
+
+BUG FIXES:
+* The dome9_aws_security_group.external_id property does not return the AWS security group ID, it does return the VPC ID instead ([#75](https://github.com/terraform-providers/terraform-provider-dome9/issues/75))
+
+## 1.17.0 (February 24, 2020)
+
+* Google cloud vendor fix ([#69](https://github.com/terraform-providers/terraform-provider-dome9/pull/69))
+
+## 1.16.0 (December 29, 2019)
+
+IMPROVEMENTS:
+* `dome9_user` and `dome9_aws_role` supports additional permission fields ([#57](https://github.com/terraform-providers/terraform-provider-dome9/pull/57)) ([#62](https://github.com/terraform-providers/terraform-provider-dome9/pull/62))
+* `dome9_cloudaccount_aws` supports `restricted_iam_entities` fields ([#63](https://github.com/terraform-providers/terraform-provider-dome9/pull/63))
+
+
+## 1.15.0 (December 19, 2019)
+
+FEATURES: 
+
+>>>>>>> c83344565d03cbbf23d3bfb4d813f7d9b6f4502f
 * **New Resource:** `dome9_azure_security_group` ([#41](https://github.com/terraform-providers/terraform-provider-dome9/pull/41))
 * **New Data Source:** `dome9_azure_security_group`([#41](https://github.com/terraform-providers/terraform-provider-dome9/pull/41))
 * **New Resource:** `dome9_organizational_unit` ([#44](https://github.com/terraform-providers/terraform-provider-dome9/pull/44))
@@ -7,6 +38,7 @@ FEATURES:
 * **New Resource:** `dome9_attach_iam_safe` ([#49](https://github.com/terraform-providers/terraform-provider-dome9/pull/49))
 * **New Resource:** `dome9_user` ([#54](https://github.com/terraform-providers/terraform-provider-dome9/pull/54))
 * **New Data Source:** `dome9_user`([#54](https://github.com/terraform-providers/terraform-provider-dome9/pull/54))
+<<<<<<< HEAD
 IMPROVEMENTS:
 * Schema structure change for `dome9_cloudaccount_azure` and `dome9_cloudaccount_gcp`([#47](https://github.com/terraform-providers/terraform-provider-dome9/pull/47)) ([#48](https://github.com/terraform-providers/terraform-provider-dome9/pull/48))
 * New field `iam_safe` in `dome9_cloudaccount_aws` resource ([#51](https://github.com/terraform-providers/terraform-provider-dome9/pull/51))
@@ -16,15 +48,43 @@ BUG FIXES:
 * Sensitive strings will be hidden in Terraform plan for Azure and GCP cloud account onboarding ([#47](https://github.com/terraform-providers/terraform-provider-dome9/pull/47)) ([#48](https://github.com/terraform-providers/terraform-provider-dome9/pull/48))
 ## 1.14.0 (December 11, 2019)
 FEATURES:
+=======
+
+IMPROVEMENTS:
+* Schema structure change for `dome9_cloudaccount_azure` and `dome9_cloudaccount_gcp`([#47](https://github.com/terraform-providers/terraform-provider-dome9/pull/47)) ([#48](https://github.com/terraform-providers/terraform-provider-dome9/pull/48))
+* New field `iam_safe` in `dome9_cloudaccount_aws` resource ([#51](https://github.com/terraform-providers/terraform-provider-dome9/pull/51))
+
+
+BUG FIXES:
+* Sensitive strings will be hidden in Terraform plan for Azure and GCP cloud account onboarding ([#47](https://github.com/terraform-providers/terraform-provider-dome9/pull/47)) ([#48](https://github.com/terraform-providers/terraform-provider-dome9/pull/48))
+
+
+
+## 1.14.0 (December 11, 2019)
+
+FEATURES:
+
+>>>>>>> c83344565d03cbbf23d3bfb4d813f7d9b6f4502f
 * **New Resource:** `dome9_aws_security_group` ([#33](https://github.com/terraform-providers/terraform-provider-dome9/pull/33))
 * **New Data Source:** `dome9_aws_security_group`([#33](https://github.com/terraform-providers/terraform-provider-dome9/pull/33))
 * **New Resource:** `dome9_aws_role` ([#35](https://github.com/terraform-providers/terraform-provider-dome9/pull/35))
 * **New Data Source:** `dome9_aws_role`([#35](https://github.com/terraform-providers/terraform-provider-dome9/pull/35))
+<<<<<<< HEAD
 IMPROVEMENTS:
 * Resource `dome9_rule_set` renamed to `dome9_ruleset`([#30](https://github.com/terraform-providers/terraform-provider-dome9/pull/30))
 BUG FIXES:
 * Support attachment of cloud account resources to organizational unit on creation ([#29](https://github.com/terraform-providers/terraform-provider-dome9/pull/29))
 * Sensitive strings will be hidden in Terraform plan for Azure and GCP cloud account onboarding ([#40](https://github.com/terraform-providers/terraform-provider-dome9/pull/40))
+=======
+
+IMPROVEMENTS:
+* Resource `dome9_rule_set` renamed to `dome9_ruleset`([#30](https://github.com/terraform-providers/terraform-provider-dome9/pull/30))
+
+BUG FIXES:
+* Support attachment of cloud account resources to organizational unit on creation ([#29](https://github.com/terraform-providers/terraform-provider-dome9/pull/29))
+* Sensitive strings will be hidden in Terraform plan for Azure and GCP cloud account onboarding ([#40](https://github.com/terraform-providers/terraform-provider-dome9/pull/40))
+
+>>>>>>> c83344565d03cbbf23d3bfb4d813f7d9b6f4502f
 ## 1.13.0 (December 02, 2019)
 FEATURES:
 * **New Resource:** `dome9_rule_set` ([#28](https://github.com/terraform-providers/terraform-provider-dome9/pull/28))

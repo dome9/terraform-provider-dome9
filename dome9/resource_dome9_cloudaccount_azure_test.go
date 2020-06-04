@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
@@ -31,7 +31,7 @@ func TestAccResourceCloudAccountAzureBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// creation test
-				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureCreationResourceName),
+				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureCreationResourceName, variable.CloudAccountAzureOperationMode),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAzureExists(resourceTypeAndName, &cloudAccountAzure),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAzureCreationResourceName),
@@ -42,10 +42,11 @@ func TestAccResourceCloudAccountAzureBasic(t *testing.T) {
 			},
 			{
 				// update name test
-				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureUpdatedAccountName),
+				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureUpdatedAccountName, variable.CloudAccountAzureUpdateOperationMode),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAzureExists(resourceTypeAndName, &cloudAccountAzure),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAzureUpdatedAccountName),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "operation_mode", variable.CloudAccountAzureUpdateOperationMode),
 				),
 			},
 		},
@@ -116,7 +117,7 @@ func testAccCheckCloudAccountAzureExists(resource string, resp *azure.CloudAccou
 	}
 }
 
-func testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, resourceName, operationMode string) string {
 	return fmt.Sprintf(`
 // azure cloud account creation
 %s
@@ -126,7 +127,7 @@ data "%s" "%s" {
 }
 `,
 		// azure cloud account
-		getCloudAccountAzureResourceHCL(generatedName, resourceName),
+		getCloudAccountAzureResourceHCL(generatedName, resourceName, operationMode),
 
 		// data source variables
 		resourcetype.CloudAccountAzure,
@@ -135,18 +136,15 @@ data "%s" "%s" {
 	)
 }
 
-func getCloudAccountAzureResourceHCL(cloudAccountName, generatedAName string) string {
+func getCloudAccountAzureResourceHCL(cloudAccountName, generatedAName, operationMode string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-  credentials = {
-    client_id       = "%s"
-    client_password = "%s"
-  }
-
-  name            = "%s"
-  operation_mode  = "%s"
-  subscription_id = "%s"
-  tenant_id       = "%s"
+	client_id       = "%s"
+	client_password = "%s"
+	name            = "%s"
+	operation_mode  = "%s"
+	subscription_id = "%s"
+	tenant_id       = "%s"
 }
 `,
 		// azure cloud account variables
@@ -155,7 +153,7 @@ resource "%s" "%s" {
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientId),
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarClientPassword),
 		generatedAName,
-		variable.CloudAccountAzureOperationMode,
+		operationMode,
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarSubscriptionId),
 		os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId),
 	)

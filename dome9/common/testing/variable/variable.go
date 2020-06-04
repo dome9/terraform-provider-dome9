@@ -1,6 +1,6 @@
 package variable
 
-// AWS resource/data source
+// aws resource/data source
 const (
 	CloudAccountAWSCreationResourceName    = "test_cloudaccount_aws"
 	CloudAccountAWSVendor                  = "aws"
@@ -11,33 +11,32 @@ const (
 	CloudAccountAWSFullManageGroupBehavior = "FullManage"
 )
 
-// Azure resource/data source
+// azure resource/data source
 const (
 	CloudAccountAzureCreationResourceName = "test_cloudaccount_azure"
-	CloudAccountAzureUpdatedAccountName   = "updated_cloud_account_name"
 	CloudAccountAzureOperationMode        = "Read"
 	CloudAccountAzureVendor               = "azure"
+
+	// update const
+	CloudAccountAzureUpdatedAccountName  = "updated_cloud_account_name"
+	CloudAccountAzureUpdateOperationMode = "Manage"
 )
 
-// GCP resource/data source
+// gcp resource/data source
 const (
-	CloudAccountGCPCreationResourceName    = "test_cloudaccount_gcp"
-	CloudAccountGCPUpdatedAccountName      = "updated_cloud_account_name"
-	CloudAccountGCPType                    = "service_account"
-	CloudAccountGCPVendor                  = "google"
-	CloudAccountGCPAuthURL                 = "https://accounts.google.com/o/oauth2/auth"
-	CloudAccountGCPTokenURL                = "https://oauth2.googleapis.com/token"
-	CloudAccountGCPAuthProviderX509CertURL = "https://www.googleapis.com/oauth2/v1/certs"
+	CloudAccountGCPCreationResourceName = "test_cloudaccount_gcp"
+	CloudAccountGCPUpdatedAccountName   = "updated_cloud_account_name"
+	CloudAccountGCPVendor               = "google"
 )
 
-// IpList resource/data source
+// ip list resource/data source
 const (
 	IPListCreationResourceName      = "test_iplist"
 	IPListDescriptionResource       = "acceptance-test"
 	IPListUpdateDescriptionResource = "update-acceptance-test"
 )
 
-// Continuous Compliance Notification resource/data source
+// continuous Compliance Notification resource/data source
 const (
 	ContinuousComplianceNotificationName               = "test_notification"
 	ContinuousComplianceNotificationDescription        = "this notification for testing"
@@ -49,15 +48,74 @@ const (
 	ContinuousComplianceNotificationRecipient          = "test@test.com"
 	ContinuousComplianceNotificationJsonWithFullEntity = "JsonWithFullEntity"
 
-	// Update const
+	// update const
 	ContinuousComplianceNotificationUpdateName          = "test_notification_update"
 	ContinuousComplianceNotificationUpdateDescription   = "this notification for update testing"
 	ContinuousComplianceNotificationUpdateAlertsConsole = false
 )
 
-// Ruleset resource/data source
+// ruleset resource/data source
 const (
 	RuleSetName              = "test_rule_set"
 	RuleSetDescription       = "this is acceptance test"
 	RuleSetDescriptionUpdate = "this is acceptance test"
+)
+
+// aws security group resource/data source
+const (
+	AWSSecurityGroupDescription   = "this is aws security group test"
+	AWSSecurityGroupRegionID      = "us_east_1"
+	WaitUntilSecurityGroupCreated = 45
+
+	// Update
+	AWSSecurityGroupTagValue = "value"
+)
+
+// azure security group resource/data source
+const (
+	AzureSecurityGroupDescription       = "this is azure security group test"
+	AzureSecurityGroupRegion            = "australiaeast"
+	AzureSecurityGroupTagValue          = "tag_val_1"
+	AzureSecurityGroupIsTamperProtected = false
+
+	// 	update const
+	AzureSecurityGroupUpdateDescription       = "this is azure security group update test"
+	AzureSecurityGroupUpdateIsTamperProtected = true
+	AzureSecurityGroupUpdateTagValue          = "val"
+)
+
+// role resource/data source
+const (
+	RoleName                    = "test_role"
+	RoleDescription             = "this is role test"
+	RoleToPermittedAlertActions = false
+
+	// update const
+	RoleUpdateDescription             = "this is update role test"
+	RoleUpdateToPermittedAlertActions = true
+)
+
+// organizational unit resource/data source
+const (
+	OrganizationalUnitName       = "test_ou"
+	OrganizationalUnitNameUpdate = "test_ou_update"
+	ParentID                     = "" // empty string as parent id creates ou under Dome9 main root ou
+)
+
+// users resource/data source
+const (
+	UserFirstName    = "first_name_for_test"
+	UserLastName     = "last_name_for_test"
+	UserIsSsoEnabled = false
+)
+
+// iam entity resource
+const (
+	IAMSafeEntityProtect       = "Protect"
+	IAMSafeEntityTypeUser      = "User"
+	IAMSafeEntityName          = "user_for_testing_dont_remove"
+	WaitUntilAttachIAMSafeDone = 300
+
+	// 	update const
+	IAMSafeEntityProtectWithElevation = "ProtectWithElevation"
 )

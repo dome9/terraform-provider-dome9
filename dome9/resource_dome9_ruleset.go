@@ -4,8 +4,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/rulebundles"
@@ -34,7 +34,7 @@ func resourceRuleSet() *schema.Resource {
 			"cloud_vendor": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice(providerconst.CloudVendors, true),
+				ValidateFunc: validation.StringInSlice(providerconst.CloudVendors, false),
 			},
 			"language": {
 				Type:     schema.TypeString,

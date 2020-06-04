@@ -1,8 +1,10 @@
 package aws
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
@@ -19,6 +21,16 @@ type CloudAccountRequest struct {
 	LambdaScanner          bool                    `json:"lambdaScanner,omitempty"`
 }
 
+type AttachIamSafeRequest struct {
+	CloudAccountID string `json:"cloudAccountId"`
+	Data           Data   `json:"data"`
+}
+
+type RestrictedIamEntitiesRequest struct {
+	EntityName string `json:"entityName"` // aws iam user name or aws role
+	EntityType string `json:"entityType"` // must be one of the following Role or User
+}
+
 type CloudAccountResponse struct {
 	ID                     string                  `json:"id"`
 	Vendor                 string                  `json:"vendor"`
@@ -28,7 +40,7 @@ type CloudAccountResponse struct {
 	IsFetchingSuspended    bool                    `json:"isFetchingSuspended"`
 	CreationDate           time.Time               `json:"creationDate"`
 	Credentials            CloudAccountCredentials `json:"credentials"`
-	IamSafe                CloudAccountIamSafe     `json:"iamSafe,omitempty"`
+	IamSafe                *CloudAccountIamSafe    `json:"iamSafe"`
 	NetSec                 CloudAccountNetSec      `json:"netSec,omitempty"`
 	Magellan               bool                    `json:"magellan"`
 	FullProtection         bool                    `json:"fullProtection"`
@@ -37,6 +49,36 @@ type CloudAccountResponse struct {
 	OrganizationalUnitPath string                  `json:"organizationalUnitPath"`
 	OrganizationalUnitName string                  `json:"organizationalUnitName"`
 	LambdaScanner          bool                    `json:"lambdaScanner"`
+}
+
+type ProtectIAMEntitiesResponse struct {
+	RolesArn []IAMSafeEntityResponse `json:"rolesArns"`
+	UsersArn []IAMSafeEntityResponse `json:"usersArns"`
+}
+
+type IAMSafeEntityResponse struct {
+	State              string   `json:"state"`
+	AttachedDome9Users []string `json:"attachedDome9Users"`
+	IsUsedByDome9      bool     `json:"isUsedByDome9"`
+	ExistsInAws        bool     `json:"existsInAws"`
+	Arn                string   `json:"arn"`
+	Name               string   `json:"name"`
+	Type               *string  `json:"type"`
+}
+
+type CloudAccountCredentials struct {
+	ApiKey     string `json:"apikey,omitempty"`
+	Arn        string `json:"arn,omitempty"`
+	Secret     string `json:"secret,omitempty"`
+	IamUser    string `json:"iamUser,omitempty"`
+	Type       string `json:"type,omitempty"`
+	IsReadOnly bool   `json:"isReadOnly,omitempty"`
+}
+
+type Data struct {
+	AwsGroupArn  string `json:"AwsGroupArn"`
+	AwsPolicyArn string `json:"AwsPolicyArn"`
+	Mode         string `json:"Mode,omitempty"`
 }
 
 type CloudAccountUpdateRegionConfigRequest struct {
@@ -61,13 +103,8 @@ type CloudAccountUpdateNameRequest struct {
 	Data                  string `json:"data,omitempty"`
 }
 
-type CloudAccountCredentials struct {
-	ApiKey     string `json:"apikey,omitempty"`
-	Arn        string `json:"arn,omitempty"`
-	Secret     string `json:"secret,omitempty"`
-	IamUser    string `json:"iamUser,omitempty"`
-	Type       string `json:"type,omitempty"`
-	IsReadOnly bool   `json:"isReadOnly,omitempty"`
+type UnprotectAWSIAMEntityOptions struct {
+	EntityName string `json:"entityName"`
 }
 
 type CloudAccountNetSec struct {
@@ -91,8 +128,8 @@ type CloudAccountIamSafe struct {
 }
 
 type CloudAccountIamEntities struct {
-	RolesArns []string `json:"rolesArns,omitempty"`
-	UsersArns []string `json:"usersArns,omitempty"`
+	RolesArn []string `json:"rolesArns,omitempty"`
+	UsersArn []string `json:"usersArns,omitempty"`
 }
 
 func (service *Service) Get(options interface{}) (*CloudAccountResponse, *http.Response, error) {
@@ -140,6 +177,17 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 	return resp, nil
 }
 
+func (service *Service) ForceDelete(id string) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, id, cloudaccounts.DeleteForce)
+	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func (service *Service) UpdateName(body CloudAccountUpdateNameRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, cloudaccounts.RESTfulServicePathAWSName)
@@ -162,7 +210,6 @@ func (service *Service) UpdateRegionConfig(body CloudAccountUpdateRegionConfigRe
 	return v, resp, nil
 }
 
-// TODO: not implemented in TF provider due to bug https://dome9-security.atlassian.net/browse/DOME-12538
 func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdateOrganizationalIDRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, id, cloudaccounts.RESTfulServicePathAWSOrganizationalUnit)
@@ -183,4 +230,94 @@ func (service *Service) UpdateCredentials(body CloudAccountUpdateCredentialsRequ
 	}
 
 	return v, resp, nil
+}
+
+/*
+	attach iam safe to cloud account
+*/
+
+func (service *Service) AttachIAMSafeToCloudAccount(body AttachIamSafeRequest) (*CloudAccountResponse, *http.Response, error) {
+	v := new(CloudAccountResponse)
+	path := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAWSCloudAccounts, cloudaccounts.RESTfulServicePathAWSIAMSafe)
+	resp, err := service.Client.NewRequestDo("PUT", path, nil, body, v)
+	if err != nil {
+		return nil, nil, err
+	}
+	return v, resp, err
+}
+
+func (service *Service) DetachIAMSafeToCloudAccount(id string) (*http.Response, error) {
+	path := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulServicePathAWSCloudAccounts, id, cloudaccounts.RESTfulServicePathAWSIAMSafe)
+	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, err
+}
+
+/*
+	iam protect (restrict) entity
+*/
+
+func (service *Service) ProtectIAMSafeEntity(d9CloudAccountID string, body RestrictedIamEntitiesRequest) (*string, *http.Response, error) {
+	// iam entity can be aws iam user or aws role, according the type of the field EntityType inside the body
+	var arn string
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, d9CloudAccountID, cloudaccounts.RESTfulPathRestrictedIamEntities)
+
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, &arn)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return &arn, resp, nil
+}
+
+func (service *Service) GetAllProtectIAMSafeEntityStatus(d9CloudAccountID string) (*ProtectIAMEntitiesResponse, *http.Response, error) {
+	v := new(ProtectIAMEntitiesResponse)
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, d9CloudAccountID, cloudaccounts.RESTfulPathIAM)
+
+	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return v, resp, nil
+}
+
+func (service *Service) GetProtectIAMSafeEntityStatusByName(d9CloudAccountID, entityName, entityType string) (*IAMSafeEntityResponse, error) {
+	var iamEntities []IAMSafeEntityResponse
+
+	protectAWSIAMEntitiesStatus, _, err := service.GetAllProtectIAMSafeEntityStatus(d9CloudAccountID)
+	if err != nil {
+		return nil, err
+	}
+
+	if strings.EqualFold(entityType, cloudaccounts.RESTfulPathUser) {
+		iamEntities = protectAWSIAMEntitiesStatus.UsersArn
+	} else {
+		iamEntities = protectAWSIAMEntitiesStatus.RolesArn
+	}
+
+	for _, arn := range iamEntities {
+		if arn.Name == entityName {
+			return &arn, nil
+		}
+	}
+
+	errMsg := fmt.Sprintf("There is no aws IAM entity with %s name %s", entityType, entityName)
+	return nil, errors.New(errMsg)
+}
+
+func (service *Service) UnprotectIAMSafeEntity(d9CloudAccountID, entityName, entityType string) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathAWS, d9CloudAccountID, cloudaccounts.RESTfulPathRestrictedIamEntities, entityType)
+	unprotectAWSIAMEntityOptions := UnprotectAWSIAMEntityOptions{
+		EntityName: entityName,
+	}
+
+	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, unprotectAWSIAMEntityOptions, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

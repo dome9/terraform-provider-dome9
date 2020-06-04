@@ -14,6 +14,7 @@ type CloudAccountRequest struct {
 	ServiceAccountCredentials ServiceAccountCredentials `json:"serviceAccountCredentials,omitempty"`
 	GsuiteUser                string                    `json:"gsuiteUser,omitempty"`
 	DomainName                string                    `json:"domainName,omitempty"`
+	OrganizationalUnitID      string                    `json:"organizationalUnitId,omitempty"`
 }
 
 type CloudAccountResponse struct {
@@ -21,7 +22,7 @@ type CloudAccountResponse struct {
 	Name                   string    `json:"name"`
 	ProjectID              string    `json:"projectId"`
 	CreationDate           time.Time `json:"creationDate"`
-	OrganizationalUnitID   string    `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitID   string    `json:"organizationalUnitId"`
 	OrganizationalUnitPath string    `json:"organizationalUnitPath"`
 	OrganizationalUnitName string    `json:"organizationalUnitName"`
 	GSuite                 GSuite    `json:"gSuite,omitempty"`

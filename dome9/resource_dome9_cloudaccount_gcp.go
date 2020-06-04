@@ -3,11 +3,12 @@ package dome9
 import (
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
-
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
 
 func resourceCloudAccountGCP() *schema.Resource {
@@ -24,53 +25,31 @@ func resourceCloudAccountGCP() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"service_account_credentials": {
-				Type:     schema.TypeMap,
+			"project_id": {
+				Type:     schema.TypeString,
 				Required: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"type": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"project_id": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"private_key_id": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"private_key": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"client_email": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"client_id": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"auth_uri": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"token_uri": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"auth_provider_x509_cert_url": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"client_x509_cert_url": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-					},
-				},
+			},
+			"private_key_id": {
+				Type:      schema.TypeString,
+				Required:  true,
+				Sensitive: true,
+			},
+			"private_key": {
+				Type:      schema.TypeString,
+				Required:  true,
+				Sensitive: true,
+			},
+			"client_email": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"client_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"client_x509_cert_url": {
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"vendor": {
 				Type:     schema.TypeString,
@@ -198,7 +177,7 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
-	if d.HasChange("service_account_credentials") {
+	if credentialsHasChange(d) {
 		log.Println("The service account credentials user or domain name has been changed")
 
 		if resp, _, err := d9Client.cloudaccountGCP.UpdateCredentials(d.Id(), gcp.CloudAccountUpdateCredentialsRequest{
@@ -214,12 +193,17 @@ func resourceCloudAccountGCPUpdate(d *schema.ResourceData, meta interface{}) err
 	return nil
 }
 
+func credentialsHasChange(d *schema.ResourceData) bool {
+	return d.HasChange("project_id") || d.HasChange("private_key_id") || d.HasChange("private_key") || d.HasChange("client_email") || d.HasChange("client_id") || d.HasChange("client_x509_cert_url")
+}
+
 func expandCloudAccountGCPRequest(d *schema.ResourceData) gcp.CloudAccountRequest {
 	req := gcp.CloudAccountRequest{
 		Name:                      d.Get("name").(string),
 		ServiceAccountCredentials: expandServiceAccountCredentials(d),
 		GsuiteUser:                d.Get("gsuite_user").(string),
 		DomainName:                d.Get("domain_name").(string),
+		OrganizationalUnitID:      d.Get("organizational_unit_id").(string),
 	}
 
 	return req
@@ -227,15 +211,15 @@ func expandCloudAccountGCPRequest(d *schema.ResourceData) gcp.CloudAccountReques
 
 func expandServiceAccountCredentials(d *schema.ResourceData) gcp.ServiceAccountCredentials {
 	return gcp.ServiceAccountCredentials{
-		Type:                    d.Get("service_account_credentials.type").(string),
-		ProjectID:               d.Get("service_account_credentials.project_id").(string),
-		PrivateKeyID:            d.Get("service_account_credentials.private_key_id").(string),
-		PrivateKey:              d.Get("service_account_credentials.private_key").(string),
-		ClientEmail:             d.Get("service_account_credentials.client_email").(string),
-		ClientID:                d.Get("service_account_credentials.client_id").(string),
-		AuthURI:                 d.Get("service_account_credentials.auth_uri").(string),
-		TokenURI:                d.Get("service_account_credentials.token_uri").(string),
-		AuthProviderX509CertURL: d.Get("service_account_credentials.auth_provider_x509_cert_url").(string),
-		ClientX509CertURL:       d.Get("service_account_credentials.client_x509_cert_url").(string),
+		Type:                    providerconst.GCPCloudAccountType,
+		ProjectID:               d.Get("project_id").(string),
+		PrivateKeyID:            d.Get("private_key_id").(string),
+		PrivateKey:              d.Get("private_key").(string),
+		ClientEmail:             d.Get("client_email").(string),
+		ClientID:                d.Get("client_id").(string),
+		AuthURI:                 providerconst.GCPCloudAccountAuthUri,
+		TokenURI:                providerconst.GCPCloudAccountTokenUri,
+		AuthProviderX509CertURL: providerconst.GCPCloudAccountAuthProviderX509CertUrl,
+		ClientX509CertURL:       d.Get("client_x509_cert_url").(string),
 	}
 }

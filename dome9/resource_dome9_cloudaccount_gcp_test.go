@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
@@ -119,19 +119,13 @@ func testAccCheckCloudAccountGCPExists(resource string, resp *gcp.CloudAccountRe
 func testAccCheckCloudAccountGCPConfigure(resourceTypeAndName, generatedName, resourceName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-  name = "%s"
-  service_account_credentials ={
-    type = "%s"
-    project_id = "%s"
-    private_key_id = "%s"
-    private_key = "%s"
-    client_email = "%s"
-    client_id = "%s"
-    auth_uri = "%s"
-    token_uri = "%s"
-    auth_provider_x509_cert_url = "%s"
-    client_x509_cert_url = "%s"
-  }
+  name                 = "%s"
+  project_id           = "%s"
+  private_key_id       = "%s"
+  private_key          = "%s"
+  client_email         = "%s"
+  client_id            = "%s"
+  client_x509_cert_url = "%s"
 }
 
 data "%s" "%s" {
@@ -142,15 +136,11 @@ data "%s" "%s" {
 		resourcetype.CloudAccountGCP,
 		generatedName,
 		resourceName,
-		variable.CloudAccountGCPType,
 		os.Getenv(environmentvariable.CloudAccountGCPEnvVarProjectId),
 		os.Getenv(environmentvariable.CloudAccountGCPEnvVarPrivateKeyId),
 		os.Getenv(environmentvariable.CloudAccountGCPEnvVarPrivateKey),
 		os.Getenv(environmentvariable.CloudAccountGCPEnvVarClientEmail),
 		os.Getenv(environmentvariable.CloudAccountGCPEnvVarClientId),
-		variable.CloudAccountGCPAuthURL,
-		variable.CloudAccountGCPTokenURL,
-		variable.CloudAccountGCPAuthProviderX509CertURL,
 		os.Getenv(environmentvariable.CloudAccountGCPEnvVarClientX509CertUrl),
 
 		// data source variables

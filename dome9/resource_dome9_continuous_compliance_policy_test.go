@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 
@@ -22,7 +22,7 @@ func TestAccResourceContinuousCompliancePolicyBasic(t *testing.T) {
 	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 	notificationUpdateTypeAndName, _, notificationUpdateGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 
-	azureHCL := getCloudAccountAzureResourceHCL(azureGeneratedName, variable.CloudAccountAzureCreationResourceName)
+	azureHCL := getCloudAccountAzureResourceHCL(azureGeneratedName, variable.CloudAccountAzureCreationResourceName, variable.CloudAccountAzureOperationMode)
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
 	// notificationHCL := getUpdateContinuousCompliancePolicyResourceHCL1(azureHCL, azureTypeAndName, notificationHCL, notificationTypeAndName, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
 	notificationUpdateHCL := getContinuousComplianceNotificationResourceHCL(notificationUpdateGeneratedName, continuousComplianceNotificationUpdateConfig())

@@ -3,7 +3,7 @@ package dome9
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
@@ -22,7 +22,7 @@ func TestAccDataSourceCloudAccountAzureBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountAzureDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureCreationResourceName),
+				Config: testAccCheckCloudAccountAzureConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAzureCreationResourceName, variable.CloudAccountAzureOperationMode),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "name", resourceTypeAndName, "name"),

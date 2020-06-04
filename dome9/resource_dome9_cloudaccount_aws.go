@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
@@ -120,6 +120,48 @@ func resourceCloudAccountAWS() *schema.Resource {
 					},
 				},
 			},
+			"iam_safe": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"aws_group_arn": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"aws_policy_arn": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"mode": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"restricted_iam_entities": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"roles_arns": {
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"users_arns": {
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"full_protection": {
 				Type:     schema.TypeBool,
 				Computed: true,
@@ -127,6 +169,10 @@ func resourceCloudAccountAWS() *schema.Resource {
 			"allow_read_only": {
 				Type:     schema.TypeBool,
 				Computed: true,
+			},
+			"organizational_unit_id": {
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 		},
 	}
@@ -172,8 +218,16 @@ func resourceCloudAccountAWSRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("creation_date", resp.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("full_protection", resp.FullProtection)
 	_ = d.Set("allow_read_only", resp.AllowReadOnly)
+	_ = d.Set("organizational_unit_id", resp.OrganizationalUnitID)
+
 	if err := d.Set("net_sec", flattenCloudAccountAWSNetSec(resp.NetSec)); err != nil {
 		return err
+	}
+
+	if resp.IamSafe != nil {
+		if err := d.Set("iam_safe", flattenCloudAccountIAMSafe(*resp.IamSafe)); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -183,7 +237,7 @@ func resourceCloudAccountAWSDelete(d *schema.ResourceData, meta interface{}) err
 	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting AWS Cloud Account ID: %v\n", d.Id())
 
-	if _, err := d9Client.cloudaccountAWS.Delete(d.Id()); err != nil {
+	if _, err := d9Client.cloudaccountAWS.ForceDelete(d.Id()); err != nil {
 		return err
 	}
 
@@ -201,6 +255,16 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 			CloudAccountID:        d.Id(),
 			ExternalAccountNumber: d.Get("external_account_number").(string),
 			Data:                  d.Get("name").(string),
+		}); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("organizational_unit_id") {
+		log.Println("The Organizational Unit ID has been changed")
+
+		if _, _, err := d9Client.cloudaccountAWS.UpdateOrganizationalID(d.Id(), aws.CloudAccountUpdateOrganizationalIDRequest{
+			OrganizationalUnitId: d.Get("organizational_unit_id").(string),
 		}); err != nil {
 			return err
 		}
@@ -243,8 +307,9 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 
 func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountRequest {
 	return aws.CloudAccountRequest{
-		Name:        d.Get("name").(string),
-		Credentials: expandCloudAccountAWSCredentials(d),
+		Name:                 d.Get("name").(string),
+		Credentials:          expandCloudAccountAWSCredentials(d),
+		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 	}
 }
 
@@ -262,6 +327,26 @@ func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountCr
 func flattenCloudAccountAWSNetSec(responseNetSec aws.CloudAccountNetSec) []interface{} {
 	m := map[string]interface{}{
 		"regions": flattenCloudAccountAWSNetSecRegions(responseNetSec.Regions),
+	}
+
+	return []interface{}{m}
+}
+
+func flattenCloudAccountIAMSafe(responseIAMSafe aws.CloudAccountIamSafe) []interface{} {
+	m := map[string]interface{}{
+		"aws_group_arn":           responseIAMSafe.AwsGroupArn,
+		"aws_policy_arn":          responseIAMSafe.AwsPolicyArn,
+		"mode":                    responseIAMSafe.Mode,
+		"restricted_iam_entities": flattenRestrictedIamEntities(responseIAMSafe.RestrictedIamEntities),
+	}
+
+	return []interface{}{m}
+}
+
+func flattenRestrictedIamEntities(restrictedIamEntities aws.CloudAccountIamEntities) []interface{} {
+	m := map[string]interface{}{
+		"roles_arns": restrictedIamEntities.RolesArn,
+		"users_arns": restrictedIamEntities.UsersArn,
 	}
 
 	return []interface{}{m}

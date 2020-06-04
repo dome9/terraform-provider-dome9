@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"github.com/dome9/dome9-sdk-go/services/rulebundles"
 
@@ -51,7 +51,7 @@ func testAccCheckRuleSetDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.IPList {
+		if rs.Type != resourcetype.RuleSet {
 			continue
 		}
 

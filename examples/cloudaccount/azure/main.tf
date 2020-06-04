@@ -1,9 +1,6 @@
 resource "dome9_cloudaccount_azure" "azure_ca" {
-  credentials = {
-    client_id       = "CLIENT_ID"
-    client_password = "CLIENT_PASSWORD"
-  }
-
+  client_id       = "CLIENT_ID"
+  client_password = "CLIENT_PASSWORD"
   name            = "sandbox"
   operation_mode  = "Read"
   subscription_id = "SUBSCRIPTION_ID"

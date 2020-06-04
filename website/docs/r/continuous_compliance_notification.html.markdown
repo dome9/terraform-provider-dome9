@@ -54,9 +54,9 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 
 * `scheduled_report` - Scheduled email report notification  block:
     * `email_sending_state` - send schedule report of findings by email; can be  "Enabled" or "Disabled".
-	
+
 		if `email_sending_state` is Enabled, the following must be included:
-	
+
 		* `schedule_data` -  Schedule details:
 			* `cron_expression` -  the schedule to issue the email report (in cron expression format)
 			* `type` - type of report; can be  "Detailed", "Summary", "FullCsv" or "FullCsvZip"
@@ -64,32 +64,32 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 
 * `change_detection` -   Send changes in findings options:
     * `email_sending_stat` - send email report of changes in findings; can be "Enabled" or "Disabled".
-	
+
 		if `email_sending_stat`  is Enabled, the following must be included:
-	
+
 		* `email_data` - Email notification details:
 			* `recipients` -  comma-separated list of email recipients
 
     * `email_per_finding_sending_state` - send separate email  notification for each finding; can be "Enabled" or "Disabled"
-	
+
 		if `email_per_finding_sending_state`  is Enabled, the following must be included:
 
 		* `email_per_finding_data` - Email per finding notification details:
 			* `recipients` - comma-separated list of email recipients
 			* `notification_output_format` - (Required) format of JSON block for finding; can be  "JsonWithFullEntity", "JsonWithBasicEntity", or "PlainText".
-	
+
     * `sns_sending_state` - send  by AWS SNS for each new finding; can be  "Enabled" or "Disabled".
-    
+
 		if `sns_sending_state`  is Enabled, the following must be included:
-	
+
 		* `sns_data` - SNS notification details:
 			* `sns_topic_arn` - SNS topic ARN
 			* `sns_output_format` - SNS output format; can be  "JsonWithFullEntity", "JsonWithBasicEntity", or "PlainText".
-    
+
 	* `external_ticket_creating_state` - send each finding to an external ticketing system; can be  "Enabled" or "Disabled".
-    
-		if `external_ticket_creating_state`  is Enabled, the following must be included:
-	
+
+	    if `external_ticket_creating_state`  is Enabled, the following must be included:
+
 		* `ticketing_system_data` - Ticketing system details:
 			* `system_type` - system type; can be "ServiceOne", "Jira", or "PagerDuty"
 			* `should_close_tickets` - ticketing system should close tickets when resolved (bool)
@@ -98,41 +98,41 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 			* `pass` - password (ServiceNow only)
 			* `project_key` - project key (Jira) or API Key (PagerDuty)
 			* `issue_type` - issue type (Jira)
-	
-   
+
+
     * `webhook_integration_state` - send findings to an HTTP endpoint (webhook); can be  "Enabled" or "Disabled".
-	
+
 		if `webhook_integration_state`  is Enabled, the following must be included:
-		
+
 		* `webhook_data` - Webhook data block supports:
-			* `url` - HTTP endpoint URL 
+			* `url` - HTTP endpoint URL
 			* `http_method` - HTTP method, "Post" by default.
 			* `auth_method` - authentication method; "NoAuth" by default
 			* `username` - username in endpoint system
 			* `password` - password in endpoint system
 			* `format_type` - format for JSON block for finding; can be "Basic" or "ServiceNow"
-		
-	 * `aws_security_hub_integration_state` - send findings to AWS Secure Hub; can be "Enabled" or "Disabled".
-	
-		if `aws_security_hub_integration_state`  is Enabled, the following must be included:
-		
-		* `aws_security_hub_integration` - AWS security hub integration block supports:
-			* `external_account_id` - (Required) external account id
-			* `region` - (Required) AWS region	
-		
+
+    * `aws_security_hub_integration_state` - send findings to AWS Secure Hub; can be "Enabled" or "Disabled".
+
+	    if `aws_security_hub_integration_state`  is Enabled, the following must be included:
+
+        * `aws_security_hub_integration` - AWS security hub integration block supports:
+		    * `external_account_id` - (Required) external account id
+		    * `region` - (Required) AWS region
+
 `gcp_security_command_center_integration` is a change_detection option
 
 * `gcp_security_command_center_integration` - GCP security command center details
-    * `state` - send findings to the GCP Security Command Center; can be "Enabled" or "Disabled" 
-    
+    * `state` - send findings to the GCP Security Command Center; can be "Enabled" or "Disabled"
+
 		if `state` is Enabled, the following must be included:
-	
-		* `project_id` - GCP Project id 
-		* `source_id` - GCP Source id 
+
+		* `project_id` - GCP Project id
+		* `source_id` - GCP Source id
 
 ## Import
 
-The notification can be imported; use `<NOTIFICATION ID>` as the import ID. 
+The notification can be imported; use `<NOTIFICATION ID>` as the import ID.
 
 For example:
 
