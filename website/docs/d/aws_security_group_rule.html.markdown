@@ -8,7 +8,7 @@ description: |-
 
 # Data Source: dome9_aws_security_group_rule
 
-This resource has methods to add and manage input and output services to Security Groups in a cloud account that is managed by Dome9.
+Use this data source to get information about input and output services for AWS Security Groups in a cloud account that is managed by Dome9.
 
 ## Example Usage
 
