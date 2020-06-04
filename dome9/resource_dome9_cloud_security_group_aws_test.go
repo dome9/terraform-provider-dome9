@@ -43,7 +43,7 @@ func TestAccResourceCloudSecurityGroupAWSBasic(t *testing.T) {
 			},
 			{
 				PreConfig: func() { time.Sleep(time.Second * variable.WaitUntilSecurityGroupCreated) },
-				Config:    testAccCheckCloudSecurityGroupAWSUpdateBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName, securityGroupTypeAndName),
+				Config:    testAccCheckCloudSecurityGroupAWSUpdateBasic(awsCloudAccountHCL, awsTypeAndName, securityGroupGeneratedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudSecurityGroupAWSExists(securityGroupTypeAndName, &cloudSecurityGroupAWSResponse),
 					resource.TestCheckResourceAttr(securityGroupTypeAndName, "tags.key", variable.AWSSecurityGroupTagValue),
@@ -102,27 +102,14 @@ func testAccCheckCloudSecurityGroupAWSBasic(awsCloudAccountHCL, awsCloudAccountT
 %s
 
 // aws security group creation
-resource "%s" "%s" {
-  dome9_security_group_name = "%s"
-  description               = "%s"
-  aws_region_id             = "%s"
-  dome9_cloud_account_id    = "${%s.id}"
-  is_protected              = true
-}
+%s
 
 data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
 		awsCloudAccountHCL,
-
-		// resource variables
-		resourcetype.CloudAccountAWSSecurityGroup,
-		securityGroupResourceName,
-		securityGroupResourceName,
-		variable.AWSSecurityGroupDescription,
-		variable.AWSSecurityGroupRegionID,
-		awsCloudAccountTypeAndName,
+		getCloudAccountSecurityGroupAWSResourceHCL(securityGroupResourceName, securityGroupResourceName, awsCloudAccountTypeAndName, ""),
 
 		// data source variables
 		resourcetype.CloudAccountAWSSecurityGroup,
@@ -131,32 +118,40 @@ data "%s" "%s" {
 	)
 }
 
-func testAccCheckCloudSecurityGroupAWSUpdateBasic(awsCloudAccountHCL, awsCloudAccountTypeAndName, securityGroupResourceName, securityGroupTypeAndName string) string {
+func testAccCheckCloudSecurityGroupAWSUpdateBasic(awsCloudAccountHCL, awsCloudAccountTypeAndName, securityGroupResourceName string) string {
 	return fmt.Sprintf(`
 // aws cloud account resource
 %s
 
 // aws security group creation
+%s
+`,
+		awsCloudAccountHCL,
+		getCloudAccountSecurityGroupAWSResourceHCL(securityGroupResourceName, securityGroupResourceName, awsCloudAccountTypeAndName, "tags = {\n    key = \"value\"\n  }"),
+	)
+}
+
+func getCloudAccountSecurityGroupAWSResourceHCL(generatedName, resourceName, awsCloudAccountTypeAndName, additionalBlock string) string {
+	return fmt.Sprintf(`
 resource "%s" "%s" {
   dome9_security_group_name = "%s"
   description               = "%s"
   aws_region_id             = "%s"
   dome9_cloud_account_id    = "${%s.id}"
   is_protected              = true
-  tags = {
-    key = "%s"
-  }
+  
+  // tags section
+  %s
 }
 `,
-		awsCloudAccountHCL,
-
-		// resource variables
+		// aws cloud account variables
 		resourcetype.CloudAccountAWSSecurityGroup,
-		securityGroupResourceName,
-		securityGroupResourceName,
+		generatedName,
+		resourceName,
 		variable.AWSSecurityGroupDescription,
 		variable.AWSSecurityGroupRegionID,
 		awsCloudAccountTypeAndName,
-		variable.AWSSecurityGroupTagValue,
+
+		additionalBlock,
 	)
 }
