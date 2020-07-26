@@ -6,3 +6,5 @@ require (
 	github.com/dome9/dome9-sdk-go v1.8.4
 	github.com/hashicorp/terraform-plugin-sdk v1.1.0
 )
+
+replace github.com/dome9/dome9-sdk-go => ../dome9-sdk-go

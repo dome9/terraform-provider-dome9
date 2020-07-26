@@ -2,7 +2,10 @@ package environmentvariable
 
 // global
 const (
-	OrganizationalUnitName = "ORGANIZATIONAL_UNIT_NAME"
+	OrganizationalUnitName  	  = "ORGANIZATIONAL_UNIT_NAME"
+	UpdatedOrganizationalUnitId   = "UPDATED_ORGANIZATIONAL_UNIT_ID"
+	UpdatedOrganizationalUnitName = "UPDATED_ORGANIZATIONAL_UNIT_NAME"
+	UpdatedOrganizationalUnitPath = "UPDATED_ORGANIZATIONAL_UNIT_PATH"
 )
 
 // AWS environment variable

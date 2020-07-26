@@ -29,6 +29,13 @@ const (
 	CloudAccountGCPVendor               = "google"
 )
 
+// k8s resource/data source
+const (
+	CloudAccountK8SVendor              = "kubernetes"
+	CloudAccountK8SOriginalAccountName = "test_cloudaccount_k8s_resource_name"
+	CloudAccountK8SUpdatedAccountName  = "test_cloudaccount_k8s_updated_resource_name"
+)
+
 // ip list resource/data source
 const (
 	IPListCreationResourceName      = "test_iplist"
