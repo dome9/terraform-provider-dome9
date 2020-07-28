@@ -4,6 +4,7 @@ const (
 	RESTfulPathAWS   = "cloudaccounts"
 	RESTfulPathAzure = "AzureCloudAccount"
 	RESTfulPathGCP   = "GoogleCloudAccount"
+	RESTfulPathK8S   = "KubernetesAccount"
 )
 
 // AWS service paths
@@ -34,6 +35,12 @@ const (
 	RESTfulServicePathGCPCredentialsGSuite  = "Credentials/Gsuite"
 	RESTfulServicePathGCPOrganizationalUnit = "organizationalUnit"
 	RESTfulServicePathGCPCredentials        = "Credentials"
+)
+
+// K8S service paths
+const (
+	RESTfulServicePathK8SName               = "AccountName"
+	RESTfulServicePathK8SOrganizationalUnit = "organizationalUnit"
 )
 
 type QueryParameters struct {
