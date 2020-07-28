@@ -29,11 +29,11 @@ const (
 	CloudAccountGCPVendor               = "google"
 )
 
-// k8s resource/data source
+// kubernetes resource/data source
 const (
-	CloudAccountK8SVendor              = "kubernetes"
-	CloudAccountK8SOriginalAccountName = "test_cloudaccount_k8s_resource_name"
-	CloudAccountK8SUpdatedAccountName  = "test_cloudaccount_k8s_updated_resource_name"
+	CloudAccountKubernetesVendor              = "kubernetes"
+	CloudAccountKubernetesOriginalAccountName = "test_cloudaccount_kubernetes_resource_name"
+	CloudAccountKubernetesUpdatedAccountName  = "test_cloudaccount_kubernetes_updated_resource_name"
 )
 
 // ip list resource/data source

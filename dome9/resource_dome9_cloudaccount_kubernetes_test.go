@@ -15,9 +15,9 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
-func TestAccResourceCloudAccountK8SBasic(t *testing.T) {
+func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 	var cloudAccountResponse k8s.CloudAccountResponse
-	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountK8S)
+	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
 	defaultOrganizationalUnitName := os.Getenv(environmentvariable.OrganizationalUnitName)
 	organizationUnitTypeAndName, _, organizationUnitGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.OrganizationalUnit)
 	organizationUnitHCL := getOrganizationalUnitResourceHCL(organizationUnitGeneratedName, variable.OrganizationalUnitName)
@@ -25,41 +25,41 @@ func TestAccResourceCloudAccountK8SBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountK8SEnvVarsPreCheck(t)
+			testAccCloudAccountKubernetesEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCloudAccountK8SDestroy,
+		CheckDestroy: testAccCheckCloudAccountKubernetesDestroy,
 		Steps: []resource.TestStep{
 			{
 				//Create Default
-				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SOriginalAccountName),
+				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesOriginalAccountName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountK8SExists(resourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountK8SOriginalAccountName),
+					testAccCheckCloudAccountKubernetesExists(resourceTypeAndName, &cloudAccountResponse),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountKubernetesOriginalAccountName),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "creation_date"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountK8SVendor),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
 				),
 			},
 			{
 				//Update name
-				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SUpdatedAccountName),
+				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesUpdatedAccountName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountK8SExists(resourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountK8SUpdatedAccountName),
+					testAccCheckCloudAccountKubernetesExists(resourceTypeAndName, &cloudAccountResponse),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountKubernetesUpdatedAccountName),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "creation_date"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountK8SVendor),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
 				),
 			},
 			{
 				//Update OU
-				Config: testAccCheckCloudAccountK8SBasicWithUpdatedOU(resourceTypeAndName, generatedName, variable.CloudAccountK8SUpdatedAccountName, organizationUnitHCL, organizationUnitTypeAndName),
+				Config: testAccCheckCloudAccountKubernetesBasicWithUpdatedOU(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesUpdatedAccountName, organizationUnitHCL, organizationUnitTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountK8SExists(resourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountK8SUpdatedAccountName),
+					testAccCheckCloudAccountKubernetesExists(resourceTypeAndName, &cloudAccountResponse),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountKubernetesUpdatedAccountName),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "creation_date"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountK8SVendor),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "organizational_unit_id", organizationUnitTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "organizational_unit_name", organizationUnitTypeAndName, "name"),
 				),
@@ -68,7 +68,7 @@ func TestAccResourceCloudAccountK8SBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckCloudAccountK8SExists(resource string, cloudAccount *k8s.CloudAccountResponse) resource.TestCheckFunc {
+func testAccCheckCloudAccountKubernetesExists(resource string, cloudAccount *k8s.CloudAccountResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
@@ -79,7 +79,7 @@ func testAccCheckCloudAccountK8SExists(resource string, cloudAccount *k8s.CloudA
 		}
 
 		apiClient := testAccProvider.Meta().(*Client)
-		receivedCloudAccountResponse, _, err := apiClient.cloudaccountK8S.Get(rs.Primary.ID)
+		receivedCloudAccountResponse, _, err := apiClient.cloudaccountKubernetes.Get(rs.Primary.ID)
 
 		if err != nil {
 			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
@@ -90,15 +90,15 @@ func testAccCheckCloudAccountK8SExists(resource string, cloudAccount *k8s.CloudA
 	}
 }
 
-func testAccCheckCloudAccountK8SDestroy(s *terraform.State) error {
+func testAccCheckCloudAccountKubernetesDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.CloudAccountK8S {
+		if rs.Type != resourcetype.CloudAccountKubernetes {
 			continue
 		}
 
-		receivedCloudAccountResponse, _, err := apiClient.cloudaccountK8S.Get(rs.Primary.ID)
+		receivedCloudAccountResponse, _, err := apiClient.cloudaccountKubernetes.Get(rs.Primary.ID)
 
 		if err == nil {
 			return fmt.Errorf("id %s already exists", rs.Primary.ID)
@@ -112,36 +112,36 @@ func testAccCheckCloudAccountK8SDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCloudAccountK8SEnvVarsPreCheck(t *testing.T) {
+func testAccCloudAccountKubernetesEnvVarsPreCheck(t *testing.T) {
 	if v := os.Getenv(environmentvariable.OrganizationalUnitName); v == "" {
 		t.Fatalf("%s must be set for acceptance tests", environmentvariable.OrganizationalUnitName)
 	}
 }
 
-func testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, resourceName string) string {
 	return fmt.Sprintf(`
-// k8s cloud account creation
+// Kubernetes cloud account creation
 %s
 
 data "%s" "%s" {
  id = "${%s.id}"
 }
 `,
-		// k8s cloud account
-		getBasicCloudAccountK8SResourceHCL(generatedName, resourceName),
+		// Kubernetes cloud account
+		getBasicCloudAccountKubernetesResourceHCL(generatedName, resourceName),
 
 		// data source variables
-		resourcetype.CloudAccountK8S,
+		resourcetype.CloudAccountKubernetes,
 		generatedName,
 		resourceTypeAndName,
 	)
 }
 
-func testAccCheckCloudAccountK8SBasicWithUpdatedOU(resourceTypeAndName , generatedName, resourceName, organizationUnitHCL string, organizationUnitTypeAndName string) string {
+func testAccCheckCloudAccountKubernetesBasicWithUpdatedOU(resourceTypeAndName , generatedName, resourceName, organizationUnitHCL string, organizationUnitTypeAndName string) string {
 	return fmt.Sprintf(`
 // OU creation
 %s
-// k8s cloud account creation
+// Kubernetes cloud account creation
 %s
 
 data "%s" "%s" {
@@ -151,38 +151,38 @@ data "%s" "%s" {
 		// ou arguments
 		organizationUnitHCL,
 
-		// k8s cloud account arguments
-		getCloudAccountK8SResourceHCLWithOU(generatedName, resourceName, organizationUnitTypeAndName),
+		// Kubernetes cloud account arguments
+		getCloudAccountKubernetesResourceHCLWithOU(generatedName, resourceName, organizationUnitTypeAndName),
 
 		// data source variables
-		resourcetype.CloudAccountK8S,
+		resourcetype.CloudAccountKubernetes,
 		generatedName,
 		resourceTypeAndName,
 	)
 }
 
-func getBasicCloudAccountK8SResourceHCL(generatedName string, resourceName string) string {
+func getBasicCloudAccountKubernetesResourceHCL(generatedName string, resourceName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
  name                   = "%s"
 }
 `,
-		// k8s cloud account variables
-		resourcetype.CloudAccountK8S,
+		// Kubernetes cloud account variables
+		resourcetype.CloudAccountKubernetes,
 		generatedName,
 		resourceName,
 	)
 }
 
-func getCloudAccountK8SResourceHCLWithOU(generatedName string, resourceName string, organizationUnitTypeAndName string) string {
+func getCloudAccountKubernetesResourceHCLWithOU(generatedName string, resourceName string, organizationUnitTypeAndName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
  name                   = "%s"
  organizational_unit_id = "${%s.id}"
 }
 `,
-		// k8s cloud account variables
-		resourcetype.CloudAccountK8S,
+		// Kubernetes cloud account variables
+		resourcetype.CloudAccountKubernetes,
 		generatedName,
 		resourceName,
 		organizationUnitTypeAndName,

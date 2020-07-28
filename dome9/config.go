@@ -29,7 +29,7 @@ type Client struct {
 	cloudaccountAWS                  aws.Service
 	cloudaccountAzure                azure.Service
 	cloudaccountGCP                  gcp.Service
-	cloudaccountK8S                  k8s.Service
+	cloudaccountKubernetes           k8s.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
 	ruleSet                          rulebundles.Service
@@ -57,7 +57,7 @@ func (c *Config) Client() (*Client, error) {
 		cloudaccountAWS:                  *aws.New(config),
 		cloudaccountAzure:                *azure.New(config),
 		cloudaccountGCP:                  *gcp.New(config),
-		cloudaccountK8S:                  *k8s.New(config),
+		cloudaccountKubernetes:           *k8s.New(config),
 		continuousCompliancePolicy:       *continuous_compliance_policy.New(config),
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
 		ruleSet:                          *rulebundles.New(config),

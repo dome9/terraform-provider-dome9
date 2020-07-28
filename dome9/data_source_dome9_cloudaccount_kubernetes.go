@@ -8,9 +8,9 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
-func dataSourceCloudAccountK8S() *schema.Resource {
+func dataSourceCloudAccountKubernetes() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceK8SRead,
+		Read: dataSourceKubernetesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeString,
@@ -48,13 +48,13 @@ func dataSourceCloudAccountK8S() *schema.Resource {
 	}
 }
 
-func dataSourceK8SRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceKubernetesRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 
 	id := d.Get("id").(string)
-	log.Printf("[INFO] Getting data for cloud account %s with id %s\n", variable.CloudAccountK8SVendor, id)
+	log.Printf("[INFO] Getting data for cloud account %s with id %s\n", variable.CloudAccountKubernetesVendor, id)
 
-	resp, _, err := d9Client.cloudaccountK8S.Get(id)
+	resp, _, err := d9Client.cloudaccountKubernetes.Get(id)
 	if err != nil {
 		return err
 	}

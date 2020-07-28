@@ -8,12 +8,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func resourceCloudAccountK8S() *schema.Resource {
+func resourceCloudAccountKubernetes() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceCloudAccountK8SCreate,
-		Read:   resourceCloudAccountK8SRead,
-		Update: resourceCloudAccountK8SUpdate,
-		Delete: resourceCloudAccountK8SDelete,
+		Create: resourceCloudAccountKubernetesCreate,
+		Read:   resourceCloudAccountKubernetesRead,
+		Update: resourceCloudAccountKubernetesUpdate,
+		Delete: resourceCloudAccountKubernetesDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -51,29 +51,29 @@ func resourceCloudAccountK8S() *schema.Resource {
 	}
 }
 
-func resourceCloudAccountK8SCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudAccountKubernetesCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	req := createK8SCloudAccountRequest(d)
-	log.Printf("[INFO] Creating K8S Cloud Account with request\n%+v\n", req)
-	resp, _, err := d9Client.cloudaccountK8S.Create(req)
+	req := createKubernetesCloudAccountRequest(d)
+	log.Printf("[INFO] Creating Kubernetes Cloud Account with request\n%+v\n", req)
+	resp, _, err := d9Client.cloudaccountKubernetes.Create(req)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[INFO] Created K8S CloudAccount. ID: %v\n", resp.ID)
+	log.Printf("[INFO] Created Kubernetes CloudAccount. ID: %v\n", resp.ID)
 	d.SetId(resp.ID)
 
-	return resourceCloudAccountK8SRead(d, meta)
+	return resourceCloudAccountKubernetesRead(d, meta)
 }
 
-func resourceCloudAccountK8SRead(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudAccountKubernetesRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 
-	resp, _, err := d9Client.cloudaccountK8S.Get(d.Id())
+	resp, _, err := d9Client.cloudaccountKubernetes.Get(d.Id())
 
 	if err != nil {
 		if err.(*client.ErrorResponse).IsObjectNotFound() { // 404 response code
-			log.Printf("[WARN] Removing K8S cloud account %s from state because it no longer exists in Dome9", d.Id())
+			log.Printf("[WARN] Removing Kubernetes cloud account %s from state because it no longer exists in Dome9", d.Id())
 			d.SetId("")
 			return nil
 		}
@@ -81,7 +81,7 @@ func resourceCloudAccountK8SRead(d *schema.ResourceData, meta interface{}) error
 		return err
 	}
 
-	log.Printf("[INFO] Reading K8S account response and settings states: %+v\n", resp)
+	log.Printf("[INFO] Reading Kubernetes account response and settings states: %+v\n", resp)
 	d.SetId(resp.ID)
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("creation_date", resp.CreationDate.Format("2006-01-02 15:04:05"))
@@ -94,25 +94,25 @@ func resourceCloudAccountK8SRead(d *schema.ResourceData, meta interface{}) error
 	return nil
 }
 
-func resourceCloudAccountK8SDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudAccountKubernetesDelete(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	log.Printf("[INFO] Deleting K8S Cloud Account ID: %v\n", d.Id())
+	log.Printf("[INFO] Deleting Kubernetes Cloud Account ID: %v\n", d.Id())
 
-	if _, err := d9Client.cloudaccountK8S.Delete(d.Id()); err != nil {
+	if _, err := d9Client.cloudaccountKubernetes.Delete(d.Id()); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func resourceCloudAccountK8SUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceCloudAccountKubernetesUpdate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	log.Println("An update occurred for K8S account")
+	log.Println("An update occurred for Kubernetes account")
 
 	if d.HasChange("name") {
 		log.Println("The name has been changed")
 
-		if _, _, err := d9Client.cloudaccountK8S.UpdateName(d.Id(), k8s.CloudAccountUpdateNameRequest{
+		if _, _, err := d9Client.cloudaccountKubernetes.UpdateName(d.Id(), k8s.CloudAccountUpdateNameRequest{
 			Name: d.Get("name").(string),
 		}); err != nil {
 			return err
@@ -122,17 +122,17 @@ func resourceCloudAccountK8SUpdate(d *schema.ResourceData, meta interface{}) err
 	if d.HasChange("organizational_unit_id") {
 		log.Println("The Organizational Unit ID has been changed")
 
-		if _, _, err := d9Client.cloudaccountK8S.UpdateOrganizationalID(d.Id(), k8s.CloudAccountUpdateOrganizationalIDRequest{
+		if _, _, err := d9Client.cloudaccountKubernetes.UpdateOrganizationalID(d.Id(), k8s.CloudAccountUpdateOrganizationalIDRequest{
 			OrganizationalUnitId: d.Get("organizational_unit_id").(string),
 		}); err != nil {
 			return err
 		}
 	}
 
-	return resourceCloudAccountK8SRead(d, meta)
+	return resourceCloudAccountKubernetesRead(d, meta)
 }
 
-func createK8SCloudAccountRequest(d *schema.ResourceData) k8s.CloudAccountRequest {
+func createKubernetesCloudAccountRequest(d *schema.ResourceData) k8s.CloudAccountRequest {
 	return k8s.CloudAccountRequest{
 		Name:                 d.Get("name").(string),
 		OrganizationalUnitID: d.Get("organizational_unit_id").(string),

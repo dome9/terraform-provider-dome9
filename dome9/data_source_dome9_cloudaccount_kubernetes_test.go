@@ -12,24 +12,24 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
-func TestAccDataSourceCloudAccountK8SBasic(t *testing.T) {
-	resourceTypeAndName, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountK8S)
+func TestAccDataSourceCloudAccountKubernetesBasic(t *testing.T) {
+	resourceTypeAndName, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
 	defaultOrganizationalUnitName := os.Getenv(environmentvariable.OrganizationalUnitName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountK8SEnvVarsPreCheck(t)
+			testAccCloudAccountKubernetesEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCloudAccountK8SDestroy,
+		CheckDestroy: testAccCheckCloudAccountKubernetesDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SOriginalAccountName),
+				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesOriginalAccountName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
-					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", variable.CloudAccountK8SOriginalAccountName),
-					resource.TestCheckResourceAttr(dataSourceTypeAndName, "vendor", variable.CloudAccountK8SVendor),
+					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", variable.CloudAccountKubernetesOriginalAccountName),
+					resource.TestCheckResourceAttr(dataSourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
 				),
 			},
