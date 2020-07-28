@@ -25,10 +25,10 @@ func TestAccDataSourceCloudAccountK8SBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountK8SDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SOriginalAccountName, ""),
+				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SOriginalAccountName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
-					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", variable.CloudAccountK8SOriginalAccountName), // TODO: why other implementation used pair?
+					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", variable.CloudAccountK8SOriginalAccountName),
 					resource.TestCheckResourceAttr(dataSourceTypeAndName, "vendor", variable.CloudAccountK8SVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
 				),

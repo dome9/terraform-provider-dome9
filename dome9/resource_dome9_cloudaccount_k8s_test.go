@@ -19,9 +19,8 @@ func TestAccResourceCloudAccountK8SBasic(t *testing.T) {
 	var cloudAccountResponse k8s.CloudAccountResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountK8S)
 	defaultOrganizationalUnitName := os.Getenv(environmentvariable.OrganizationalUnitName)
-	updatedOrganizationalUnitID := os.Getenv(environmentvariable.UpdatedOrganizationalUnitId)
-	updatedOrganizationalUnitName := os.Getenv(environmentvariable.UpdatedOrganizationalUnitName)
-	updatedOrganizationalUnitPath := os.Getenv(environmentvariable.UpdatedOrganizationalUnitPath)
+	organizationUnitTypeAndName, _, organizationUnitGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.OrganizationalUnit)
+	organizationUnitHCL := getOrganizationalUnitResourceHCL(organizationUnitGeneratedName, variable.OrganizationalUnitName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -33,7 +32,7 @@ func TestAccResourceCloudAccountK8SBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				//Create Default
-				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SOriginalAccountName, ""),
+				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SOriginalAccountName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountK8SExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountK8SOriginalAccountName),
@@ -44,7 +43,7 @@ func TestAccResourceCloudAccountK8SBasic(t *testing.T) {
 			},
 			{
 				//Update name
-				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SUpdatedAccountName, ""),
+				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SUpdatedAccountName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountK8SExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountK8SUpdatedAccountName),
@@ -55,15 +54,14 @@ func TestAccResourceCloudAccountK8SBasic(t *testing.T) {
 			},
 			{
 				//Update OU
-				Config: testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, variable.CloudAccountK8SUpdatedAccountName, updatedOrganizationalUnitID),
+				Config: testAccCheckCloudAccountK8SBasicWithUpdatedOU(resourceTypeAndName, generatedName, variable.CloudAccountK8SUpdatedAccountName, organizationUnitHCL, organizationUnitTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountK8SExists(resourceTypeAndName, &cloudAccountResponse),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountK8SUpdatedAccountName),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "creation_date"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountK8SVendor),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_id", updatedOrganizationalUnitID),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", updatedOrganizationalUnitName),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_path", updatedOrganizationalUnitPath),
+					resource.TestCheckResourceAttrPair(resourceTypeAndName, "organizational_unit_id", organizationUnitTypeAndName, "id"),
+					resource.TestCheckResourceAttrPair(resourceTypeAndName, "organizational_unit_name", organizationUnitTypeAndName, "name"),
 				),
 			},
 		},
@@ -118,18 +116,9 @@ func testAccCloudAccountK8SEnvVarsPreCheck(t *testing.T) {
 	if v := os.Getenv(environmentvariable.OrganizationalUnitName); v == "" {
 		t.Fatalf("%s must be set for acceptance tests", environmentvariable.OrganizationalUnitName)
 	}
-	if v := os.Getenv(environmentvariable.UpdatedOrganizationalUnitId); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.UpdatedOrganizationalUnitId)
-	}
-	if v := os.Getenv(environmentvariable.UpdatedOrganizationalUnitName); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.UpdatedOrganizationalUnitName)
-	}
-	if v := os.Getenv(environmentvariable.UpdatedOrganizationalUnitPath); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.UpdatedOrganizationalUnitPath)
-	}
 }
 
-func testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, resourceName string, organizationalUnitID string) string {
+func testAccCheckCloudAccountK8SBasic(resourceTypeAndName, generatedName, resourceName string) string {
 	return fmt.Sprintf(`
 // k8s cloud account creation
 %s
@@ -139,7 +128,7 @@ data "%s" "%s" {
 }
 `,
 		// k8s cloud account
-		getCloudAccountK8SResourceHCL(generatedName, resourceName, organizationalUnitID),
+		getBasicCloudAccountK8SResourceHCL(generatedName, resourceName),
 
 		// data source variables
 		resourcetype.CloudAccountK8S,
@@ -148,17 +137,54 @@ data "%s" "%s" {
 	)
 }
 
-func getCloudAccountK8SResourceHCL(generatedName, resourceName, organizationalUnitID string) string {
+func testAccCheckCloudAccountK8SBasicWithUpdatedOU(resourceTypeAndName , generatedName, resourceName, organizationUnitHCL string, organizationUnitTypeAndName string) string {
+	return fmt.Sprintf(`
+// OU creation
+%s
+// k8s cloud account creation
+%s
+
+data "%s" "%s" {
+ id = "${%s.id}"
+}
+`,
+		// ou arguments
+		organizationUnitHCL,
+
+		// k8s cloud account arguments
+		getCloudAccountK8SResourceHCLWithOU(generatedName, resourceName, organizationUnitTypeAndName),
+
+		// data source variables
+		resourcetype.CloudAccountK8S,
+		generatedName,
+		resourceTypeAndName,
+	)
+}
+
+func getBasicCloudAccountK8SResourceHCL(generatedName string, resourceName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
  name                   = "%s"
- organizational_unit_id = "%s"
 }
 `,
 		// k8s cloud account variables
 		resourcetype.CloudAccountK8S,
 		generatedName,
 		resourceName,
-		organizationalUnitID,
+	)
+}
+
+func getCloudAccountK8SResourceHCLWithOU(generatedName string, resourceName string, organizationUnitTypeAndName string) string {
+	return fmt.Sprintf(`
+resource "%s" "%s" {
+ name                   = "%s"
+ organizational_unit_id = "${%s.id}"
+}
+`,
+		// k8s cloud account variables
+		resourcetype.CloudAccountK8S,
+		generatedName,
+		resourceName,
+		organizationUnitTypeAndName,
 	)
 }
