@@ -137,7 +137,7 @@ data "%s" "%s" {
 	)
 }
 
-func testAccCheckCloudAccountKubernetesBasicWithUpdatedOU(resourceTypeAndName , generatedName, resourceName, organizationUnitHCL string, organizationUnitTypeAndName string) string {
+func testAccCheckCloudAccountKubernetesBasicWithUpdatedOU(resourceTypeAndName, generatedName, resourceName, organizationUnitHCL string, organizationUnitTypeAndName string) string {
 	return fmt.Sprintf(`
 // OU creation
 %s
