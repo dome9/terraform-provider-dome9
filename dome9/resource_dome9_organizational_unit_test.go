@@ -89,13 +89,27 @@ func testAccCheckOrganizationalUnitExists(resource string, ou *organizationaluni
 
 func testAccCheckOrganizationalUnitConfigure(resourceTypeAndName, resourceName, ouName string) string {
 	return fmt.Sprintf(`
-resource "%s" "%s" {
-	name               = "%s"
-	parent_id          = "%s"
-}
+%s
 
 data "%s" "%s" {
 	id = "${%s.id}"
+}
+`,
+		// resource variables
+		getOrganizationalUnitResourceHCL(resourceName, ouName),
+
+		// data source variables
+		resourcetype.OrganizationalUnit,
+		resourceName,
+		resourceTypeAndName,
+	)
+}
+
+func getOrganizationalUnitResourceHCL(resourceName string, ouName string) string {
+	return fmt.Sprintf(`
+resource "%s" "%s" {
+	name               = "%s"
+	parent_id          = "%s"
 }
 `,
 		// resource variables
@@ -103,10 +117,5 @@ data "%s" "%s" {
 		resourceName,
 		ouName,
 		variable.ParentID,
-
-		// data source variables
-		resourcetype.OrganizationalUnit,
-		resourceName,
-		resourceTypeAndName,
 	)
 }

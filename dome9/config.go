@@ -7,6 +7,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
@@ -28,6 +29,7 @@ type Client struct {
 	cloudaccountAWS                  aws.Service
 	cloudaccountAzure                azure.Service
 	cloudaccountGCP                  gcp.Service
+	cloudaccountKubernetes           k8s.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
 	ruleSet                          rulebundles.Service
@@ -55,6 +57,7 @@ func (c *Config) Client() (*Client, error) {
 		cloudaccountAWS:                  *aws.New(config),
 		cloudaccountAzure:                *azure.New(config),
 		cloudaccountGCP:                  *gcp.New(config),
+		cloudaccountKubernetes:           *k8s.New(config),
 		continuousCompliancePolicy:       *continuous_compliance_policy.New(config),
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
 		ruleSet:                          *rulebundles.New(config),
