@@ -1,4 +1,6 @@
 ## 1.20.0 (Unreleased)
+* **New Resource:** `dome9_cloudaccount_kubernetes` ([#88](https://github.com/terraform-providers/terraform-provider-dome9/pull/88))
+* **New Data Source:** `dome9_cloudaccount_kubernetes`([#88](https://github.com/terraform-providers/terraform-provider-dome9/pull/88))
 ## 1.19.0 (June 04, 2020)
 * **New Resource:** `dome9_aws_security_group_rule` ([#84](https://github.com/terraform-providers/terraform-provider-dome9/pull/84))
 * **New Data Source:** `dome9_aws_security_group_rule`([#84](https://github.com/terraform-providers/terraform-provider-dome9/pull/84))
