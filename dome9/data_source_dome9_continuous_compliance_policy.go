@@ -15,19 +15,19 @@ func dataSourceContinuousCompliancePolicy() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"cloud_account_id": {
+			"target_internal_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"external_account_id": {
+			"target_external_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"cloud_account_type": {
+			"target_type": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"bundle_id": {
+			"ruleset_id": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
@@ -52,10 +52,10 @@ func dataSourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta inter
 	}
 
 	d.SetId(resp.ID)
-	_ = d.Set("cloud_account_id", resp.CloudAccountID)
-	_ = d.Set("external_account_id", resp.ExternalAccountID)
-	_ = d.Set("cloud_account_type", resp.CloudAccountType)
-	_ = d.Set("bundle_id", resp.BundleID)
+	_ = d.Set("target_internal_id", resp.TargetInternalId)
+	_ = d.Set("target_external_id", resp.TargetExternalId)
+	_ = d.Set("target_type", resp.TargetType)
+	_ = d.Set("ruleset_id", resp.RulesetId)
 	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
 		return err
 	}
