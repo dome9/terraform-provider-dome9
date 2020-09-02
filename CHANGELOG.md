@@ -1,4 +1,7 @@
-## 1.21.0 (Unreleased)
+## 1.20.1 (Unreleased)
+* IMPROVEMENTS:
+    - Support new two aws regions: Cape Town (af-south-1) and Milan (eu-south-1) ([#90](https://github.com/terraform-providers/terraform-provider-dome9/pull/90))
+    - Support continues complience policy v2 ([#89](https://github.com/terraform-providers/terraform-provider-dome9/pull/89))
 ## 1.20.0 (July 29, 2020)
 * **New Resource:** `dome9_cloudaccount_kubernetes` ([#88](https://github.com/terraform-providers/terraform-provider-dome9/pull/88))
 * **New Data Source:** `dome9_cloudaccount_kubernetes`([#88](https://github.com/terraform-providers/terraform-provider-dome9/pull/88))
