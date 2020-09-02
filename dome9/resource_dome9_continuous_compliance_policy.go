@@ -28,7 +28,7 @@ func resourceContinuousCompliancePolicy() *schema.Resource {
 			"target_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice([]string{"Aws", "Azure", "Gcp", "Kubernetes", "OrganizationalUnit", "Terraform", "Generic"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"Aws", "Azure", "Gcp", "Kubernetes", "OrganizationalUnit"}, false),
 			},
 			"ruleset_id": {
 				Type:     schema.TypeInt,

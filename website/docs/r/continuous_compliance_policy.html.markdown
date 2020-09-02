@@ -30,7 +30,7 @@ The following arguments are supported:
 
 * `target_id` - (Required) The cloud account id.
 * `ruleset_id` - (Required) The bundle id for the bundle that will be used in the policy.
-* `target_type` - (Required) The cloud account provider ("Aws", "Azure", "Gcp", "Kubernetes", "OrganizationalUnit", "Terraform", "Generic").
+* `target_type` - (Required) The cloud account provider ("Aws", "Azure", "Gcp", "Kubernetes", "OrganizationalUnit").
 * `notification_ids` - (Required) The notification policy id's for the policy [list].
     
 ## Attributes Reference
