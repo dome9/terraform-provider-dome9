@@ -61,6 +61,11 @@ const (
 	ContinuousComplianceNotificationUpdateAlertsConsole = false
 )
 
+// continuous Compliance Policy resource/data source
+const (
+	ContinuousCompliancePolicyRulesetId = -14
+)
+
 // ruleset resource/data source
 const (
 	RuleSetName              = "test_rule_set"
