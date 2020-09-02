@@ -16,10 +16,9 @@ Basic usage:
 
 ```hcl
 resource "dome9_continuous_compliance_policy" "test_policy" {
-  cloud_account_id    = "CLOUD ACCOUNT ID"
-  external_account_id = "EXTERNAL ACCOUNT ID"
-  bundle_id           = 00000
-  cloud_account_type  = "CLOUD ACCOUNT TYPE"
+  target_id    = "CLOUD ACCOUNT ID"
+  ruleset_id           = 00000
+  target_type  = "CLOUD ACCOUNT TYPE"
   notification_ids    = ["NOTIFICATION IDS"]
 }
 
@@ -29,10 +28,9 @@ resource "dome9_continuous_compliance_policy" "test_policy" {
 
 The following arguments are supported:
 
-* `cloud_account_id` - (Required) The cloud account id.
-* `external_account_id` - (Required) The account number.
-* `bundle_id` - (Required) The bundle id for the bundle that will be used in the policy.
-* `cloud_account_type` - (Required) The cloud account provider ("Aws", "Azure", "Google").
+* `target_id` - (Required) The cloud account id.
+* `ruleset_id` - (Required) The bundle id for the bundle that will be used in the policy.
+* `target_type` - (Required) The cloud account provider ("Aws", "Azure", "Gcp", "Kubernetes", "OrganizationalUnit").
 * `notification_ids` - (Required) The notification policy id's for the policy [list].
     
 ## Attributes Reference

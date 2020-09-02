@@ -6,24 +6,24 @@ import (
 )
 
 const (
-	continuousComplianceResourcePath = "Compliance/ContinuousCompliancePolicy"
+	continuousComplianceResourcePath = "ContinuousCompliancePolicyV2"
 )
 
 type ContinuousCompliancePolicyRequest struct {
-	CloudAccountID    string   `json:"cloudAccountId"`
-	ExternalAccountID string   `json:"externalAccountId"`
-	CloudAccountType  string   `json:"cloudAccountType,omitempty"`
-	BundleID          int      `json:"bundleId"`
-	NotificationIds   []string `json:"notificationIds"`
+	TargetId        string   `json:"targetId"`
+	TargetType      string   `json:"targetType,omitempty"`
+	RulesetId       int      `json:"rulesetId"`
+	NotificationIds []string `json:"notificationIds"`
 }
 
 type ContinuousCompliancePolicyResponse struct {
-	ID                string   `json:"id"`
-	CloudAccountID    string   `json:"cloudAccountId"`
-	ExternalAccountID string   `json:"externalAccountId"`
-	CloudAccountType  string   `json:"cloudAccountType"`
-	BundleID          int      `json:"bundleId"`
-	NotificationIds   []string `json:"notificationIds"`
+	ID               string   `json:"id"`
+	TargetType       string   `json:"targetType"`
+	TargetInternalId string   `json:"targetInternalId"`
+	TargetExternalId string   `json:"targetExternalId"`
+	RulesetId        int      `json:"rulesetId"`
+	NotificationIds  []string `json:"notificationIds"`
+	ErrorMessage     string   `json:"errorMessage"`
 }
 
 func (service *Service) Get(id string) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
@@ -48,24 +48,29 @@ func (service *Service) GetAll() (*[]ContinuousCompliancePolicyResponse, *http.R
 }
 
 func (service *Service) Create(body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
-	v := new(ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", continuousComplianceResourcePath, nil, body, v)
+	v := new([]ContinuousCompliancePolicyResponse)
+	resp, err := service.Client.NewRequestDo("POST", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest { body }, v)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	return v, resp, nil
+	policy := new(ContinuousCompliancePolicyResponse)
+	if len(*v) > 0{
+		policy = &(*v)[0]
+	}
+	return policy, resp, nil
 }
 
-func (service *Service) Update(id string, body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
-	v := new(ContinuousCompliancePolicyResponse)
-	path := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
-	resp, err := service.Client.NewRequestDo("PUT", path, nil, body, v)
+func (service *Service) Update(body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
+	v := new([]ContinuousCompliancePolicyResponse)
+	resp, err := service.Client.NewRequestDo("PUT", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest { body }, v)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	return v, resp, nil
+	policy := new(ContinuousCompliancePolicyResponse)
+	if len(*v) > 0{
+		policy = &(*v)[0]
+	}
+	return policy, resp, nil
 }
 
 func (service *Service) Delete(id string) (*http.Response, error) {

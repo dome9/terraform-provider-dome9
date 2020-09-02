@@ -20,22 +20,17 @@ func resourceContinuousCompliancePolicy() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"cloud_account_id": {
+			"target_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"external_account_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-			"cloud_account_type": {
+			"target_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice([]string{"Azure", "Aws", "Google", "Kubernetes"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"Aws", "Azure", "Gcp", "Kubernetes", "OrganizationalUnit"}, false),
 			},
-			"bundle_id": {
+			"ruleset_id": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
@@ -80,10 +75,8 @@ func resourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interfa
 
 	log.Printf("[INFO] Getting continuous compliance policy: %+v\n", resp)
 	d.SetId(resp.ID)
-	_ = d.Set("cloud_account_id", resp.CloudAccountID)
-	_ = d.Set("external_account_id", resp.ExternalAccountID)
-	_ = d.Set("cloud_account_type", resp.CloudAccountType)
-	_ = d.Set("bundle_id", resp.BundleID)
+	_ = d.Set("target_type", resp.TargetType)
+	_ = d.Set("ruleset_id", resp.RulesetId)
 	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
 		return err
 	}
@@ -96,7 +89,7 @@ func resourceContinuousCompliancePolicyUpdate(d *schema.ResourceData, meta inter
 	log.Printf("[INFO] Updating continuous compliance policy ID: %v\n", d.Id())
 	req := expandContinuousCompliancePolicyRequest(d)
 
-	if _, _, err := d9Client.continuousCompliancePolicy.Update(d.Id(), &req); err != nil {
+	if _, _, err := d9Client.continuousCompliancePolicy.Update(&req); err != nil {
 		return err
 	}
 
@@ -125,10 +118,9 @@ func expandNotificationIDs(d *schema.ResourceData, key string) []string {
 
 func expandContinuousCompliancePolicyRequest(d *schema.ResourceData) continuous_compliance_policy.ContinuousCompliancePolicyRequest {
 	return continuous_compliance_policy.ContinuousCompliancePolicyRequest{
-		CloudAccountID:    d.Get("cloud_account_id").(string),
-		ExternalAccountID: d.Get("external_account_id").(string),
-		BundleID:          d.Get("bundle_id").(int),
-		NotificationIds:   expandNotificationIDs(d, "notification_ids"),
-		CloudAccountType:  d.Get("cloud_account_type").(string),
+		TargetId:        d.Get("target_id").(string),
+		RulesetId:       d.Get("ruleset_id").(int),
+		NotificationIds: expandNotificationIDs(d, "notification_ids"),
+		TargetType:      d.Get("target_type").(string),
 	}
 }

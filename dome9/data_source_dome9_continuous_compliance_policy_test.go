@@ -1,6 +1,8 @@
 package dome9
 
 import (
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -12,17 +14,17 @@ import (
 
 func TestAccDataSourceContinuousCompliancePolicyBasic(t *testing.T) {
 	policyTypeAndName, policyDataSourceTypeAndName, policyGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousCompliancePolicy)
-	azureTypeAndName, _, azureGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAzure)
+	awsTypeAndName, _, awsGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWS)
 	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 
-	azureHCL := getCloudAccountAzureResourceHCL(azureGeneratedName, variable.CloudAccountAzureCreationResourceName, variable.CloudAccountAzureOperationMode)
+	awsHCL := getCloudAccountAWSResourceHCL(awsGeneratedName, variable.CloudAccountAWSOriginalAccountName, os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn), "")
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
-	policyHCL := getContinuousCompliancePolicyResourceHCL(azureHCL, azureTypeAndName, notificationHCL, notificationTypeAndName, policyGeneratedName)
+	policyHCL := getContinuousCompliancePolicyResourceHCL(awsHCL, awsTypeAndName, notificationHCL, notificationTypeAndName, policyGeneratedName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountAzureEnvVarsPreCheck(t) // Azure account used as an input for policy creation thus this check is required
+			testAccCloudAccountAWSEnvVarsPreCheck(t) // Aws account used as an input for policy creation thus this check is required
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckContinuousCompliancePolicyDestroy,
@@ -31,8 +33,8 @@ func TestAccDataSourceContinuousCompliancePolicyBasic(t *testing.T) {
 				Config: testAccCheckContinuousCompliancePolicyBasic(policyHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "id", policyTypeAndName, "id"),
-					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "cloud_account_id", policyTypeAndName, "cloud_account_id"),
-					resource.TestCheckResourceAttr(policyDataSourceTypeAndName, "cloud_account_type", "Azure"),
+					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "target_id", policyTypeAndName, "target_internal_id"),
+					resource.TestCheckResourceAttr(policyDataSourceTypeAndName, "target_type", "Aws"),
 					resource.TestCheckResourceAttr(policyDataSourceTypeAndName, "notification_ids.#", "1"),
 				),
 			},

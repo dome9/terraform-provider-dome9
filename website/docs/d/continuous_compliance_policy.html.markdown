@@ -28,8 +28,8 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `cloud_account_id` - GCP account name in Dome9.
-* `external_account_id` - The account number.
-* `cloud_account_type` - creation date for project in Google.
-* `bundle_id` - Organizational unit id.
+* `target_internal_id` - Internal account id in Dome9.
+* `target_external_id` - The account number.
+* `target_type` - Vendor type (`Aws`, `Azure`, `Gcp`, `Kubernetes`, `OrganizationalUnit`).
+* `ruleset_id` - Organizational unit id.
 * `notification_ids` - Organizational unit path.
