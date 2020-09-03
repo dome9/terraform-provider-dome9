@@ -1,4 +1,4 @@
-## 1.20.1 (Unreleased)
+## 1.20.1 (September 03, 2020)
 * IMPROVEMENTS:
     - Support new two aws regions: Cape Town (af-south-1) and Milan (eu-south-1) ([#90](https://github.com/terraform-providers/terraform-provider-dome9/pull/90))
     - Support continues complience policy v2 ([#89](https://github.com/terraform-providers/terraform-provider-dome9/pull/89))
