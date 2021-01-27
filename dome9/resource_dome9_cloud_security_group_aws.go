@@ -30,6 +30,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 			"dome9_cloud_account_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -38,6 +39,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 			"aws_region_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				ForceNew:     true,
 				Default:      "us_east_1",
 				ValidateFunc: validation.StringInSlice(providerconst.AWSRegions, true),
 			},
@@ -55,11 +57,13 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
+				ForceNew: true,
 			},
 			"vpc_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
+				ForceNew: true,
 			},
 			"external_id": {
 				Type:     schema.TypeString,
