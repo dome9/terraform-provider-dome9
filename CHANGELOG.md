@@ -1,4 +1,7 @@
-## 1.21.0 (Unreleased)
+## 1.21.0 (February 17, 2010)
+* IMPROVEMENTS:
+* Schema structure change for `data_aws_security_group`,`data_aws_security_group_rule`,`resource_dome9_aws_security_group`,`resource_dome9_aws_security_group_rule` ([#100](https://github.com/dome9/terraform-provider-dome9/pull/100))
+
 ## 1.20.1 (September 03, 2020)
 * IMPROVEMENTS:
     - Support new two aws regions: Cape Town (af-south-1) and Milan (eu-south-1) ([#90](https://github.com/terraform-providers/terraform-provider-dome9/pull/90))
