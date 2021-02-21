@@ -34,7 +34,7 @@ func resourceCloudSecurityGroupAWSRule() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"inbound": {
-							Type:     schema.TypeList,
+							Type:     schema.TypeSet,
 							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -63,7 +63,7 @@ func resourceCloudSecurityGroupAWSRule() *schema.Resource {
 										Default:  false,
 									},
 									"scope": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
 
 										Elem: &schema.Resource{
@@ -86,7 +86,7 @@ func resourceCloudSecurityGroupAWSRule() *schema.Resource {
 							},
 						},
 						"outbound": {
-							Type:     schema.TypeList,
+							Type:     schema.TypeSet,
 							Optional: true,
 							Computed: true,
 							Elem: &schema.Resource{
@@ -115,7 +115,7 @@ func resourceCloudSecurityGroupAWSRule() *schema.Resource {
 										Optional: true,
 									},
 									"scope": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
 										Computed: true,
 										Elem: &schema.Resource{

@@ -83,7 +83,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"inbound": {
-							Type:     schema.TypeList,
+							Type:     schema.TypeSet,
 							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -112,7 +112,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 										Default:  false,
 									},
 									"scope": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
 
 										Elem: &schema.Resource{
@@ -135,7 +135,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 							},
 						},
 						"outbound": {
-							Type:     schema.TypeList,
+							Type:     schema.TypeSet,
 							Optional: true,
 							Computed: true,
 							Elem: &schema.Resource{
@@ -164,7 +164,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 										Optional: true,
 									},
 									"scope": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
 										Computed: true,
 										Elem: &schema.Resource{
@@ -325,18 +325,18 @@ func expandServices(d *schema.ResourceData) *securitygroupaws.ServicesRequest {
 		service := servicesItem.(map[string]interface{})
 
 		return &securitygroupaws.ServicesRequest{
-			Inbound:  expandBoundServicesRequest(service["inbound"].([]interface{})),
-			Outbound: expandBoundServicesRequest(service["outbound"].([]interface{})),
+			Inbound:  expandBoundServicesRequest(service["inbound"].(*schema.Set)),
+			Outbound: expandBoundServicesRequest(service["outbound"].(*schema.Set)),
 		}
 	}
 
 	return nil
 }
 
-func expandBoundServicesRequest(boundServicesRequest []interface{}) []securitygroupaws.BoundServicesRequest {
-	boundServices := make([]securitygroupaws.BoundServicesRequest, len(boundServicesRequest))
+func expandBoundServicesRequest(boundServicesRequest *schema.Set) []securitygroupaws.BoundServicesRequest {
+	boundServices := make([]securitygroupaws.BoundServicesRequest, boundServicesRequest.Len())
 
-	for i, boundService := range boundServicesRequest {
+	for i, boundService := range boundServicesRequest.List() {
 		boundServiceItem := boundService.(map[string]interface{})
 
 		boundServices[i] = securitygroupaws.BoundServicesRequest{
@@ -345,16 +345,16 @@ func expandBoundServicesRequest(boundServicesRequest []interface{}) []securitygr
 			ProtocolType: boundServiceItem["protocol_type"].(string),
 			Port:         boundServiceItem["port"].(string),
 			OpenForAll:   boundServiceItem["open_for_all"].(bool),
-			Scope:        expandScope(boundServiceItem["scope"].([]interface{})),
+			Scope:        expandScope(boundServiceItem["scope"].(*schema.Set)),
 		}
 	}
 
 	return boundServices
 }
 
-func expandScope(scopeRequest []interface{}) []securitygroupaws.Scope {
-	scopes := make([]securitygroupaws.Scope, len(scopeRequest))
-	for i, scope := range scopeRequest {
+func expandScope(scopeRequest *schema.Set) []securitygroupaws.Scope {
+	scopes := make([]securitygroupaws.Scope, scopeRequest.Len())
+	for i, scope := range scopeRequest.List() {
 		scopeItem := scope.(map[string]interface{})
 		scopes[i] = securitygroupaws.Scope{
 			Type: scopeItem["type"].(string),
