@@ -132,7 +132,7 @@ func (service *Service) Create(body *ContinuousComplianceNotificationRequest) (*
 func (service *Service) Update(id string, body *ContinuousComplianceNotificationRequest) (*ContinuousComplianceNotificationResponse, *http.Response, error) {
 	v := new(ContinuousComplianceNotificationResponse)
 	relativeURL := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
 	if err != nil {
 		return nil, nil, err
 	}
