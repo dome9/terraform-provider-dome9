@@ -31,7 +31,7 @@ func resourceCloudAccountAWS() *schema.Resource {
 			},
 			"vendor": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Required: true,
 			},
 			"external_account_number": {
 				Type:     schema.TypeString,
@@ -308,6 +308,7 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountRequest {
 	return aws.CloudAccountRequest{
 		Name:                 d.Get("name").(string),
+		Vendor:               d.Get("vendor").(string),
 		Credentials:          expandCloudAccountAWSCredentials(d),
 		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 	}

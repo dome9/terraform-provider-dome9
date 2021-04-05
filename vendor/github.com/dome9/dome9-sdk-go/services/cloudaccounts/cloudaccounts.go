@@ -10,6 +10,7 @@ const (
 // AWS service paths
 const (
 	RESTfulServicePathAWSName               = "name"
+	RESTfulServicePathAWSVendor             = "vendor"
 	RESTfulServicePathAWSRegionConfig       = "region-conf"
 	RESTfulServicePathAWSOrganizationalUnit = "organizationalUnit"
 	RESTfulServicePathAWSCredentials        = "credentials"

@@ -17,7 +17,9 @@ Basic usage:
 ```hcl
 resource "dome9_cloudaccount_AWS" "test" {
   name  = "ACCOUNT NAME"
- 
+
+  vendor = "aws"
+
   credentials  {
     ARN    = "ARN"
     secret = "SECRET"
@@ -138,7 +140,7 @@ The following arguments are supported:
 ## Attributes Reference
 
 * `id` - The id of the account in Dome9.
-* `vendor` - The cloud provider ("AWS").
+* `vendor` - The cloud provider ("aws", "awsgov").
 * `external_account_number` - The AWS account number.
 * `is_fetching_suspended` - Fetching suspending status.
 * `creation_date` - Date the account was onboarded to Dome9.
@@ -146,16 +148,16 @@ The following arguments are supported:
 * `allow_read_only` - The AWS cloud account operation mode. true for "Full-Manage", false for "Readonly".
 * `net_sec` - The network security configuration for the AWS cloud account. If not given, sets to default value.
 * `IAM_safe` - IAM safe entity details
-    * `AWS_group_ARN` - AWS group ARN  
-    * `AWS_policy_ARN` - AWS policy ARN  
-    * `mode` - Mode  
-    * `restricted_IAM_entities` - Restricted IAM safe entities, which have the following fields:  
+    * `AWS_group_ARN` - AWS group ARN
+    * `AWS_policy_ARN` - AWS policy ARN
+    * `mode` - Mode
+    * `restricted_IAM_entities` - Restricted IAM safe entities, which have the following fields:
 		* `roles_ARNs` - Restricted IAM safe entities roles ARNs
 		* `users_ARNs` - Restricted IAM safe entities users ARNs
 
 ## Import
 
-AWS cloud account can be imported; use `<AWS CLOUD ACCOUNT ID>` as the import ID. 
+AWS cloud account can be imported; use `<AWS CLOUD ACCOUNT ID>` as the import ID.
 
 For example:
 

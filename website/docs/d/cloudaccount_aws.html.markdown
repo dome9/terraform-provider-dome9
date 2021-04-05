@@ -23,13 +23,13 @@ data "dome9_cloudaccount_AWS" "test" {
 
 The following arguments are supported:
 
-* `id` - (Required) The Dome9  id for the AWS account 
+* `id` - (Required) The Dome9  id for the AWS account
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `vendor` - The cloud provider ("AWS").
+* `vendor` - The cloud provider ("aws", "awsgov").
 * `name` - The cloud account name in Dome9.
 * `external_account_number` - The AWS account number.
 * `error` - Credentials error status.
@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 * `net_sec` - The network security configuration for the AWS cloud account.
 * `organizational_unit_id` - Organizational unit id.
 * `IAM_safe` - IAM safe entity details
-    * `AWS_group_ARN` - AWS group ARN  
-    * `AWS_policy_ARN` - AWS policy ARN  
-    * `mode` - Mode  
-    * `restricted_IAM_entities` - Restricted IAM safe entities which has the following:  
+    * `AWS_group_ARN` - AWS group ARN
+    * `AWS_policy_ARN` - AWS policy ARN
+    * `mode` - Mode
+    * `restricted_IAM_entities` - Restricted IAM safe entities which has the following:
 		* `roles_ARNs` - Restricted IAM safe entities roles ARNs
 		* `users_ARNs` - Restricted IAM safe entities users ARNs

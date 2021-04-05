@@ -1,6 +1,8 @@
 resource "dome9_cloudaccount_aws" "aws_ca" {
   name = "account name"
 
+  vendor = "aws"
+
   credentials = {
     arn    = "ARN"
     secret = "SECRET"

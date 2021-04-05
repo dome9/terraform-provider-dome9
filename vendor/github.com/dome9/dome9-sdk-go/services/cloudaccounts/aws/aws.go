@@ -12,6 +12,7 @@ import (
 
 type CloudAccountRequest struct {
 	Name                   string                  `json:"name"`
+	Vendor                 string                  `json:"vendor"`
 	Credentials            CloudAccountCredentials `json:"credentials"`
 	FullProtection         bool                    `json:"fullProtection,omitempty"`
 	AllowReadOnly          bool                    `json:"allowReadOnly,omitempty"`
