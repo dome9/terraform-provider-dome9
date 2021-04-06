@@ -1,4 +1,8 @@
-## 1.21.0 (February 17, 2010)
+## 1.21.1 (April 6, 2021)
+BUG FIX
+* Compliance Notification fix ([#104](https://github.com/dome9/terraform-provider-dome9/pulls))
+
+## 1.21.0 (February 17, 2021)
 * IMPROVEMENTS:
 * Schema structure change for `data_aws_security_group`,`data_aws_security_group_rule`,`resource_dome9_aws_security_group`,`resource_dome9_aws_security_group_rule` ([#100](https://github.com/dome9/terraform-provider-dome9/pull/100))
 
