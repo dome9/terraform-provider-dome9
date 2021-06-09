@@ -18,6 +18,15 @@ Basic usage:
 resource "dome9_cloudaccount_kubernetes" "test" {
   name  = "CLUSTER NAME"
   organizational_unit_id = "ORGANIZATIONAL UNIT ID"
+  runtime_protection {
+    enabled = true
+  }
+  admission_control {
+    enabled = true
+  }
+  image_assurance {
+    enabled = true
+  }
 }
 ```
 
@@ -27,6 +36,12 @@ The following arguments supported:
 
 * `name` - (Required) The name of the kubernetes cluster as it will appear in Dome9 kubernetes cloud account.
 * `organizational_unit_id` - (Optional) The Organizational Unit this cloud account will be attached to
+* `runtime_protection` - (Optional) Runtime Protection which has the following configuration:
+   * `enabled` - (Required) Is Runtime Protection enabled
+* `admission_control` - (Optional) Admission Control which has the following configuration:
+   * `enabled` - (Required) Is Admission Control enabled
+* `image_assurance` - (Optional) Image Assurance which has the following configuration:
+   * `enabled` - (Required) Is Image Assurance enabled
 
 ## Attributes Reference
 
