@@ -8,27 +8,45 @@ import (
 )
 
 type CloudAccountRequest struct {
-	Name                   string                  `json:"name"`
-	OrganizationalUnitID   string                  `json:"organizationalUnitId,omitempty"`
+	Name                 string `json:"name"`
+	OrganizationalUnitID string `json:"organizationalUnitId,omitempty"`
 }
 
 type CloudAccountResponse struct {
-	ID                     string                  `json:"id"` //The k8s cluster ID
-	Name                   string                  `json:"name"`
-	CreationDate           time.Time               `json:"creationDate"`
-	Vendor                 string                  `json:"vendor"`
-	OrganizationalUnitID   string                  `json:"organizationalUnitId,omitempty"`
-	OrganizationalUnitPath string                  `json:"organizationalUnitPath,omitempty"`
-	OrganizationalUnitName string                  `json:"organizationalUnitName,omitempty"`
-	ClusterVersion         string                  `json:"clusterVersion"`
+	ID                       string    `json:"id"` //The k8s cluster ID
+	Name                     string    `json:"name"`
+	CreationDate             time.Time `json:"creationDate"`
+	Vendor                   string    `json:"vendor"`
+	OrganizationalUnitID     string    `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitPath   string    `json:"organizationalUnitPath,omitempty"`
+	OrganizationalUnitName   string    `json:"organizationalUnitName,omitempty"`
+	ClusterVersion           string    `json:"clusterVersion"`
+	RuntimeProtectionEnabled bool      `json:"runtimeProtection"`
+	AdmissionControlEnabled  bool      `json:"admissionControl"`
+	ImageAssuranceEnabled    bool      `json:"vulnerabilityAssessment"`
 }
 
 type CloudAccountUpdateNameRequest struct {
-	Name                   string                  `json:"name"`
+	Name string `json:"name"`
 }
 
 type CloudAccountUpdateOrganizationalIDRequest struct {
-	OrganizationalUnitId   string                  `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitId string `json:"organizationalUnitId,omitempty"`
+}
+
+type RuntimeProtectionEnableRequest struct {
+	CloudAccountId string `json:"k8sAccountId"`
+	Enabled        bool   `json:"enabled"`
+}
+
+type AdmissionControlEnableRequest struct {
+	CloudAccountId string `json:"k8sAccountId"`
+	Enabled        bool   `json:"enabled"`
+}
+
+type ImageAssuranceEnableRequest struct {
+	CloudAccountId string `json:"cloudAccountId"`
+	Enabled        bool   `json:"enabled"`
 }
 
 func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse, *http.Response, error) {
@@ -82,4 +100,46 @@ func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdat
 	}
 
 	return v, resp, nil
+}
+
+/*
+	runtime-protection
+*/
+
+func (service *Service) EnableRuntimeProtection(body RuntimeProtectionEnableRequest) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SRuntimeProtection, cloudaccounts.RESTfulPathK8sEnable)
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+/*
+	admission-control
+*/
+
+func (service *Service) EnableAdmissionControl(body AdmissionControlEnableRequest) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SAdmissionControl, cloudaccounts.RESTfulPathK8sEnable)
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+/*
+	image-assurance
+*/
+
+func (service *Service) EnableImageAssurance(body ImageAssuranceEnableRequest) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SImageAssurance, cloudaccounts.RESTfulPathK8sEnable)
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
