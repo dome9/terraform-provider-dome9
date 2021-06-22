@@ -194,7 +194,19 @@ data "%s" "%s" {
 	)
 }
 
-func testAccCheckCloudAccountKubernetesCreateWithFeatures(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckCloudAccountKubernetesCreateOrUpdateWithFeatures(resourceTypeAndName, generatedName, resourceName string, isUpdate bool) string {
+	var ac, ia, rp bool
+
+	if isUpdate {
+		ac = variable.CloudAccountKubernetesAdmissionControlUpdateEnabled
+		ia = variable.CloudAccountKubernetesImageAssuranceUpdateEnabled
+		rp = variable.CloudAccountKubernetesRuntimeProtectionUpdateEnabled
+	} else {
+		ac = variable.CloudAccountKubernetesAdmissionControlEnabled
+		ia = variable.CloudAccountKubernetesImageAssuranceEnabled
+		rp = variable.CloudAccountKubernetesRuntimeProtectionEnabled
+	}
+
 	return fmt.Sprintf(`
 // Kubernetes cloud account with features
 %s
@@ -204,38 +216,21 @@ data "%s" "%s" {
 }
 `,
 		// Kubernetes cloud account
-		getCloudAccountKubernetesResourceHCLWithfeatures(generatedName, resourceName,
-			variable.CloudAccountKubernetesRuntimeProtectionEnabled,
-			variable.CloudAccountKubernetesAdmissionControlEnabled,
-			variable.CloudAccountKubernetesImageAssuranceEnabled),
+		getCloudAccountKubernetesResourceHCLWithfeatures(generatedName, resourceName, rp, ac, ia),
 
 		// data source variables
 		resourcetype.CloudAccountKubernetes,
 		generatedName,
 		resourceTypeAndName,
 	)
+}
+
+func testAccCheckCloudAccountKubernetesCreateWithFeatures(resourceTypeAndName, generatedName, resourceName string) string {
+	return testAccCheckCloudAccountKubernetesCreateOrUpdateWithFeatures(resourceTypeAndName, generatedName, resourceName, false)
 }
 
 func testAccCheckCloudAccountKubernetesWithUpdateFeatures(resourceTypeAndName, generatedName, resourceName string) string {
-	return fmt.Sprintf(`
-// Kubernetes cloud account with features
-%s
-
-data "%s" "%s" {
- id = "${%s.id}"
-}
-`,
-		// Kubernetes cloud account
-		getCloudAccountKubernetesResourceHCLWithfeatures(generatedName, resourceName,
-			variable.CloudAccountKubernetesRuntimeProtectionUpdateEnabled,
-			variable.CloudAccountKubernetesAdmissionControlUpdateEnabled,
-			variable.CloudAccountKubernetesImageAssuranceUpdateEnabled),
-
-		// data source variables
-		resourcetype.CloudAccountKubernetes,
-		generatedName,
-		resourceTypeAndName,
-	)
+	return testAccCheckCloudAccountKubernetesCreateOrUpdateWithFeatures(resourceTypeAndName, generatedName, resourceName, true)
 }
 
 func getBasicCloudAccountKubernetesResourceHCL(generatedName string, resourceName string) string {
