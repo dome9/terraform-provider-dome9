@@ -44,6 +44,45 @@ func dataSourceCloudAccountKubernetes() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"runtime_protection": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+					},
+				},
+			},
+			"admission_control": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+					},
+				},
+			},
+			"image_assurance": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -67,6 +106,9 @@ func dataSourceKubernetesRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("organizational_unit_path", resp.OrganizationalUnitPath)
 	_ = d.Set("organizational_unit_name", resp.OrganizationalUnitName)
 	_ = d.Set("cluster_version", resp.ClusterVersion)
+	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
+	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
+	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
 
 	return nil
 }

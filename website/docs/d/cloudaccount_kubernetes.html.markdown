@@ -36,3 +36,10 @@ In addition to all arguments above, the following attributes exported:
 * `organizational_unit_path` - Organizational unit path.
 * `organizational_unit_name` - Organizational unit name.
 * `cluster_version` - The onboarded cluster version.
+* `runtime_protection` - Runtime Protection details
+    * `enabled` - Is Runtime Protection enabled
+* `admission_control` - Admission Control details
+    * `enabled` - Is Admission Control enabled
+* `image_assurance` - Image Assurance details
+    * `enabled` - Is Image Assurance enabled
+    

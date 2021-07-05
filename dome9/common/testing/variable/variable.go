@@ -34,6 +34,16 @@ const (
 	CloudAccountKubernetesVendor              = "kubernetes"
 	CloudAccountKubernetesOriginalAccountName = "test_cloudaccount_kubernetes_resource_name"
 	CloudAccountKubernetesUpdatedAccountName  = "test_cloudaccount_kubernetes_updated_resource_name"
+
+	// features
+	CloudAccountKubernetesAdmissionControlEnabled  = true
+	CloudAccountKubernetesRuntimeProtectionEnabled = true
+	CloudAccountKubernetesImageAssuranceEnabled    = true
+
+	// features updates
+	CloudAccountKubernetesAdmissionControlUpdateEnabled  = false
+	CloudAccountKubernetesRuntimeProtectionUpdateEnabled = false
+	CloudAccountKubernetesImageAssuranceUpdateEnabled    = false
 )
 
 // ip list resource/data source

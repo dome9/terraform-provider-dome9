@@ -47,6 +47,48 @@ func resourceCloudAccountKubernetes() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"runtime_protection": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+					},
+				},
+			},
+			"admission_control": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+					},
+				},
+			},
+			"image_assurance": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -61,6 +103,12 @@ func resourceCloudAccountKubernetesCreate(d *schema.ResourceData, meta interface
 	}
 
 	log.Printf("[INFO] Created Kubernetes CloudAccount. ID: %v\n", resp.ID)
+
+	err = featuresCreate(d, d9Client, resp.ID)
+	if err != nil {
+		return err
+	}
+
 	d.SetId(resp.ID)
 
 	return resourceCloudAccountKubernetesRead(d, meta)
@@ -90,6 +138,9 @@ func resourceCloudAccountKubernetesRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("organizational_unit_path", resp.OrganizationalUnitPath)
 	_ = d.Set("organizational_unit_name", resp.OrganizationalUnitName)
 	_ = d.Set("cluster_version", resp.ClusterVersion)
+	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
+	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
+	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
 
 	return nil
 }
@@ -97,6 +148,11 @@ func resourceCloudAccountKubernetesRead(d *schema.ResourceData, meta interface{}
 func resourceCloudAccountKubernetesDelete(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting Kubernetes Cloud Account ID: %v\n", d.Id())
+
+	err := featuresDelete(d, d9Client)
+	if err != nil {
+		return err
+	}
 
 	if _, err := d9Client.cloudaccountKubernetes.Delete(d.Id()); err != nil {
 		return err
@@ -129,6 +185,11 @@ func resourceCloudAccountKubernetesUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	err := featuresUpdate(d, d9Client)
+	if err != nil {
+		return err
+	}
+
 	return resourceCloudAccountKubernetesRead(d, meta)
 }
 
@@ -137,4 +198,204 @@ func createKubernetesCloudAccountRequest(d *schema.ResourceData) k8s.CloudAccoun
 		Name:                 d.Get("name").(string),
 		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 	}
+}
+
+func featuresCreate(d *schema.ResourceData, d9Client *Client, newId string) error {
+	runtimeProtection, ok := d.GetOk("runtime_protection")
+	if ok {
+		if err := configureRuntimeProtection(runtimeProtection, newId, d9Client); err != nil {
+			return err
+		}
+	}
+
+	admissionControl, ok := d.GetOk("admission_control")
+	if ok {
+		if err := configureAdmissionControl(admissionControl, newId, d9Client); err != nil {
+			return err
+		}
+	}
+
+	imageAssurance, ok := d.GetOk("image_assurance")
+	if ok {
+		if err := configureImageAssurance(imageAssurance, newId, d9Client); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func featuresUpdate(d *schema.ResourceData, d9Client *Client) error {
+	if d.HasChange("runtime_protection") {
+		log.Println("Runtime Protection has been changed")
+
+		runtimeProtection := d.Get("runtime_protection")
+		if err := configureRuntimeProtection(runtimeProtection, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("admission_control") {
+		log.Println("Admission Control has been changed")
+
+		admissionControl := d.Get("admission_control")
+		if err := configureAdmissionControl(admissionControl, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("image_assurance") {
+		log.Println("Image Assurance has been changed")
+
+		imageAssurance := d.Get("image_assurance")
+		if err := configureImageAssurance(imageAssurance, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func featuresDelete(d *schema.ResourceData, d9Client *Client) error {
+	runtimeProtection, ok := d.GetOk("runtime_protection")
+	if ok {
+		if err := disableRuntimeProtectionIfEnabled(runtimeProtection, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+
+	admissionControl, ok := d.GetOk("admission_control")
+	if ok {
+		if err := disableAdmissionControlIfEnabled(admissionControl, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+
+	imageAssurance, ok := d.GetOk("image_assurance")
+	if ok {
+		if err := disableImageAssuranceIfEnabled(imageAssurance, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func configureRuntimeProtection(runtimeProtection interface{}, clusterId string, d9Client *Client) error {
+	runtimeProtectionConfig := runtimeProtection.([]interface{})[0].(map[string]interface{})
+	req := createRuntimeProtectionEnableRequest(clusterId, runtimeProtectionConfig["enabled"].(bool))
+	log.Println("[INFO] Configuring Runtime Protection for Kubernetes Cloud Account")
+	if _, err := d9Client.cloudaccountKubernetes.EnableRuntimeProtection(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func configureAdmissionControl(admissionControl interface{}, clusterId string, d9Client *Client) error {
+	admissionControlConfig := admissionControl.([]interface{})[0].(map[string]interface{})
+	log.Println("[INFO] Configuring Admission Control for Kubernetes Cloud Account")
+
+	enableReq := createAdmissionControlEnableRequest(clusterId, admissionControlConfig["enabled"].(bool))
+	if _, err := d9Client.cloudaccountKubernetes.EnableAdmissionControl(enableReq); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func configureImageAssurance(ImageAssurance interface{}, clusterId string, d9Client *Client) error {
+	ImageAssuranceConfig := ImageAssurance.([]interface{})[0].(map[string]interface{})
+	req := createImageAssuranceEnableRequest(clusterId, ImageAssuranceConfig["enabled"].(bool))
+	log.Println("[INFO] Configuring Image Assurance for Kubernetes Cloud Account")
+	if _, err := d9Client.cloudaccountKubernetes.EnableImageAssurance(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func createRuntimeProtectionEnableRequest(clusterId string, enabled bool) k8s.RuntimeProtectionEnableRequest {
+	return k8s.RuntimeProtectionEnableRequest{
+		CloudAccountId: clusterId,
+		Enabled:        enabled,
+	}
+}
+
+func createAdmissionControlEnableRequest(clusterId string, enabled bool) k8s.AdmissionControlEnableRequest {
+	return k8s.AdmissionControlEnableRequest{
+		CloudAccountId: clusterId,
+		Enabled:        enabled,
+	}
+}
+
+func createImageAssuranceEnableRequest(clusterId string, enabled bool) k8s.ImageAssuranceEnableRequest {
+	return k8s.ImageAssuranceEnableRequest{
+		CloudAccountId: clusterId,
+		Enabled:        enabled,
+	}
+}
+func expandRuntimeProtectionConfig(resp *k8s.CloudAccountResponse) []interface{} {
+	runtimeProtectionConfig := make(map[string]interface{})
+
+	runtimeProtectionConfig["enabled"] = resp.RuntimeProtectionEnabled
+
+	return []interface{}{runtimeProtectionConfig}
+}
+
+func expandAdmissionControlConfig(resp *k8s.CloudAccountResponse) []interface{} {
+	admissionControlConfig := make(map[string]interface{})
+
+	admissionControlConfig["enabled"] = resp.AdmissionControlEnabled
+
+	return []interface{}{admissionControlConfig}
+}
+
+func expandImageAssuranceConfig(resp *k8s.CloudAccountResponse) []interface{} {
+	ImageAssuranceConfig := make(map[string]interface{})
+
+	ImageAssuranceConfig["enabled"] = resp.ImageAssuranceEnabled
+
+	return []interface{}{ImageAssuranceConfig}
+}
+
+func disableRuntimeProtectionIfEnabled(runtimeProtection interface{}, clusterId string, d9Client *Client) error {
+	runtimeProtectionConfig := runtimeProtection.([]interface{})[0].(map[string]interface{})
+
+	if runtimeProtectionConfig["enabled"].(bool) {
+		req := createRuntimeProtectionEnableRequest(clusterId, false)
+		log.Println("[INFO] Disabling Runtime Protection for Kubernetes Cloud Account")
+		if _, err := d9Client.cloudaccountKubernetes.EnableRuntimeProtection(req); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func disableAdmissionControlIfEnabled(admissionControl interface{}, clusterId string, d9Client *Client) error {
+	admissionControlConfig := admissionControl.([]interface{})[0].(map[string]interface{})
+
+	if admissionControlConfig["enabled"].(bool) {
+		req := createAdmissionControlEnableRequest(clusterId, false)
+		log.Println("[INFO] Disabling Admission Control for Kubernetes Cloud Account")
+		if _, err := d9Client.cloudaccountKubernetes.EnableAdmissionControl(req); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func disableImageAssuranceIfEnabled(ImageAssurance interface{}, clusterId string, d9Client *Client) error {
+	ImageAssuranceConfig := ImageAssurance.([]interface{})[0].(map[string]interface{})
+
+	if ImageAssuranceConfig["enabled"].(bool) {
+		req := createImageAssuranceEnableRequest(clusterId, false)
+		log.Println("[INFO] Disabling Image Assurance for Kubernetes Cloud Account")
+		if _, err := d9Client.cloudaccountKubernetes.EnableImageAssurance(req); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
