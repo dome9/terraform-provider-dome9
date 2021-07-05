@@ -1,3 +1,7 @@
+## 1.22.0 (July 5, 2021)
+* IMPROVEMENTS:
+* Schema structure change for `resource_dome9_cloudaccount_kubernetes`,`data_source_dome9_cloudaccount_kubernetes`, ([#109](https://github.com/dome9/terraform-provider-dome9/pull/109))
+
 ## 1.21.1 (April 6, 2021)
 BUG FIX
 * Compliance Notification fix ([#104](https://github.com/dome9/terraform-provider-dome9/pulls))
