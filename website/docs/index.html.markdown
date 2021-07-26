@@ -27,14 +27,36 @@ You can use the Key and Secret in the following ways:
 - On the CLI, omit the `provider` block from your tf file, and the CLI will prompt for proper credentials.
   [CLI config file](/docs/commands/cli-config.html#credentials).
 - Set the `DOME9_ACCESS_ID` and `DOME9_SECRET_KEY` environment variables.
+- [Optional] The provider works by default with US region. Set 'base_url' with one of the following 
+  URLs for working with other supported regions.
+  Support regions URLs list:
+    - N.Virginia [DEFAULT]: 'https://api.dome9.com/v2/' 
+    - Ireland : 'https://api.eu1.dome9.com/v2/'
+    - Singapore : 'https://api.ap1.dome9.com/v2/'
+    - Sydney : 'https://api.ap2.dome9.com/v2/'
+    - Mumbai : 'https://api.ap3.dome9.com/v2/'
 - Fill the provider block with the appropriate arguments:    
 
 
 ```hcl
-# Configure the Dome9 Provider
+# Configure the Dome9 Provider, works with US region by default
 provider "dome9" {
   dome9_access_id     = "${var.access_id}"
   dome9_secret_key    = "${var.secret_key}"
+}
+
+# Create an organization
+resource "dome9_cloudaccount_aws" "account" {
+  # ...
+}
+```
+
+```hcl
+# Configure the Dome9 Provider None-US regions
+provider "dome9" {
+  dome9_access_id     = "${var.access_id}"
+  dome9_secret_key    = "${var.secret_key}"
+  base_url            = "${var.base_url}"
 }
 
 # Create an organization
