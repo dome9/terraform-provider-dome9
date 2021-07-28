@@ -13,7 +13,7 @@ Use this data source to get information about an AWS cloud account onboarded to 
 ## Example Usage
 
 ```hcl
-data "dome9_cloudaccount_AWS" "test" {
+data "dome9_cloudaccount_aws" "test" {
   id = "d9-AWS-cloud-account-id"
 }
 
