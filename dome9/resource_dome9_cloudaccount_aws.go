@@ -11,7 +11,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
 )
 
 func resourceCloudAccountAWS() *schema.Resource {

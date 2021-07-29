@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/method"
 )
 
 func TestAccDataSourceUserBasic(t *testing.T) {

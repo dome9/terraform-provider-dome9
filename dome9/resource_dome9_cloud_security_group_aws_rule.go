@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
 	"log"
 	"strconv"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
 
 func resourceCloudSecurityGroupAWSRule() *schema.Resource {

@@ -3,7 +3,11 @@ package dome9
 import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/environmentvariable"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/variable"
+
 	"os"
 	"strconv"
 	"testing"
@@ -11,12 +15,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+
 )
 
 func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
+
 	var cloudAccountResponse k8s.CloudAccountResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
 	anotherResourceTypeAndName, _, anotherGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)

@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
 )
 
 func srlDescriptorSchema() *schema.Schema {

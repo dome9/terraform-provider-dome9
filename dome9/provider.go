@@ -1,16 +1,16 @@
 package dome9
 
 import (
+	"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 )
 
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
+
 			providerconst.ProviderAccessID: {
 				Type:        schema.TypeString,
 				Required:    true,

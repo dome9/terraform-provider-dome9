@@ -9,9 +9,9 @@ import (
 
 	"github.com/dome9/dome9-sdk-go/services/rulebundles"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
 func TestAccResourceRuleSetBasic(t *testing.T) {

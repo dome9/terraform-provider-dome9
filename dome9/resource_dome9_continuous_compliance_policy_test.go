@@ -2,7 +2,7 @@ package dome9
 
 import (
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"os"
 	"strings"
 	"testing"
@@ -12,9 +12,9 @@ import (
 
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
 func TestAccResourceContinuousCompliancePolicyBasic(t *testing.T) {

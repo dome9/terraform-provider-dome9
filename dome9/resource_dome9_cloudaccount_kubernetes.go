@@ -315,6 +315,7 @@ func configureImageAssurance(ImageAssurance interface{}, clusterId string, d9Cli
 }
 
 func createRuntimeProtectionEnableRequest(clusterId string, enabled bool) k8s.RuntimeProtectionEnableRequest {
+
 	return k8s.RuntimeProtectionEnableRequest{
 		CloudAccountId: clusterId,
 		Enabled:        enabled,

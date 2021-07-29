@@ -11,10 +11,10 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/environmentvariable"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/dome9/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
 func TestAccResourceCloudAccountAzureBasic(t *testing.T) {
