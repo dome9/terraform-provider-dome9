@@ -29,7 +29,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `vendor` - The cloud provider ("AWS").
+* `vendor` - The cloud provider ("AWS/AWSGOV").
 * `name` - The cloud account name in Dome9.
 * `external_account_number` - The AWS account number.
 * `error` - Credentials error status.
