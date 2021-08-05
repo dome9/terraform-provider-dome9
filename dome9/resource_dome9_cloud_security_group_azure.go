@@ -9,8 +9,6 @@ import (
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure"
-
-	//"github.com/dome9/terraform-provider-dome9/dome9/common/providerconst"
 )
 
 func resourceAzureSecurityGroup() *schema.Resource {

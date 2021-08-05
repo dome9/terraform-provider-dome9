@@ -31,7 +31,7 @@ func resourceCloudAccountAWS() *schema.Resource {
 			},
 			"vendor": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Optional: true,
 			},
 			"external_account_number": {
 				Type:     schema.TypeString,
@@ -53,12 +53,11 @@ func resourceCloudAccountAWS() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"arn": {
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
 						},
 						"api_key": {
-							Type:       schema.TypeString,
-							Optional:   true,
-							Deprecated: "Deprecated",
+							Type:     schema.TypeString,
+							Optional: true,
 						},
 						"secret": {
 							Type:      schema.TypeString,
@@ -66,14 +65,13 @@ func resourceCloudAccountAWS() *schema.Resource {
 							Sensitive: true,
 						},
 						"iam_user": {
-							Type:       schema.TypeString,
-							Optional:   true,
-							Deprecated: "Deprecated",
+							Type:     schema.TypeString,
+							Optional: true,
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The cloud account onboarding method. Should be set to 'RoleBased' as other methods are deprecated",
+							Description: "The cloud account onboarding method. Should be set to 'RoleBased' for AWS and 'UserBased' forAWS_GOV.",
 						},
 						"is_read_only": {
 							Type:     schema.TypeBool,
@@ -108,10 +106,9 @@ func resourceCloudAccountAWS() *schema.Resource {
 										Computed: true,
 									},
 									"new_group_behavior": {
-										Type:     schema.TypeString,
-										Computed: true,
-										Optional: true,
-										// Reset == regionlock
+										Type:         schema.TypeString,
+										Computed:     true,
+										Optional:     true,
 										ValidateFunc: validation.StringInSlice([]string{"ReadOnly", "FullManage", "Reset"}, true),
 									},
 								},
@@ -306,20 +303,34 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 }
 
 func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountRequest {
+	credentials := expandCloudAccountAWSCredentials(d)
+	vendor := "aws"
+	if credentials.Type == "UserBased" {
+		vendor = "awsgov"
+	}
 	return aws.CloudAccountRequest{
 		Name:                 d.Get("name").(string),
-		Credentials:          expandCloudAccountAWSCredentials(d),
+		Credentials:          credentials,
 		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
+		Vendor:               vendor,
 	}
 }
 
 func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountCredentials {
+	onbordingType := d.Get("credentials.0.type").(string)
+	if onbordingType == "UserBased" {
+		return aws.CloudAccountCredentials{
+			ApiKey:     d.Get("credentials.0.api_key").(string),
+			Secret:     d.Get("credentials.0.secret").(string),
+			Type:       onbordingType,
+			IsReadOnly: d.Get("credentials.0.is_read_only").(bool),
+		}
+	}
+
 	return aws.CloudAccountCredentials{
-		ApiKey:     d.Get("credentials.0.api_key").(string),
 		Arn:        d.Get("credentials.0.arn").(string),
 		Secret:     d.Get("credentials.0.secret").(string),
-		IamUser:    d.Get("credentials.0.iam_user").(string),
-		Type:       d.Get("credentials.0.type").(string),
+		Type:       onbordingType,
 		IsReadOnly: d.Get("credentials.0.is_read_only").(bool),
 	}
 }

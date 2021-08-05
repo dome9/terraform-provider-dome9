@@ -14,8 +14,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
-
 )
 
 func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
