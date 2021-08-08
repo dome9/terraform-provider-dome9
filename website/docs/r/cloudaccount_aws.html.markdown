@@ -112,13 +112,13 @@ resource "dome9_cloudaccount_AWS" "test" {
 ```
 
 ```hcl
-resource "dome9_cloudaccount_AWSGOV" "test" {
+resource "dome9_cloudaccount_awsgov" "test" {
   name  = "ACCOUNT NAME"
  
   credentials  {
     api_key    = "API_KEY"
     secret = "SECRET"
-    type   = "RoleBased"
+    type   = "UserBased"
   }
   organizational_unit_id = "ORGANIZATIONAL UNIT ID"
   net_sec {
@@ -147,10 +147,10 @@ The following arguments are supported:
 ### Credentials
 
 `credentials` has the following arguments:
-*  `arn`       - (Optional) AWS Role ARN (to be assumed by Dome9 - Required for AWS)
-*  `secret`    - (Required) The AWS role External ID (Dome9  will have to use this secret in order to assume the role)
-*  `type`      - (Required) The cloud account onboarding method. Set to "RoleBased".
-*  `api_key`   - (Optional) AWS Role ARN (to be assumed by Dome9 - Required for AWSGOV)
+*  `arn`       - (Optional) AWS Role ARN (to be assumed by Dome9 - Required for AWS but not for awsGov)
+*  `secret`    - (Required) The AWS role External ID or AWS user secret key (Dome9  will have to use this secret)
+*  `type`      - (Required) The cloud account onboarding method. Set to "RoleBased" for aws account and to "userBased" for awsGov.
+*  `api_key`   - (Optional) AWS user api-key (to be assumed by Dome9 - Required for awsGov but not for aws)
 
 ### Network security configuration
 
@@ -163,7 +163,7 @@ The following arguments are supported:
 ## Attributes Reference
 
 * `id` - The id of the account in Dome9.
-* `vendor` - The cloud provider ("AWS").
+* `vendor` - The cloud provider ("aws/awsgov").
 * `external_account_number` - The AWS account number.
 * `is_fetching_suspended` - Fetching suspending status.
 * `creation_date` - Date the account was onboarded to Dome9.
