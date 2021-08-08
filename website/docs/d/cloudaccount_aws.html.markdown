@@ -13,7 +13,7 @@ Use this data source to get information about an AWS cloud account onboarded to 
 ## Example Usage
 
 ```hcl
-data "dome9_cloudaccount_AWS" "test" {
+data "dome9_cloudaccount_aws" "test" {
   id = "d9-AWS-cloud-account-id"
 }
 
@@ -29,7 +29,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `vendor` - The cloud provider ("AWS").
+* `vendor` - The cloud provider ("aws/awsgov").
 * `name` - The cloud account name in Dome9.
 * `external_account_number` - The AWS account number.
 * `error` - Credentials error status.

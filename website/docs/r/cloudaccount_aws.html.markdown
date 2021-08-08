@@ -111,6 +111,31 @@ resource "dome9_cloudaccount_AWS" "test" {
 }
 ```
 
+```hcl
+resource "dome9_cloudaccount_AWSGOV" "test" {
+  name  = "ACCOUNT NAME"
+ 
+  credentials  {
+    api_key    = "API_KEY"
+    secret = "SECRET"
+    type   = "RoleBased"
+  }
+  organizational_unit_id = "ORGANIZATIONAL UNIT ID"
+  net_sec {
+    net_sec {
+      regions {
+        new_group_behavior = "ReadOnly"
+        region             = "us_gov_east_1"
+      }
+      regions {
+        new_group_behavior = "ReadOnly"
+        region             = "us_gov_west_1"
+      }
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -122,18 +147,18 @@ The following arguments are supported:
 ### Credentials
 
 `credentials` has the following arguments:
-
-* `arn` - (Required) AWS Role ARN (to be assumed by Dome9)
-* `secret` - (Required) The AWS role External ID (Dome9  will have to use this secret in order to assume the role)
-* `type` - (Required) The cloud account onboarding method. Set to "RoleBased".
+*  `arn`       - (Optional) AWS Role ARN (to be assumed by Dome9 - Required for AWS)
+*  `secret`    - (Required) The AWS role External ID (Dome9  will have to use this secret in order to assume the role)
+*  `type`      - (Required) The cloud account onboarding method. Set to "RoleBased".
+*  `api_key`   - (Optional) AWS Role ARN (to be assumed by Dome9 - Required for AWSGOV)
 
 ### Network security configuration
 
 `net_sec` has the these arguments:
 
 * `Regions` - (Required) list of the supported regions, and their configuration:
-    * `new_group_behavior` - (Required) The network security configuration. Select "ReadOnly", "FullManage", or "Reset".
-    * `region` - (Required) AWS region, in AWS format (e.g., "us-east-1")
+* `new_group_behavior` - (Required) The network security configuration. Select "ReadOnly", "FullManage", or "Reset".
+* `region` - (Required) AWS region, in AWS format (e.g., "us-east-1")
 
 ## Attributes Reference
 
