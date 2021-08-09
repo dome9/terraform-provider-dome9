@@ -30,7 +30,7 @@ func resourceServiceAccount() *schema.Resource {
 				Computed: true,
 			},
 			"role_ids": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Required: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
 			},
@@ -42,7 +42,7 @@ func resourceServiceAccountCreate(d *schema.ResourceData, meta interface{}) erro
 	d9Client := meta.(*Client)
 
 	var roleIds []int64
-	for _, i := range d.Get("role_ids").([]interface{}) {
+	for _, i := range d.Get("role_ids").(*schema.Set).List() {
 		roleIds = append(roleIds, int64(i.(int)))
 	}
 	req := serviceaccounts.ServiceAccountRequest{
@@ -90,7 +90,7 @@ func resourceServiceAccountUpdate(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[INFO] Updating service account ID: %v\n", d.Id())
 
 	var roleIds []int64
-	for _, i := range d.Get("role_ids").([]interface{}) {
+	for _, i := range d.Get("role_ids").(*schema.Set).List() {
 		roleIds = append(roleIds, int64(i.(int)))
 	}
 

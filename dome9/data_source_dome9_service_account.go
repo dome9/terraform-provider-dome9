@@ -22,7 +22,7 @@ func dataSourceServiceAccount() *schema.Resource {
 				Computed: true,
 			},
 			"role_ids": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeInt},
 			},
