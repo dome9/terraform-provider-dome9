@@ -2,14 +2,12 @@ package dome9
 
 import (
 	"fmt"
-	"log"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"log"
 
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
@@ -32,6 +30,7 @@ func resourceCloudAccountAWS() *schema.Resource {
 			"vendor": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Default:  "aws",
 			},
 			"external_account_number": {
 				Type:     schema.TypeString,
@@ -177,7 +176,10 @@ func resourceCloudAccountAWS() *schema.Resource {
 
 func resourceCloudAccountAWSCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	req := expandCloudAccountAWSRequest(d)
+	req, err := expandCloudAccountAWSRequest(d)
+	if err != nil {
+		return err
+	}
 	log.Printf("[INFO] Creating AWS Cloud Account with request\n%+v\n", req)
 	resp, _, err := d9Client.cloudaccountAWS.Create(req)
 	if err != nil {
@@ -302,18 +304,93 @@ func resourceCloudAccountAWSUpdate(d *schema.ResourceData, meta interface{}) err
 	return nil
 }
 
-func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountRequest {
+func expandCloudAccountAWSRequest(d *schema.ResourceData) (aws.CloudAccountRequest, error) {
+	var regionsName []string
+	var err error
 	credentials := expandCloudAccountAWSCredentials(d)
-	vendor := "aws"
-	if credentials.Type == "UserBased" {
-		vendor = "awsgov"
+	vendor := d.Get("vendor").(string)
+	netSecRegions := d.Get("net_sec.0.regions").([]interface{})
+	if netSecRegions != nil {
+		regionsName = getRegionsName(netSecRegions)
 	}
+
+	err = validateVendor(vendor, credentials, regionsName)
+	if err != nil {
+		return aws.CloudAccountRequest{}, err
+	}
+
 	return aws.CloudAccountRequest{
 		Name:                 d.Get("name").(string),
 		Credentials:          credentials,
 		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 		Vendor:               vendor,
+	}, nil
+}
+
+func getRegionsName(netSecRegionsIterator []interface{}) []string {
+	var regionsName []string
+	for _, val := range netSecRegionsIterator {
+		regionObject := val.(map[string]interface{})
+		regionsName = append(regionsName, regionObject["region"].(string))
 	}
+
+	return regionsName
+}
+
+func validateVendor(vendor string, credentials aws.CloudAccountCredentials, regions []string) error {
+	switch vendor {
+	case "aws":
+		_, err := validateAwsVendor(credentials, regions)
+		if err != nil {
+			return err
+		}
+		break
+	case "awsgov":
+		_, err := validateAwsGovVendor(credentials, regions)
+		if err != nil {
+			return err
+		}
+		break
+	}
+	return nil
+}
+
+func validateAwsGovVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
+	awsGovRegions := map[string]bool{"us_gov_east_1": true, "us_gov_west_1": true}
+	validate := checkRegions(regions, awsGovRegions)
+
+	if !validate {
+		return validate, fmt.Errorf("awsGov vendor has an unsutibule regions")
+	}
+
+	if credentials.Type != "UserBased" || len(credentials.ApiKey) == 0 || len(credentials.Secret) == 0 {
+		return false, fmt.Errorf("awsGov vendor has wrong credentials")
+	}
+	return true, nil
+}
+
+func validateAwsVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
+	awsRegions := map[string]bool{"us_east_1": true, "us_west_1": true, "eu_west_1": true, "ap_southeast_1": true, "ap_northeast_1": true, "us_west_2": true,
+		"sa_east_1": true, "ap_southeast_2": true, "eu_central_1": true, "ap_northeast_2": true, "ap_south_1": true, "us_east_2": true, "ca_central_1": true,
+		"eu_west_2": true, "eu_west_3": true, "eu_north_1": true, "ap_east_1": true, "me_south_1": true, "af_south_1": true, "eu_south_1": true}
+	validate := checkRegions(regions, awsRegions)
+	if !validate {
+		return validate, fmt.Errorf("aws vendor has an unsutibule regions")
+	}
+	if credentials.Type != "RoleBased" || len(credentials.Arn) == 0 || len(credentials.Secret) == 0 {
+		return false, fmt.Errorf("aws vendor has wrong credentials")
+	}
+	return true, nil
+}
+
+func checkRegions(regions []string, regionsToCompare map[string]bool) bool {
+	for _, val := range regions {
+		_, ok := regionsToCompare[val]
+		if !ok {
+			return false
+		}
+	}
+	return true
 }
 
 func expandCloudAccountAWSCredentials(d *schema.ResourceData) aws.CloudAccountCredentials {
