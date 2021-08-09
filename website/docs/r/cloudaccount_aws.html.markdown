@@ -114,7 +114,7 @@ resource "dome9_cloudaccount_AWS" "test" {
 ```hcl
 resource "dome9_cloudaccount_awsgov" "test" {
   name  = "ACCOUNT NAME"
- 
+  vendoe = "awsgov
   credentials  {
     api_key    = "API_KEY"
     secret = "SECRET"
@@ -143,12 +143,13 @@ The following arguments are supported:
 * `name` - (Required) The name of AWS account in Dome9
 * `credentials` - (Required) The information needed for Dome9 System in order to connect to the AWS cloud account
 * `organizational_unit_id` - (Optional) The Organizational Unit that this cloud account will be attached to
+* `vendor` - (Optional) the default value for vendor is "aws" due to that you must add vendor field for aws gov with the value  "awsgov" 
 
 ### Credentials
 
 `credentials` has the following arguments:
 *  `arn`       - (Optional) AWS Role ARN (to be assumed by Dome9 - Required for AWS but not for awsGov)
-*  `secret`    - (Required) The AWS role External ID or AWS user secret key (Dome9  will have to use this secret)
+*  `secret`    - (Required) The AWS role External ID for AWS(RoleBased) and user secret key for awsGov(Dome9  will have to use this secret)
 *  `type`      - (Required) The cloud account onboarding method. Set to "RoleBased" for aws account and to "userBased" for awsGov.
 *  `api_key`   - (Optional) AWS user api-key (to be assumed by Dome9 - Required for awsGov but not for aws)
 
