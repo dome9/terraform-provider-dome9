@@ -19,6 +19,7 @@ type CloudAccountRequest struct {
 	OrganizationalUnitPath string                  `json:"organizationalUnitPath,omitempty"`
 	OrganizationalUnitName string                  `json:"organizationalUnitName,omitempty"`
 	LambdaScanner          bool                    `json:"lambdaScanner,omitempty"`
+	Vendor                 string                  `json:"vendor,omitempty"`
 }
 
 type AttachIamSafeRequest struct {
@@ -158,6 +159,10 @@ func (service *Service) GetAll() (*[]CloudAccountResponse, *http.Response, error
 
 func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
+	ven := body.Vendor
+	if ven != "aws" && ven != "awsgov" {
+		return nil, nil, errors.New("vendor must be aws/awsgov")
+	}
 	resp, err := service.Client.NewRequestDo("POST", cloudaccounts.RESTfulPathAWS, nil, body, v)
 	if err != nil {
 		return nil, nil, err
