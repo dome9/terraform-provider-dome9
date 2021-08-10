@@ -72,6 +72,7 @@ const (
 	ME_SOUTH_1          = "25"
 	AF_SOUTH_1          = "26"
 	EU_SOUTH_1          = "27"
+	AP_NORTHEAST_3      = "28"
 )
 
 // Azure consts
@@ -131,6 +132,7 @@ var AWSRegionsEnum = map[string]string{
 	"me_south_1":          ME_SOUTH_1,
 	"af_south_1":          AF_SOUTH_1,
 	"eu_south_1":          EU_SOUTH_1,
+	"ap_northeast_3":      AP_NORTHEAST_3,
 }
 
 var PermissionTrafficType = map[string]string{
