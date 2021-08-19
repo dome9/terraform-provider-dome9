@@ -310,6 +310,7 @@ func expandCloudAccountAWSRequest(d *schema.ResourceData) aws.CloudAccountReques
 		Name:                 d.Get("name").(string),
 		Credentials:          expandCloudAccountAWSCredentials(d),
 		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
+		Vendor:               "aws",
 	}
 }
 
