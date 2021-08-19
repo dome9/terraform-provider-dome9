@@ -1,0 +1,42 @@
+name: test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        env:
+          ATTACH_IAM_SAFE_GROUP_ARN: ${{ secrets.TEST_ATTACH_IAM_SAFE_GROUP_ARN }}
+          ATTACH_IAM_SAFE_POLICY_ARN: ${{ secrets.TEST_ATTACH_IAM_SAFE_POLICY_ARN }}
+          DOME9_ACCESS_ID: ${{ secrets.TEST_DOME9_ACCESS_ID }}
+          DOME9_SECRET_KEY: ${{ secrets.TEST_DOME9_SECRET_KEY }}
+          ORGANIZATIONAL_UNIT_NAME: ${{ secrets.TEST_ORGANIZATIONAL_UNIT_NAME }}
+          ARN: ${{ secrets.TEST_ROLE_ARN }}
+          ARN_UPDATE: ${{ secrets.TEST_ROLE_ARN_UPDATE }}
+          SECRET: ${{ secrets.TEST_AWS_SECRET }}
+          SUBSCRIPTION_ID: ${{ secrets.TEST_AZURE_SUBSCRIPTION_ID }}
+          TENANT_ID: ${{ secrets.TEST_AZURE_TENANT_ID }}
+          CLIENT_PASSWORD: ${{ secrets.TEST_AZURE_CLIENT_PASSWORD }}
+          AZURE_RESOURCE_GROUP: ${{ secrets.TEST_AZURE_RESOURCE_GROUP }}
+          PROJECT_ID: ${{ secrets.TEST_GCP_PROJECT_ID }}
+          PRIVATE_KEY: ${{ secrets.TEST_GCP_PRIVATE_KEY }}
+          PRIVATE_KEY_ID: ${{ secrets.TEST_GCP_PRIVATE_KEY_ID }}
+          CLIENT_EMAIL: ${{ secrets.TEST_GCP_CLIENT_EMAIL }}
+          CLIENT_ID: ${{ secrets.TEST_GCP_CLIENT_ID }}
+          CLIENT_X509_CERT_URL: ${{ secrets.TEST_GCP_CLIENT_X509_CERT_URL }}
+        run: go test -v ./...
