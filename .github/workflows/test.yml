@@ -21,6 +21,7 @@ jobs:
 
       - name: Test
         env:
+          TF_ACC: true
           ATTACH_IAM_SAFE_GROUP_ARN: ${{ secrets.TEST_ATTACH_IAM_SAFE_GROUP_ARN }}
           ATTACH_IAM_SAFE_POLICY_ARN: ${{ secrets.TEST_ATTACH_IAM_SAFE_POLICY_ARN }}
           DOME9_ACCESS_ID: ${{ secrets.TEST_DOME9_ACCESS_ID }}
