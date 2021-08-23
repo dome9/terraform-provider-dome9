@@ -94,7 +94,7 @@ func resourceCloudAccountAWS() *schema.Resource {
 									"region": {
 										Type:         schema.TypeString,
 										Required:     true,
-										ValidateFunc: validation.StringInSlice(providerconst.AWSRegions, true),
+										ValidateFunc: validation.StringInSlice(providerconst.AllAWSRegions, true),
 									},
 									"name": {
 										Type:     schema.TypeString,

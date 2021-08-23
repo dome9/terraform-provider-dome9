@@ -25,7 +25,7 @@ func srlDescriptorSchema() *schema.Schema {
 				"region": {
 					Type:         schema.TypeString,
 					Optional:     true,
-					ValidateFunc: validation.StringInSlice(providerconst.AWSRegions, true),
+					ValidateFunc: validation.StringInSlice(providerconst.AllAWSRegions, true),
 				},
 				"security_group_id": {
 					Type:     schema.TypeString,
