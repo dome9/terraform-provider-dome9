@@ -70,7 +70,7 @@ func resourceCloudAccountAWS() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The cloud account onboarding method. Should be set to 'RoleBased' for aws and 'UserBased' for awsGov",
+							Description: "The cloud account onboarding method. Should be set to 'RoleBased' for aws and 'UserBased' for awsGov & awsChina",
 						},
 						"is_read_only": {
 							Type:     schema.TypeBool,
@@ -351,8 +351,30 @@ func validateVendor(vendor string, credentials aws.CloudAccountCredentials, regi
 			return err
 		}
 		break
+	case "awschina":
+		_, err := validateAwsChinaVendor(credentials, regions)
+		if err != nil {
+			return err
+		}
+		break
 	}
+
 	return nil
+}
+
+func validateAwsChinaVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
+	awsChinaRegions := map[string]bool{"cn_northwest_1":true, "cn_north_1":true}
+	validate := checkRegions(regions, awsChinaRegions)
+
+	if !validate {
+		return validate, fmt.Errorf("awsChina vendor has an unsutibule regions")
+	}
+
+	if  credentials.Type != "UserBased" || len(credentials.ApiKey) == 0 || len(credentials.Secret) == 0 {
+		return false, fmt.Errorf("awsChina vendor has wrong credentials")
+	}
+
+	return true, nil
 }
 
 func validateAwsGovVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {

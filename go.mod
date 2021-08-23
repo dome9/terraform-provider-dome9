@@ -2,9 +2,7 @@ module github.com/terraform-providers/terraform-provider-dome9
 
 go 1.13
 
-replace (
-	github.com/dome9/dome9-sdk-go => ../dome9-sdk-go
-)
+replace github.com/dome9/dome9-sdk-go => ../dome9-sdk-go
 
 require (
 	github.com/dome9/dome9-sdk-go v1.10.0

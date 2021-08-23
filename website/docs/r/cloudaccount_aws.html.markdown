@@ -118,7 +118,7 @@ resource "dome9_cloudaccount_AWS" "test" {
 ```hcl
 resource "dome9_cloudaccount_awsgov" "test" {
   name  = "ACCOUNT NAME"
-  vendoe = "awsgov
+  vendoe = "awsgov"
   credentials  {
     api_key    = "API_KEY"
     secret = "SECRET"
@@ -134,6 +134,31 @@ resource "dome9_cloudaccount_awsgov" "test" {
       regions {
         new_group_behavior = "ReadOnly"
         region             = "us_gov_west_1"
+      }
+    }
+  }
+}
+```
+
+```hcl
+resource "dome9_cloudaccount_awschina" "test" {
+  name  = "ACCOUNT NAME"
+  vendoe = "awschina"
+  credentials  {
+    api_key    = "API_KEY"
+    secret = "SECRET"
+    type   = "UserBased"
+  }
+  organizational_unit_id = "ORGANIZATIONAL UNIT ID"
+  net_sec {
+    net_sec {
+      regions {
+        new_group_behavior = "ReadOnly"
+        region             = "cn-northwest-1"
+      }
+      regions {
+        new_group_behavior = "ReadOnly"
+        region             = "cn-north-1"
       }
     }
   }
