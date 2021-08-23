@@ -107,6 +107,10 @@ resource "dome9_cloudaccount_AWS" "test" {
       new_group_behavior = "ReadOnly"
       region             = "eu_south_1"
     }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_northeast_3"
+    }
   }
 }
 ```
