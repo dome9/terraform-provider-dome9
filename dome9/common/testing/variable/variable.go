@@ -4,12 +4,9 @@ package variable
 const (
 	CloudAccountAWSCreationResourceName    = "test_cloudaccount_aws"
 	CloudAccountAWSVendor                  = "aws"
-	CloudAccountAWSGOVVendor               = "awsgov"
 	CloudAccountAWSOriginalAccountName     = "original_cloud_account_name_before_change"
-	CloudAccountAWSGOVOriginalAccountName  = "original_cloud_account_GOV_name_before_change"
 	CloudAccountAWSUpdatedAccountName      = "updated_cloud_account_name"
 	CloudAccountAWSFetchedRegion           = "us_east_1"
-	CloudAccountAWSGOVFetchedRegion        = "us_gov_west_1"
 	CloudAccountAWSReadOnlyGroupBehavior   = "ReadOnly"
 	CloudAccountAWSFullManageGroupBehavior = "FullManage"
 )

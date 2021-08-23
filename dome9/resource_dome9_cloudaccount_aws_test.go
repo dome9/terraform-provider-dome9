@@ -35,22 +35,6 @@ func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountAWSGOVBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSOriginalAccountName, originalArn, ""),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountAWSExists(resourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountAWSGOVVendor),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "allow_read_only", "false"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "credentials.0.arn", originalArn),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAWSGOVOriginalAccountName),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.#", "1"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.#", fmt.Sprint(len(providerconst.AWSRegions))),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.0.region", variable.CloudAccountAWSGOVFetchedRegion),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.0.new_group_behavior", originalGroupBehavior),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.1.new_group_behavior", originalGroupBehavior),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.2.new_group_behavior", originalGroupBehavior),
-				),
-			},
-			{
 				Config: testAccCheckCloudAccountAWSBasic(resourceTypeAndName, generatedName, variable.CloudAccountAWSOriginalAccountName, originalArn, ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAWSExists(resourceTypeAndName, &cloudAccountResponse),
