@@ -356,8 +356,7 @@ func validateVendor(vendor string, credentials aws.CloudAccountCredentials, regi
 }
 
 func validateAwsGovVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
-	awsGovRegions := map[string]bool{"us_gov_east_1": true, "us_gov_west_1": true}
-	validate := checkRegions(regions, awsGovRegions)
+	validate := checkRegions(regions, providerconst.AWSGOVRegions)
 
 	if !validate {
 		return validate, fmt.Errorf("awsGov vendor has an unsutibule regions")
@@ -370,10 +369,7 @@ func validateAwsGovVendor(credentials aws.CloudAccountCredentials, regions []str
 }
 
 func validateAwsVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
-	awsRegions := map[string]bool{"us_east_1": true, "us_west_1": true, "eu_west_1": true, "ap_southeast_1": true, "ap_northeast_1": true, "us_west_2": true,
-		"sa_east_1": true, "ap_southeast_2": true, "eu_central_1": true, "ap_northeast_2": true, "ap_south_1": true, "us_east_2": true, "ca_central_1": true,
-		"eu_west_2": true, "eu_west_3": true, "eu_north_1": true, "ap_east_1": true, "me_south_1": true, "af_south_1": true, "eu_south_1": true}
-	validate := checkRegions(regions, awsRegions)
+		validate := checkRegions(regions, providerconst.AWSRegions)
 	if !validate {
 		return validate, fmt.Errorf("aws vendor has an unsutibule regions")
 	}
@@ -383,10 +379,15 @@ func validateAwsVendor(credentials aws.CloudAccountCredentials, regions []string
 	return true, nil
 }
 
-func checkRegions(regions []string, regionsToCompare map[string]bool) bool {
+func checkRegions(regions []string, regionsToCompare []string) bool {
 	for _, val := range regions {
-		_, ok := regionsToCompare[val]
-		if !ok {
+		flag := false
+		for _, region := range regionsToCompare {
+			if val == region {
+				flag = true
+			}
+		}
+		if !flag {
 			return false
 		}
 	}

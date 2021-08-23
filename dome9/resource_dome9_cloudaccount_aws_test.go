@@ -142,26 +142,6 @@ data "%s" "%s" {
 	)
 }
 
-func testAccCheckCloudAccountAWSGOVBasic(resourceTypeAndName, generatedName, resourceName, arn, additionalBlock string) string {
-	return fmt.Sprintf(`
-// awsgov cloud account creation
-%s
-
-data "%s" "%s" {
-  id = "${%s.id}"
-}
-
-`,
-		// aws cloud account
-		getCloudAccountAWSResourceHCL(generatedName, resourceName, arn, additionalBlock),
-
-		// data source variables
-		resourcetype.CloudAccountAWS,
-		generatedName,
-		resourceTypeAndName,
-	)
-}
-
 func getCloudAccountAWSResourceHCL(generatedName, resourceName, arn, additionalBlock string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
