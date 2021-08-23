@@ -141,3 +141,9 @@ const (
 	// 	update const
 	IAMSafeEntityProtectWithElevation = "ProtectWithElevation"
 )
+
+// service account entity resource
+const (
+	ServiceAccountName       = "serviceAccount"
+	ServiceAccountNameUpdate = "serviceAccountUpdate"
+)

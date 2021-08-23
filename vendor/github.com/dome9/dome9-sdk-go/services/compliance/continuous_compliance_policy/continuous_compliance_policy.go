@@ -49,12 +49,12 @@ func (service *Service) GetAll() (*[]ContinuousCompliancePolicyResponse, *http.R
 
 func (service *Service) Create(body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new([]ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest { body }, v)
+	resp, err := service.Client.NewRequestDo("POST", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest{body}, v)
 	if err != nil {
 		return nil, nil, err
 	}
 	policy := new(ContinuousCompliancePolicyResponse)
-	if len(*v) > 0{
+	if len(*v) > 0 {
 		policy = &(*v)[0]
 	}
 	return policy, resp, nil
@@ -62,12 +62,12 @@ func (service *Service) Create(body *ContinuousCompliancePolicyRequest) (*Contin
 
 func (service *Service) Update(body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new([]ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("PUT", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest { body }, v)
+	resp, err := service.Client.NewRequestDo("PUT", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest{body}, v)
 	if err != nil {
 		return nil, nil, err
 	}
 	policy := new(ContinuousCompliancePolicyResponse)
-	if len(*v) > 0{
+	if len(*v) > 0 {
 		policy = &(*v)[0]
 	}
 	return policy, resp, nil
