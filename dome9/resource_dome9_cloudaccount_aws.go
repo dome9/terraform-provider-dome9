@@ -363,8 +363,7 @@ func validateVendor(vendor string, credentials aws.CloudAccountCredentials, regi
 }
 
 func validateAwsChinaVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
-	awsChinaRegions := map[string]bool{"cn_northwest_1":true, "cn_north_1":true}
-	validate := checkRegions(regions, awsChinaRegions)
+	validate := checkRegions(regions, providerconst.AWSChinaRegions)
 
 	if !validate {
 		return validate, fmt.Errorf("awsChina vendor has an unsutibule regions")

@@ -15,7 +15,7 @@ This resource is used to onboard AWS cloud accounts to Dome9. This is the first 
 Basic usage:
 
 ```hcl
-resource "dome9_cloudaccount_AWS" "test" {
+resource "dome9_cloudaccount_aws" "test" {
   name  = "ACCOUNT NAME"
  
   credentials  {
@@ -141,7 +141,7 @@ resource "dome9_cloudaccount_aws" "test" {
 ```
 
 ```hcl
-resource "dome9_cloudaccount_awschina" "test" {
+resource "dome9_cloudaccount_aws" "test" {
   name  = "ACCOUNT NAME"
   vendoe = "awschina"
   credentials  {
