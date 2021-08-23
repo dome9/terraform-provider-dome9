@@ -116,7 +116,7 @@ resource "dome9_cloudaccount_AWS" "test" {
 ```
 
 ```hcl
-resource "dome9_cloudaccount_awsgov" "test" {
+resource "dome9_cloudaccount_aws" "test" {
   name  = "ACCOUNT NAME"
   vendoe = "awsgov"
   credentials  {

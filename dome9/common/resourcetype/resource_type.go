@@ -18,4 +18,5 @@ const (
 	AttachIAMSafeToAwsCloudAccount   = "dome9_attach_iam_safe"
 	User                             = "dome9_user"
 	IAMSafeEntity                    = "dome9_iam_safe_entity"
+	ServiceAccount                   = "dome9_service_account"
 )

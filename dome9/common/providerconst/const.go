@@ -81,6 +81,12 @@ var AzureSecurityGroupAccess = []string{"Allow", "Deny"}
 var AzureSecurityGroupProtocol = []string{"UDP", "TCP", "ANY"}
 var AzureSecurityGroupSourceScopeTypes = []string{"CIDR", "IPList", "Tag"}
 
+// The 21 regions Dome9 manages in AWS cloud account
+var AWSRegions = []string{"us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3"}
+// The 2 regions Dome9 manages in AWSGOV cloud account
+var AWSGOVRegions = []string{"us_gov_west_1", "us_gov_east_1"}
+// The 23 regions Dome9 manages in AWS & AWSGOV cloud account
+var AllAWSRegions = append(AWSGOVRegions, AWSRegions...)
 // AWSRegions The 25 regions Dome9 manages in AWS cloud account (3 for awsGov & 2 for awsChina)
 var AWSRegions = []string{"cn_northwest_1", "cn_north_1","us_gov_west_1", "us_gov_east_1", "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1"}
 var CloudVendors = []string{"aws", "azure", "google"}

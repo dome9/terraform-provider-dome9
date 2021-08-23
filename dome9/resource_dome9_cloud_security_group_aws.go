@@ -41,7 +41,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      "us_east_1",
-				ValidateFunc: validation.StringInSlice(providerconst.AWSRegions, true),
+				ValidateFunc: validation.StringInSlice(providerconst.AllAWSRegions, true),
 			},
 			// Always true in creation.
 			"is_protected": {
