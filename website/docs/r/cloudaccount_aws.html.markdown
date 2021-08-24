@@ -115,6 +115,31 @@ resource "dome9_cloudaccount_AWS" "test" {
 }
 ```
 
+```hcl
+resource "dome9_cloudaccount_aws" "test" {
+  name  = "ACCOUNT NAME"
+  vendoe = "awsgov
+  credentials  {
+    api_key    = "API_KEY"
+    secret = "SECRET"
+    type   = "UserBased"
+  }
+  organizational_unit_id = "ORGANIZATIONAL UNIT ID"
+  net_sec {
+    net_sec {
+      regions {
+        new_group_behavior = "ReadOnly"
+        region             = "us_gov_east_1"
+      }
+      regions {
+        new_group_behavior = "ReadOnly"
+        region             = "us_gov_west_1"
+      }
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -122,27 +147,28 @@ The following arguments are supported:
 * `name` - (Required) The name of AWS account in Dome9
 * `credentials` - (Required) The information needed for Dome9 System in order to connect to the AWS cloud account
 * `organizational_unit_id` - (Optional) The Organizational Unit that this cloud account will be attached to
+* `vendor` - (Optional) the default value for vendor is "aws" due to that you must add vendor field for aws gov with the value  "awsgov" 
 
 ### Credentials
 
 `credentials` has the following arguments:
-
-* `arn` - (Required) AWS Role ARN (to be assumed by Dome9)
-* `secret` - (Required) The AWS role External ID (Dome9  will have to use this secret in order to assume the role)
-* `type` - (Required) The cloud account onboarding method. Set to "RoleBased".
+*  `arn`       - (Optional) AWS Role ARN (to be assumed by Dome9 - Required for AWS but not for awsGov)
+*  `secret`    - (Required) The AWS role External ID for AWS(RoleBased) and user secret key for awsGov(Dome9  will have to use this secret)
+*  `type`      - (Required) The cloud account onboarding method. Set to "RoleBased" for aws account and to "userBased" for awsGov.
+*  `api_key`   - (Optional) AWS user api-key (to be assumed by Dome9 - Required for awsGov but not for aws)
 
 ### Network security configuration
 
 `net_sec` has the these arguments:
 
 * `Regions` - (Required) list of the supported regions, and their configuration:
-    * `new_group_behavior` - (Required) The network security configuration. Select "ReadOnly", "FullManage", or "Reset".
-    * `region` - (Required) AWS region, in AWS format (e.g., "us-east-1")
+* `new_group_behavior` - (Required) The network security configuration. Select "ReadOnly", "FullManage", or "Reset".
+* `region` - (Required) AWS region, in AWS format (e.g., "us-east-1")
 
 ## Attributes Reference
 
 * `id` - The id of the account in Dome9.
-* `vendor` - The cloud provider ("AWS").
+* `vendor` - The cloud provider ("aws/awsgov").
 * `external_account_number` - The AWS account number.
 * `is_fetching_suspended` - Fetching suspending status.
 * `creation_date` - Date the account was onboarded to Dome9.

@@ -232,7 +232,7 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 										Type:         schema.TypeString,
 										Required:     true,
 										ForceNew:     true,
-										ValidateFunc: validation.StringInSlice(providerconst.AWSRegions, true),
+										ValidateFunc: validation.StringInSlice(providerconst.AllAWSRegions, true),
 									},
 								},
 							},

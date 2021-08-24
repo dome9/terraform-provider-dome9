@@ -21,7 +21,7 @@ func TestAccDataSourceServiceAccountBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckServiceAccountBasic(resourceTypeAndName, generatedName, "test", roleHCL, roleTypeAndName),
-				Check: resource.ComposeTestCheckFunc( 
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "name", resourceTypeAndName, "name"),
 					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", "test"),
 				),

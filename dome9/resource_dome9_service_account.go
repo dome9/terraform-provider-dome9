@@ -46,7 +46,7 @@ func resourceServiceAccountCreate(d *schema.ResourceData, meta interface{}) erro
 		roleIds = append(roleIds, int64(i.(int)))
 	}
 	req := serviceaccounts.ServiceAccountRequest{
-		Name: d.Get("name").(string),
+		Name:    d.Get("name").(string),
 		RoleIds: roleIds,
 	}
 	log.Printf("[INFO] Creating service account request\n%+v\n", req)
@@ -95,8 +95,8 @@ func resourceServiceAccountUpdate(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	req := serviceaccounts.UpdateServiceAccountRequest{
-		Name: d.Get("name").(string),
-		Id: d.Id(),
+		Name:    d.Get("name").(string),
+		Id:      d.Id(),
 		RoleIds: roleIds,
 	}
 
