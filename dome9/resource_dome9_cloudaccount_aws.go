@@ -369,7 +369,7 @@ func validateAwsChinaVendor(credentials aws.CloudAccountCredentials, regions []s
 		return validate, fmt.Errorf("awsChina vendor has an unsutibule regions")
 	}
 
-	if  credentials.Type != "UserBased" || len(credentials.ApiKey) == 0 || len(credentials.Secret) == 0 {
+	if credentials.Type != "UserBased" || len(credentials.ApiKey) == 0 || len(credentials.Secret) == 0 {
 		return false, fmt.Errorf("awsChina vendor has wrong credentials")
 	}
 
@@ -390,7 +390,7 @@ func validateAwsGovVendor(credentials aws.CloudAccountCredentials, regions []str
 }
 
 func validateAwsVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
-		validate := checkRegions(regions, providerconst.AWSRegions)
+	validate := checkRegions(regions, providerconst.AWSRegions)
 	if !validate {
 		return validate, fmt.Errorf("aws vendor has an unsutibule regions")
 	}

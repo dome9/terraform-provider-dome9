@@ -62,7 +62,7 @@ func TestAccResourceCloudAccountAWSBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "net_sec.0.regions.2.new_group_behavior", originalGroupBehavior),
 				),
 			},
-		}, 
+		},
 	})
 }
 
