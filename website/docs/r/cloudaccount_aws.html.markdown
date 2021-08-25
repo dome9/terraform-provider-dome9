@@ -154,11 +154,11 @@ resource "dome9_cloudaccount_aws" "test" {
     net_sec {
       regions {
         new_group_behavior = "ReadOnly"
-        region             = "cn-northwest-1"
+        region             = "cn_northwest_1"
       }
       regions {
         new_group_behavior = "ReadOnly"
-        region             = "cn-north-1"
+        region             = "cn_north_1"
       }
     }
   }
