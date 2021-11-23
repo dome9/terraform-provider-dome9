@@ -40,4 +40,6 @@ jobs:
           CLIENT_EMAIL: ${{ secrets.TEST_GCP_CLIENT_EMAIL }}
           CLIENT_ID: ${{ secrets.TEST_GCP_CLIENT_ID }}
           CLIENT_X509_CERT_URL: ${{ secrets.TEST_GCP_CLIENT_X509_CERT_URL }}
+          ALIBABA_ACCESS_KEY: ${{ secrets.TEST_ALIBABA_ACCESS_KEY }}
+          ALIBABA_ACCESS_SECRET: ${{ secrets.TEST_ALIBABA_ACCESS_SECRET }}
         run: go test -v -timeout 2400s ./...
