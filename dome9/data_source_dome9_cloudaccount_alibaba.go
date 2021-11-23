@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -28,6 +29,18 @@ func dataSourceCloudAccountAlibaba() *schema.Resource {
 			"creation_date": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+			"credentials": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"access_key": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
 			},
 			"organizational_unit_id": {
 				Type:     schema.TypeString,
@@ -66,9 +79,16 @@ func dataSourceAlibabaRead(d *schema.ResourceData, meta interface{}) error {
 	// Converting the timestamp to string in the format yyyy-MM-dd HH:mm:ss
 	_ = d.Set("creation_date", alibabaCloudAccount.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("organizational_unit_id", alibabaCloudAccount.OrganizationalUnitID)
+	_ = d.Set("credentials", setCredentials(alibabaCloudAccount.Credentials))
 	_ = d.Set("organizational_unit_path", alibabaCloudAccount.OrganizationalUnitPath)
 	_ = d.Set("organizational_unit_name", alibabaCloudAccount.OrganizationalUnitName)
 	_ = d.Set("vendor", alibabaCloudAccount.Vendor)
 
 	return nil
+}
+
+func setCredentials(credentials alibaba.CloudAccountCredentialsResponse) map[string]interface{}{
+	return map[string]interface{}{
+		"access_key": credentials.AccessKey,
+	}
 }

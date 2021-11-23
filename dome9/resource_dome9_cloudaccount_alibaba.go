@@ -24,7 +24,7 @@ func resourceCloudAccountAlibaba() *schema.Resource {
 				Required: true,
 			},
 			"credentials": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeMap,
 				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -148,12 +148,12 @@ func resourceCloudAccountAlibabaUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("credentials.0.access_key") || d.HasChange("credentials.0.access_secret") {
+	if d.HasChange("credentials.access_key") || d.HasChange("credentials.access_secret") {
 		log.Println("The credentials has been changed")
 
 		if resp, _, err := d9Client.cloudaccountAlibaba.UpdateCredentials(d.Id(), alibaba.CloudAccountCredentialsRequest{
-			AccessKey:    d.Get("credentials.0.access_key").(string),
-			AccessSecret: d.Get("credentials.0.access_secret").(string),
+			AccessKey:    d.Get("credentials.access_key").(string),
+			AccessSecret: d.Get("credentials.access_secret").(string),
 		}); err != nil {
 			return err
 		} else {
@@ -168,8 +168,8 @@ func expandCloudAccountAlibabaRequest(d *schema.ResourceData) alibaba.CloudAccou
 	req := alibaba.CloudAccountRequest{
 		Name: d.Get("name").(string),
 		Credentials: alibaba.CloudAccountCredentialsRequest{
-			AccessKey:    d.Get("credentials.0.access_key").(string),
-			AccessSecret: d.Get("credentials.0.access_secret").(string),
+			AccessKey:    d.Get("credentials.access_key").(string),
+			AccessSecret: d.Get("credentials.access_secret").(string),
 		},
 		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 	}

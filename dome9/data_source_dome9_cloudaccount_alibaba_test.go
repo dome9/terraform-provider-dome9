@@ -26,7 +26,13 @@ func TestAccDataSourceCloudAccountAlibabaBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "name", resourceTypeAndName, "name"),
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "account_id", resourceTypeAndName, "account_id"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "alibaba_account_id", resourceTypeAndName, "alibaba_account_id"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "organizational_unit_id", resourceTypeAndName, "organizational_unit_id"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "credentials", resourceTypeAndName, "credentials"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "organizational_unit_path", resourceTypeAndName, "organizational_unit_path"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "organizational_unit_name", resourceTypeAndName, "organizational_unit_name"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "vendor", resourceTypeAndName, "vendor"),
+
 				),
 			},
 		},
