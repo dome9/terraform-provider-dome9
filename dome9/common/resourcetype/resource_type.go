@@ -2,6 +2,7 @@ package resourcetype
 
 // dome9 Types
 const (
+	CloudAccountAlibaba              = "dome9_cloudaccount_alibaba"
 	CloudAccountAWS                  = "dome9_cloudaccount_aws"
 	CloudAccountAzure                = "dome9_cloudaccount_azure"
 	CloudAccountGCP                  = "dome9_cloudaccount_gcp"

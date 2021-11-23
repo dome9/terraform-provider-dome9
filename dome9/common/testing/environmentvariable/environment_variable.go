@@ -5,6 +5,12 @@ const (
 	OrganizationalUnitName = "ORGANIZATIONAL_UNIT_NAME"
 )
 
+// Alibaba environment variable
+const (
+	CloudAccountAlibabaEnvVarAccessKey    = "ALIBABA_ACCESS_KEY"
+	CloudAccountAlibabaEnvVarAccessSecret = "ALIBABA_ACCESS_SECRET"
+)
+
 // AWS environment variable
 const (
 	CloudAccountAWSEnvVarArn        = "ARN"

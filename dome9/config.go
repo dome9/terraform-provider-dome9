@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
@@ -31,6 +32,7 @@ type Client struct {
 	cloudaccountAzure                azure.Service
 	cloudaccountGCP                  gcp.Service
 	cloudaccountKubernetes           k8s.Service
+	cloudaccountAlibaba              alibaba.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
 	ruleSet                          rulebundles.Service
@@ -56,6 +58,7 @@ func (c *Config) Client() (*Client, error) {
 
 	client := &Client{
 		iplist:                           *iplist.New(config),
+		cloudaccountAlibaba:              *alibaba.New(config),
 		cloudaccountAWS:                  *aws.New(config),
 		cloudaccountAzure:                *azure.New(config),
 		cloudaccountGCP:                  *gcp.New(config),

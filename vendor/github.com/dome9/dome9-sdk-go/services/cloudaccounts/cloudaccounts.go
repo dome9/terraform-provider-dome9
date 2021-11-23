@@ -1,10 +1,11 @@
 package cloudaccounts
 
 const (
-	RESTfulPathAWS   = "cloudaccounts"
-	RESTfulPathAzure = "AzureCloudAccount"
-	RESTfulPathGCP   = "GoogleCloudAccount"
-	RESTfulPathK8S   = "KubernetesAccount"
+	RESTfulPathAWS     = "cloudaccounts"
+	RESTfulPathAzure   = "AzureCloudAccount"
+	RESTfulPathGCP     = "GoogleCloudAccount"
+	RESTfulPathK8S     = "KubernetesAccount"
+	RESTfulPathAlibaba = "AlibabaCloudAccount"
 )
 
 // AWS service paths
@@ -48,6 +49,13 @@ const (
 	RESTfulPathK8SAdmissionControl = "admission-control"
 	//image-assurance
 	RESTfulPathK8SImageAssurance = "vulnerabilityAssessment"
+)
+
+// Alibaba service paths
+const (
+	RESTfulServicePathAlibabaName               = "AccountName"
+	RESTfulServicePathAlibabaOrganizationalUnit = "organizationalUnit"
+	RESTfulServicePathAlibabaCredentials        = "Credentials"
 )
 
 type QueryParameters struct {
