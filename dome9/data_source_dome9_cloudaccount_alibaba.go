@@ -21,7 +21,7 @@ func dataSourceCloudAccountAlibaba() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"account_id": {
+			"alibaba_account_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -62,7 +62,7 @@ func dataSourceAlibabaRead(d *schema.ResourceData, meta interface{}) error {
 
 	d.SetId(alibabaCloudAccount.ID)
 	_ = d.Set("name", alibabaCloudAccount.Name)
-	_ = d.Set("account_id", alibabaCloudAccount.AccountId)
+	_ = d.Set("alibaba_account_id", alibabaCloudAccount.AlibabaAccountId)
 	// Converting the timestamp to string in the format yyyy-MM-dd HH:mm:ss
 	_ = d.Set("creation_date", alibabaCloudAccount.CreationDate.Format("2006-01-02 15:04:05"))
 	_ = d.Set("organizational_unit_id", alibabaCloudAccount.OrganizationalUnitID)

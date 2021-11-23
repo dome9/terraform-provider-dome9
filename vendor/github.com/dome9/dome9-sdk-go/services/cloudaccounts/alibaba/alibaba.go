@@ -8,32 +8,30 @@ import (
 )
 
 type CloudAccountRequest struct {
-	Name                   string                  `json:"name,omitempty"`
-	AccountId              string                  `json:"accountId,omitempty"`
-	Credentials            CloudAccountCredentials `json:"credentials,omitempty"`
-	Error                  string                  `json:"error,omitempty"`
-	CreationDate           time.Time               `json:"creationDate,omitempty"`
-	OrganizationalUnitID   string                  `json:"organizationalUnitId,omitempty"`
-	OrganizationalUnitPath string                  `json:"organizationalUnitPath,omitempty"`
-	OrganizationalUnitName string                  `json:"organizationalUnitName,omitempty"`
+	Name                 string                         `json:"name,omitempty"`
+	Credentials          CloudAccountCredentialsRequest `json:"credentials,omitempty"`
+	OrganizationalUnitID string                         `json:"organizationalUnitId,omitempty"`
 }
 
 type CloudAccountResponse struct {
-	ID                     string                  `json:"id"`
-	Name                   string                  `json:"name"`
-	AccountId              string                  `json:"accountId"`
-	Credentials            CloudAccountCredentials `json:"credentials"`
-	Error                  string                  `json:"error,omitempty"`
-	CreationDate           time.Time               `json:"creationDate"`
-	OrganizationalUnitID   string                  `json:"organizationalUnitId,omitempty"`
-	OrganizationalUnitPath string                  `json:"organizationalUnitPath"`
-	OrganizationalUnitName string                  `json:"organizationalUnitName"`
-	Vendor                 string                  `json:"vendor"`
+	ID                     string                          `json:"id"`
+	Name                   string                          `json:"name"`
+	CreationDate           time.Time                       `json:"creationDate"`
+	AlibabaAccountId       string                          `json:"alibabaAccountId"`
+	Credentials            CloudAccountCredentialsResponse `json:"credentials"`
+	OrganizationalUnitID   string                          `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitPath string                          `json:"organizationalUnitPath"`
+	OrganizationalUnitName string                          `json:"organizationalUnitName"`
+	Vendor                 string                          `json:"vendor"`
 }
 
-type CloudAccountCredentials struct {
-	AccessKey      string `json:"accessKey,omitempty"`
-	AccessSecret   string `json:"accessSecret,omitempty"`
+type CloudAccountCredentialsRequest struct {
+	AccessKey    string `json:"accessKey,omitempty"`
+	AccessSecret string `json:"accessSecret,omitempty"`
+}
+
+type CloudAccountCredentialsResponse struct {
+	AccessKey string `json:"accessKey,omitempty"`
 }
 
 type CloudAccountUpdateNameRequest struct {
@@ -42,11 +40,6 @@ type CloudAccountUpdateNameRequest struct {
 
 type CloudAccountUpdateOrganizationalIDRequest struct {
 	OrganizationalUnitID string `json:"organizationalUnitId,omitempty"`
-}
-
-type CloudAccountUpdateCredentialsRequest struct {
-	ApplicationID  string `json:"applicationId,omitempty"`
-	ApplicationKey string `json:"applicationKey,omitempty"`
 }
 
 func (service *Service) GetAll() (*[]CloudAccountResponse, *http.Response, error) {
@@ -117,7 +110,7 @@ func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdat
 	return v, resp, nil
 }
 
-func (service *Service) UpdateCredentials(id string, body CloudAccountUpdateCredentialsRequest) (*CloudAccountResponse, *http.Response, error) {
+func (service *Service) UpdateCredentials(id string, body CloudAccountCredentialsRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAlibaba, id, cloudaccounts.RESTfulServicePathAlibabaCredentials)
 	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)

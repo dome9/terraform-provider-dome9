@@ -128,8 +128,10 @@ data "%s" "%s" {
 func getCloudAccountAlibabaResourceHCL(cloudAccountName, generatedAName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
+	credentials {
 	access_key    = "%s"
 	access_secret = "%s"
+}
 	name          = "%s"
 }
 `,

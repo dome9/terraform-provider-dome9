@@ -1,10 +1,8 @@
 package dome9
 
 import (
-	"log"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
@@ -25,20 +23,28 @@ func resourceCloudAccountAlibaba() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"access_key": {
-				Type:     schema.TypeString,
+			"credentials": {
+				Type:     schema.TypeList,
 				Required: true,
-			},
-			"access_secret": {
-				Type:      schema.TypeString,
-				Required:  true,
-				Sensitive: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"access_key": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"access_secret": {
+							Type:      schema.TypeString,
+							Required:  true,
+							Sensitive: true,
+						},
+					},
+				},
 			},
 			"vendor": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"account_id": {
+			"alibaba_account_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -94,7 +100,7 @@ func resourceCloudAccountAlibabaRead(d *schema.ResourceData, meta interface{}) e
 
 	d.SetId(resp.ID)
 	_ = d.Set("name", resp.Name)
-	_ = d.Set("account_id", resp.AccountId)
+	_ = d.Set("alibaba_account_id", resp.AlibabaAccountId)
 	_ = d.Set("vendor", resp.Vendor)
 	_ = d.Set("creation_date", resp.CreationDate)
 	_ = d.Set("organizational_unit_id", resp.OrganizationalUnitID)
@@ -130,19 +136,6 @@ func resourceCloudAccountAlibabaUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("access_key") || d.HasChange("access_secret") {
-		log.Println("The credentials has been changed")
-
-		if resp, _, err := d9Client.cloudaccountAlibaba.UpdateCredentials(d.Id(), alibaba.CloudAccountUpdateCredentialsRequest{
-			ApplicationID:  d.Get("access_key").(string),
-			ApplicationKey: d.Get("access_secret").(string),
-		}); err != nil {
-			return err
-		} else {
-			log.Printf("resourceCloudAccountAlibabaUpdate response is: %+v\n", resp)
-		}
-	}
-
 	if d.HasChange("organizational_unit_id") {
 		log.Println("The organizational unit id has been changed")
 
@@ -155,26 +148,30 @@ func resourceCloudAccountAlibabaUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
+	if d.HasChange("credentials.0.access_key") || d.HasChange("credentials.0.access_secret") {
+		log.Println("The credentials has been changed")
+
+		if resp, _, err := d9Client.cloudaccountAlibaba.UpdateCredentials(d.Id(), alibaba.CloudAccountCredentialsRequest{
+			AccessKey:    d.Get("credentials.0.access_key").(string),
+			AccessSecret: d.Get("credentials.0.access_secret").(string),
+		}); err != nil {
+			return err
+		} else {
+			log.Printf("resourceCloudAccountAlibabaUpdate response is: %+v\n", resp)
+		}
+	}
+
 	return nil
 }
 
 func expandCloudAccountAlibabaRequest(d *schema.ResourceData) alibaba.CloudAccountRequest {
 	req := alibaba.CloudAccountRequest{
-		Name:           d.Get("name").(string),
-		AccountId:       d.Get("account_id").(string),
-		Credentials: alibaba.CloudAccountCredentials{
-			AccessKey:       d.Get("access_key").(string),
-			AccessSecret: d.Get("access_secret").(string),
+		Name: d.Get("name").(string),
+		Credentials: alibaba.CloudAccountCredentialsRequest{
+			AccessKey:    d.Get("credentials.0.access_key").(string),
+			AccessSecret: d.Get("credentials.0.access_secret").(string),
 		},
-		OrganizationalUnitID:   d.Get("organizational_unit_id").(string),
-		OrganizationalUnitPath: d.Get("organizational_unit_path").(string),
-		OrganizationalUnitName: d.Get("organizational_unit_name").(string),
-	}
-
-	if r, ok := d.GetOk("creation_date"); ok {
-		formatTemplate := "2006-01-02 15:04:05"
-		creationDateTime, _ := time.Parse(formatTemplate, r.(string))
-		req.CreationDate = creationDateTime
+		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
 	}
 	return req
 }
