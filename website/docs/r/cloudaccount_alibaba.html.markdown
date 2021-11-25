@@ -31,16 +31,16 @@ resource "dome9_cloudaccount_alibaba" "test" {
 The following arguments are supported:
 
 * `name` - (Required) The name of the Alibaba account in Dome9
-* `credentials` - Has the following arguments:
-  * `access_key` - The access key for the Alibaba account.
-  * `access_secret` - The access secret for the Alibaba account.
+* `credentials` - (Required) Has the following arguments:
+  * `access_key` - (Required) The access key for the Alibaba account.
+  * `access_secret` - (Required) The access secret for the Alibaba account.
+* `organizational_unit_id` - (optional) Organizational unit id.
 
 ## Attributes Reference
 
 * `vendor` - The cloud provider ("Alibaba")
 * `alibaba_account_id` - Alibaba account id.
 * `creation_date` - Date the account was onboarded to Dome9
-* `organizational_unit_id` - Organizational unit id.
 * `organizational_unit_path` - Organizational unit path
 * `organizational_unit_name` - Organizational unit name
 
