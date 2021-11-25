@@ -37,6 +37,7 @@ func Provider() terraform.ResourceProvider {
 				resource formation: provider-resourcename-subresource
 			*/
 			resourcetype.IPList:                           resourceIpList(),
+			resourcetype.CloudAccountAlibaba:              resourceCloudAccountAlibaba(),
 			resourcetype.CloudAccountAWS:                  resourceCloudAccountAWS(),
 			resourcetype.CloudAccountGCP:                  resourceCloudAccountGCP(),
 			resourcetype.CloudAccountAzure:                resourceCloudAccountAzure(),
@@ -57,6 +58,7 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
 			resourcetype.IPList:                           dataSourceIpList(),
+			resourcetype.CloudAccountAlibaba:              dataSourceCloudAccountAlibaba(),
 			resourcetype.CloudAccountAWS:                  dataSourceCloudAccountAWS(),
 			resourcetype.CloudAccountGCP:                  dataSourceCloudAccountGCP(),
 			resourcetype.CloudAccountAzure:                dataSourceCloudAccountAzure(),

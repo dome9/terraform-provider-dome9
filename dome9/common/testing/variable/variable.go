@@ -1,5 +1,12 @@
 package variable
 
+// alibaba resource/data source
+const (
+	CloudAccountAlibabaCreationResourceName = "test_cloudaccount_alibaba"
+	CloudAccountAlibabaUpdatedAccountName   = "updated_cloud_account_name"
+	CloudAccountAlibabaVendor               = "alibaba"
+)
+
 // aws resource/data source
 const (
 	CloudAccountAWSCreationResourceName    = "test_cloudaccount_aws"
