@@ -1,4 +1,4 @@
-resource "dome9_users" "users_sg" {
+resource "dome9_user" "users_sg" {
   email                = "EMAIL"
   first_name           = "FIRST_NAME"
   last_name            = "LAST_NAME"
