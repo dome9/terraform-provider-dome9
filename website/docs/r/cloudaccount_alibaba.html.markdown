@@ -2,13 +2,13 @@
 layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_cloudaccount_alibaba"
 sidebar_current: "docs-resource-dome9-cloudaccount-alibaba"
-description: |-
-  Onboard Alibaba cloud account
+description: |- Onboard Alibaba cloud account
 ---
 
 # dome9_cloudaccount_alibaba
 
-This resource is used to onboard Alibaba cloud accounts to Dome9. This is the first and pre-requisite step in order to apply  Dome9 features, such as compliance testing, on the account.
+This resource is used to onboard Alibaba cloud accounts to Dome9. This is the first and pre-requisite step in order to
+apply Dome9 features, such as compliance testing, on the account.
 
 ## Example Usage
 
@@ -16,13 +16,11 @@ Basic usage:
 
 ```hcl
 resource "dome9_cloudaccount_alibaba" "test" {
-  name                   = "NAME"
-  operation_mode         = "OPERATION MODE"
-  subscription_id        = "SUBSCRIPTION ID"
-  tenant_id              = "TENANT ID"
-  client_id              = "CLIENT ID"
-  client_password        = "CLIENT PASSWORD"
-  organizational_unit_id = "ORGANIZATIONAL UNIT ID"
+  name        = "NAME"
+  credentials = {
+    access_key    = "ACCESS_KEY"
+    access_secret = "ACCESS_SECRET"
+  }
 }
 ```
 
@@ -32,8 +30,8 @@ The following arguments are supported:
 
 * `name` - (Required) The name of the Alibaba account in Dome9
 * `credentials` - (Required) Has the following arguments:
-  * `access_key` - (Required) The access key for the Alibaba account.
-  * `access_secret` - (Required) The access secret for the Alibaba account.
+    * `access_key` - (Required) The access key for the Alibaba account.
+    * `access_secret` - (Required) The access secret for the Alibaba account.
 * `organizational_unit_id` - (optional) Organizational unit id.
 
 ## Attributes Reference
@@ -46,7 +44,7 @@ The following arguments are supported:
 
 ## Import
 
-Alibaba cloud account can be imported; use `<Alibaba CLOUD ACCOUNT ID>` as the import ID. 
+Alibaba cloud account can be imported; use `<Alibaba CLOUD ACCOUNT ID>` as the import ID.
 
 For example:
 
