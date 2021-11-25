@@ -42,7 +42,7 @@ The following arguments are supported:
 * `creation_date` - Date the account was onboarded to Dome9
 * `organizational_unit_path` - Organizational unit path
 * `organizational_unit_name` - Organizational unit name
-*`organizational_unit_id` - Organizational unit id.
+* `organizational_unit_id` - Organizational unit id.
 
 ## Import
 
