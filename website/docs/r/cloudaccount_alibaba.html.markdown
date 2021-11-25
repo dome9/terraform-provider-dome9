@@ -36,13 +36,13 @@ The following arguments are supported:
 
 ## Attributes Reference
 
-* `name` - (Required) The name of the Alibaba account in Dome9
+* `name` - The name of the Alibaba account in Dome9
 * `vendor` - The cloud provider ("Alibaba")
 * `alibaba_account_id` - Alibaba account id.
 * `creation_date` - Date the account was onboarded to Dome9
 * `organizational_unit_path` - Organizational unit path
 * `organizational_unit_name` - Organizational unit name
-*`organizational_unit_id` - (optional) Organizational unit id.
+*`organizational_unit_id` - Organizational unit id.
 
 ## Import
 
