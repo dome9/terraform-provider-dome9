@@ -31,7 +31,7 @@ resource "dome9_cloudaccount_azure" "test" {
 The following arguments are supported:
 
 * `name` - (Required) The name of the Azure account in Dome9
-* `operation_mode` - (Required) Dome9 operation mode for the Azure account ("Read-Only" or "Managed")
+* `operation_mode` - (Required) Dome9 operation mode for the Azure account ("Read" or "Manage")
 * `subscription_id` - (Required) The Azure subscription id for account
 * `tenant_id` - (Required) The Azure tenant id
 * `client_id` - (Required) Azure account id

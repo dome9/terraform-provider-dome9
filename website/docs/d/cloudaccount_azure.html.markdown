@@ -31,7 +31,7 @@ In addition to all arguments above, the following attributes are exported:
 * `name` - Account name (in Dome9).
 * `subscription_id` - Azure subscription id for account.
 * `tenant_id` - Azure tenant id.
-* `operation_mode` - Dome9 operation mode for the Azure account (Read-Only or Managed).
+* `operation_mode` - Dome9 operation mode for the Azure account ("Read" or "Manage")
 * `vendor` - The cloud provider (Azure).
 * `creation_date` - Date Azure account was onboarded to a Dome9 account.
 * `organizational_unit_id` - Organizational unit id.
