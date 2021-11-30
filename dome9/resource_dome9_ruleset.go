@@ -39,6 +39,7 @@ func resourceRuleSet() *schema.Resource {
 			"language": {
 				Type:     schema.TypeString,
 				Required: true,
+				Default:  "en",
 			},
 			"hide_in_compliance": {
 				Type:     schema.TypeBool,
@@ -62,16 +63,16 @@ func resourceRuleSet() *schema.Resource {
 			},
 			"rules": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"logic": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"severity": {
 							Type:     schema.TypeString,
