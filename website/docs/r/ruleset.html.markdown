@@ -54,6 +54,7 @@ The `rules` (Required) supports the following arguments:
 * `logic` - (Required) Rule GSL logic. This is the text of the rule, using Dome9 GSL syntax.
 * `severity` - (Optional) Rule severity (Default: "Low").
 * `description` - (Optional) Rule description.
+* `remediation` - (Optional) Rule remediation.
 * `compliance_tag` - (Optional) A reference to a compliance standard.
 * `domain` - (Optional) Rule domain.
 * `priority` - (Optional) Rule priority.
