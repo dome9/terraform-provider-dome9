@@ -53,5 +53,6 @@ The `rules` supports the following attributes:
 * `priority` - Rule priority.
 * `control_title` - Rule control title.
 * `rule_id` - Rule id.
+* `Category` - Rule category.
 * `logic_hash` - Rule logic hash.
 * `is_default` - is a default rule (Default: "false").

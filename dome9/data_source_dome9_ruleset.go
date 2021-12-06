@@ -15,31 +15,7 @@ func dataSourceRuleSet() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"cloud_vendor": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"language": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"hide_in_compliance": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"is_template": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"min_feature_tier": {
+			"account_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -49,6 +25,58 @@ func dataSourceRuleSet() *schema.Resource {
 			},
 			"updated_time": {
 				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"description": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"is_template": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"hide_in_compliance": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"min_feature_tier": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"section": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"tooltip_text": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"show_bundle": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"system_bundle": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"cloud_vendor": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"version": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"language": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"rules_count": {
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"rules": {
@@ -96,6 +124,10 @@ func dataSourceRuleSet() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"category": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"logic_hash": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -123,15 +155,22 @@ func dataSourceRuleSetRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.SetId(strconv.Itoa(resp.ID))
-	_ = d.Set("name", resp.Name)
-	_ = d.Set("description", resp.Description)
-	_ = d.Set("cloud_vendor", resp.CloudVendor)
-	_ = d.Set("language", resp.Language)
-	_ = d.Set("hide_in_compliance", resp.HideInCompliance)
-	_ = d.Set("is_template", resp.IsTemplate)
-	_ = d.Set("min_feature_tier", resp.MinFeatureTier)
+	_ = d.Set("account_id", resp.AccountID)
 	_ = d.Set("created_time", resp.CreatedTime)
 	_ = d.Set("updated_time", resp.UpdatedTime)
+	_ = d.Set("name", resp.Name)
+	_ = d.Set("description", resp.Description)
+	_ = d.Set("is_template", resp.IsTemplate)
+	_ = d.Set("hide_in_compliance", resp.HideInCompliance)
+	_ = d.Set("min_feature_tier", resp.MinFeatureTier)
+	_ = d.Set("section", resp.Section)
+	_ = d.Set("tooltip_text", resp.TooltipText)
+	_ = d.Set("show_bundle", resp.ShowBundle)
+	_ = d.Set("system_bundle", resp.SystemBundle)
+	_ = d.Set("cloud_vendor", resp.CloudVendor)
+	_ = d.Set("version", resp.Version)
+	_ = d.Set("language", resp.Language)
+	_ = d.Set("rules_count", resp.RulesCount)
 
 	if err := d.Set("rules", flattenRules(resp.Rules)); err != nil {
 		return err

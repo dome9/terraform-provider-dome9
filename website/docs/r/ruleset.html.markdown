@@ -48,7 +48,7 @@ The following arguments are supported:
 
 ### Rules 
 
-The `rules` (Required) supports the following arguments:
+The `rules` (Optional) supports the following arguments:
     
 * `name` - (Required) Rule name.
 * `logic` - (Required) Rule GSL logic. This is the text of the rule, using Dome9 GSL syntax.
@@ -60,6 +60,7 @@ The `rules` (Required) supports the following arguments:
 * `priority` - (Optional) Rule priority.
 * `control_title` - (Optional) Rule control title.
 * `rule_id` - (Optional) Rule id.
+* `Category` - (Optional) Rule category.
 * `is_default` - (Optional) is a default rule (Default: "false").
 
 

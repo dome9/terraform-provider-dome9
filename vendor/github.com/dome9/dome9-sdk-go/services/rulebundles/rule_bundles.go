@@ -3,10 +3,11 @@ package rulebundles
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 const (
-	ruleBundleResourcePath = "CompliancePolicy"
+	ruleBundleResourcePath = "Compliance/Ruleset"
 )
 
 type RuleBundleRequest struct {
@@ -42,24 +43,25 @@ type RuleBundleResponse struct {
 }
 
 type Rule struct {
-	Name          string `json:"name,omitempty"`
-	Severity      string `json:"severity,omitempty"`
-	Logic         string `json:"logic,omitempty"`
-	Description   string `json:"description,omitempty"`
-	Remediation   string `json:"remediation,omitempty"`
-	ComplianceTag string `json:"complianceTag,omitempty"`
-	Domain        string `json:"domain,omitempty"`
-	Priority      string `json:"priority,omitempty"`
-	ControlTitle  string `json:"controlTitle,omitempty"`
-	RuleID        string `json:"ruleId,omitempty"`
-	LogicHash     string `json:"logicHash,omitempty"`
-	IsDefault     bool   `json:"isDefault,omitempty"`
+	Name          string   `json:"name,omitempty"`
+	Severity      string   `json:"severity,omitempty"`
+	Logic         string   `json:"logic,omitempty"`
+	Description   string   `json:"description,omitempty"`
+	Remediation   string   `json:"remediation,omitempty"`
+	ComplianceTag string   `json:"complianceTag,omitempty"`
+	Domain        string   `json:"domain,omitempty"`
+	Priority      string   `json:"priority,omitempty"`
+	ControlTitle  string   `json:"controlTitle,omitempty"`
+	RuleID        string   `json:"ruleId,omitempty"`
+	Category      string   `json:"category,omitempty"`
+	LogicHash     string   `json:"logicHash,omitempty"`
+	IsDefault     bool     `json:"isDefault,omitempty"`
 }
 
 func (service *Service) Get(id string) (*RuleBundleResponse, *http.Response, error) {
 	v := new(RuleBundleResponse)
-	path := fmt.Sprintf("%s/%s", ruleBundleResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	relativeURL := fmt.Sprintf("%s/%s", ruleBundleResourcePath, id)
+	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -90,7 +92,8 @@ func (service *Service) Create(body *RuleBundleRequest) (*RuleBundleResponse, *h
 func (service *Service) Update(body *RuleBundleRequest) (*RuleBundleResponse, *http.Response, error) {
 	// Rule bundle ID passed within the request body
 	v := new(RuleBundleResponse)
-	resp, err := service.Client.NewRequestDo("PUT", ruleBundleResourcePath, nil, body, v)
+	relativeURL := fmt.Sprintf("%s/%s", ruleBundleResourcePath, strconv.Itoa(body.ID))
+	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -99,8 +102,8 @@ func (service *Service) Update(body *RuleBundleRequest) (*RuleBundleResponse, *h
 }
 
 func (service *Service) Delete(id string) (*http.Response, error) {
-	path := fmt.Sprintf("%s/%s", ruleBundleResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	relativeURL := fmt.Sprintf("%s/%s", ruleBundleResourcePath, id)
+	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
