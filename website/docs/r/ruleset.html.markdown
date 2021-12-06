@@ -43,12 +43,12 @@ The following arguments are supported:
 * `cloud_vendor` - (Required) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure` or `google`.
 * `language` - (Required) Language of the rules; defaults to 'en' (English).
 * `hide_in_compliance` - (Required) hide in compliance - true/false.
-* `rules` - (Optional) List of rules in the ruleset.
+*  [`rules`](#rules) - (Optional) List of rules in the ruleset.
 
 
-### Rules Argument Reference
+### Rules
 
-The `rules` (Optional) supports the following arguments:
+The `rules` supports the following arguments:
     
 * `name` - (Required) Rule name.
 * `logic` - (Required) Rule GSL logic. This is the text of the rule, using Dome9 GSL syntax.
@@ -66,6 +66,8 @@ The `rules` (Optional) supports the following arguments:
 
 ## Attributes Reference
 
+In addition to all arguments above, the following attributes are exported:
+
 * `id` - Ruleset Id.
 * `min_feature_tier` - Min feature tier.
 * `created_time` - Rule set creation time.
@@ -76,7 +78,7 @@ The `rules` (Optional) supports the following arguments:
 * `is_template` - is a template rule.
 
 
-### Rules Attributes Reference
+### Rules
 * `logic_hash` - Logic hash.
 
 
