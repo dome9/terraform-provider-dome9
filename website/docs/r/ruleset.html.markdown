@@ -43,11 +43,10 @@ The following arguments are supported:
 * `cloud_vendor` - (Required) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure` or `google`.
 * `language` - (Required) Language of the rules; defaults to 'en' (English).
 * `hide_in_compliance` - (Required) hide in compliance - true/false.
-* `is_template` - (Optional) is a template rule.
 * `rules` - (Optional) List of rules in the ruleset.
 
 
-### Rules 
+### Rules Argument Reference
 
 The `rules` (Optional) supports the following arguments:
     
@@ -67,13 +66,18 @@ The `rules` (Optional) supports the following arguments:
 
 ## Attributes Reference
 
-* `id` - Ruleset Id
+* `id` - Ruleset Id.
 * `min_feature_tier` - Min feature tier.
 * `created_time` - Rule set creation time.
 * `updated_time` - Rule set last update time.
 * `account_id` - The account id of the ruleset in Dome9.
 * `system_bundle` - Is a system bundle or not.
 * `rules_count` - The rules count.
+* `is_template` - is a template rule.
+
+
+### Rules Attributes Reference
+* `logic_hash` - Logic hash.
 
 
 ## Import

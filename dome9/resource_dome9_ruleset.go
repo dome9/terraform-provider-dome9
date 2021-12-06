@@ -46,7 +46,7 @@ func resourceRuleSet() *schema.Resource {
 			},
 			"is_template": {
 				Type:     schema.TypeBool,
-				Optional: true,
+				Computed: true,
 			},
 			"min_feature_tier": {
 				Type:     schema.TypeString,
