@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 * `system_bundle` - Is a system bundle or not.
 * `rules_count` - The rules count.
 * `section` - Which section the rule belongs to.
-*  [`rules`](#Rules) - List of rules in the ruleset.
+*  [`rules`](#rules) - List of rules in the ruleset.
 
 ### Rules
 

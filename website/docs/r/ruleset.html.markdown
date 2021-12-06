@@ -78,10 +78,6 @@ In addition to all arguments above, the following attributes are exported:
 * `is_template` - is a template rule.
 
 
-### Rules
-* `logic_hash` - Logic hash.
-
-
 ## Import
 
 Ruleset can be imported; use `<RULE SET ID>` as the import ID. 
