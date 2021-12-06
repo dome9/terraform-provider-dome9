@@ -17,7 +17,7 @@ Basic usage:
 ```hcl
 resource "dome9_ruleset" "ruleset" {
   name        = "some_ruleset"
-  description = "this is the descrption of my ruleset"
+  description = "this is the description of my ruleset"
   cloud_vendor = "aws"
   language = "en"
   hide_in_compliance = false
@@ -41,23 +41,42 @@ The following arguments are supported:
 * `name` - (Required) The name of the ruleset in Dome9.
 * `description` - (Optional) A description of the ruleset (what it represents); defaults to empty string.
 * `cloud_vendor` - (Required) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure` or `google`.
-* `language` - (Optional) Language of the rules; defaults to 'en' (English).
+* `language` - (Required) Language of the rules; defaults to 'en' (English).
+* `hide_in_compliance` - (Required) hide in compliance - true/false.
+*  [`rules`](#rules) - (Optional) List of rules in the ruleset.
 
 
-### Rules 
+### Rules
 
 The `rules` supports the following arguments:
     
-* `name` - (Required) Rule name
-* `logic` - (Optional) Rule GSL logic. This is the text of the rule, using Dome9 GSL syntax
-* `severity` - (Optional) Rule severity
-* `description` - (Optional) Rule description
-* `compliance_tag` - (Optional) A reference to a compliance standard
+* `name` - (Required) Rule name.
+* `logic` - (Required) Rule GSL logic. This is the text of the rule, using Dome9 GSL syntax.
+* `severity` - (Optional) Rule severity (Default: "Low").
+* `description` - (Optional) Rule description.
+* `remediation` - (Optional) Rule remediation.
+* `compliance_tag` - (Optional) A reference to a compliance standard.
+* `domain` - (Optional) Rule domain.
+* `priority` - (Optional) Rule priority.
+* `control_title` - (Optional) Rule control title.
+* `rule_id` - (Optional) Rule id.
+* `category` - (Optional) Rule category.
+* `is_default` - (Optional) is a default rule (Default: "false").
 
 
 ## Attributes Reference
 
-* `id` - Ruleset Id
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - Ruleset Id.
+* `min_feature_tier` - Min feature tier.
+* `created_time` - Rule set creation time.
+* `updated_time` - Rule set last update time.
+* `account_id` - The account id of the ruleset in Dome9.
+* `system_bundle` - Is a system bundle or not.
+* `rules_count` - The rules count.
+* `is_template` - is a template rule.
+
 
 ## Import
 

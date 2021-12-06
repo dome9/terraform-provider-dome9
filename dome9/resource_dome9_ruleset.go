@@ -46,7 +46,7 @@ func resourceRuleSet() *schema.Resource {
 			},
 			"is_template": {
 				Type:     schema.TypeBool,
-				Optional: true,
+				Computed: true,
 			},
 			"min_feature_tier": {
 				Type:     schema.TypeString,
@@ -60,6 +60,18 @@ func resourceRuleSet() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"account_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"system_bundle": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"rules_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
 			"rules": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -67,11 +79,11 @@ func resourceRuleSet() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"logic": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"severity": {
 							Type:     schema.TypeString,
@@ -103,6 +115,10 @@ func resourceRuleSet() *schema.Resource {
 							Optional: true,
 						},
 						"rule_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"category": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
@@ -152,15 +168,18 @@ func resourceRuleSetRead(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[INFO] Getting rule set:\n%+v\n", resp)
 	d.SetId(strconv.Itoa(resp.ID))
-	_ = d.Set("name", resp.Name)
-	_ = d.Set("description", resp.Description)
-	_ = d.Set("cloud_vendor", resp.CloudVendor)
-	_ = d.Set("language", resp.Language)
-	_ = d.Set("hide_in_compliance", resp.HideInCompliance)
-	_ = d.Set("is_template", resp.IsTemplate)
-	_ = d.Set("min_feature_tier", resp.MinFeatureTier)
+	_ = d.Set("account_id", resp.AccountID)
 	_ = d.Set("created_time", resp.CreatedTime)
 	_ = d.Set("updated_time", resp.UpdatedTime)
+	_ = d.Set("name", resp.Name)
+	_ = d.Set("description", resp.Description)
+	_ = d.Set("is_template", resp.IsTemplate)
+	_ = d.Set("hide_in_compliance", resp.HideInCompliance)
+	_ = d.Set("min_feature_tier", resp.MinFeatureTier)
+	_ = d.Set("section", resp.Section)
+	_ = d.Set("cloud_vendor", resp.CloudVendor)
+	_ = d.Set("language", resp.Language)
+	_ = d.Set("rules_count", resp.RulesCount)
 
 	if err := d.Set("rules", flattenRules(resp.Rules)); err != nil {
 		return err
@@ -229,10 +248,15 @@ func expandRules(d *schema.ResourceData) *[]rulebundles.Rule {
 				Priority:      rule["priority"].(string),
 				ControlTitle:  rule["control_title"].(string),
 				RuleID:        rule["rule_id"].(string),
+				Category:      rule["category"].(string),
 				LogicHash:     rule["logic_hash"].(string),
 				IsDefault:     rule["is_default"].(bool),
 			}
 		}
+	}
+
+	if rules == nil {
+		rules = make([]rulebundles.Rule, 0)
 	}
 
 	return &rules
@@ -252,6 +276,7 @@ func flattenRules(responseRules []rulebundles.Rule) []interface{} {
 			"priority":       val.Priority,
 			"control_title":  val.ControlTitle,
 			"rule_id":        val.RuleID,
+			"category":       val.Category,
 			"logic_hash":     val.LogicHash,
 			"is_default":     val.IsDefault,
 		}
