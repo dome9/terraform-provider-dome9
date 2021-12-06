@@ -64,20 +64,8 @@ func resourceRuleSet() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"tooltip_text": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"show_bundle": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
 			"system_bundle": {
 				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"version": {
-				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"rules_count": {
@@ -189,11 +177,7 @@ func resourceRuleSetRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("hide_in_compliance", resp.HideInCompliance)
 	_ = d.Set("min_feature_tier", resp.MinFeatureTier)
 	_ = d.Set("section", resp.Section)
-	_ = d.Set("tooltip_text", resp.TooltipText)
-	_ = d.Set("show_bundle", resp.ShowBundle)
-	_ = d.Set("system_bundle", resp.SystemBundle)
 	_ = d.Set("cloud_vendor", resp.CloudVendor)
-	_ = d.Set("version", resp.Version)
 	_ = d.Set("language", resp.Language)
 	_ = d.Set("rules_count", resp.RulesCount)
 

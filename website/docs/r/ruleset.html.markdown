@@ -44,6 +44,7 @@ The following arguments are supported:
 * `language` - (Required) Language of the rules; defaults to 'en' (English).
 * `hide_in_compliance` - (Required) hide in compliance - true/false.
 * `is_template` - (Optional) is a template rule.
+* `rules` - (Optional) List of rules in the ruleset.
 
 
 ### Rules 
@@ -60,13 +61,20 @@ The `rules` (Optional) supports the following arguments:
 * `priority` - (Optional) Rule priority.
 * `control_title` - (Optional) Rule control title.
 * `rule_id` - (Optional) Rule id.
-* `Category` - (Optional) Rule category.
+* `category` - (Optional) Rule category.
 * `is_default` - (Optional) is a default rule (Default: "false").
 
 
 ## Attributes Reference
 
 * `id` - Ruleset Id
+* `min_feature_tier` - Min feature tier.
+* `created_time` - Rule set creation time.
+* `updated_time` - Rule set last update time.
+* `account_id` - The account id of the ruleset in Dome9.
+* `system_bundle` - Is a system bundle or not.
+* `rules_count` - The rules count.
+
 
 ## Import
 
