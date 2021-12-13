@@ -46,12 +46,16 @@ type ChangeDetection struct {
 	ExternalTicketCreatingState    string                     `json:"externalTicketCreatingState,omitempty"`
 	AWSSecurityHubIntegrationState string                     `json:"awsSecurityHubIntegrationState,omitempty"`
 	WebhookIntegrationState        string                     `json:"webhookIntegrationState,omitempty"`
+	SlackIntegrationState          string                     `json:"slackIntegrationState,omitempty"`
+	TeamsIntegrationState          string                     `json:"teamsIntegrationState,omitempty"`
 	EmailData                      *EmailData                 `json:"emailData,omitempty"`
 	EmailPerFindingData            *EmailPerFindingData       `json:"emailPerFindingData,omitempty"`
 	SNSData                        *SNSData                   `json:"snsData,omitempty"`
 	TicketingSystemData            *TicketingSystemData       `json:"ticketingSystemData,omitempty"`
 	AWSSecurityHubIntegration      *AWSSecurityHubIntegration `json:"awsSecurityHubIntegration,omitempty"`
 	WebhookData                    *WebhookData               `json:"webhookData,omitempty"`
+	SlackData                      *SlackData                 `json:"slackData,omitempty"`
+	TeamsData                      *TeamsData                 `json:"teamsData,omitempty"`
 }
 
 type EmailData struct {
@@ -84,12 +88,23 @@ type AWSSecurityHubIntegration struct {
 }
 
 type WebhookData struct {
-	URL        string `json:"url"`
-	HTTPMethod string `json:"httpMethod"`
-	AuthMethod string `json:"authMethod"`
-	Username   string `json:"username,omitempty"`
-	Password   string `json:"password,omitempty"`
-	FormatType string `json:"formatType"`
+	URL               string                 `json:"url"`
+	HTTPMethod        string                 `json:"httpMethod"`
+	AuthMethod        string                 `json:"authMethod"`
+	Username          string                 `json:"username,omitempty"`
+	Password          string                 `json:"password,omitempty"`
+	FormatType        string                 `json:"formatType"`
+	PayloadFormat     map[string]interface{} `json:"payloadFormat"`
+	IgnoreCertificate bool                   `json:"ignoreCertificate"`
+	AdvancedUrl       bool                   `json:"advancedUrl"`
+}
+
+type SlackData struct {
+	URL string `json:"url"`
+}
+
+type TeamsData struct {
+	URL string `json:"url"`
 }
 
 type GCPSecurityCommandCenterIntegration struct {

@@ -118,6 +118,18 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 							Default:      "Disabled",
 							ValidateFunc: validation.StringInSlice([]string{"Disabled", "Enabled"}, true),
 						},
+						"slack_integration_state": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "Disabled",
+							ValidateFunc: validation.StringInSlice([]string{"Disabled", "Enabled"}, true),
+						},
+						"teams_integration_state": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "Disabled",
+							ValidateFunc: validation.StringInSlice([]string{"Disabled", "Enabled"}, true),
+						},
 						"email_data": {
 							Type:     schema.TypeSet,
 							Optional: true,
@@ -274,6 +286,46 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 										Optional:     true,
 										Default:      "JsonWithFullEntity",
 										ValidateFunc: validation.StringInSlice([]string{"JsonWithFullEntity", "SplunkBasic", "ServiceNow"}, true),
+									},
+									"payload_format": {
+										Type:     schema.TypeMap,
+										Optional: true,
+										Default:  map[string]*schema.Schema{},
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+									},
+									"ignore_certificate": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+									"advanced_url": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+								},
+							},
+						},
+						"slack_data": {
+							Type:     schema.TypeSet,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"url": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+						"teams_data": {
+							Type:     schema.TypeSet,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"url": {
+										Type:     schema.TypeString,
+										Required: true,
 									},
 								},
 							},
@@ -438,12 +490,16 @@ func expandChangeDetection(d *schema.ResourceData) *continuous_compliance_notifi
 		ExternalTicketCreatingState:    changeDetection["external_ticket_creating_state"].(string),
 		AWSSecurityHubIntegrationState: changeDetection["aws_security_hub_integration_state"].(string),
 		WebhookIntegrationState:        changeDetection["webhook_integration_state"].(string),
+		SlackIntegrationState:          changeDetection["slack_integration_state"].(string),
+		TeamsIntegrationState:          changeDetection["teams_integration_state"].(string),
 		EmailData:                      expandEmailData(changeDetection["email_data"].(*schema.Set)),
 		EmailPerFindingData:            expandEmailPerFindingData(changeDetection["email_per_finding_data"].(*schema.Set)),
 		SNSData:                        expandSNSData(changeDetection["sns_data"].(*schema.Set)),
 		TicketingSystemData:            expandTicketingSystemData(changeDetection["ticketing_system_data"].(*schema.Set)),
 		AWSSecurityHubIntegration:      expandAWSSecurityHubIntegration(changeDetection["aws_security_hub_integration"].(*schema.Set)),
 		WebhookData:                    expandWebhookData(changeDetection["webhook_data"].(*schema.Set)),
+		SlackData:                      expandSlackData(changeDetection["slack_data"].(*schema.Set)),
+		TeamsData:                      expandTeamsData(changeDetection["teams_data"].(*schema.Set)),
 	}
 }
 
@@ -533,12 +589,43 @@ func expandWebhookData(webhookData *schema.Set) *continuous_compliance_notificat
 		webhookData := webhookDataItem.(map[string]interface{})
 
 		return &continuous_compliance_notification.WebhookData{
-			URL:        webhookData["url"].(string),
-			HTTPMethod: webhookData["http_method"].(string),
-			AuthMethod: webhookData["auth_method"].(string),
-			Username:   webhookData["username"].(string),
-			Password:   webhookData["password"].(string),
-			FormatType: webhookData["format_type"].(string),
+			URL:               webhookData["url"].(string),
+			HTTPMethod:        webhookData["http_method"].(string),
+			AuthMethod:        webhookData["auth_method"].(string),
+			Username:          webhookData["username"].(string),
+			Password:          webhookData["password"].(string),
+			FormatType:        webhookData["format_type"].(string),
+			PayloadFormat:     webhookData["payload_format"].(map[string]interface{}),
+			IgnoreCertificate: webhookData["ignore_certificate"].(bool),
+			AdvancedUrl:       webhookData["advanced_url"].(bool),
+		}
+	}
+
+	return nil
+}
+
+func expandSlackData(slackData *schema.Set) *continuous_compliance_notification.SlackData {
+	slackDataLst := slackData.List()
+	if len(slackDataLst) > 0 {
+		slackDataItem := slackDataLst[0]
+		slackData := slackDataItem.(map[string]interface{})
+
+		return &continuous_compliance_notification.SlackData{
+			URL: slackData["url"].(string),
+		}
+	}
+
+	return nil
+}
+
+func expandTeamsData(teamsData *schema.Set) *continuous_compliance_notification.TeamsData {
+	teamsDataLst := teamsData.List()
+	if len(teamsDataLst) > 0 {
+		teamsDataItem := teamsDataLst[0]
+		teamsData := teamsDataItem.(map[string]interface{})
+
+		return &continuous_compliance_notification.TeamsData{
+			URL: teamsData["url"].(string),
 		}
 	}
 
@@ -610,6 +697,8 @@ func flattenChangeDetection(respChangeDetection *continuous_compliance_notificat
 		"external_ticket_creating_state":     respChangeDetection.ExternalTicketCreatingState,
 		"aws_security_hub_integration_state": respChangeDetection.AWSSecurityHubIntegrationState,
 		"webhook_integration_state":          respChangeDetection.WebhookIntegrationState,
+		"slack_integration_state":            respChangeDetection.SlackIntegrationState,
+		"teams_integration_state":            respChangeDetection.TeamsIntegrationState,
 	}
 
 	if respChangeDetection.EmailData != nil {
@@ -636,6 +725,14 @@ func flattenChangeDetection(respChangeDetection *continuous_compliance_notificat
 		m["webhook_data"] = flattenWebhookData(respChangeDetection.WebhookData)
 	}
 
+	if respChangeDetection.SlackData != nil {
+		m["slack_data"] = flattenSlackData(respChangeDetection.SlackData)
+	}
+
+	if respChangeDetection.TeamsData != nil {
+		m["teams_data"] = flattenTeamsData(respChangeDetection.TeamsData)
+	}
+
 	return []interface{}{m}
 }
 
@@ -650,12 +747,31 @@ func flattenAWSSecurityHubIntegration(respAWSSecurityHubIntegration *continuous_
 
 func flattenWebhookData(respWebhookData *continuous_compliance_notification.WebhookData) []interface{} {
 	m := map[string]interface{}{
-		"url":         respWebhookData.URL,
-		"http_method": respWebhookData.HTTPMethod,
-		"auth_method": respWebhookData.AuthMethod,
-		"username":    respWebhookData.Username,
-		"password":    respWebhookData.Password,
-		"format_type": respWebhookData.FormatType,
+		"url":                respWebhookData.URL,
+		"http_method":        respWebhookData.HTTPMethod,
+		"auth_method":        respWebhookData.AuthMethod,
+		"username":           respWebhookData.Username,
+		"password":           respWebhookData.Password,
+		"format_type":        respWebhookData.FormatType,
+		"payload_format":     respWebhookData.PayloadFormat,
+		"ignore_certificate": respWebhookData.IgnoreCertificate,
+		"advanced_url":       respWebhookData.AdvancedUrl,
+	}
+
+	return []interface{}{m}
+}
+
+func flattenSlackData(respWebhookData *continuous_compliance_notification.SlackData) []interface{} {
+	m := map[string]interface{}{
+		"url": respWebhookData.URL,
+	}
+
+	return []interface{}{m}
+}
+
+func flattenTeamsData(respWebhookData *continuous_compliance_notification.TeamsData) []interface{} {
+	m := map[string]interface{}{
+		"url": respWebhookData.URL,
 	}
 
 	return []interface{}{m}
