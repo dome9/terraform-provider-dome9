@@ -62,7 +62,7 @@ const (
 
 // continuous Compliance Notification resource/data source
 const (
-	ContinuousComplianceNotificationName               = "test_notification"
+	ContinuousComplianceNotificationName               = "test_notification_tf"
 	ContinuousComplianceNotificationDescription        = "this notification for testing"
 	ContinuousComplianceNotificationAlertsConsole      = true
 	ContinuousComplianceNotificationEnabled            = "Enabled"

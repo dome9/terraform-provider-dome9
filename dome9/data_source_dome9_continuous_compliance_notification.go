@@ -230,7 +230,7 @@ func dataSourceContinuousComplianceNotification() *schema.Resource {
 										Computed: true,
 									},
 									"payload_format": {
-										Type:     schema.TypeMap,
+										Type:     schema.TypeString,
 										Computed: true,
 									},
 									"ignore_certificate": {
@@ -317,7 +317,11 @@ func dataSourceContinuousComplianceNotificationRead(d *schema.ResourceData, meta
 		}
 	}
 
-	if err := d.Set("change_detection", flattenChangeDetection(&resp.ChangeDetection)); err != nil {
+	flattenChangeDetection, err:= flattenChangeDetection(&resp.ChangeDetection)
+	if err != nil {
+		return err
+	}
+	if err := d.Set("change_detection", flattenChangeDetection); err != nil{
 		return err
 	}
 

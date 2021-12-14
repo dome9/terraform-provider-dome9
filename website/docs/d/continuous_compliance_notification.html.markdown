@@ -29,14 +29,12 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `name` - Notification policy name.
-  The following arguments are supported:
 
-* `name` -  The cloud account id in Dome9.
 * `description` -  Description of the notification.
 
 at least one of  `alerts_console`, `scheduled_report`, or `change_detection` must be included
 
-* `alerts_console` -  send findings (also) to the Dome9 web app alerts console (Boolean); default is False.
+* `alerts_console` -  send findings (also) to the Dome9 alerts console (Boolean); default is False.
 
 * `scheduled_report` - Scheduled email report notification block:
   * `email_sending_state` - send schedule report of findings by email; can be  "Enabled" or "Disabled".
@@ -50,7 +48,7 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 
 
 * `change_detection` -  Send changes in findings options:
-  * `email_sending_stat` - send email report of changes in findings; can be "Enabled" or "Disabled".
+  * `email_sending_stat` - Whether to send email report of changes in findings; can be "Enabled" or "Disabled".
 
     if `email_sending_stat`  is Enabled, the following must be included:
 

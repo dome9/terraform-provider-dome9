@@ -1,6 +1,9 @@
 package dome9
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -288,12 +291,10 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 										ValidateFunc: validation.StringInSlice([]string{"JsonWithFullEntity", "SplunkBasic", "ServiceNow"}, true),
 									},
 									"payload_format": {
-										Type:     schema.TypeMap,
-										Optional: true,
-										Default:  map[string]*schema.Schema{},
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{},
-										},
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: ValidatePayloadFormatJSON,
+										Default:      "{}",
 									},
 									"ignore_certificate": {
 										Type:     schema.TypeBool,
@@ -364,7 +365,10 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 
 func resourceContinuousComplianceNotificationCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	req := expandContinuousComplianceNotificationRequest(d)
+	req, err := expandContinuousComplianceNotificationRequest(d)
+	if err != nil {
+		return err
+	}
 	log.Printf("[INFO] Creating continuous compliance notification request\n%+v\n", req)
 	resp, _, err := d9Client.continuousComplianceNotification.Create(&req)
 	if err != nil {
@@ -398,16 +402,23 @@ func resourceContinuousComplianceNotificationRead(d *schema.ResourceData, meta i
 
 	if resp.ScheduledReport != nil {
 		if err := d.Set("scheduled_report", flattenScheduledReport(resp.ScheduledReport)); err != nil {
+			resourceContinuousComplianceNotificationDelete(d, meta)
 			return err
 		}
 	}
 
-	if err := d.Set("change_detection", flattenChangeDetection(&resp.ChangeDetection)); err != nil {
+	flattenChangeDetection, err:= flattenChangeDetection(&resp.ChangeDetection)
+	if err != nil {
+		return err
+	}
+	if err := d.Set("change_detection", flattenChangeDetection); err != nil {
+		resourceContinuousComplianceNotificationDelete(d, meta)
 		return err
 	}
 
 	if resp.GCPSecurityCommandCenterIntegration != nil {
 		if err = d.Set("gcp_security_command_center_integration", flattenGCPSecurityCommandCenterIntegration(resp.GCPSecurityCommandCenterIntegration)); err != nil {
+			resourceContinuousComplianceNotificationDelete(d, meta)
 			return err
 		}
 	}
@@ -429,7 +440,10 @@ func resourceContinuousComplianceNotificationDelete(d *schema.ResourceData, meta
 func resourceContinuousComplianceNotificationUpdate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	log.Printf("[INFO] Updating continuous compliance notification ID: %v\n", d.Id())
-	req := expandContinuousComplianceNotificationRequest(d)
+	req, err := expandContinuousComplianceNotificationRequest(d)
+	if err != nil {
+		return err
+	}
 
 	if _, _, err := d9Client.continuousComplianceNotification.Update(d.Id(), &req); err != nil {
 		return err
@@ -438,15 +452,20 @@ func resourceContinuousComplianceNotificationUpdate(d *schema.ResourceData, meta
 	return nil
 }
 
-func expandContinuousComplianceNotificationRequest(d *schema.ResourceData) continuous_compliance_notification.ContinuousComplianceNotificationRequest {
+func expandContinuousComplianceNotificationRequest(d *schema.ResourceData) (continuous_compliance_notification.ContinuousComplianceNotificationRequest, error) {
+	ChangeDetectionData, err := expandChangeDetection(d)
+	if err != nil {
+		return continuous_compliance_notification.ContinuousComplianceNotificationRequest{}, err
+	}
+
 	return continuous_compliance_notification.ContinuousComplianceNotificationRequest{
 		Name:                                d.Get("name").(string),
 		Description:                         d.Get("description").(string),
 		AlertsConsole:                       d.Get("alerts_console").(bool),
 		ScheduledReport:                     expandScheduledReport(d),
-		ChangeDetection:                     *expandChangeDetection(d),
+		ChangeDetection:                     *ChangeDetectionData,
 		GCPSecurityCommandCenterIntegration: expandGCPSecurityCommandCenterIntegration(d),
-	}
+	}, nil
 }
 
 func expandScheduledReport(d *schema.ResourceData) *continuous_compliance_notification.ScheduledReport {
@@ -479,9 +498,14 @@ func expandScheduleData(scheduleData *schema.Set) *continuous_compliance_notific
 	return nil
 }
 
-func expandChangeDetection(d *schema.ResourceData) *continuous_compliance_notification.ChangeDetection {
+func expandChangeDetection(d *schema.ResourceData) (*continuous_compliance_notification.ChangeDetection, error) {
 	changeDetectionItem := d.Get("change_detection").(*schema.Set).List()[0]
 	changeDetection := changeDetectionItem.(map[string]interface{})
+
+	webhookData, err := expandWebhookData(changeDetection["webhook_data"].(*schema.Set))
+	if err != nil {
+		return nil, err
+	}
 
 	return &continuous_compliance_notification.ChangeDetection{
 		EmailSendingState:              changeDetection["email_sending_state"].(string),
@@ -497,10 +521,10 @@ func expandChangeDetection(d *schema.ResourceData) *continuous_compliance_notifi
 		SNSData:                        expandSNSData(changeDetection["sns_data"].(*schema.Set)),
 		TicketingSystemData:            expandTicketingSystemData(changeDetection["ticketing_system_data"].(*schema.Set)),
 		AWSSecurityHubIntegration:      expandAWSSecurityHubIntegration(changeDetection["aws_security_hub_integration"].(*schema.Set)),
-		WebhookData:                    expandWebhookData(changeDetection["webhook_data"].(*schema.Set)),
+		WebhookData:                    webhookData,
 		SlackData:                      expandSlackData(changeDetection["slack_data"].(*schema.Set)),
 		TeamsData:                      expandTeamsData(changeDetection["teams_data"].(*schema.Set)),
-	}
+	}, nil
 }
 
 func expandEmailData(emailData *schema.Set) *continuous_compliance_notification.EmailData {
@@ -582,11 +606,18 @@ func expandAWSSecurityHubIntegration(awsSecurityHubIntegration *schema.Set) *con
 	return nil
 }
 
-func expandWebhookData(webhookData *schema.Set) *continuous_compliance_notification.WebhookData {
+func expandWebhookData(webhookData *schema.Set) (*continuous_compliance_notification.WebhookData, error) {
 	webhookDataLst := webhookData.List()
 	if len(webhookDataLst) > 0 {
 		webhookDataItem := webhookDataLst[0]
 		webhookData := webhookDataItem.(map[string]interface{})
+
+
+		PayloadFormatJson := make(map[string]interface{})
+		err := json.Unmarshal([]byte(webhookData["payload_format"].(string)), &PayloadFormatJson)
+		if err != nil {
+			return nil, err
+		}
 
 		return &continuous_compliance_notification.WebhookData{
 			URL:               webhookData["url"].(string),
@@ -595,13 +626,13 @@ func expandWebhookData(webhookData *schema.Set) *continuous_compliance_notificat
 			Username:          webhookData["username"].(string),
 			Password:          webhookData["password"].(string),
 			FormatType:        webhookData["format_type"].(string),
-			PayloadFormat:     webhookData["payload_format"].(map[string]interface{}),
+			PayloadFormat:     PayloadFormatJson,
 			IgnoreCertificate: webhookData["ignore_certificate"].(bool),
 			AdvancedUrl:       webhookData["advanced_url"].(bool),
-		}
+		}, nil
 	}
 
-	return nil
+	return nil, nil
 }
 
 func expandSlackData(slackData *schema.Set) *continuous_compliance_notification.SlackData {
@@ -689,7 +720,7 @@ func flattenScheduleData(respScheduleData *continuous_compliance_notification.Sc
 	return []interface{}{m}
 }
 
-func flattenChangeDetection(respChangeDetection *continuous_compliance_notification.ChangeDetection) []interface{} {
+func flattenChangeDetection(respChangeDetection *continuous_compliance_notification.ChangeDetection) ([]interface{}, error) {
 	m := map[string]interface{}{
 		"email_sending_state":                respChangeDetection.EmailSendingState,
 		"email_per_finding_sending_state":    respChangeDetection.EmailPerFindingSendingState,
@@ -722,7 +753,11 @@ func flattenChangeDetection(respChangeDetection *continuous_compliance_notificat
 	}
 
 	if respChangeDetection.WebhookData != nil {
-		m["webhook_data"] = flattenWebhookData(respChangeDetection.WebhookData)
+		var err error
+		m["webhook_data"], err = flattenWebhookData(respChangeDetection.WebhookData)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if respChangeDetection.SlackData != nil {
@@ -733,7 +768,7 @@ func flattenChangeDetection(respChangeDetection *continuous_compliance_notificat
 		m["teams_data"] = flattenTeamsData(respChangeDetection.TeamsData)
 	}
 
-	return []interface{}{m}
+	return []interface{}{m}, nil
 }
 
 func flattenAWSSecurityHubIntegration(respAWSSecurityHubIntegration *continuous_compliance_notification.AWSSecurityHubIntegration) []interface{} {
@@ -745,7 +780,14 @@ func flattenAWSSecurityHubIntegration(respAWSSecurityHubIntegration *continuous_
 	return []interface{}{m}
 }
 
-func flattenWebhookData(respWebhookData *continuous_compliance_notification.WebhookData) []interface{} {
+func flattenWebhookData(respWebhookData *continuous_compliance_notification.WebhookData) ([]interface{}, error) {
+
+	PayloadFormatBytes, err := json.Marshal(respWebhookData.PayloadFormat)
+	if err != nil {
+		return nil, err
+	}
+	PayloadFormatStr := string(PayloadFormatBytes)
+
 	m := map[string]interface{}{
 		"url":                respWebhookData.URL,
 		"http_method":        respWebhookData.HTTPMethod,
@@ -753,12 +795,12 @@ func flattenWebhookData(respWebhookData *continuous_compliance_notification.Webh
 		"username":           respWebhookData.Username,
 		"password":           respWebhookData.Password,
 		"format_type":        respWebhookData.FormatType,
-		"payload_format":     respWebhookData.PayloadFormat,
+		"payload_format":     PayloadFormatStr,
 		"ignore_certificate": respWebhookData.IgnoreCertificate,
 		"advanced_url":       respWebhookData.AdvancedUrl,
 	}
 
-	return []interface{}{m}
+	return []interface{}{m}, nil
 }
 
 func flattenSlackData(respWebhookData *continuous_compliance_notification.SlackData) []interface{} {
@@ -815,4 +857,18 @@ func flattenEmailPerFindingData(respEmailPerFindingData *continuous_compliance_n
 	}
 
 	return []interface{}{m}
+}
+
+func ValidatePayloadFormatJSON(v interface{}, k string) (ws []string, errors []error) {
+	// IAM Policy documents need to be valid JSON, and pass legacy parsing
+	value := v.(string)
+	if len(value) < 1 || value[:1] != "{" {
+		errors = append(errors, fmt.Errorf("%q Contains an invalid JSON policy", k))
+		return
+	}
+	if _, err := structure.NormalizeJsonString(v); err != nil {
+		errors = append(errors, fmt.Errorf("%q Contains an invalid JSON: %s", k, err))
+		return
+	}
+	return
 }
