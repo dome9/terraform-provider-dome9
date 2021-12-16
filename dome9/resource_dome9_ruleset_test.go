@@ -99,7 +99,6 @@ resource "%s" "%s" {
 	cloud_vendor       = "aws"
 	language           = "en"
 	hide_in_compliance = false
-	is_template        = false
 	rules {
 		name           = "some_rule2"
 		logic          = "EC2 should x"

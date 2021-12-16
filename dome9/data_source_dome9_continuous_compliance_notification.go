@@ -90,6 +90,14 @@ func dataSourceContinuousComplianceNotification() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"slack_integration_state": {
+							Type:         schema.TypeString,
+							Computed: true,
+						},
+						"teams_integration_state": {
+							Type:         schema.TypeString,
+							Computed: true,
+						},
 						"email_data": {
 							Type:     schema.TypeSet,
 							Computed: true,
@@ -221,6 +229,42 @@ func dataSourceContinuousComplianceNotification() *schema.Resource {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
+									"payload_format": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"ignore_certificate": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+									"advanced_url": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+								},
+							},
+						},
+						"slack_data": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"url": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+								},
+							},
+						},
+						"teams_data": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"url": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
 								},
 							},
 						},
@@ -273,7 +317,11 @@ func dataSourceContinuousComplianceNotificationRead(d *schema.ResourceData, meta
 		}
 	}
 
-	if err := d.Set("change_detection", flattenChangeDetection(&resp.ChangeDetection)); err != nil {
+	flattenChangeDetection, err:= flattenChangeDetection(&resp.ChangeDetection)
+	if err != nil {
+		return err
+	}
+	if err := d.Set("change_detection", flattenChangeDetection); err != nil{
 		return err
 	}
 
