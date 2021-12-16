@@ -129,6 +129,15 @@ resource "%s" "%s" {
     aws_security_hub_integration_state = "%s"
     webhook_integration_state          = "%s"
 
+	webhook_data {
+    url = "https://dome9-security.atlassian.net"
+    auth_method = "BasicAuth"
+    username = "guy@dome9.com"
+    password = "0uZshD712uToGmUgr2r03668"
+    format_type = "JsonWithFullEntity"
+    payload_format = jsonencode({})
+  }
+
     email_data {
       recipients = ["%s"]
     }
@@ -151,7 +160,7 @@ resource "%s" "%s" {
 		variable.ContinuousComplianceNotificationDisabled,
 		variable.ContinuousComplianceNotificationDisabled,
 		variable.ContinuousComplianceNotificationDisabled,
-		variable.ContinuousComplianceNotificationDisabled,
+		variable.ContinuousComplianceNotificationEnabled,
 
 		variable.ContinuousComplianceNotificationRecipient,
 

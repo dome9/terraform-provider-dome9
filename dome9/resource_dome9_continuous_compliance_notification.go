@@ -860,7 +860,6 @@ func flattenEmailPerFindingData(respEmailPerFindingData *continuous_compliance_n
 }
 
 func ValidatePayloadFormatJSON(v interface{}, k string) (ws []string, errors []error) {
-	// IAM Policy documents need to be valid JSON, and pass legacy parsing
 	value := v.(string)
 	if len(value) < 1 || value[:1] != "{" {
 		errors = append(errors, fmt.Errorf("%q Contains an invalid JSON policy", k))

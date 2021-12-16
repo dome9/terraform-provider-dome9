@@ -31,6 +31,23 @@ resource "dome9_continuous_compliance_notification" "test_notification" {
     slack_integration_state            = "SLACK_INTEGRATION_STATE"
     teams_integration_state            = "TEAMS_INTEGRATION_STATE"
 
+    webhook_data {
+      url            = "URL"
+      auth_method    = "AUTH_METHOD"
+      username       = "USERNAME"
+      password       = "PASSWORD"
+      format_type    = "FORMAT_TYPE"
+      payload_format = "jsonencode({ PAYLOAD_FORMAT })"
+    }
+
+    slack_data {
+      url = "URL"
+    }
+
+    teams_data {
+      url = "URL"
+    }
+
     email_data {
       recipients = ["RECIPIENTS"]
     }
@@ -94,7 +111,8 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 
         * `sns_data` - SNS notification details:
             * `sns_topic_arn` - (Required) SNS topic ARN
-            * `sns_output_format` - (Required) SNS output format; can be  "JsonWithFullEntity", "JsonWithBasicEntity", or "
+            * `sns_output_format` - (Required) SNS output format; can be  "JsonWithFullEntity", "JsonWithBasicEntity",
+              or "
               PlainText".
 
             <br/>
