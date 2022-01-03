@@ -105,8 +105,8 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
       * `auth_method` - authentication method; "NoAuth" by default
       * `username` - username in endpoint system
       * `password` - password in endpoint system
-      * `format_type` - format for JSON block for finding, "JsonWithFullEntity" by default; can be one of:
-        * `JsonWithFullEntity` - JSON - Full entity
+      * `format_type` - format for JSON block for finding, can be one of:
+        * `JsonWithFullEntity` - JSON - Full entity (default)
         * `SplunkBasic` - Splunk format
         * `ServiceNow` - ServiceNow format
         * `QRadar` - QRadar format
