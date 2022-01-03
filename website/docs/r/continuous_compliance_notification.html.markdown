@@ -37,7 +37,7 @@ resource "dome9_continuous_compliance_notification" "test_notification" {
       username       = "USERNAME"
       password       = "PASSWORD"
       format_type    = "FORMAT_TYPE"
-      payload_format = "jsonencode({ PAYLOAD_FORMAT })"
+      payload_format = jsonencode("PAYLOAD_FORMAT")
     }
 
     slack_data {
@@ -138,11 +138,17 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 
         * `webhook_data` - Webhook data block supports:
             * `url` - (Required) HTTP endpoint URL
-            * `http_method` - HTTP method, "Post" by default.
+            * `http_method` - HTTP method, "Post" by default. Can be one of: "Post", "Get"
             * `auth_method` - authentication method; "NoAuth" by default
             * `username` - username in endpoint system
             * `password` - password in endpoint system
-            * `format_type` - format for JSON block for finding; can be "Basic" or "ServiceNow"
+            * `format_type` - format for JSON block for finding, "JsonWithFullEntity" by default; can be one of: "JsonWithFullEntity", "SplunkBasic", "ServiceNow", "QRadar", "JsonFirstLevelEntity", "Jira"
+              * `JsonWithFullEntity` - in UI is: JSON - Full entity
+              * `SplunkBasic` - in UI is: Splunk - JSON
+              * `ServiceNow` - in UI is: ServiceNow
+              * `QRadar` - in UI is: QRadar
+              * `JsonFirstLevelEntity` - in UI is: Sumo Logic
+              * `Jira` - in UI is: Jira
             * `payload_format` - Json Payload
             * `ignore_certificate` - Check this to use self-signed certificates, and ignore validation of them
             * `advanced_url` - Tick this box if you are using a version of Jira that only supports REST API 2
@@ -159,8 +165,7 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
 
           <br/>
 
-    * `teams_integration_state` - Send report summary to Teams channel (Compliance only); can be  "Enabled" or "
-      Disabled".
+    * `teams_integration_state` - Send report summary to Teams channel (Compliance only); can be  "Enabled" or "Disabled".
 
       if `teams_integration_state`  is Enabled, the following must be included:
 

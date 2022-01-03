@@ -105,7 +105,13 @@ at least one of  `alerts_console`, `scheduled_report`, or `change_detection` mus
       * `auth_method` - authentication method; "NoAuth" by default
       * `username` - username in endpoint system
       * `password` - password in endpoint system
-      * `format_type` - format for JSON block for finding; can be "Basic" or "ServiceNow"
+      * `format_type` - format for JSON block for finding, "JsonWithFullEntity" by default; can be one of: "JsonWithFullEntity", "SplunkBasic", "ServiceNow", "QRadar", "JsonFirstLevelEntity", "Jira"
+        * `JsonWithFullEntity` - in UI is: JSON - Full entity
+        * `SplunkBasic` - in UI is: Splunk - JSON
+        * `ServiceNow` - in UI is: ServiceNow
+        * `QRadar` - in UI is: QRadar
+        * `JsonFirstLevelEntity` - in UI is: Sumo Logic
+        * `Jira` - in UI is: Jira
       * `payload_format` - Json Payload
       * `ignore_certificate` - Check this to use self-signed certificates, and ignore validation of them
       * `advanced_url` - Tick this box if you are using a version of Jira that only supports REST API 2
