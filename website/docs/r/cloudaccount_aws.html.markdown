@@ -118,7 +118,7 @@ resource "dome9_cloudaccount_aws" "test" {
 ```hcl
 resource "dome9_cloudaccount_aws" "test" {
   name  = "ACCOUNT NAME"
-  vendoe = "awsgov"
+  vendor = "awsgov"
   credentials  {
     api_key    = "API_KEY"
     secret = "SECRET"
@@ -143,7 +143,7 @@ resource "dome9_cloudaccount_aws" "test" {
 ```hcl
 resource "dome9_cloudaccount_aws" "test" {
   name  = "ACCOUNT NAME"
-  vendoe = "awschina"
+  vendor = "awschina"
   credentials  {
     api_key    = "API_KEY"
     secret = "SECRET"
