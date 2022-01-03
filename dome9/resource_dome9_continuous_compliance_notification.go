@@ -267,6 +267,7 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 										Optional: true,
 										Default:  "Post",
 										ForceNew: true,
+										ValidateFunc: validation.StringInSlice([]string{"Post", "Put"}, true),
 									},
 									"auth_method": {
 										Type:         schema.TypeString,
@@ -288,7 +289,7 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 										Type:         schema.TypeString,
 										Optional:     true,
 										Default:      "JsonWithFullEntity",
-										ValidateFunc: validation.StringInSlice([]string{"JsonWithFullEntity", "SplunkBasic", "ServiceNow"}, true),
+										ValidateFunc: validation.StringInSlice([]string{"JsonWithFullEntity", "SplunkBasic", "ServiceNow", "QRadar", "JsonFirstLevelEntity", "Jira"}, true),
 									},
 									"payload_format": {
 										Type:         schema.TypeString,
