@@ -20,4 +20,5 @@ const (
 	User                             = "dome9_user"
 	IAMSafeEntity                    = "dome9_iam_safe_entity"
 	ServiceAccount                   = "dome9_service_account"
+	AwsUnifiedOnbording              = "dome9_aws_unified_onboarding"
 )

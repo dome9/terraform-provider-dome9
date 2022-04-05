@@ -42,6 +42,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.CloudAccountGCP:                  resourceCloudAccountGCP(),
 			resourcetype.CloudAccountAzure:                resourceCloudAccountAzure(),
 			resourcetype.CloudAccountKubernetes:           resourceCloudAccountKubernetes(),
+			resourcetype.AwsUnifiedOnbording:		       resourceUnifiedOnbording(),
 			resourcetype.ContinuousCompliancePolicy:       resourceContinuousCompliancePolicy(),
 			resourcetype.ContinuousComplianceNotification: resourceContinuousComplianceNotification(),
 			resourcetype.RuleSet:                          resourceRuleSet(),
