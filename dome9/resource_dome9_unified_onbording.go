@@ -10,7 +10,6 @@ import (
 const (
 	Rulesets     = "rulesets"
 	Enabled      = "enabled"
-	Parametes    = "parameters"
 	OnboardingId = "OnboardingId"
 )
 
@@ -18,6 +17,8 @@ func resourceUnifiedOnbording() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceUnifiedOnbordingCreate,
 		Read:   resourceUnifiedOnbordingRead,
+		Update: resourceUnifiedOnbordingUpdat,
+		Delete: resourceUnifiedOnbordingDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -34,7 +35,6 @@ func resourceUnifiedOnbording() *schema.Resource {
 			"cloud_vendor": {
 				Type:     schema.TypeString,
 				Required: true,
-				Optional: true,
 			},
 			"enable_stack_modify": {
 				Type:     schema.TypeBool,
@@ -82,6 +82,14 @@ func resourceUnifiedOnbording() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceUnifiedOnbordingDelete(data *schema.ResourceData, i interface{}) error {
+	return nil
+}
+
+func resourceUnifiedOnbordingUpdat(data *schema.ResourceData, i interface{}) error {
+	return nil
 }
 
 func resourceUnifiedOnbordingRead(d *schema.ResourceData, meta interface{}) error {
