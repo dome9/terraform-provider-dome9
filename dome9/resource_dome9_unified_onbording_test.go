@@ -22,10 +22,7 @@ func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, generatedName, variable.AwsUnifiedOnbordingOnboardType,
-					variable.AwsUnifiedOnbordingFullProtection, variable.AwsUnifiedOnbordingCloudVendor,
-					variable.AwsUnifiedOnbordingEnableStackModify, variable.AwsUnifiedOnbordingPostureManagementConfiguration,
-					variable.AwsUnifiedOnbordingServerlessConfiguration, variable.AwsUnifiedOnbordingIntelligenceConfigurations),
+				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAwsUnifiedOnbordingExists(resourceTypeAndName, &awsUnifiedOnbording),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "template_url", variable.AwsUnifiedOnbordingTemplateUrl),
@@ -58,7 +55,7 @@ func testAccCheckAwsUnifiedOnbordingExists(resource string, awsUnifiedOnbording 
 	}
 }
 
-func testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName string, generatedName string, onboardType string, fullProtection string, cloudVendor string, enableStackModify string, postureManagementConfiguration string, serverlessConfiguration string, intelligenceConfigurations string) string {
+func testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName string, generatedName string) string {
 	return fmt.Sprintf(`
 // AwsUnifiedOnbording resource
 %s
@@ -90,7 +87,7 @@ resource "%s" "%s"{
 	  "intelligenceConfigurations"		= "%s"
 	}
 }`,
-		generatedName,
+		resourcetype.AwsUnifiedOnbording,
 		resourceTypeAndName,
 		variable.AwsUnifiedOnbordingOnboardType,
 		variable.AwsUnifiedOnbordingFullProtection,

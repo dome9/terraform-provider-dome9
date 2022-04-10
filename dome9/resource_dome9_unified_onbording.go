@@ -1,22 +1,15 @@
 package dome9
 
 import (
-	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/unifiedOnbording/awsUnifiedOnbording"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"log"
 )
-
-const (
-	Rulesets     = "rulesets"
-	Enabled      = "enabled"
-	OnboardingId = "OnboardingId"
-)
-
 func resourceUnifiedOnbording() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceUnifiedOnbordingCreate,
-		Read:   resourceUnifiedOnbordingRead,
+		Read:   unifiedOnbordingResourceRead,
 		Update: resourceUnifiedOnbordingUpdat,
 		Delete: resourceUnifiedOnbordingDelete,
 		Importer: &schema.ResourceImporter{
@@ -25,24 +18,24 @@ func resourceUnifiedOnbording() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"onboard_type": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 			},
 			"full_protection": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
 			},
 			"cloud_vendor": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"enable_stack_modify": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
 			},
 			"posture_management_configuration": {
 				Type:     schema.TypeMap,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						Rulesets: {
@@ -54,7 +47,7 @@ func resourceUnifiedOnbording() *schema.Resource {
 			},
 			"serverless_configuration": {
 				Type:     schema.TypeMap,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						Enabled: {
@@ -66,53 +59,45 @@ func resourceUnifiedOnbording() *schema.Resource {
 			},
 			"intelligence_configurations": {
 				Type:     schema.TypeMap,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						Rulesets: {
 							Type:     schema.TypeList,
-							Required: true,
+							Required: false,
 						},
 						Enabled: {
 							Type:     schema.TypeBool,
-							Required: true,
+							Required: false,
 						},
 					},
 				},
+			},
+			StackName: {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			Parameters: {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{},
+				},
+			},
+			IamCapabilities: {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			TemplateUrl: {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
 }
 
-func resourceUnifiedOnbordingDelete(data *schema.ResourceData, i interface{}) error {
-	return nil
-}
-
-func resourceUnifiedOnbordingUpdat(data *schema.ResourceData, i interface{}) error {
-	return nil
-}
-
-func resourceUnifiedOnbordingRead(d *schema.ResourceData, meta interface{}) error {
-	d9Client := meta.(*Client)
-	resp, _, err := d9Client.AwsUnifiedOnbording.Get(d.Id())
-	if err != nil {
-		if err.(*client.ErrorResponse).IsObjectNotFound() {
-			log.Printf("[WARN] Removing rule set %s from state because it no longer exists in Dome9", d.Id())
-			d.SetId("")
-			return nil
-		}
-		return err
-	}
-
-	log.Printf("[INFO] Getting Unified Onbording:\n%+v\n", resp)
-	_ = d.Set("stack_name", resp.StackName)
-	_ = d.Set("parameters", resp.Parameters)
-	_ = d.Set("iam_capabilities", resp.IamCapabilities)
-	_ = d.Set("template_url", resp.TemplateUrl)
-
-	return nil
-}
-
+//todo to consider the resource aws_cloudformation_stack
 func resourceUnifiedOnbordingCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	req := expandAwsUnifiedOnbordingRequest(d)
@@ -124,23 +109,15 @@ func resourceUnifiedOnbordingCreate(d *schema.ResourceData, meta interface{}) er
 
 	log.Printf("[INFO] Created UnifiedOnbording resource with stackName: %v\n", resp.StackName)
 
-	AddOnbordingIdAsSchemaId(d, resp)
+	addOnboardingIdAsSchemaId(d, resp)
 
-	return resourceUnifiedOnbordingRead(d, meta)
-}
+	log.Printf("[INFO] Getting Unified Onbording:\n%+v\n", resp)
+	_ = d.Set(StackName, resp.StackName)
+	_ = d.Set(Parameters, resp.Parameters)
+	_ = d.Set(IamCapabilities, resp.IamCapabilities)
+	_ = d.Set(TemplateUrl, resp.TemplateUrl)
 
-func AddOnbordingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) {
-	var p = resp.Parameters
-	var schemaId string
-	for _, value := range p {
-		if value.Key == OnboardingId {
-			schemaId = value.Value
-		}
-	}
-
-	if len(schemaId) > 0 {
-		d.SetId(schemaId)
-	}
+	return nil
 }
 
 func expandAwsUnifiedOnbordingRequest(d *schema.ResourceData) awsUnifiedOnbording.UnifiedOnbordingRequest {
@@ -159,7 +136,7 @@ func expandAwsUnifiedOnbordingRequest(d *schema.ResourceData) awsUnifiedOnbordin
 
 func expendIntelligenceConfigurations(d *schema.ResourceData) awsUnifiedOnbording.IntelligenceConfigurations {
 	var intelligenceConfigurations awsUnifiedOnbording.IntelligenceConfigurations
-	intelligenceConfigurations.Enabled = d.Get(Enabled).(bool)
+	intelligenceConfigurations.Enabled = true // d.Get(variable.Enabled).(bool)
 	intelligenceConfigurations.Rulesets = *getRulesets(d)
 
 	return intelligenceConfigurations
@@ -167,7 +144,7 @@ func expendIntelligenceConfigurations(d *schema.ResourceData) awsUnifiedOnbordin
 
 func expendServerlessConfiguration(d *schema.ResourceData) awsUnifiedOnbording.ServerlessConfiguration {
 	var serverlessConfiguration awsUnifiedOnbording.ServerlessConfiguration
-	item := d.Get(Enabled).(bool)
+	item := true// d.Get(Enabled).(bool)
 	serverlessConfiguration.Enabled = item
 	return serverlessConfiguration
 }
@@ -195,17 +172,28 @@ func getRulesets(d *schema.ResourceData) *[]int {
 	return &rulesets
 }
 
-func resourceContinuousCompliancePolicyCreate2(d *schema.ResourceData, meta interface{}) error {
-	d9Client := meta.(*Client)
-	req := expandContinuousCompliancePolicyRequest(d)
-	log.Printf("[INFO] Creating compliance policy request %+v\n", req)
-	resp, _, err := d9Client.continuousCompliancePolicy.Create(&req)
-	if err != nil {
-		return err
+func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) {
+	var p = resp.Parameters
+	var schemaId string
+	for _, value := range p {
+		if value.Key == variable.OnboardingId {
+			schemaId = value.Value
+		}
 	}
 
-	log.Printf("[INFO] Created compliance policy with ID: %v\n", resp.ID)
-	d.SetId(resp.ID)
+	if len(schemaId) > 0 {
+		d.SetId(schemaId)
+	}
+}
 
-	return resourceContinuousCompliancePolicyRead(d, meta)
+func resourceUnifiedOnbordingDelete(data *schema.ResourceData, i interface{}) error {
+	return nil
+}
+
+func resourceUnifiedOnbordingUpdat(data *schema.ResourceData, i interface{}) error {
+	return nil
+}
+
+func unifiedOnbordingResourceRead(d *schema.ResourceData, meta interface{}) error {
+	return nil
 }
