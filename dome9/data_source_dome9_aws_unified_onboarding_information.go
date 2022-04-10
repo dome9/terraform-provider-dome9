@@ -1,7 +1,6 @@
 package dome9
 
 import (
-	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -68,13 +67,12 @@ func dataSourceAwsUnifiedOnboardingInformation() *schema.Resource {
 				Computed: true,
 			},
 			UnifiedOnboardingRequest: {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Resource{Schema: map[string]*schema.Schema{
 					"onboard_type": {
 						Type:     schema.TypeString,
 						Optional: true,
-						ForceNew: true,
 					},
 					"full_protection": {
 						Type:     schema.TypeBool,
@@ -170,39 +168,23 @@ func dataSourceAwsUnifiedOnboardingInformation() *schema.Resource {
 
 func dataSourceAwsUnifiedOnboardingReadInfo(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	resp, _, err := d9Client.AwsUnifiedOnbording.Get(d.Get("CloudAccountId").(string))
+	resp, _, err := d9Client.AwsUnifiedOnbording.Get(d.Get(CloudAccountId).(string))
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[INFO] Get UnifiedOnbording Information with OnbordingId: %s\n", resp.OnboardingId)
 
-	return unifiedOnbordingReadInfo(d, meta)
-}
-
-func unifiedOnbordingReadInfo(d *schema.ResourceData, meta interface{}) error {
-	d9Client := meta.(*Client)
-	resp, _, err := d9Client.AwsUnifiedOnbording.Get(d.Id())
-	if err != nil {
-		if err.(*client.ErrorResponse).IsObjectNotFound() {
-			log.Printf("[WARN] Removing rule set %s from state because it no longer exists in Dome9", d.Id())
-			d.SetId("")
-			return nil
-		}
-		return err
-	}
-
-	log.Printf("[INFO] Getting Unified Onbording:\n%+v\n", resp)
 	_ = d.Set(OnboardingId, resp.OnboardingId)
 	_ = d.Set(InitiatedUserName, resp.InitiatedUserName)
-	_ = d.Set(InitiatedUserId, resp.InitiatedUserId)
-	_ = d.Set(EnvironmentId, resp.EnvironmentId)
 	_ = d.Set(EnvironmentName, resp.EnvironmentName)
 	_ = d.Set(EnvironmentExternalId, resp.EnvironmentExternalId)
 	_ = d.Set(RootStackId, resp.RootStackId)
 	_ = d.Set(CftVersion, resp.CftVersion)
 	_ = d.Set(UnifiedOnboardingRequest, resp.UnifiedOnbordingRequest)
 	_ = d.Set(Status, resp.Statuses)
+	_ = d.Set(EnvironmentId, resp.EnvironmentId)
+	_ = d.Set(InitiatedUserId, resp.InitiatedUserId)
 
 	return nil
 }
