@@ -8,7 +8,7 @@ import (
 )
 func resourceAwsUnifiedOnbording() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceUnifiedOnbordingCreate,
+		Create: resourceUnifiedOnboardingCreate,
 		Read:   unifiedOnbordingResourceRead,
 		Update: resourceUnifiedOnbordingUpdat,
 		Delete: resourceUnifiedOnbordingDelete,
@@ -97,8 +97,7 @@ func resourceAwsUnifiedOnbording() *schema.Resource {
 	}
 }
 
-//todo to consider the resource aws_cloudformation_stack
-func resourceUnifiedOnbordingCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceUnifiedOnboardingCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	req := expandAwsUnifiedOnbordingRequest(d)
 	log.Printf("[INFO] Creating Unified Onbording request %+v\n", req)

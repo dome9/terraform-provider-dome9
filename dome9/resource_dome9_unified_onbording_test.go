@@ -24,7 +24,7 @@ func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
 			{
 				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAwsUnifiedOnbordingExists(resourceTypeAndName, &awsUnifiedOnbording),
+					testAccCheckAwsUnifiedOnboardingExists(resourceTypeAndName, &awsUnifiedOnbording),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "template_url", variable.AwsUnifiedOnbordingTemplateUrl),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities", variable.AwsUnifiedOnbordingIamCapabilities),
 				),
@@ -33,7 +33,7 @@ func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckAwsUnifiedOnbordingExists(resource string, awsUnifiedOnbording *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) resource.TestCheckFunc {
+func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnbording *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
@@ -44,7 +44,7 @@ func testAccCheckAwsUnifiedOnbordingExists(resource string, awsUnifiedOnbording 
 		}
 
 		apiClient := testAccProvider.Meta().(*Client)
-		receivedAwsUnifiedOnbordingResponse, _, err := apiClient.AwsUnifiedOnbording.Get(rs.Primary.ID)
+		receivedAwsUnifiedOnbordingResponse, _, err := apiClient.AwsUnifiedOnbording.GetUpdateStackConfig(rs.Primary.ID)
 
 		if err != nil {
 			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)

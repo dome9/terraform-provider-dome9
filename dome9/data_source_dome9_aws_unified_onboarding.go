@@ -6,8 +6,6 @@ import (
 	"log"
 )
 
-const (
-)
 
 func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 	return &schema.Resource{

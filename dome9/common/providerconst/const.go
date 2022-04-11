@@ -8,37 +8,44 @@ const (
 
 // SDK parameters names
 const (
-	ProviderAccessID          = "dome9_access_id"
-	ProviderSecretKey         = "dome9_secret_key"
-	ProviderBaseURL           = "base_url"
+	ProviderAccessID  = "dome9_access_id"
+	ProviderSecretKey = "dome9_secret_key"
+	ProviderBaseURL   = "base_url"
 )
 
 // AWS unified onboarding
 const (
-	CloudAccountId            = "cloud_account_id"
-	InitiatedUserName         = "initiated_user_name"
-	InitiatedUserId           = "initiated_user_id"
-	EnvironmentId             = "environment_id"
-	EnvironmentName           = "environment_name"
-	EnvironmentExternalId     = "environment_external_id"
-	RootStackId               = "root_stack_id"
-	CftVersion                = "cft_version"
-	UnifiedOnboardingRequest  = "onbording_request"
-	Statuses                  = "statuses"
-	Module                    = "module"
-	Feature                   = "feature"
-	Status                    = "status"
-	StatusMessage             = "status_message"
-	StackStatus               = "stack_status"
-	StackMessage              = "stack_message"
-	RemediationRecommendation = "remediation_recommendation"
-	OnboardType = "onboard_type"
-	FullProtection = "full_protection"
-	CloudVendor = "cloud_vendor"
-	EnableStackModify = "enable_stack_modify"
+	CloudAccountId                 = "cloud_account_id"
+	InitiatedUserName              = "initiated_user_name"
+	InitiatedUserId                = "initiated_user_id"
+	EnvironmentId                  = "environment_id"
+	EnvironmentName                = "environment_name"
+	EnvironmentExternalId          = "environment_external_id"
+	RootStackId                    = "root_stack_id"
+	CftVersion                     = "cft_version"
+	UnifiedOnboardingRequest       = "onbording_request"
+	Statuses                       = "statuses"
+	Module                         = "module"
+	Feature                        = "feature"
+	Status                         = "status"
+	StatusMessage                  = "status_message"
+	StackStatus                    = "stack_status"
+	StackMessage                   = "stack_message"
+	RemediationRecommendation      = "remediation_recommendation"
+	Rulesets                       = "rulesets"
+	Enabled                        = "enabled"
+	StackName                      = "stack_name"
+	Parameters                     = "parameters"
+	IamCapabilities                = "iam_capabilities"
+	TemplateUrl                    = "template_url"
+	OnboardingId                   = "onboarding_id"
+	OnboardType                    = "onboard_type"
+	FullProtection                 = "full_protection"
+	CloudVendor                    = "cloud_vendor"
+	EnableStackModify              = "enable_stack_modify"
 	PostureManagementConfiguration = "posture_management_configuration"
-	ServerlessConfiguration = "serverless_configuration"
-	IntelligenceConfigurations = "intelligence_configurations"
+	ServerlessConfiguration        = "serverless_configuration"
+	IntelligenceConfigurations     = "intelligence_configurations"
 )
 
 // GCP onboarding
@@ -101,16 +108,6 @@ const (
 	AF_SOUTH_1          = "26"
 	EU_SOUTH_1          = "27"
 	AP_NORTHEAST_3      = "28"
-)
-
-const (
-	Rulesets        = "rulesets"
-	Enabled         = "enabled"
-	StackName       = "stack_name"
-	Parameters      = "parameters"
-	IamCapabilities = "iam_capabilities"
-	TemplateUrl     = "template_url"
-	OnboardingId    = "onboarding_id"
 )
 
 // Azure consts
