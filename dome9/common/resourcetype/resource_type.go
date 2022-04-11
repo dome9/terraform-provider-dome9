@@ -21,5 +21,5 @@ const (
 	IAMSafeEntity                               = "dome9_iam_safe_entity"
 	ServiceAccount                              = "dome9_service_account"
 	AwsUnifiedOnbordingUpdateVersionStackConfig = "dome9_aws_unified_onbording_update_version_stack_config"
-	AwsUnifiedOnbording                         = "dome9_data_source_aws_unified_onboarding"
+	AwsUnifiedOnbording                         = "dome9_aws_unified_onboarding"
 )
