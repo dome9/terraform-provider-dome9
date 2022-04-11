@@ -8,7 +8,7 @@ import (
 )
 
 
-func dataSourceAwsUnifiedOnboarding() *schema.Resource { //todo rename to aws_unified_onbording_update_version_stack_config
+func dataSourceAwsUnifiedOnboardingUpdateVersionStackConfig() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceAwsUnifiedOnboardingReadConfig,
 		Schema: map[string]*schema.Schema{

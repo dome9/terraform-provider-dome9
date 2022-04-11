@@ -9,7 +9,7 @@ import (
 const (
 )
 
-func dataSourceAwsUnifiedOnboardingInformation() *schema.Resource { //todo tename to dome9_aws_unified_onboarding
+func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceAwsUnifiedOnboardingReadInfo,
 		Schema: map[string]*schema.Schema{
