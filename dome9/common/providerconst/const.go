@@ -8,9 +8,37 @@ const (
 
 // SDK parameters names
 const (
-	ProviderAccessID  = "dome9_access_id"
-	ProviderSecretKey = "dome9_secret_key"
-	ProviderBaseURL   = "base_url"
+	ProviderAccessID          = "dome9_access_id"
+	ProviderSecretKey         = "dome9_secret_key"
+	ProviderBaseURL           = "base_url"
+)
+
+// AWS unified onboarding
+const (
+	CloudAccountId            = "cloud_account_id"
+	InitiatedUserName         = "initiated_user_name"
+	InitiatedUserId           = "initiated_user_id"
+	EnvironmentId             = "environment_id"
+	EnvironmentName           = "environment_name"
+	EnvironmentExternalId     = "environment_external_id"
+	RootStackId               = "root_stack_id"
+	CftVersion                = "cft_version"
+	UnifiedOnboardingRequest  = "onbording_request"
+	Statuses                  = "statuses"
+	Module                    = "module"
+	Feature                   = "feature"
+	Status                    = "status"
+	StatusMessage             = "status_message"
+	StackStatus               = "stack_status"
+	StackMessage              = "stack_message"
+	RemediationRecommendation = "remediation_recommendation"
+	OnboardType = "onboard_type"
+	FullProtection = "full_protection"
+	CloudVendor = "cloud_vendor"
+	EnableStackModify = "enable_stack_modify"
+	PostureManagementConfiguration = "posture_management_configuration"
+	ServerlessConfiguration = "serverless_configuration"
+	IntelligenceConfigurations = "intelligence_configurations"
 )
 
 // GCP onboarding
@@ -75,6 +103,16 @@ const (
 	AP_NORTHEAST_3      = "28"
 )
 
+const (
+	Rulesets        = "rulesets"
+	Enabled         = "enabled"
+	StackName       = "stack_name"
+	Parameters      = "parameters"
+	IamCapabilities = "iam_capabilities"
+	TemplateUrl     = "template_url"
+	OnboardingId    = "onboarding_id"
+)
+
 // Azure consts
 var AzureSecurityGroupRegions = []string{"centralus", "eastus", "eastus2", "usgovlowa", "usgovvirginia", "northcentralus", "southcentralus", "westus", "westus2", "westcentralus", "northeurope", "westeurope", "eastasia", "southeastasia", "japaneast", "japanwest", "brazilsouth", "australiaeast", "australiasoutheast", "centralindia", "southindia", "westindia", "chinaeast", "chinanorth", "canadacentral", "canadaeast", "germanycentral", "germanynortheast", "koreacentral", "uksouth", "ukwest", "koreasouth"}
 var AzureSecurityGroupAccess = []string{"Allow", "Deny"}
@@ -83,10 +121,13 @@ var AzureSecurityGroupSourceScopeTypes = []string{"CIDR", "IPList", "Tag"}
 
 // The 21 regions Dome9 manages in AWS cloud account
 var AWSRegions = []string{"us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3"}
+
 // The 2 regions Dome9 manages in AWSGOV cloud account
 var AWSGOVRegions = []string{"us_gov_west_1", "us_gov_east_1"}
+
 // The 2 regions Dome9 manages in AWSChina cloud account
 var AWSChinaRegions = []string{"cn_northwest_1", "cn_north_1"}
+
 // The 23 regions Dome9 manages in AWS & AWSGOV cloud account
 var AllAWSRegions = append(AWSGOVRegions, append(AWSRegions, AWSChinaRegions...)...)
 var CloudVendors = []string{"aws", "azure", "google"}

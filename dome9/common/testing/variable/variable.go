@@ -137,12 +137,6 @@ const (
 
 	AwsUnifiedOnbordingTemplateUrl     = `https://cloudguard-unified-onboarding-dev.s3.amazonaws.com/3.4.0/templates/role_based/onboarding.yml`
 	AwsUnifiedOnbordingIamCapabilities = ` ["CAPABILITY_IAM","CAPABILITY_NAMED_IAM","CAPABILITY_AUTO_EXPAND"]`
-
-	Rulesets     = "rulesets"
-	Enabled      = "enabled"
-	OnboardingId = "OnboardingId"
-
-
 )
 
 // organizational unit resource/data source

@@ -3,10 +3,10 @@ package dome9
 import (
 	"github.com/dome9/dome9-sdk-go/services/unifiedOnbording/awsUnifiedOnbording"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 	"log"
 )
-func resourceUnifiedOnbording() *schema.Resource {
+func resourceAwsUnifiedOnbording() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceUnifiedOnbordingCreate,
 		Read:   unifiedOnbordingResourceRead,
@@ -16,80 +16,80 @@ func resourceUnifiedOnbording() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"onboard_type": {
+			providerconst.OnboardType: {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
-			"full_protection": {
+			providerconst.FullProtection: {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
-			"cloud_vendor": {
+			providerconst.CloudVendor: {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"enable_stack_modify": {
+			providerconst.EnableStackModify: {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
-			"posture_management_configuration": {
+			providerconst.PostureManagementConfiguration: {
 				Type:     schema.TypeMap,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						Rulesets: {
+						providerconst.Rulesets: {
 							Type:     schema.TypeList,
 							Required: true,
 						},
 					},
 				},
 			},
-			"serverless_configuration": {
+			providerconst.ServerlessConfiguration: {
 				Type:     schema.TypeMap,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						Enabled: {
+						providerconst.Enabled: {
 							Type:     schema.TypeBool,
 							Required: true,
 						},
 					},
 				},
 			},
-			"intelligence_configurations": {
+			providerconst.IntelligenceConfigurations: {
 				Type:     schema.TypeMap,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						Rulesets: {
+						providerconst.Rulesets: {
 							Type:     schema.TypeList,
 							Required: false,
 						},
-						Enabled: {
+						providerconst.Enabled: {
 							Type:     schema.TypeBool,
 							Required: false,
 						},
 					},
 				},
 			},
-			StackName: {
+			providerconst.StackName: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			Parameters: {
+			providerconst.Parameters: {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{},
 				},
 			},
-			IamCapabilities: {
+			providerconst.IamCapabilities: {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			TemplateUrl: {
+			providerconst.TemplateUrl: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -112,10 +112,10 @@ func resourceUnifiedOnbordingCreate(d *schema.ResourceData, meta interface{}) er
 	addOnboardingIdAsSchemaId(d, resp)
 
 	log.Printf("[INFO] Getting Unified Onbording:\n%+v\n", resp)
-	_ = d.Set(StackName, resp.StackName)
-	_ = d.Set(Parameters, resp.Parameters)
-	_ = d.Set(IamCapabilities, resp.IamCapabilities)
-	_ = d.Set(TemplateUrl, resp.TemplateUrl)
+	_ = d.Set(providerconst.StackName, resp.StackName)
+	_ = d.Set(providerconst.Parameters, resp.Parameters)
+	_ = d.Set(providerconst.IamCapabilities, resp.IamCapabilities)
+	_ = d.Set(providerconst.TemplateUrl, resp.TemplateUrl)
 
 	return nil
 }
@@ -123,10 +123,10 @@ func resourceUnifiedOnbordingCreate(d *schema.ResourceData, meta interface{}) er
 func expandAwsUnifiedOnbordingRequest(d *schema.ResourceData) awsUnifiedOnbording.UnifiedOnbordingRequest {
 
 	return awsUnifiedOnbording.UnifiedOnbordingRequest{
-		CloudVendor:                    d.Get("cloud_vendor").(string),
-		OnboardType:                    d.Get("onboard_type").(string),
-		EnableStackModify:              d.Get("enable_stack_modify").(bool),
-		FullProtection:                 d.Get("full_protection").(bool),
+		CloudVendor:                    d.Get(providerconst.CloudVendor).(string),
+		OnboardType:                    d.Get(providerconst.OnboardType).(string),
+		EnableStackModify:              d.Get(providerconst.EnableStackModify).(bool),
+		FullProtection:                 d.Get(providerconst.FullProtection).(bool),
 		PostureManagementConfiguration: expendPostureManagementConfiguration(d),
 		ServerlessConfiguration:        expendServerlessConfiguration(d),
 		IntelligenceConfigurations:     expendIntelligenceConfigurations(d),
@@ -157,7 +157,7 @@ func expendPostureManagementConfiguration(d *schema.ResourceData) awsUnifiedOnbo
 
 func getRulesets(d *schema.ResourceData) *[]int {
 	var rulesets []int
-	if itemsInterface, ok := d.GetOk(Rulesets); ok {
+	if itemsInterface, ok := d.GetOk(providerconst.Rulesets); ok {
 		items := itemsInterface.([]interface{})
 		rulesets = make([]int, len(items))
 		for i, item := range items {
@@ -176,7 +176,7 @@ func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording
 	var p = resp.Parameters
 	var schemaId string
 	for _, value := range p {
-		if value.Key == variable.OnboardingId {
+		if value.Key == providerconst.OnboardingId {
 			schemaId = value.Value
 		}
 	}

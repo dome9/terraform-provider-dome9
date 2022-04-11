@@ -1,125 +1,108 @@
 package dome9
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
+	"log"
 )
 
 const (
-	CloudAccountId            = "cloud_account_id"
-	InitiatedUserName         = "initiated_user_name"
-	InitiatedUserId           = "initiated_user_id"
-	EnvironmentId             = "environment_id"
-	EnvironmentName           = "environment_name"
-	EnvironmentExternalId     = "environment_external_id"
-	RootStackId               = "root_stack_id"
-	CftVersion                = "cft_version"
-	UnifiedOnboardingRequest  = "onbording_request"
-	Statuses                  = "statuses"
-	Module                    = "module"
-	Feature                   = "feature"
-	Status                    = "status"
-	StatusMessage             = "status_message"
-	StackStatus               = "stack_status"
-	StackMessage              = "stack_message"
-	remediationRecommendation = "remediation_recommendation"
 )
 
-func dataSourceAwsUnifiedOnboardingInformation() *schema.Resource {
+func dataSourceAwsUnifiedOnboardingInformation() *schema.Resource { //todo tename to dome9_aws_unified_onboarding
 	return &schema.Resource{
 		Read: dataSourceAwsUnifiedOnboardingReadInfo,
 		Schema: map[string]*schema.Schema{
-			CloudAccountId: {
+			providerconst.CloudAccountId: {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			OnboardingId: {
+			providerconst.OnboardingId: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			InitiatedUserName: {
+			providerconst.InitiatedUserName: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			InitiatedUserId: {
+			providerconst.InitiatedUserId: {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			EnvironmentId: {
+			providerconst.EnvironmentId: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			EnvironmentExternalId: {
+			providerconst.EnvironmentExternalId: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			RootStackId: {
+			providerconst.RootStackId: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			CftVersion: {
+			providerconst.CftVersion: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			EnvironmentName: {
+			providerconst.EnvironmentName: {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			UnifiedOnboardingRequest: {
+			providerconst.UnifiedOnboardingRequest: {
 				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Resource{Schema: map[string]*schema.Schema{
-					"onboard_type": {
+					providerconst.OnboardType: {
 						Type:     schema.TypeString,
 						Optional: true,
 					},
-					"full_protection": {
+					providerconst.FullProtection: {
 						Type:     schema.TypeBool,
 						Optional: true,
 					},
-					"cloud_vendor": {
+					providerconst.CloudVendor: {
 						Type:     schema.TypeString,
 						Optional: true,
 					},
-					"enable_stack_modify": {
+					providerconst.EnableStackModify: {
 						Type:     schema.TypeBool,
 						Optional: true,
 					},
-					"posture_management_configuration": {
+					providerconst.PostureManagementConfiguration: {
 						Type:     schema.TypeMap,
 						Optional: true,
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
-								Rulesets: {
+								providerconst.Rulesets: {
 									Type:     schema.TypeList,
 									Required: true,
 								},
 							},
 						},
 					},
-					"serverless_configuration": {
+					providerconst.ServerlessConfiguration: {
 						Type:     schema.TypeMap,
 						Optional: true,
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
-								Enabled: {
+								providerconst.Enabled: {
 									Type:     schema.TypeBool,
 									Required: true,
 								},
 							},
 						},
 					},
-					"intelligence_configurations": {
+					providerconst.IntelligenceConfigurations: {
 						Type:     schema.TypeMap,
 						Optional: true,
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
-								Rulesets: {
+								providerconst.Rulesets: {
 									Type:     schema.TypeList,
 									Required: false,
 								},
-								Enabled: {
+								providerconst.Enabled: {
 									Type:     schema.TypeBool,
 									Required: false,
 								},
@@ -127,36 +110,36 @@ func dataSourceAwsUnifiedOnboardingInformation() *schema.Resource {
 						},
 					},
 				}}},
-			Statuses: {
+			providerconst.Statuses: {
 				Type:     schema.TypeString,
 				Computed: true,
 				Elem: &schema.Resource{Schema: map[string]*schema.Schema{
-					Module: {
+					providerconst.Module: {
 						Type:     schema.TypeString,
 						Computed: true,
 						ForceNew: true,
 					},
-					Feature: {
+					providerconst.Feature: {
 						Type:     schema.TypeBool,
 						Computed: true,
 					},
-					Status: {
+					providerconst.Status: {
 						Type:     schema.TypeString,
 						Computed: true,
 					},
-					StatusMessage: {
+					providerconst.StatusMessage: {
 						Type:     schema.TypeString,
 						Computed: true,
 					},
-					StackStatus: {
+					providerconst.StackStatus: {
 						Type:     schema.TypeString,
 						Computed: true,
 					},
-					StackMessage: {
+					providerconst.StackMessage: {
 						Type:     schema.TypeString,
 						Computed: true,
 					},
-					remediationRecommendation: {
+					providerconst.RemediationRecommendation: {
 						Type:     schema.TypeString,
 						Computed: true,
 					},
@@ -168,23 +151,24 @@ func dataSourceAwsUnifiedOnboardingInformation() *schema.Resource {
 
 func dataSourceAwsUnifiedOnboardingReadInfo(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	resp, _, err := d9Client.AwsUnifiedOnbording.Get(d.Get(CloudAccountId).(string))
+	resp, _, err := d9Client.AwsUnifiedOnbording.Get(d.Get(providerconst.CloudAccountId).(string))
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[INFO] Get UnifiedOnbording Information with OnbordingId: %s\n", resp.OnboardingId)
 
-	_ = d.Set(OnboardingId, resp.OnboardingId)
-	_ = d.Set(InitiatedUserName, resp.InitiatedUserName)
-	_ = d.Set(EnvironmentName, resp.EnvironmentName)
-	_ = d.Set(EnvironmentExternalId, resp.EnvironmentExternalId)
-	_ = d.Set(RootStackId, resp.RootStackId)
-	_ = d.Set(CftVersion, resp.CftVersion)
-	_ = d.Set(UnifiedOnboardingRequest, resp.UnifiedOnbordingRequest)
-	_ = d.Set(Status, resp.Statuses)
-	_ = d.Set(EnvironmentId, resp.EnvironmentId)
-	_ = d.Set(InitiatedUserId, resp.InitiatedUserId)
+	d.SetId(resp.OnboardingId)
+	_ = d.Set(providerconst.OnboardingId, resp.OnboardingId)
+	_ = d.Set(providerconst.InitiatedUserName, resp.InitiatedUserName)
+	_ = d.Set(providerconst.EnvironmentName, resp.EnvironmentName)
+	_ = d.Set(providerconst.EnvironmentExternalId, resp.EnvironmentExternalId)
+	_ = d.Set(providerconst.RootStackId, resp.RootStackId)
+	_ = d.Set(providerconst.CftVersion, resp.CftVersion)
+	_ = d.Set(providerconst.UnifiedOnboardingRequest, resp.UnifiedOnbordingRequest)
+	_ = d.Set(providerconst.Status, resp.Statuses)
+	_ = d.Set(providerconst.EnvironmentId, resp.EnvironmentId)
+	_ = d.Set(providerconst.InitiatedUserId, resp.InitiatedUserId)
 
 	return nil
 }
