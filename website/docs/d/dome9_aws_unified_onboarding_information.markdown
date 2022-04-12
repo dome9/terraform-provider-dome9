@@ -1,19 +1,19 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_aws_unified_onboarding"
+page_title: "Check Point CloudGuard Dome9: dome9_aws_unified_onboarding_information"
 sidebar_current: "docs-datasource-dome9-aws-unified-onboarding"
 description: |-
   GET configuration should be set to the AWS cloud formation SDK for an update
 ---
 
-# Data Source: dome9_aws_unified_onboarding
+# Data Source: dome9_aws_unified_onboarding_update_version_stack_config
 
 Use this data source to get the configuration that should be set to the AWS cloud formation SDK for an update.
 
 ## Example Usage
 
 ```hcl
-data "dome9_aws_unified_onboarding" "test" {
+data "dome9_aws_unified_onboarding_update_version_stack_config" "test" {
   onboarding_id = "onboarding_id"
 }
 ```
