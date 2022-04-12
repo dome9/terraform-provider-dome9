@@ -75,6 +75,7 @@ func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 								providerconst.Rulesets: {
 									Type:     schema.TypeList,
 									Required: true,
+									Elem:     &schema.Schema{Type: schema.TypeInt},
 								},
 							},
 						},
@@ -99,6 +100,7 @@ func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 								providerconst.Rulesets: {
 									Type:     schema.TypeList,
 									Required: false,
+									Elem:     &schema.Schema{Type: schema.TypeInt},
 								},
 								providerconst.Enabled: {
 									Type:     schema.TypeBool,

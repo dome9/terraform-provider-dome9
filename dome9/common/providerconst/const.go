@@ -32,7 +32,7 @@ const (
 	StackStatus                    = "stack_status"
 	StackMessage                   = "stack_message"
 	RemediationRecommendation      = "remediation_recommendation"
-	Rulesets                       = "rulesets"
+	Rulesets                       = "rulsets"
 	Enabled                        = "enabled"
 	StackName                      = "stack_name"
 	Parameters                     = "parameters"

@@ -1,11 +1,14 @@
 package dome9
 
 import (
+	"encoding/json"
 	"github.com/dome9/dome9-sdk-go/services/unifiedOnbording/awsUnifiedOnbording"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 	"log"
+	"strconv"
 )
+
 func resourceAwsUnifiedOnbording() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceUnifiedOnboardingCreate,
@@ -41,6 +44,7 @@ func resourceAwsUnifiedOnbording() *schema.Resource {
 						providerconst.Rulesets: {
 							Type:     schema.TypeList,
 							Required: true,
+							Elem:     &schema.Schema{Type: schema.TypeInt},
 						},
 					},
 				},
@@ -65,6 +69,7 @@ func resourceAwsUnifiedOnbording() *schema.Resource {
 						providerconst.Rulesets: {
 							Type:     schema.TypeList,
 							Required: false,
+							Elem:     &schema.Schema{Type: schema.TypeInt},
 						},
 						providerconst.Enabled: {
 							Type:     schema.TypeBool,
@@ -97,9 +102,10 @@ func resourceAwsUnifiedOnbording() *schema.Resource {
 	}
 }
 
+//todo to consider the resource aws_cloudformation_stack create the resource and check the onboarding
 func resourceUnifiedOnboardingCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	req := expandAwsUnifiedOnbordingRequest(d)
+	req := expandAwsUnifiedOnboardingRequest(d)
 	log.Printf("[INFO] Creating Unified Onbording request %+v\n", req)
 	resp, _, err := d9Client.AwsUnifiedOnbording.Create(req)
 	if err != nil {
@@ -119,7 +125,7 @@ func resourceUnifiedOnboardingCreate(d *schema.ResourceData, meta interface{}) e
 	return nil
 }
 
-func expandAwsUnifiedOnbordingRequest(d *schema.ResourceData) awsUnifiedOnbording.UnifiedOnbordingRequest {
+func expandAwsUnifiedOnboardingRequest(d *schema.ResourceData) awsUnifiedOnbording.UnifiedOnbordingRequest {
 
 	return awsUnifiedOnbording.UnifiedOnbordingRequest{
 		CloudVendor:                    d.Get(providerconst.CloudVendor).(string),
@@ -135,47 +141,68 @@ func expandAwsUnifiedOnbordingRequest(d *schema.ResourceData) awsUnifiedOnbordin
 
 func expendIntelligenceConfigurations(d *schema.ResourceData) awsUnifiedOnbording.IntelligenceConfigurations {
 	var intelligenceConfigurations awsUnifiedOnbording.IntelligenceConfigurations
-	intelligenceConfigurations.Enabled = true // d.Get(variable.Enabled).(bool)
-	intelligenceConfigurations.Rulesets = *getRulesets(d)
+	log.Printf("[INFO] ########## expendIntelligenceConfigurations:%+v\n", intelligenceConfigurations)
+	log.Printf("[INFO] ########## expendIntelligenceConfigurations	schema	:\n%+v\n", d)
+	configuration := d.Get("intelligence_configurations").(map[string]interface{})
+	intelligenceConfigurations.Enabled = getEnabledFromMap(configuration)
+	log.Printf("[INFO] ########## expendIntelligenceConfigurations	configurations	:%+v\n", intelligenceConfigurations)
+	intelligenceConfigurations.Rulesets = *getRulesetsFromMap(configuration)
+
+	log.Printf("[INFO] ############# expendIntelligenceConfigurations:%+v\n", intelligenceConfigurations)
 
 	return intelligenceConfigurations
 }
 
+func getEnabledFromMap(configurations map[string]interface{}) bool {
+	b := false
+	if len(configurations) > 0 {
+		v := configurations[providerconst.Enabled].(string)
+		b, _ = strconv.ParseBool(v)
+	}
+	return b
+}
+
 func expendServerlessConfiguration(d *schema.ResourceData) awsUnifiedOnbording.ServerlessConfiguration {
 	var serverlessConfiguration awsUnifiedOnbording.ServerlessConfiguration
-	item := true// d.Get(Enabled).(bool)
-	serverlessConfiguration.Enabled = item
+	log.Printf("[INFO] ########## expendServerlessConfiguration:\n%+v\n", serverlessConfiguration)
+	serverlessConfiguration.Enabled = getEnabledFromMap(d.Get("serverless_configuration").(map[string]interface{}))
+	log.Printf("[INFO] ########## expendServerlessConfiguration:\n%+v\n", serverlessConfiguration)
+
 	return serverlessConfiguration
 }
 
 func expendPostureManagementConfiguration(d *schema.ResourceData) awsUnifiedOnbording.PostureManagementConfiguration {
 	var postureManagementConfiguration awsUnifiedOnbording.PostureManagementConfiguration
-	postureManagementConfiguration.Rulesets = *getRulesets(d)
+	postureManagementConfiguration.Rulesets = *getRulesetsFromMap(d.Get("posture_management_configuration").(map[string]interface{}))
 	return postureManagementConfiguration
 }
 
-func getRulesets(d *schema.ResourceData) *[]int {
+func getRulesetsFromMap(m map[string]interface{}) *[]int {
 	var rulesets []int
-	if itemsInterface, ok := d.GetOk(providerconst.Rulesets); ok {
-		items := itemsInterface.([]interface{})
-		rulesets = make([]int, len(items))
-		for i, item := range items {
-			rulesets[i] = item.(int)
-		}
-	}
-
-	if rulesets == nil {
+	if m == nil {
+		log.Printf("[INFO] ############# getRulesetsFromMap	m == nil")
 		rulesets = make([]int, 0)
+		return &rulesets
 	}
+	log.Printf("[INFO] ############# getRulesetsFromMap	map :%+v\n", m)
+	log.Printf("[INFO] ############# getRulesetsFromMap	m[providerconst.Rulesets] :%+v\n", m[providerconst.Rulesets])
+
+	RulesetsAsString := m[providerconst.Rulesets].(string)
+	err := json.Unmarshal([]byte(RulesetsAsString), &rulesets)
+	if err != nil {
+		log.Printf("[ERROR] ############# getRulesetsFromMap	rulesets :%+v\n", rulesets)
+	}
+	log.Printf("[INFO] ############# RulesetsAsString	v :%+v\n LEN :%+v\n ", RulesetsAsString, len(RulesetsAsString))
 
 	return &rulesets
 }
+
 
 func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) {
 	var p = resp.Parameters
 	var schemaId string
 	for _, value := range p {
-		if value.Key == providerconst.OnboardingId {
+		if value.Key == "OnboardingId" {
 			schemaId = value.Value
 		}
 	}
@@ -183,6 +210,8 @@ func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording
 	if len(schemaId) > 0 {
 		d.SetId(schemaId)
 	}
+
+	log.Printf("[INFO] ############## schemaId:\n%+v\n", schemaId)
 }
 
 func resourceUnifiedOnbordingDelete(data *schema.ResourceData, i interface{}) error {
