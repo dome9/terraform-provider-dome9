@@ -43,10 +43,10 @@ The following arguments are supported:
 * `full_protection ` - (Optional) The protection mode for security groups in the account. (Boolean); default is False.
 * `enable_stack_modify ` - (Optional) Enable stack modify. (Boolean); default is False.
 * `posture_management_configuration  ` - (Optional) :
-    * `rulesets ` - List of ruleset Ids. default is [0]
+    * `rulesets ` - List of ruleset Ids.(String) default is "[0]"
 * `serverlessConfiguration` - (Optional) Send changes in findings options:
     * `enabled` - true or false to Enables serverless.  (Boolean); default is true.
 * `intelligenceConfigurations` - (Optional) Send changes in findings options:
     * `enabled` - true or false to Enables intelligence.  (Boolean); default is true.
-    * `rulesets ` - List of ruleset Ids. default is [0]
+    * `rulesets ` - List of ruleset Ids.(String) default is [0]
  
