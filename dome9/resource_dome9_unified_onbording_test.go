@@ -13,7 +13,7 @@ import (
 
 func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
 	var awsUnifiedOnbording awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse
-	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnbording)
+	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -44,12 +44,12 @@ func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnbording
 		}
 
 		apiClient := testAccProvider.Meta().(*Client)
-		receivedAwsUnifiedOnbordingResponse, _, err := apiClient.AwsUnifiedOnbording.GetUpdateStackConfig(rs.Primary.ID)
+		receivedAwsUnifiedOnboardingResponse, _, err := apiClient.AwsUnifiedOnbording.GetUpdateStackConfig(rs.Primary.ID)
 
 		if err != nil {
 			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
 		}
-		*awsUnifiedOnbording = *receivedAwsUnifiedOnbordingResponse
+		*awsUnifiedOnbording = *receivedAwsUnifiedOnboardingResponse
 
 		return nil
 	}
@@ -61,14 +61,14 @@ func testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName string, generatedN
 %s
 
 data "%s" "%s" {
-  id = "${%s.id}"
+  cloud_account_id = "${%s.id}"
 }
 `,
 		// continuous compliance notification resource
 		getContinuousComplianceAwsUnifiedOnbordingHCL(generatedName, resourceTypeAndName),
 
 		// data source variables
-		resourcetype.AwsUnifiedOnbording,
+		resourcetype.AwsUnifiedOnboarding,
 		generatedName,
 		resourceTypeAndName,
 	)
@@ -87,7 +87,7 @@ resource "%s" "%s"{
 	  "intelligenceConfigurations"		= "%s"
 	}
 }`,
-		resourcetype.AwsUnifiedOnbording,
+		resourcetype.AwsUnifiedOnboarding,
 		resourceTypeAndName,
 		variable.AwsUnifiedOnbordingOnboardType,
 		variable.AwsUnifiedOnbordingFullProtection,

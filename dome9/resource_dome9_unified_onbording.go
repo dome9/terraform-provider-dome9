@@ -141,14 +141,9 @@ func expandAwsUnifiedOnboardingRequest(d *schema.ResourceData) awsUnifiedOnbordi
 
 func expendIntelligenceConfigurations(d *schema.ResourceData) awsUnifiedOnbording.IntelligenceConfigurations {
 	var intelligenceConfigurations awsUnifiedOnbording.IntelligenceConfigurations
-	log.Printf("[INFO] ########## expendIntelligenceConfigurations:%+v\n", intelligenceConfigurations)
-	log.Printf("[INFO] ########## expendIntelligenceConfigurations	schema	:\n%+v\n", d)
 	configuration := d.Get("intelligence_configurations").(map[string]interface{})
 	intelligenceConfigurations.Enabled = getEnabledFromMap(configuration)
-	log.Printf("[INFO] ########## expendIntelligenceConfigurations	configurations	:%+v\n", intelligenceConfigurations)
 	intelligenceConfigurations.Rulesets = *getRulesetsFromMap(configuration)
-
-	log.Printf("[INFO] ############# expendIntelligenceConfigurations:%+v\n", intelligenceConfigurations)
 
 	return intelligenceConfigurations
 }
@@ -164,9 +159,7 @@ func getEnabledFromMap(configurations map[string]interface{}) bool {
 
 func expendServerlessConfiguration(d *schema.ResourceData) awsUnifiedOnbording.ServerlessConfiguration {
 	var serverlessConfiguration awsUnifiedOnbording.ServerlessConfiguration
-	log.Printf("[INFO] ########## expendServerlessConfiguration:\n%+v\n", serverlessConfiguration)
 	serverlessConfiguration.Enabled = getEnabledFromMap(d.Get("serverless_configuration").(map[string]interface{}))
-	log.Printf("[INFO] ########## expendServerlessConfiguration:\n%+v\n", serverlessConfiguration)
 
 	return serverlessConfiguration
 }
@@ -180,23 +173,19 @@ func expendPostureManagementConfiguration(d *schema.ResourceData) awsUnifiedOnbo
 func getRulesetsFromMap(m map[string]interface{}) *[]int {
 	var rulesets []int
 	if m == nil {
-		log.Printf("[INFO] ############# getRulesetsFromMap	m == nil")
 		rulesets = make([]int, 0)
 		return &rulesets
 	}
-	log.Printf("[INFO] ############# getRulesetsFromMap	map :%+v\n", m)
-	log.Printf("[INFO] ############# getRulesetsFromMap	m[providerconst.Rulesets] :%+v\n", m[providerconst.Rulesets])
 
 	RulesetsAsString := m[providerconst.Rulesets].(string)
 	err := json.Unmarshal([]byte(RulesetsAsString), &rulesets)
 	if err != nil {
-		log.Printf("[ERROR] ############# getRulesetsFromMap	rulesets :%+v\n", rulesets)
+		log.Printf("[ERROR] getRulesetsFromMap failed Unmarshal rulesets :%+v err:%v", rulesets,err)
+		rulesets = make([]int, 0)
 	}
-	log.Printf("[INFO] ############# RulesetsAsString	v :%+v\n LEN :%+v\n ", RulesetsAsString, len(RulesetsAsString))
 
 	return &rulesets
 }
-
 
 func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) {
 	var p = resp.Parameters
@@ -210,8 +199,6 @@ func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording
 	if len(schemaId) > 0 {
 		d.SetId(schemaId)
 	}
-
-	log.Printf("[INFO] ############## schemaId:\n%+v\n", schemaId)
 }
 
 func resourceUnifiedOnbordingDelete(data *schema.ResourceData, i interface{}) error {
