@@ -32,9 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 * `InitiatedUserName` - The name of the initiated User.
 * `initiated_user_id` - The ID of the initiated User.
 * `environment_external_id` - The AWS cloud account id.
-* `environment_id` - environment_id ?. "4d76adb3-6c97-4984-948b-119c2cce6252"
-* `environment_name` - Organizational unit path."chkp-aws-rnd-menahema-base"
+* `environment_id` - The AWS cloud account internal environment Id.
+* `environment_name` - aws environment name.
 * `root_stack_id` - arn:aws:cloudformation:*
-* `cft_version` - ?
+* `cft_version` - current Cloud Formation Template version. 
 * `onbording_request` - The request data for the creation of the current Data Source.
-* `statuses` - ?.
+* `statuses` - the current status of the onboarding process.
