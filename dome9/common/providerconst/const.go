@@ -23,7 +23,7 @@ const (
 	EnvironmentExternalId          = "environment_external_id"
 	RootStackId                    = "root_stack_id"
 	CftVersion                     = "cft_version"
-	UnifiedOnboardingRequest       = "onbording_request"
+	UnifiedOnboardingRequest       = "onboarding_request"
 	Statuses                       = "statuses"
 	Module                         = "module"
 	Feature                        = "feature"
