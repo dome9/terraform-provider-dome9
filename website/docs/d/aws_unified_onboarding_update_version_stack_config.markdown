@@ -29,6 +29,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `stack_name` - aws cloudformation stack name.
-* `parameters` - object with meta data about the onboarding. 
-* `iam_capabilities` - Organizational unit id.
-* `template_url` - Organizational unit path.
+* `parameters` - dictionary with the onboarding parameters.
+* `iam_capabilities` - organizational unit id.
+* `template_url` - organizational unit path.

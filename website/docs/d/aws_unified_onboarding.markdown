@@ -21,20 +21,20 @@ data "dome9_aws_unified_onboarding" "T" {
 
 The following arguments are supported:
 
-* `cloud_account_id` - (Required) cloud_account_id OR The onboardingId that create with creation of
+* `cloud_account_id` - (Required) cloud account id / the onboarding id that create with creation of
   dome9_aws_unified_onboarding resource.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `onboarding_id` - The OnboardingId that create with creation of dome9_aws_unified_onboarding resource..
-* `InitiatedUserName` - The name of the initiated User.
-* `initiated_user_id` - The ID of the initiated User.
-* `environment_external_id` - The AWS cloud account id.
-* `environment_id` - The AWS cloud account internal environment Id.
-* `environment_name` - aws environment name.
+* `onboarding_id` - the onboarding id that create with creation of dome9_aws_unified_onboarding resource
+* `InitiatedUserName` - the name of the initiated User
+* `initiated_user_id` - the id of the initiated User
+* `environment_external_id` - the AWS cloud account id
+* `environment_id` - the AWS cloud account internal environment id
+* `environment_name` - aws environment name
 * `root_stack_id` - arn:aws:cloudformation:*
-* `cft_version` - current Cloud Formation Template version. 
-* `onbording_request` - The request data for the creation of the current Data Source.
-* `statuses` - the current status of the onboarding process.
+* `cft_version` - current Cloud Formation Template version.
+* `onbording_request` - the request data for the creation of the current data source
+* `statuses` - the current status per blade of the onboarding process

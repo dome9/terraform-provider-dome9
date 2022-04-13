@@ -38,15 +38,15 @@ resource resource "dome9_aws_unified_onboarding" "test" {
 
 The following arguments are supported:
 
-* `cloud_vendor ` - (Optional) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure`, `google` etc.
-* `onboard_type ` - (Optional) "Simple" for oneClick onbording. (String); default is "Simple".
-* `full_protection ` - (Optional) The protection mode for security groups in the account. (Boolean); default is False.
-* `enable_stack_modify ` - (Optional) Enable stack modify. (Boolean); default is False.
-* `posture_management_configuration  ` - (Optional) :
-    * `rulesets ` - List of ruleset Ids.(String) default is "[0]"
-* `serverlessConfiguration` - (Optional) Send changes in findings options:
-    * `enabled` - true or false to Enables serverless.  (Boolean); default is true.
-* `intelligenceConfigurations` - (Optional) Send changes in findings options:
-    * `enabled` - true or false to Enables intelligence.  (Boolean); default is true.
-    * `rulesets ` - List of ruleset Ids.(String) default is [0]
+* `cloud_vendor` - (Optional) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `awsgov`, `awschina` the defult is `aws`
+* `onboard_type` - (Optional) "Simple" for pre-configured "one-click" onboarding and "Advanced" for customized configuration (String); default is "Simple"
+* `full_protection` - (Optional) The AWS cloud account operation mode. `true` for "Full-Protection(R/W)", `false` for "Monitor(ReadOnly)"
+* `enable_stack_modify` - (Optional) Enable stack modify (Boolean); default is `false`
+* `posture_management_configuration` - (Optional) :
+    * `rulesets` - List of Posture Management ruleset Ids (String) default is "[0]"
+* `serverlessConfiguration` - (Optional):
+    * `enabled` - `true` or `false` to enable Serverless Protection (Boolean); default is `true`
+* `intelligenceConfigurations` - (Optional):
+    * `enabled` - `true` or `false` to enable Intelligence (Account Activity) (Boolean); default is `true`
+    * `rulesets` - List of Intelligence ruleset Ids (String) default is [0]
  
