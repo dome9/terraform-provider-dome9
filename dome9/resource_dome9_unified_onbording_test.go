@@ -2,29 +2,31 @@ package dome9
 
 import (
 	"fmt"
-	"github.com/dome9/dome9-sdk-go/services/unifiedOnbording/awsUnifiedOnbording"
+	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/awsUnifiedOnboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+	"log"
 	"testing"
 )
 
 func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
-	var awsUnifiedOnbording awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse
+	var awsUnifiedOnboarding awsUnifiedOnboarding.UnifiedOnboardingResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
+			testAccCloudAccountAWSEnvVarsPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAwsUnifiedOnboardingExists(resourceTypeAndName, &awsUnifiedOnbording),
+					testAccCheckAwsUnifiedOnboardingExists(resourceTypeAndName, &awsUnifiedOnboarding),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "template_url", variable.AwsUnifiedOnbordingTemplateUrl),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities", variable.AwsUnifiedOnbordingIamCapabilities),
 				),
@@ -33,7 +35,7 @@ func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnbording *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) resource.TestCheckFunc {
+func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboarding *awsUnifiedOnboarding.UnifiedOnboardingResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
@@ -41,15 +43,20 @@ func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnbording
 		}
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("no record ID is set")
+		}else {
+			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", rs)
+			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists OK:%+v\n", ok)
 		}
 
 		apiClient := testAccProvider.Meta().(*Client)
-		receivedAwsUnifiedOnboardingResponse, _, err := apiClient.AwsUnifiedOnbording.GetUpdateStackConfig(rs.Primary.ID)
+		receivedAwsUnifiedOnboardingResponse, _, err := apiClient.awsUnifiedOnboarding.Get(rs.Primary.ID)
+		log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists apiClient:%+v\n", receivedAwsUnifiedOnboardingResponse)
+		log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists err:%+v\n", err)
 
 		if err != nil {
 			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
 		}
-		*awsUnifiedOnbording = *receivedAwsUnifiedOnboardingResponse
+		awsUnifiedOnboarding = receivedAwsUnifiedOnboardingResponse
 
 		return nil
 	}
@@ -65,7 +72,7 @@ data "%s" "%s" {
 }
 `,
 		// continuous compliance notification resource
-		getContinuousComplianceAwsUnifiedOnbordingHCL(generatedName, resourceTypeAndName),
+		getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName, resourceTypeAndName),
 
 		// data source variables
 		resourcetype.AwsUnifiedOnboarding,
@@ -74,17 +81,17 @@ data "%s" "%s" {
 	)
 }
 
-func getContinuousComplianceAwsUnifiedOnbordingHCL(generatedName string, resourceTypeAndName string) interface{} {
+func getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName string, resourceTypeAndName string) interface{} {
 	return fmt.Sprintf(`{
 // AwsUnifiedOnbording creation
 resource "%s" "%s"{ 
 	"onboardType" 						= "%s",
-	"fullProtection"					= "%s",
-	  "cloudVendor"						= "%s",
-	  "enableStackModify"				= "%s",
-	  "postureManagementConfiguration"	= "%s",
-	  "serverlessConfiguration"			= "%s",
-	  "intelligenceConfigurations"		= "%s"
+"fullProtection"					= "%s",
+"cloudVendor"						= "%s",
+"enableStackModify"				= "%s",
+"postureManagementConfiguration"	= "%s",
+"serverlessConfiguration"			= "%s",
+"intelligenceConfigurations"		= "%s"
 	}
 }`,
 		resourcetype.AwsUnifiedOnboarding,

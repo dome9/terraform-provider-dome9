@@ -151,12 +151,13 @@ func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 
 func dataSourceAwsUnifiedOnboardingReadInfo(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	resp, _, err := d9Client.AwsUnifiedOnbording.Get(d.Get(providerconst.CloudAccountId).(string))
+	resp, _, err := d9Client.awsUnifiedOnboarding.Get(d.Get(providerconst.CloudAccountId).(string))
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[INFO] Get UnifiedOnbording Information with OnbordingId: %s\n", resp.OnboardingId)
+	log.Printf("[INFO] ############ dataSourceAwsUnifiedOnboardingReadInfo GET with resp: %+v\n", resp)
 
 	d.SetId(resp.OnboardingId)
 	_ = d.Set(providerconst.OnboardingId, resp.OnboardingId)
@@ -165,7 +166,7 @@ func dataSourceAwsUnifiedOnboardingReadInfo(d *schema.ResourceData, meta interfa
 	_ = d.Set(providerconst.EnvironmentExternalId, resp.EnvironmentExternalId)
 	_ = d.Set(providerconst.RootStackId, resp.RootStackId)
 	_ = d.Set(providerconst.CftVersion, resp.CftVersion)
-	_ = d.Set(providerconst.UnifiedOnboardingRequest, resp.UnifiedOnbordingRequest)
+	_ = d.Set(providerconst.UnifiedOnboardingRequest, resp.UnifiedOnboardingRequest)
 	_ = d.Set(providerconst.Status, resp.Statuses)
 	_ = d.Set(providerconst.EnvironmentId, resp.EnvironmentId)
 	_ = d.Set(providerconst.InitiatedUserId, resp.InitiatedUserId)

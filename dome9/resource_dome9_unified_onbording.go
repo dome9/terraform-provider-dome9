@@ -2,19 +2,20 @@ package dome9
 
 import (
 	"encoding/json"
-	"github.com/dome9/dome9-sdk-go/services/unifiedOnbording/awsUnifiedOnbording"
+	_ "github.com/dome9/dome9-sdk-go/services/unifiedOnboarding/awsUnifiedOnboarding"
+	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/awsUnifiedOnboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 	"log"
 	"strconv"
 )
 
-func resourceAwsUnifiedOnbording() *schema.Resource {
+func resourceAwsUnifiedOnboarding() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceUnifiedOnboardingCreate,
-		Read:   unifiedOnbordingResourceRead,
-		Update: resourceUnifiedOnbordingUpdat,
-		Delete: resourceUnifiedOnbordingDelete,
+		Read:   unifiedOnboardingResourceRead,
+		Update: resourceUnifiedOnboardingUpdat,
+		Delete: resourceUnifiedOnboardingDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -107,12 +108,12 @@ func resourceUnifiedOnboardingCreate(d *schema.ResourceData, meta interface{}) e
 	d9Client := meta.(*Client)
 	req := expandAwsUnifiedOnboardingRequest(d)
 	log.Printf("[INFO] Creating Unified Onbording request %+v\n", req)
-	resp, _, err := d9Client.AwsUnifiedOnbording.Create(req)
+	resp, _, err := d9Client.awsUnifiedOnboarding.Create(req)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[INFO] Created UnifiedOnbording resource with stackName: %v\n", resp.StackName)
+	log.Printf("[INFO] Created UnifiedOnboarding resource with stackName: %v\n", resp.StackName)
 
 	addOnboardingIdAsSchemaId(d, resp)
 
@@ -125,9 +126,9 @@ func resourceUnifiedOnboardingCreate(d *schema.ResourceData, meta interface{}) e
 	return nil
 }
 
-func expandAwsUnifiedOnboardingRequest(d *schema.ResourceData) awsUnifiedOnbording.UnifiedOnbordingRequest {
+func expandAwsUnifiedOnboardingRequest(d *schema.ResourceData) awsUnifiedOnboarding.UnifiedOnboardingRequest {
 
-	return awsUnifiedOnbording.UnifiedOnbordingRequest{
+	return awsUnifiedOnboarding.UnifiedOnboardingRequest{
 		CloudVendor:                    d.Get(providerconst.CloudVendor).(string),
 		OnboardType:                    d.Get(providerconst.OnboardType).(string),
 		EnableStackModify:              d.Get(providerconst.EnableStackModify).(bool),
@@ -139,8 +140,8 @@ func expandAwsUnifiedOnboardingRequest(d *schema.ResourceData) awsUnifiedOnbordi
 
 }
 
-func expendIntelligenceConfigurations(d *schema.ResourceData) awsUnifiedOnbording.IntelligenceConfigurations {
-	var intelligenceConfigurations awsUnifiedOnbording.IntelligenceConfigurations
+func expendIntelligenceConfigurations(d *schema.ResourceData) awsUnifiedOnboarding.IntelligenceConfigurations {
+	var intelligenceConfigurations awsUnifiedOnboarding.IntelligenceConfigurations
 	configuration := d.Get("intelligence_configurations").(map[string]interface{})
 	intelligenceConfigurations.Enabled = getEnabledFromMap(configuration)
 	intelligenceConfigurations.Rulesets = *getRulesetsFromMap(configuration)
@@ -157,15 +158,15 @@ func getEnabledFromMap(configurations map[string]interface{}) bool {
 	return b
 }
 
-func expendServerlessConfiguration(d *schema.ResourceData) awsUnifiedOnbording.ServerlessConfiguration {
-	var serverlessConfiguration awsUnifiedOnbording.ServerlessConfiguration
+func expendServerlessConfiguration(d *schema.ResourceData) awsUnifiedOnboarding.ServerlessConfiguration {
+	var serverlessConfiguration awsUnifiedOnboarding.ServerlessConfiguration
 	serverlessConfiguration.Enabled = getEnabledFromMap(d.Get("serverless_configuration").(map[string]interface{}))
 
 	return serverlessConfiguration
 }
 
-func expendPostureManagementConfiguration(d *schema.ResourceData) awsUnifiedOnbording.PostureManagementConfiguration {
-	var postureManagementConfiguration awsUnifiedOnbording.PostureManagementConfiguration
+func expendPostureManagementConfiguration(d *schema.ResourceData) awsUnifiedOnboarding.PostureManagementConfiguration {
+	var postureManagementConfiguration awsUnifiedOnboarding.PostureManagementConfiguration
 	postureManagementConfiguration.Rulesets = *getRulesetsFromMap(d.Get("posture_management_configuration").(map[string]interface{}))
 	return postureManagementConfiguration
 }
@@ -187,7 +188,7 @@ func getRulesetsFromMap(m map[string]interface{}) *[]int {
 	return &rulesets
 }
 
-func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording.UnifiedOnbordingConfigurationResponse) {
+func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnboarding.UnifiedOnboardingConfigurationResponse) {
 	var p = resp.Parameters
 	var schemaId string
 	for _, value := range p {
@@ -201,14 +202,14 @@ func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *awsUnifiedOnbording
 	}
 }
 
-func resourceUnifiedOnbordingDelete(data *schema.ResourceData, i interface{}) error {
+func resourceUnifiedOnboardingDelete(data *schema.ResourceData, i interface{}) error {
 	return nil
 }
 
-func resourceUnifiedOnbordingUpdat(data *schema.ResourceData, i interface{}) error {
+func resourceUnifiedOnboardingUpdat(data *schema.ResourceData, i interface{}) error {
 	return nil
 }
 
-func unifiedOnbordingResourceRead(d *schema.ResourceData, meta interface{}) error {
+func unifiedOnboardingResourceRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
