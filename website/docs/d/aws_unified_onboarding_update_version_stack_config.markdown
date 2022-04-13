@@ -28,7 +28,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `stack_name` - the Google project id (that will be onboarded).
-* `parameters` - map of parameters. ???? need to explain more 
+* `stack_name` - aws cloudformation stack name.
+* `parameters` - object with meta data about the onboarding. 
 * `iam_capabilities` - Organizational unit id.
 * `template_url` - Organizational unit path.

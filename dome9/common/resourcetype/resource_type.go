@@ -20,6 +20,6 @@ const (
 	User                                         = "dome9_user"
 	IAMSafeEntity                                = "dome9_iam_safe_entity"
 	ServiceAccount                               = "dome9_service_account"
-	AwsUnifiedOnboardingUpdateVersionStackConfig = "dome9_aws_unified_onbording_update_version_stack_config"
+	AwsUnifiedOnboardingUpdateVersionStackConfig = "dome9_aws_unified_onboarding_update_version_stack_config"
 	AwsUnifiedOnboarding                         = "dome9_aws_unified_onboarding"
 )
