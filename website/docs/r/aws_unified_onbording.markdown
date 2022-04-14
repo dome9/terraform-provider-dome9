@@ -7,7 +7,9 @@ description: AWS unified onboarding in Dome9
 
 # dome9_aws_unified_onboarding
 
-Create an onboarding configuration including an onbordingId
+Create an onboarding configuration including an onboardingId and use the configuration to create 
+"aws_cloudformation_stack" and by that make an actual onboarding to "Cloud Guard"
+
 
 ## Example Usage
 
@@ -30,6 +32,14 @@ resource resource "dome9_aws_unified_onboarding" "test" {
         rulesets = "[0]"
         enabled = true
     }
+}
+
+
+resource "aws_cloudformation_stack" "stack"{
+	name = dome9_aws_unified_onboarding.test.stack_name
+	template_url = dome9_aws_unified_onboarding.test.template_url
+	parameters = dome9_aws_unified_onboarding.test.parameters
+	capabilities = dome9_aws_unified_onboarding.test.iam_capabilities
 }
 
 ```
