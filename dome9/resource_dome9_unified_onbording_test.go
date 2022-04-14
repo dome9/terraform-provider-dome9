@@ -12,15 +12,12 @@ import (
 	"testing"
 )
 
-func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
+func TestAccResourceAwsUnifiedOnboardingBasic(t *testing.T) {
 	var awsUnifiedOnboarding aws_unified_onboarding.UnifiedOnboardingResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-			testAccCloudAccountAWSEnvVarsPreCheck(t)
-		},
+		PreCheck: func() {testAccPreCheck(t)},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -28,7 +25,9 @@ func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAwsUnifiedOnboardingExists(resourceTypeAndName, &awsUnifiedOnboarding),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "template_url", variable.AwsUnifiedOnbordingTemplateUrl),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities", variable.AwsUnifiedOnbordingIamCapabilities),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.0", variable.AwsUnifiedOnbordingIamCapabilities0),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.1", variable.AwsUnifiedOnbordingIamCapabilities1),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.2", variable.AwsUnifiedOnbordingIamCapabilities2),
 				),
 			},
 		},
@@ -39,14 +38,20 @@ func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboardin
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
-			return fmt.Errorf("didn't find resource: %s", resource)
+			res := fmt.Errorf("didn't find resource: %s", resource)
+			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", res)
+			return res
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("no record ID is set")
-		}else {
+			res :=  fmt.Errorf("no record ID is set")
+			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", res)
+			return res
+
+		} else {
 			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", rs)
 			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists OK:%+v\n", ok)
 		}
+		log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", rs)
 
 		apiClient := testAccProvider.Meta().(*Client)
 		receivedAwsUnifiedOnboardingResponse, _, err := apiClient.awsUnifiedOnboarding.Get(rs.Primary.ID)
@@ -63,8 +68,9 @@ func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboardin
 }
 
 func testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName string, generatedName string) string {
-	return fmt.Sprintf(`
+	res := fmt.Sprintf(`
 // AwsUnifiedOnbording resource
+
 %s
 
 data "%s" "%s" {
@@ -72,30 +78,33 @@ data "%s" "%s" {
 }
 `,
 		// continuous compliance notification resource
-		getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName, resourceTypeAndName),
+		getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName),
 
 		// data source variables
 		resourcetype.AwsUnifiedOnboarding,
-		generatedName,
+		generatedName+"Data",
 		resourceTypeAndName,
 	)
+	log.Printf("[INFO] testAccCheckAwsUnifiedOnbordingBasic:%+v\n", res)
+
+	return res
 }
 
-func getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName string, resourceTypeAndName string) interface{} {
-	return fmt.Sprintf(`{
+func getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName string) interface{} {
+	return fmt.Sprintf(`
 // AwsUnifiedOnbording creation
 resource "%s" "%s"{ 
-	"onboardType" 						= "%s",
-"fullProtection"					= "%s",
-"cloudVendor"						= "%s",
-"enableStackModify"				= "%s",
-"postureManagementConfiguration"	= "%s",
-"serverlessConfiguration"			= "%s",
-"intelligenceConfigurations"		= "%s"
+onboard_type	 					= "%s"
+full_protection					= %s
+cloud_vendor						= "%s"
+enable_stack_modify				= %s
+posture_management_configuration	= %s
+serverless_configuration			= %s
+intelligence_configurations		= %s
 	}
-}`,
+`,
 		resourcetype.AwsUnifiedOnboarding,
-		resourceTypeAndName,
+		generatedName,
 		variable.AwsUnifiedOnbordingOnboardType,
 		variable.AwsUnifiedOnbordingFullProtection,
 		variable.AwsUnifiedOnbordingCloudVendor,

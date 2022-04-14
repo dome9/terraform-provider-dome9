@@ -165,8 +165,13 @@ func expendIntelligenceConfigurations(d *schema.ResourceData) aws_unified_onboar
 func getEnabledFromMap(configurations map[string]interface{}) bool {
 	b := false
 	if len(configurations) > 0 {
-		v := configurations[providerconst.Enabled].(string)
-		b, _ = strconv.ParseBool(v)
+		enabled := configurations[providerconst.Enabled]
+		log.Printf("[INFO] getEnabledFromMap:%+v\n", enabled)
+
+		if enabled != ""  && enabled != nil {
+			v := enabled.(string)
+			b, _ = strconv.ParseBool(v)
+		}
 	}
 	return b
 }
