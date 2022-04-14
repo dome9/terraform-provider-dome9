@@ -2,7 +2,6 @@ package dome9
 
 import (
 	"encoding/json"
-	_ "github.com/dome9/dome9-sdk-go/services/unifiedOnboarding/awsUnifiedOnboarding"
 	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/awsUnifiedOnboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
@@ -117,11 +116,15 @@ func resourceUnifiedOnboardingCreate(d *schema.ResourceData, meta interface{}) e
 
 	addOnboardingIdAsSchemaId(d, resp)
 
-	log.Printf("[INFO] Getting Unified Onbording:\n%+v\n", resp)
+	log.Printf("[INFO] ######## Getting Unified Onbording:%+v\n", resp)
 	_ = d.Set(providerconst.StackName, resp.StackName)
+	log.Printf("[INFO] ######## Getting Unified Onbording resp.StackName:%+v\n", resp.StackName)
 	_ = d.Set(providerconst.Parameters, resp.Parameters)
+	log.Printf("[INFO] ######## Getting Unified Onbording resp.Parameters:%+v\n", resp.Parameters)
 	_ = d.Set(providerconst.IamCapabilities, resp.IamCapabilities)
+	log.Printf("[INFO] ######## Getting Unified Onbording resp.IamCapabilities:%+v\n", resp.IamCapabilities)
 	_ = d.Set(providerconst.TemplateUrl, resp.TemplateUrl)
+	log.Printf("[INFO] ######## Getting Unified Onbording resp.TemplateUrl :%+v\n", resp.TemplateUrl)
 
 	return nil
 }

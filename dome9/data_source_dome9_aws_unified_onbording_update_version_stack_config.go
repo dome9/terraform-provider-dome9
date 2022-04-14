@@ -42,7 +42,7 @@ func dataSourceAwsUnifiedOnboardingUpdateVersionStackConfig() *schema.Resource {
 
 func dataSourceAwsUnifiedOnboardingReadConfig(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	resp, _, err := d9Client.AwsUnifiedOnbording.GetUpdateStackConfig(d.Get(providerconst.OnboardingId).(string))
+	resp, _, err := d9Client.awsUnifiedOnboarding.GetUpdateStackConfig(d.Get(providerconst.OnboardingId).(string))
 	if err != nil {
 		return err
 	}
