@@ -1,7 +1,7 @@
 ---
 layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_aws_unified_onboarding"
-sidebar_current: "docs-resource-dome9-continuous-compliance-notification"
+sidebar_current: "docs-resource-dome9-aws-unified-onboarding"
 description: AWS unified onboarding in Dome9
 ---
 
@@ -54,9 +54,16 @@ The following arguments are supported:
 * `enable_stack_modify` - (Optional) Enable stack modify (Boolean); default is `false`
 * `posture_management_configuration` - (Optional) :
     * `rulesets` - List of Posture Management ruleset Ids (String) default is "[0]"
-* `serverlessConfiguration` - (Optional):
+* `serverless_configuration` - (Optional):
     * `enabled` - `true` or `false` to enable Serverless Protection (Boolean); default is `true`
-* `intelligenceConfigurations` - (Optional):
+* `intelligence_configurations` - (Optional):
     * `enabled` - `true` or `false` to enable Intelligence (Account Activity) (Boolean); default is `true`
     * `rulesets` - List of Intelligence ruleset Ids (String) default is [0]
+
+## Attributes Reference
+
+* `stack_name` - aws cloudformation stack name
+* `parameters` - dictionary with the onboarding parameters
+* `iam_capabilities` - organizational unit id
+* `template_url` - organizational unit path
  
