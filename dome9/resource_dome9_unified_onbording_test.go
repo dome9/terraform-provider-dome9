@@ -2,7 +2,7 @@ package dome9
 
 import (
 	"fmt"
-	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/awsUnifiedOnboarding"
+	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/aws_unified_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
@@ -13,7 +13,7 @@ import (
 )
 
 func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
-	var awsUnifiedOnboarding awsUnifiedOnboarding.UnifiedOnboardingResponse
+	var awsUnifiedOnboarding aws_unified_onboarding.UnifiedOnboardingResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
 
 	resource.Test(t, resource.TestCase{
@@ -35,7 +35,7 @@ func TestAccResourceAwsUnifiedOnbordingBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboarding *awsUnifiedOnboarding.UnifiedOnboardingResponse) resource.TestCheckFunc {
+func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboarding *aws_unified_onboarding.UnifiedOnboardingResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
