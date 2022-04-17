@@ -1,5 +1,9 @@
-resource "dome9_attach_iam_safe" "dome9_attach_iam_safe_re" {
-  aws_cloud_account_id = "00000000-0000-0000-0000-000000000000"
-  aws_group_arn        = "AWS_GROUP_ARN"
-  aws_policy_arn       = "AWS_POLICY_ARN"
+resource "dome9_aws_unified_onboarding" "aws_unified_onboarding" {
+}
+
+resource "aws_cloudformation_stack" "stack"{
+	name = dome9_aws_unified_onboarding.aws_unified_onboarding.stack_name
+	template_url = dome9_aws_unified_onboarding.aws_unified_onboarding.template_url
+	parameters = dome9_aws_unified_onboarding.aws_unified_onboarding.parameters
+	capabilities = dome9_aws_unified_onboarding.aws_unified_onboarding.iam_capabilities
 }
