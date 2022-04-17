@@ -39,15 +39,15 @@ In addition to all arguments above, the following attributes are exported:
 * `onbording_request` - the request data for the creation of the onboarding
   * `cloud_vendor` - Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `awsgov`, `awschina` the defult is `aws`
   * `onboard_type` - "Simple" for pre-configured "one-click" onboarding and "Advanced" for customized configuration (String); default is "simple"
-  * `full_protection` - The AWS cloud account operation mode. `true` for "Full-Protection(R/W)", `false` for "Monitor(ReadOnly)"; default is `false`
-  * `enable_stack_modify` - Enable stack modify (Boolean); default is `false`
+  * `full_protection` - The AWS cloud account operation mode. `true` for "Full-Protection(Read and write)", `false` for "Monitor(ReadOnly)"; default is `false`
+  * `enable_stack_modify` -(Optional) Allow Cloud Guard tom update and delete this stack upon update or delete of the environment, default is `false`
   * `posture_management_configuration`:
     * `rulesets` - List of Posture Management ruleset Ids (String) default is "[]"
   * `serverless_configuration`:
-    * `enabled` - `true` or `false` to enable Serverless Protection (Boolean); default is `true`
+    * `enabled` - whether to enable Serverless protection or not, default is `true`
   * `intelligence_configurations`:
-    * `enabled` - `true` or `false` to enable Intelligence (Account Activity) (Boolean); default is `true`
-    * `rulesets` - list of Intelligence ruleset Ids (String) default is []
+    * `enabled` - whether to enable Intelligence (Account Activity) or not, default is `true`
+    * `rulesets` - list of Intelligence ruleset Ids that will be associated with a policy, default is []
 * `statuses` - list of statuses, a status per blade of the onboarding process
   * `module` - the module name(Role Permissions/Continuous Posture/Serverless Protection/Account Activity)
   * `feature` - the feature name(Intelligence/Workload/Posture/Onbording/General)

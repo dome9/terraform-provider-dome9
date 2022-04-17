@@ -7,9 +7,8 @@ description: AWS unified onboarding in Dome9
 
 # dome9_aws_unified_onboarding
 
-Create an onboarding configuration including an onboardingId and use the configuration to create 
-"aws_cloudformation_stack" and by that make an actual onboarding to "Cloud Guard"
-
+Create an onboarding configuration including an onboardingId and use the configuration to create
+"aws_cloudformation_stack" in order to onboard to "Cloud Guard"
 
 ## Example Usage
 
@@ -36,10 +35,10 @@ resource resource "dome9_aws_unified_onboarding" "test" {
 
 
 resource "aws_cloudformation_stack" "stack"{
-	name = dome9_aws_unified_onboarding.test.stack_name
-	template_url = dome9_aws_unified_onboarding.test.template_url
-	parameters = dome9_aws_unified_onboarding.test.parameters
-	capabilities = dome9_aws_unified_onboarding.test.iam_capabilities
+  name = dome9_aws_unified_onboarding.test.stack_name
+  template_url = dome9_aws_unified_onboarding.test.template_url
+  parameters = dome9_aws_unified_onboarding.test.parameters
+  capabilities = dome9_aws_unified_onboarding.test.iam_capabilities
 }
 
 ```
@@ -48,17 +47,20 @@ resource "aws_cloudformation_stack" "stack"{
 
 The following arguments are supported:
 
-* `cloud_vendor` - (Optional) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `awsgov`, `awschina` the defult is `aws`
-* `onboard_type` - (Optional) "Simple" for pre-configured "one-click" onboarding and "Advanced" for customized configuration (String); default is "simple"
-* `full_protection` - (Optional) The AWS cloud account operation mode. `true` for "Full-Protection(R/W)", `false` for "Monitor(ReadOnly)"; default is `false`
-* `enable_stack_modify` - (Optional) Enable stack modify (Boolean); default is `false`
+* `cloud_vendor` - (Optional) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`
+  , `awsgov`, `awschina` the defult is `aws`
+* `onboard_type` - (Optional) "simple" for pre-configured "one-click" onboarding and "Advanced" for customized
+  configuration (String); default is "Simple"
+* `full_protection` - (Optional) The AWS cloud account operation mode. `true` for "Full-Protection(Read and write)", `false` for "
+  Monitor(ReadOnly)"; default is `false`
+* `enable_stack_modify` - (Optional) Allow Cloud Guard tom update and delete this stack upon update or delete of the environment, default is `false`
 * `posture_management_configuration` - (Optional) :
     * `rulesets` - List of Posture Management ruleset Ids (String) default is "[]"
 * `serverless_configuration` - (Optional):
-    * `enabled` - `true` or `false` to enable Serverless Protection (Boolean); default is `true`
+    * `enabled` - whether to enable Serverless protection or not, default is
 * `intelligence_configurations` - (Optional):
-    * `enabled` - `true` or `false` to enable Intelligence (Account Activity) (Boolean); default is `true`
-    * `rulesets` - List of Intelligence ruleset Ids (String) default is []
+    * `enabled` - whether to enable Intelligence (Account Activity) or not, default is `true`
+    * `rulesets` - list of Intelligence ruleset Ids that will be associated with a policy, default is []
 
 ## Attributes Reference
 

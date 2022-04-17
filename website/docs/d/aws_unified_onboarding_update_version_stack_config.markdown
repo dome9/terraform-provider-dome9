@@ -22,13 +22,14 @@ data "dome9_aws_unified_onboarding_update_version_stack_config" "test" {
 
 The following arguments are supported:
 
-* `onboarding_id` - (Required) The onboarding that create with creation of dome9_aws_unified_onboarding resource
+* `onboarding_id` - (Required) (Required) The onboarding id (can be taken for the dome9_aws_unified_onboarding resource 
+  (please link it to the resource) or dome9_aws_unified_onboarding data source
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `stack_name` - aws cloudformation stack name
-* `parameters` - dictionary with the onboarding parameters
-* `iam_capabilities` - organizational unit id
-* `template_url` - organizational unit path
+* `stack_name` - the aws cloudformation stack name
+* `parameters` - dictionary with the onboarding template parameters
+* `iam_capabilities` - the iam capabilities
+* `template_url` - the template url
