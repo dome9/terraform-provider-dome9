@@ -11,7 +11,7 @@ func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceAwsUnifiedOnboardingReadInfo,
 		Schema: map[string]*schema.Schema{
-			providerconst.CloudAccountId: {
+			providerconst.Id: {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -150,7 +150,7 @@ func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 
 func dataSourceAwsUnifiedOnboardingReadInfo(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	resp, _, err := d9Client.awsUnifiedOnboarding.Get(d.Get(providerconst.CloudAccountId).(string))
+	resp, _, err := d9Client.awsUnifiedOnboarding.Get(d.Get(providerconst.Id).(string))
 	if err != nil {
 		return err
 	}

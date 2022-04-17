@@ -15,6 +15,7 @@ const (
 
 // AWS unified onboarding
 const (
+	Id                             = "id"
 	CloudAccountId                 = "cloud_account_id"
 	InitiatedUserName              = "initiated_user_name"
 	InitiatedUserId                = "initiated_user_id"
