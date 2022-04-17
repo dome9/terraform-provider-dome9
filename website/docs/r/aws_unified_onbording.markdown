@@ -49,21 +49,21 @@ resource "aws_cloudformation_stack" "stack"{
 The following arguments are supported:
 
 * `cloud_vendor` - (Optional) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `awsgov`, `awschina` the defult is `aws`
-* `onboard_type` - (Optional) "Simple" for pre-configured "one-click" onboarding and "Advanced" for customized configuration (String); default is "Simple"
-* `full_protection` - (Optional) The AWS cloud account operation mode. `true` for "Full-Protection(R/W)", `false` for "Monitor(ReadOnly)"
+* `onboard_type` - (Optional) "Simple" for pre-configured "one-click" onboarding and "Advanced" for customized configuration (String); default is "simple"
+* `full_protection` - (Optional) The AWS cloud account operation mode. `true` for "Full-Protection(R/W)", `false` for "Monitor(ReadOnly)"; default is `false`
 * `enable_stack_modify` - (Optional) Enable stack modify (Boolean); default is `false`
 * `posture_management_configuration` - (Optional) :
-    * `rulesets` - List of Posture Management ruleset Ids (String) default is "[0]"
+    * `rulesets` - List of Posture Management ruleset Ids (String) default is "[]"
 * `serverless_configuration` - (Optional):
     * `enabled` - `true` or `false` to enable Serverless Protection (Boolean); default is `true`
 * `intelligence_configurations` - (Optional):
     * `enabled` - `true` or `false` to enable Intelligence (Account Activity) (Boolean); default is `true`
-    * `rulesets` - List of Intelligence ruleset Ids (String) default is [0]
+    * `rulesets` - List of Intelligence ruleset Ids (String) default is []
 
 ## Attributes Reference
 
 * `stack_name` - aws cloudformation stack name
-* `parameters` - dictionary with the onboarding parameters
-* `iam_capabilities` - organizational unit id
-* `template_url` - organizational unit path
+* `parameters` - dictionary with the onboarding template parameters
+* `iam_capabilities` - the IAM capabilities
+* `template_url` - the Template Url 
  
