@@ -47,7 +47,7 @@ resource "aws_cloudformation_stack" "stack"{
 
 The following arguments are supported:
 
-* `cloud_vendor` - (Optional) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`
+* `cloud_vendor` - (Optional) the type of the cloud account that will be onboarded. can be one of the following: `aws`
   , `awsgov`, `awschina` the defult is `aws`
 * `onboard_type` - (Optional) "simple" for pre-configured "one-click" onboarding and "Advanced" for customized
   configuration (String); default is "Simple"
@@ -57,7 +57,7 @@ The following arguments are supported:
 * `posture_management_configuration` - (Optional) :
     * `rulesets` - List of Posture Management ruleset Ids (String) default is "[]"
 * `serverless_configuration` - (Optional):
-    * `enabled` - whether to enable Serverless protection or not, default is
+    * `enabled` - whether to enable Serverless protection or not, default is `true`
 * `intelligence_configurations` - (Optional):
     * `enabled` - whether to enable Intelligence (Account Activity) or not, default is `true`
     * `rulesets` - list of Intelligence ruleset Ids that will be associated with a policy, default is []

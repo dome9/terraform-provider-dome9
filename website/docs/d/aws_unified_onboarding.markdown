@@ -13,7 +13,7 @@ Use this data source to get the information about the onboarding of an AWS cloud
 
 ```hcl
 data "dome9_aws_unified_onboarding" "aws_unidied_onboarding_ds" {
-    id = "ID" CloudAccountId or onbordingId as string
+    id = "ID"
 }
 ```
 
@@ -32,9 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 * `InitiatedUserName` - the name of the initiated User
 * `initiated_user_id` - the id of the initiated User
 * `environment_external_id` - the AWS cloud account id
-* `environment_id` - the AWS cloud account internal environment id
-* `environment_name` - aws environment name
-* `root_stack_id` - arn:aws:cloudformation:*
+* `environment_id` - the AWS cloud account internal id
+* `environment_name` - the aws environment name
+* `root_stack_id` - the arn:aws:cloudformation:* if of the root stack created by the onboarding
 * `cft_version` - the current Cloud Formation Template version
 * `onbording_request` - the request data for the creation of the onboarding
   * `cloud_vendor` - Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `awsgov`, `awschina` the defult is `aws`
