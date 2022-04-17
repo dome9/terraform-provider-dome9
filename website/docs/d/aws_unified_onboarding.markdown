@@ -13,7 +13,7 @@ Use this data source to get the information about the onboarding of an AWS cloud
 
 ```hcl
 data "dome9_aws_unified_onboarding" "aws_unidied_onboarding_ds" {
-    cloud_account_id = "ID" CloudAccountId or onbordingId as string
+    id = "ID" CloudAccountId or onbordingId as string
 }
 ```
 
@@ -21,7 +21,7 @@ data "dome9_aws_unified_onboarding" "aws_unidied_onboarding_ds" {
 
 The following arguments are supported:
 
-* `cloud_account_id` - (Required) cloud account id / the onboarding id that create with creation of
+* `id` - (Required) cloud account id / the onboarding id that create with creation of
   dome9_aws_unified_onboarding resource
 
 ## Attributes Reference
@@ -37,4 +37,23 @@ In addition to all arguments above, the following attributes are exported:
 * `root_stack_id` - arn:aws:cloudformation:*
 * `cft_version` - the current Cloud Formation Template version
 * `onbording_request` - the request data for the creation of the onboarding
-* `statuses` - the current status per blade of the onboarding process
+  * `cloud_vendor` - Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `awsgov`, `awschina` the defult is `aws`
+  * `onboard_type` - "Simple" for pre-configured "one-click" onboarding and "Advanced" for customized configuration (String); default is "simple"
+  * `full_protection` - The AWS cloud account operation mode. `true` for "Full-Protection(R/W)", `false` for "Monitor(ReadOnly)"; default is `false`
+  * `enable_stack_modify` - Enable stack modify (Boolean); default is `false`
+  * `posture_management_configuration`:
+    * `rulesets` - List of Posture Management ruleset Ids (String) default is "[]"
+  * `serverless_configuration`:
+    * `enabled` - `true` or `false` to enable Serverless Protection (Boolean); default is `true`
+  * `intelligence_configurations`:
+    * `enabled` - `true` or `false` to enable Intelligence (Account Activity) (Boolean); default is `true`
+    * `rulesets` - list of Intelligence ruleset Ids (String) default is []
+* `statuses` - list of statuses, a status per blade of the onboarding process
+  * `module` - the module name(Role Permissions/Continuous Posture/Serverless Protection/Account Activity)
+  * `feature` - the feature name(Intelligence/Workload/Posture/Onbording/General)
+  * `remediation_recommendation` - remediation recommendation
+  * `stack_message` - the stack massage
+  * `stack_status` - the stack status
+  * `status` - The status (Error/Active)
+  * `status_message` - the status massage
+
