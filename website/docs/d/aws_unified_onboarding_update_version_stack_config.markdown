@@ -8,7 +8,7 @@ description: |-
 
 # Data Source: dome9_aws_unified_onboarding_update_version_stack_config
 
-Use this data source to get the configuration that should be set to the AWS cloud formation SDK for an update
+Use this data source to get the configuration that should be set to the AWS cloud formation resource for an update
 
 ## Example Usage
 
@@ -22,7 +22,7 @@ data "dome9_aws_unified_onboarding_update_version_stack_config" "test" {
 
 The following arguments are supported:
 
-* `onboarding_id` - (Required) (Required) The onboarding id (can be taken for the dome9_aws_unified_onboarding resource 
+* `onboarding_id` - (Required) The onboarding id (can be taken for the dome9_aws_unified_onboarding resource 
   (please link it to the resource) or dome9_aws_unified_onboarding data source
 
 ## Attributes Reference
