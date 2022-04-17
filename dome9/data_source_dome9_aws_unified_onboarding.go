@@ -1,9 +1,9 @@
 package dome9
 
 import (
+	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/aws_unified_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
-	"log"
 )
 
 
@@ -111,16 +111,15 @@ func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 					},
 				}}},
 			providerconst.Statuses: {
-				Type:     schema.TypeString,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{Schema: map[string]*schema.Schema{
 					providerconst.Module: {
 						Type:     schema.TypeString,
 						Computed: true,
-						ForceNew: true,
 					},
 					providerconst.Feature: {
-						Type:     schema.TypeBool,
+						Type:     schema.TypeString,
 						Computed: true,
 					},
 					providerconst.Status: {
@@ -156,9 +155,6 @@ func dataSourceAwsUnifiedOnboardingReadInfo(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	log.Printf("[INFO] Get UnifiedOnbording Information with OnbordingId: %s\n", resp.OnboardingId)
-	log.Printf("[INFO] ############ dataSourceAwsUnifiedOnboardingReadInfo GET with resp: %+v\n", resp)
-
 	d.SetId(resp.OnboardingId)
 	_ = d.Set(providerconst.OnboardingId, resp.OnboardingId)
 	_ = d.Set(providerconst.InitiatedUserName, resp.InitiatedUserName)
@@ -167,9 +163,26 @@ func dataSourceAwsUnifiedOnboardingReadInfo(d *schema.ResourceData, meta interfa
 	_ = d.Set(providerconst.RootStackId, resp.RootStackId)
 	_ = d.Set(providerconst.CftVersion, resp.CftVersion)
 	_ = d.Set(providerconst.UnifiedOnboardingRequest, resp.UnifiedOnboardingRequest)
-	_ = d.Set(providerconst.Status, resp.Statuses)
+	_ = d.Set(providerconst.Statuses, expendStatuses(resp.Statuses))
 	_ = d.Set(providerconst.EnvironmentId, resp.EnvironmentId)
 	_ = d.Set(providerconst.InitiatedUserId, resp.InitiatedUserId)
 
 	return nil
+}
+
+func expendStatuses(statuses aws_unified_onboarding.Statuses) interface{} {
+	statusesList := make([]interface{}, len(statuses))
+
+	for i, statusItem := range statuses {
+		statusesList[i] = map[string]interface{}{
+			providerconst.Module : statusItem.Module,
+			providerconst.Feature: statusItem.Feature,
+			providerconst.Status: statusItem.Status,
+			providerconst.StatusMessage: statusItem.StackMessage,
+			providerconst.StackStatus: statusItem.StackStatus,
+			providerconst.StackMessage: statusItem.StackMessage,
+			providerconst.RemediationRecommendation: statusItem.RemediationRecommendation,
+		}
+	}
+	return statusesList
 }
