@@ -74,11 +74,11 @@ func testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName string, generatedN
 %s
 
 data "%s" "%s" {
-  cloud_account_id = "${%s.id}"
+  id = "${%s.id}"
 }
 `,
 		// continuous compliance notification resource
-		getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName),
+		getAwsUnifiedOnboardingHCL(generatedName),
 
 		// data source variables
 		resourcetype.AwsUnifiedOnboarding,
@@ -90,7 +90,7 @@ data "%s" "%s" {
 	return res
 }
 
-func getContinuousComplianceAwsUnifiedOnboardingHCL(generatedName string) interface{} {
+func getAwsUnifiedOnboardingHCL(generatedName string) interface{} {
 	return fmt.Sprintf(`
 // AwsUnifiedOnbording creation
 resource "%s" "%s"{ 

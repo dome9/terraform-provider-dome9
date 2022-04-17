@@ -1,42 +1,31 @@
 package dome9
 
 import (
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"testing"
 )
 
+func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t *testing.T) {
+	resourceTypeAndName, _, resourceName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
 
-func TestAccDataSourceAwsUnifiedOnboardingUpdateVersionStackConfigBasic(t *testing.T) {
-	//resourceTypeAndName, dataSourceTypeAndName, resourceName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboardingUpdateVersionStackConfig)
-	//awsTypeAndName, _, awsGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboardingUpdateVersionStackConfig)
-	//
-	//
-	//return &schema.Resource{
-	//	Read: dataSourceAwsUnifiedOnboardingReadConfig,
-	//	Schema: map[string]*schema.Schema{
-	//		providerconst.OnboardingId: {
-	//			Type:     schema.TypeString,
-	//			Required: true,
-	//		},
-	//		providerconst.StackName: {
-	//			Type:     schema.TypeString,
-	//			Computed: true,
-	//		},
-	//		providerconst.Parameters: {
-	//			Type:     schema.TypeMap,
-	//			Computed: true,
-	//			Elem: &schema.Resource{
-	//				Schema: map[string]*schema.Schema{},
-	//			},
-	//		},
-	//		providerconst.IamCapabilities: {
-	//			Type:     schema.TypeList,
-	//			Computed: true,
-	//			Elem:     &schema.Schema{Type: schema.TypeString},
-	//		},
-	//		providerconst.TemplateUrl: {
-	//			Type:     schema.TypeString,
-	//			Computed: true,
-	//		},
-	//	},
-	//}
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers:    testAccProviders,
+		//CheckDestroy: testAccCheckAWSUnifiedOnboardingDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, resourceName),
+				Check: resource.ComposeTestCheckFunc(
+					//resource.TestCheckResourceAttrPair(resourceTypeAndName+"Data", "cloud_vendor", resourceTypeAndName, "cloud_vendor"),
+					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "cloud_vendor", resourceTypeAndName, "cloud_vendor"),
+					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "enable_stack_modify", resourceTypeAndName, "enable_stack_modify"),
+					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "full_protection", resourceTypeAndName, "full_protection"),
+				),
+			},
+		},
+	})
 }
