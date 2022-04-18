@@ -5,7 +5,6 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/aws_unified_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
-	"log"
 	"strconv"
 )
 
@@ -105,26 +104,17 @@ func resourceAwsUnifiedOnboarding() *schema.Resource {
 func resourceUnifiedOnboardingCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	req := expandAwsUnifiedOnboardingRequest(d)
-	log.Printf("[INFO] Creating Unified Onbording request %+v\n", req)
 	resp, _, err := d9Client.awsUnifiedOnboarding.Create(req)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[INFO] Created UnifiedOnboarding resource with stackName: %v\n", resp.StackName)
 	addOnboardingIdAsSchemaId(d, resp)
 
-	log.Printf("[INFO] ######## Getting Unified Onbording:%+v\n", resp)
 	_ = d.Set(providerconst.StackName, resp.StackName)
-	log.Printf("[INFO] ######## Getting Unified Onbording resp.StackName:%+v\n", resp.StackName)
-
-	log.Printf("[INFO] ######## Getting Unified Onbording map2:%+v\n", convertParametersFromListToMap(resp))
 	_ = d.Set(providerconst.Parameters, convertParametersFromListToMap(resp))
-	log.Printf("[INFO] ######## Getting Unified Onbording resp.Parameters:%+v\n", resp.Parameters)
 	_ = d.Set(providerconst.IamCapabilities, resp.IamCapabilities)
-	log.Printf("[INFO] ######## Getting Unified Onbording resp.IamCapabilities:%+v\n", resp.IamCapabilities)
 	_ = d.Set(providerconst.TemplateUrl, resp.TemplateUrl)
-	log.Printf("[INFO] ######## Getting Unified Onbording resp.TemplateUrl :%+v\n", resp.TemplateUrl)
 
 	return nil
 }
@@ -166,7 +156,6 @@ func getEnabledFromMap(configurations map[string]interface{}) bool {
 	b := false
 	if len(configurations) > 0 {
 		enabled := configurations[providerconst.Enabled]
-		log.Printf("[INFO] getEnabledFromMap:%+v\n", enabled)
 
 		if enabled != ""  && enabled != nil {
 			v := enabled.(string)
@@ -200,7 +189,6 @@ func getRulesetsFromMap(m map[string]interface{}) *[]int {
 	RulesetsAsString := m[providerconst.Rulesets].(string)
 	err := json.Unmarshal([]byte(RulesetsAsString), &rulesets)
 	if err != nil {
-		log.Printf("[ERROR] getRulesetsFromMap failed Unmarshal rulesets :%+v err:%v", rulesets, err)
 		rulesets = make([]int, 0)
 	}
 
