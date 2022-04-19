@@ -23,10 +23,8 @@ func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t
 			{
 				Config: testAccCheckAwsUnifiedOnbordingUpdateVersionStackConfogurationBasic(resourceTypeAndName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
-					//resource.TestCheckResourceAttrPair(dataName+variable.DataSourceSuffix, "ID", resourceTypeAndName, "ID"),
-					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "cloud_vendor", resourceTypeAndName, "cloud_vendor"),
-					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "enable_stack_modify", resourceTypeAndName, "enable_stack_modify"),
-					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "full_protection", resourceTypeAndName, "full_protection"),
+					resource.TestCheckResourceAttrPair(resourceName+variable.DataSourceSuffix, "ID", resourceTypeAndName, "ID"),
+					resource.TestCheckResourceAttrPair(resourceName+variable.DataSourceSuffix, "stack_name", resourceTypeAndName, "stack_name"),
 				),
 			},
 		},
@@ -54,8 +52,4 @@ data "%s" "%s" {
 	log.Printf("[INFO] testAccCheckAwsUnifiedOnbordingBasic:%+v\n", res)
 
 	return res
-}
-
-func GenerateAWSUnifiedOnboardingUpdateVersionStackConfogurationName(name string) interface{} {
-	return fmt.Sprintf("data.%s.%s", resourcetype.AwsUnifiedOnboardingUpdateVersionStackConfig, name)
 }
