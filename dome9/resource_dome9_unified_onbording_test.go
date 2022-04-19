@@ -82,7 +82,7 @@ data "%s" "%s" {
 
 		// data source variables
 		resourcetype.AwsUnifiedOnboarding,
-		generatedName+"Data",
+		generatedName+variable.DataSourceSuffix,
 		resourceTypeAndName,
 	)
 	log.Printf("[INFO] testAccCheckAwsUnifiedOnbordingBasic:%+v\n", res)

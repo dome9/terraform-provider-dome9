@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"testing"
 )
 
@@ -21,7 +22,7 @@ func TestAccDataSourceAWSUnifiedOnboardingBasic(t *testing.T) {
 			{
 				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(resourceTypeAndName, "ID", dataName+"Data", "ID"),
+					resource.TestCheckResourceAttrPair(resourceTypeAndName, "ID", dataName+variable.DataSourceSuffix, "ID"),
 				),
 			},
 		},

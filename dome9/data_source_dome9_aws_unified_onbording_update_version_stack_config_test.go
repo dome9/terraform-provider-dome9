@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"log"
 	"testing"
 )
@@ -22,7 +23,7 @@ func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t
 			{
 				Config: testAccCheckAwsUnifiedOnbordingUpdateVersionStackConfogurationBasic(resourceTypeAndName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
-					//resource.TestCheckResourceAttrPair(dataName+"Data", "ID", resourceTypeAndName, "ID"),
+					//resource.TestCheckResourceAttrPair(dataName+variable.DataSourceSuffix, "ID", resourceTypeAndName, "ID"),
 					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "cloud_vendor", resourceTypeAndName, "cloud_vendor"),
 					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "enable_stack_modify", resourceTypeAndName, "enable_stack_modify"),
 					//resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "full_protection", resourceTypeAndName, "full_protection"),
@@ -47,7 +48,7 @@ data "%s" "%s" {
 
 		// data source variables
 		resourcetype.AwsUnifiedOnboardingUpdateVersionStackConfig,
-		generatedName+"Data",
+		generatedName+variable.DataSourceSuffix,
 		resourceTypeAndName,
 	)
 	log.Printf("[INFO] testAccCheckAwsUnifiedOnbordingBasic:%+v\n", res)

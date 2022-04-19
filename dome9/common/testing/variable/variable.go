@@ -138,7 +138,8 @@ const (
 	rulesets: "[0]"
 }`
 
-	AwsUnifiedOnbordingTemplateUrl     = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/3.5.0/templates/role_based/onboarding.yml`
+	DataSourceSuffix                    = "Data"
+	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/3.5.0/templates/role_based/onboarding.yml`
 	AwsUnifiedOnbordingIamCapabilities0 = `CAPABILITY_IAM`
 	AwsUnifiedOnbordingIamCapabilities1 = `CAPABILITY_NAMED_IAM`
 	AwsUnifiedOnbordingIamCapabilities2 = `CAPABILITY_AUTO_EXPAND`
