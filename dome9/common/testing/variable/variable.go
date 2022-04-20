@@ -136,7 +136,7 @@ const (
 	AwsUnifiedOnbordingIntelligenceConfigurations = `{
 	enabled: true
 	rulesets: "[0]"
-}`
+	}`
 
 	DataSourceSuffix                    = "Data"
 	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/3.5.0/templates/role_based/onboarding.yml`

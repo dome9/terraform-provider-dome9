@@ -23,6 +23,9 @@ func TestAccDataSourceAWSUnifiedOnboardingBasic(t *testing.T) {
 				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "ID", dataName+variable.DataSourceSuffix, "ID"),
+					resource.TestCheckResourceAttrPair(resourceTypeAndName, "provider", dataName+variable.DataSourceSuffix, "provider"),
+					resource.TestCheckResourceAttrPair(resourceTypeAndName, "parameters.Version", dataName+variable.DataSourceSuffix, "cft_version"),
+					resource.TestCheckResourceAttrPair(resourceTypeAndName, "parameters.OnboardingId", dataName+variable.DataSourceSuffix, "onboarding_id"),
 				),
 			},
 		},
