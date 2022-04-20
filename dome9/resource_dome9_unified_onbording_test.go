@@ -28,6 +28,8 @@ func TestAccResourceAwsUnifiedOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.0", variable.AwsUnifiedOnbordingIamCapabilities0),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.1", variable.AwsUnifiedOnbordingIamCapabilities1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.2", variable.AwsUnifiedOnbordingIamCapabilities2),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "onboard_type", variable.AwsUnifiedOnbordingOnboardType),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_vendor", variable.AwsUnifiedOnbordingCloudVendor),
 				),
 			},
 		},
