@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
+	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
@@ -42,6 +43,7 @@ type Client struct {
 	azureSecurityGroup               securitygroupazure.Service
 	users                            users.Service
 	serviceAccounts                  serviceaccounts.Service
+	admissionControlPolicy           admission_policy.Service
 }
 
 type Config struct {
@@ -72,6 +74,7 @@ func (c *Config) Client() (*Client, error) {
 		azureSecurityGroup:               *securitygroupazure.New(config),
 		users:                            *users.New(config),
 		serviceAccounts:                  *serviceaccounts.New(config),
+		admissionControlPolicy:           *admission_policy.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")

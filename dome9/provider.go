@@ -54,6 +54,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.User:                             resourceUser(),
 			resourcetype.IAMSafeEntity:                    resourceIAMSafeEntity(),
 			resourcetype.ServiceAccount:                   resourceServiceAccount(),
+			resourcetype.AdmissionControlPolicy:           resourceAdmissionPolicy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
@@ -73,6 +74,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.CloudAccountAzureSecurityGroup:   dataSourceSecurityGroupAzure(),
 			resourcetype.User:                             dataSourceUser(),
 			resourcetype.ServiceAccount:                   dataSourceServiceAccount(),
+			resourcetype.AdmissionControlPolicy:           dataSourceAdmissionControlPolicy(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
