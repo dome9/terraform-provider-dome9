@@ -11,7 +11,8 @@ import (
 )
 
 func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t *testing.T) {
-	resourceTypeAndName, dataTypeAndName, resourceName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
+	resourceTypeAndName, _, resourceName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
+	dataTypeAndName := fmt.Sprintf("data.%s.%s", resourcetype.AwsUnifiedOnboardingUpdateVersionStackConfig, resourceName)
 	log.Println("TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic ",resourceTypeAndName, dataTypeAndName, resourceName)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -23,8 +24,14 @@ func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t
 			{
 				Config: testAccCheckAwsUnifiedOnbordingUpdateVersionStackConfogurationBasic(resourceTypeAndName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(resourceName+variable.DataSourceSuffix, "ID", resourceTypeAndName, "ID"),
-					resource.TestCheckResourceAttrPair(resourceName+variable.DataSourceSuffix, "stack_name", resourceTypeAndName, "stack_name"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "ID", resourceTypeAndName, "ID"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "onboarding_id", resourceTypeAndName, "parameters.OnboardingId"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "stack_name", resourceTypeAndName, "stack_name"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "template_url", resourceTypeAndName, "template_url"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "provider", resourceTypeAndName, "provider"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "iam_capabilities.0", resourceTypeAndName, "iam_capabilities.0"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "iam_capabilities.1", resourceTypeAndName, "iam_capabilities.1"),
+					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "iam_capabilities.2", resourceTypeAndName, "iam_capabilities.2"),
 				),
 			},
 		},
