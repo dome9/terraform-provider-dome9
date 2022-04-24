@@ -8,7 +8,6 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
-	"log"
 	"testing"
 )
 
@@ -41,24 +40,17 @@ func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboardin
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
 			res := fmt.Errorf("didn't find resource: %s", resource)
-			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", res)
 			return res
 		}
 		if rs.Primary.ID == "" {
 			res :=  fmt.Errorf("no record ID is set")
-			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", res)
 			return res
 
 		} else {
-			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", rs)
-			log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists OK:%+v\n", ok)
 		}
-		log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists:%+v\n", rs)
 
 		apiClient := testAccProvider.Meta().(*Client)
 		receivedAwsUnifiedOnboardingResponse, _, err := apiClient.awsUnifiedOnboarding.Get(rs.Primary.ID)
-		log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists apiClient:%+v\n", receivedAwsUnifiedOnboardingResponse)
-		log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingExists err:%+v\n", err)
 
 		if err != nil {
 			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
@@ -87,7 +79,6 @@ data "%s" "%s" {
 		generatedName+variable.DataSourceSuffix,
 		resourceTypeAndName,
 	)
-	log.Printf("[INFO] testAccCheckAwsUnifiedOnbordingBasic:%+v\n", res)
 
 	return res
 }
