@@ -18,6 +18,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/roles"
 	"github.com/dome9/dome9-sdk-go/services/rulebundles"
 	"github.com/dome9/dome9-sdk-go/services/serviceaccounts"
+	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/aws_unified_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/users"
 )
 
@@ -42,6 +43,7 @@ type Client struct {
 	azureSecurityGroup               securitygroupazure.Service
 	users                            users.Service
 	serviceAccounts                  serviceaccounts.Service
+	awsUnifiedOnboarding             aws_unified_onboarding.Service
 }
 
 type Config struct {
@@ -72,6 +74,7 @@ func (c *Config) Client() (*Client, error) {
 		azureSecurityGroup:               *securitygroupazure.New(config),
 		users:                            *users.New(config),
 		serviceAccounts:                  *serviceaccounts.New(config),
+		awsUnifiedOnboarding:             *aws_unified_onboarding.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
