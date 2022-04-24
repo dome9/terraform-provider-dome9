@@ -1,7 +1,7 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_aws_unified_onboarding_information"
-sidebar_current: "docs-datasource-dome9-aws-unified-onboarding"
+page_title: "Check Point CloudGuard Dome9: dome9_aws_unified_onboarding_update_version_stack_config"
+sidebar_current: "docs-datasource-dome9-aws-unified-onboarding-update-version-stack-config"
 description: |-
   GET configuration should be set to the AWS cloud formation SDK for an update
 ---
@@ -22,8 +22,9 @@ data "dome9_aws_unified_onboarding_update_version_stack_config" "test" {
 
 The following arguments are supported:
 
-* `onboarding_id` - (Required) The onboarding id (can be taken for the dome9_aws_unified_onboarding resource 
-  (please link it to the resource) or dome9_aws_unified_onboarding data source
+* `onboarding_id` - (Required) The onboarding id. </br> 
+  the onboarding_id can be taken from the [dome9_aws_unified_onboarding resource](../r/aws_unified_onbording.markdown),
+  or from the [dome9_aws_unified_onboarding data source](../aws_unified_onbording.markdown)
 
 ## Attributes Reference
 

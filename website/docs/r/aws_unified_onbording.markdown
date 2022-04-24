@@ -7,8 +7,8 @@ description: AWS unified onboarding in Dome9
 
 # dome9_aws_unified_onboarding
 
-Create an onboarding configuration including an onboardingId and use the configuration to create
-"aws_cloudformation_stack" in order to onboard to "Cloud Guard"
+Begins an aws environment onboarding process. gets onboarding parameters and returns parameters 
+that should be set for an aws_cloudformation_stack resource in order to complete the onboarding
 
 ## Example Usage
 
@@ -47,21 +47,18 @@ resource "aws_cloudformation_stack" "stack"{
 
 The following arguments are supported:
 
-* `cloud_vendor` - (Optional) the type of the cloud account that will be onboarded. can be one of the following: `aws`
-  , `awsgov`, `awschina` the defult is `aws`
-* `onboard_type` - (Optional) "simple" for pre-configured "one-click" onboarding and "Advanced" for customized
-  configuration (String); default is "Simple"
-* `full_protection` - (Optional) The AWS cloud account operation mode. `true` for "Full-Protection(Read and write)", `false` for "
-  Monitor(ReadOnly)"; default is `false`
-* `enable_stack_modify` - (Optional) Allow Cloud Guard tom update and delete this stack upon update or delete of the environment, default is `false`
-* `posture_management_configuration` - (Optional) :
-    * `rulesets` - List of Posture Management ruleset Ids (String) default is "[]"
-* `serverless_configuration` - (Optional):
-    * `enabled` - whether to enable Serverless protection or not, default is `true`
-* `intelligence_configurations` - (Optional):
-    * `enabled` - whether to enable Intelligence (Account Activity) or not, default is `true`
-    * `rulesets` - list of Intelligence ruleset Ids that will be associated with a policy, default is []
-
+* `cloud_vendor` - (Optional) the type of the environment that will be onboarded. can be one of the following: `aws`, `awsgov`, `awschina` the defult is `aws`
+* `onboard_type` - (Optional) the onboarding type, `simple` for the default onboarding and `Advanced` for customized configuration; default is `Simple`
+* `full_protection` - (Optional) The AWS environment operation mode. `true` for "Full-Protection(Read and write)", `false` for "Monitor(ReadOnly)", default is `false`
+* `enable_stack_modify` - (Optional)  whether to allow CloudGuard to update and delete this stack upon update or delete of the environment or not, default is `false`
+* `posture_management_configuration`:
+  * `rulesets` - list of Posture rulesets Ids, that will be associated by policy with the environment
+* `serverless_configuration`:
+  * `enabled` - whether to enable Serverless protection or not, default is `true`
+* `intelligence_configurations`:
+  * `enabled` - whether to enable Intelligence (Account Activity) or not, default is `true`
+  * `rulesets` - list of Intelligence rulesets Ids that will be associated by policy with the environment
+  
 ## Attributes Reference
 
 * `stack_name` - aws cloudformation stack name
