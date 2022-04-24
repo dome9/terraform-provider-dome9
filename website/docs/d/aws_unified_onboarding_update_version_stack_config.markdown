@@ -23,8 +23,8 @@ data "dome9_aws_unified_onboarding_update_version_stack_config" "test" {
 The following arguments are supported:
 
 * `onboarding_id` - (Required) The onboarding id. </br> 
-  the onboarding_id can be taken from the [dome9_aws_unified_onboarding resource](../r/aws_unified_onbording.markdown),
-  or from the [dome9_aws_unified_onboarding data source](../aws_unified_onbording.markdown)
+  the onboarding_id can be taken from the [dome9_aws_unified_onboarding resource](https://registry.terraform.io/providers/dome9/dome9/latest/docs/resources/aws_unified_onbording),
+  or from the [dome9_aws_unified_onboarding data source](https://registry.terraform.io/providers/dome9/dome9/latest/docs/data-sources/aws_unified_onboarding)
 
 ## Attributes Reference
 
