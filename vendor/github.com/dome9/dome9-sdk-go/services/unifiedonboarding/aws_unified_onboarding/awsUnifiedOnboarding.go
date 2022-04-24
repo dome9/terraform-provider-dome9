@@ -1,4 +1,4 @@
-package awsUnifiedOnbording
+package aws_unified_onboarding
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ type IntelligenceConfigurations struct {
 	Rulesets []int `json:"rulesets"`
 }
 
-type UnifiedOnbordingRequest struct {
+type UnifiedOnboardingRequest struct {
 	OnboardType                    string                         `json:"onboardType"`
 	FullProtection                 bool                           `json:"fullProtection"`
 	CloudVendor                    string                         `json:"cloudVendor"`
@@ -33,7 +33,7 @@ type UnifiedOnbordingRequest struct {
 	IntelligenceConfigurations     IntelligenceConfigurations     `json:"intelligenceConfigurations"`
 }
 
-type UnifiedOnbordingConfigurationResponse struct {
+type UnifiedOnboardingConfigurationResponse struct {
 	StackName       string     `json:"stackName"`
 	TemplateUrl     string     `json:"templateUrl"`
 	Parameters      []Parameter `json:"parameters"`
@@ -45,17 +45,17 @@ type Parameter struct {
 	Value string `json:"value"`
 }
 
-type UnifiedOnbordingInformationResponse struct {
-	OnboardingId            string                  `json:"onboardingId"`
-	InitiatedUserName       string                  `json:"initiatedUserName"`
-	InitiatedUserId         int                     `json:"initiatedUserId"`
-	EnvironmentId           string                  `json:"environmentId"`
-	EnvironmentName         string                  `json:"environmentName"`
-	EnvironmentExternalId   string                  `json:"environmentExternalId"`
-	RootStackId             string                  `json:"rootStackId"`
-	CftVersion              string                  `json:"cftVersion"`
-	UnifiedOnbordingRequest UnifiedOnbordingRequest `json:"onboardingRequest"`
-	Statuses                Statuses                `json:"statuses"`
+type UnifiedOnboardingResponse struct {
+	OnboardingId             string                  `json:"onboardingId"`
+	InitiatedUserName        string                  `json:"initiatedUserName"`
+	InitiatedUserId          int                     `json:"initiatedUserId"`
+	EnvironmentId            string                  `json:"environmentId"`
+	EnvironmentName          string                  `json:"environmentName"`
+	EnvironmentExternalId    string                  `json:"environmentExternalId"`
+	RootStackId              string                  `json:"rootStackId"`
+	CftVersion               string                  `json:"cftVersion"`
+	UnifiedOnboardingRequest UnifiedOnboardingRequest `json:"onboardingRequest"`
+	Statuses                 Statuses                `json:"statuses"`
 }
 
 type Statuses []struct {
@@ -68,8 +68,8 @@ type Statuses []struct {
 	RemediationRecommendation string `json:"remediationRecommendation"`
 }
 
-func (service *Service) Get(id string) (*UnifiedOnbordingConfigurationResponse, *http.Response, error) {
-	v := new(UnifiedOnbordingConfigurationResponse)
+func (service *Service) Get(id string) (*UnifiedOnboardingResponse, *http.Response, error) {
+	v := new(UnifiedOnboardingResponse)
 	relativeURL := fmt.Sprintf("%s/%s", UnifiedOnboardingResourcePath, id)
 	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
 	if err != nil {
@@ -79,8 +79,8 @@ func (service *Service) Get(id string) (*UnifiedOnbordingConfigurationResponse, 
 	return v, resp, nil
 }
 
-func (service *Service) GetUpdateStackConfig(id string) (*UnifiedOnbordingConfigurationResponse, *http.Response, error) {
-	v := new(UnifiedOnbordingConfigurationResponse)
+func (service *Service) GetUpdateStackConfig(id string) (*UnifiedOnboardingConfigurationResponse, *http.Response, error) {
+	v := new(UnifiedOnboardingConfigurationResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s/%s", UnifiedOnboardingResourcePath, UpdateVersion, StackConfig, id)
 	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
 	if err != nil {
@@ -90,10 +90,10 @@ func (service *Service) GetUpdateStackConfig(id string) (*UnifiedOnbordingConfig
 	return v, resp, nil
 }
 
-func (service *Service) Create(onbordingRequest UnifiedOnbordingRequest) (*UnifiedOnbordingConfigurationResponse, *http.Response, error) {
-	v := new(UnifiedOnbordingConfigurationResponse)
+func (service *Service) Create(onboardingRequest UnifiedOnboardingRequest) (*UnifiedOnboardingConfigurationResponse, *http.Response, error) {
+	v := new(UnifiedOnboardingConfigurationResponse)
 	relativeURL := fmt.Sprintf("%s/%s", UnifiedOnboardingResourcePath, StackConfig)
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, onbordingRequest, &v)
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, onboardingRequest, &v)
 	if err != nil {
 		return nil, nil, err
 	}

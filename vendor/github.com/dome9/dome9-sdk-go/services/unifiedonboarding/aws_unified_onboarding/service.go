@@ -1,4 +1,4 @@
-package awsUnifiedOnbording
+package aws_unified_onboarding
 
 import (
 	"github.com/dome9/dome9-sdk-go/dome9"
