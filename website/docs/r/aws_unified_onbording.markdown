@@ -15,7 +15,7 @@ that should be set for an aws_cloudformation_stack resource in order to complete
 Basic usage:
 
 ```hcl
-resource resource "dome9_aws_unified_onboarding" "test" {
+resource "dome9_aws_unified_onboarding" "test" {
 	cloud_vendor = "aws"
         onboard_type = "Simple"
         full_protection = true
