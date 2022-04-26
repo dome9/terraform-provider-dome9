@@ -8,18 +8,20 @@ description: |-
 
 # Check Point CloudGuard Dome9 Provider
 
-The Check Point CloudGuard Dome9 provider is used to interact with [Dome9](https://www.dome9.com) security posture platform, to onboard cloud accounts and configure compliance policies. To use this  provider, you must create Dome9 API credentials.
+The Check Point CloudGuard Dome9 provider is to interact with [CloudGuard](https://www.checkpoint.com/dome9/) security posture platform to onboard cloud environments and configure compliance policies.
+To use this  provider, you must create CloudGuard API credentials.
 
 
-Use the navigation on the left to read about the available resources.
+Use the navigation menu on the left to read about the available resources.
 
 ## Authentication
 
-This provider requires a Dome9 API Key and Key secret  in order to manage the resources. This is obtained from the Dome9 [web application](https://secure.dome9.com/v2/settings/credentials). See [here](https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&solutionid=sk144514&partition=General&product=CloudGuard) for details how to obtain the Key and Secret.
+This provider requires a CloudGuard API Key and Key secret in order to manage the resources.
+You can generate these credentials in the CloudGuard portal or in the Infinity portal.
+- In the CloudGuard portal, use [https://secure.dome9.com/v2/settings/credentials](https://secure.dome9.com/v2/settings/credentials) and, for more details, see [CloudGuard documentation](https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Documentation/Settings/Credentials.htm?cshid=API_V2)
+- In the Infinity portal,  use [https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials](https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials) and see [CloudGuard documentation](https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/Settings/Credentials.htm?cshid=API_V2)
 
-To manage the full selection of resources, provide a
-[Dome9 access id & secret key](https://secure.dome9.com/v2/settings/credentials) 
-from an account with admin access permissions.
+To manage the full selection of resources, provide the credentials from an account with administrative access permissions.
 
 
 You can use the Key and Secret in the following ways:
