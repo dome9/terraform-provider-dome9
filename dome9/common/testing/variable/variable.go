@@ -154,3 +154,12 @@ const (
 	ServiceAccountName       = "serviceAccount"
 	ServiceAccountNameUpdate = "serviceAccountUpdate"
 )
+
+// Admission Control Policy resource
+const (
+	AdmissionControlPolicyDefaultRulesetId = -2001
+	AdmissionControlPolicyDetectAction     = "Detection"
+	AdmissionControlPolicyPreventAction    = "Prevention"
+	AdmissionControlPolicyRuleSetPlatform  = "kubernetesruntimeassurance"
+	AdmissionControlPolicyTargetType       = "Environment"
+)
