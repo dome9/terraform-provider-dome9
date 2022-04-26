@@ -9,9 +9,7 @@ description: |-
 # Check Point CloudGuard Dome9 Provider
 
 The Check Point CloudGuard Dome9 provider is to interact with [CloudGuard](https://www.checkpoint.com/dome9/) security posture platform to onboard cloud environments and configure compliance policies.
-To use this  provider, you must create CloudGuard API credentials.
-
-
+To use this  provider, you must create CloudGuard API credentials.<br/>
 Use the navigation menu on the left to read about the available resources.
 
 ## Authentication
