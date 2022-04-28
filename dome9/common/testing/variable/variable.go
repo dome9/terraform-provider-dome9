@@ -124,6 +124,27 @@ const (
 	RoleUpdateToPermittedAlertActions = true
 )
 
+// AwsUnifiedOnbording resource/data
+const (
+	AwsUnifiedOnbordingOnboardType                    = "Simple"
+	AwsUnifiedOnbordingFullProtection                 = "true"
+	AwsUnifiedOnbordingCloudVendor                    = "aws"
+	AwsUnifiedOnbordingEnableStackModify              = "true"
+	AwsUnifiedOnbordingPostureManagementConfiguration = `{rulesets: "[0]"}`
+
+	AwsUnifiedOnbordingServerlessConfiguration    = `{	enabled: true}`
+	AwsUnifiedOnbordingIntelligenceConfigurations = `{
+	enabled: true
+	rulesets: "[0]"
+	}`
+
+	DataSourceSuffix                    = "Data"
+	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/3.5.0/templates/role_based/onboarding.yml`
+	AwsUnifiedOnbordingIamCapabilities0 = `CAPABILITY_IAM`
+	AwsUnifiedOnbordingIamCapabilities1 = `CAPABILITY_NAMED_IAM`
+	AwsUnifiedOnbordingIamCapabilities2 = `CAPABILITY_AUTO_EXPAND`
+)
+
 // organizational unit resource/data source
 const (
 	OrganizationalUnitName       = "test_ou"

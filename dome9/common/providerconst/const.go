@@ -13,6 +13,42 @@ const (
 	ProviderBaseURL   = "base_url"
 )
 
+// AWS unified onboarding
+const (
+	Id                             = "id"
+	CloudAccountId                 = "cloud_account_id"
+	InitiatedUserName              = "initiated_user_name"
+	InitiatedUserId                = "initiated_user_id"
+	EnvironmentId                  = "environment_id"
+	EnvironmentName                = "environment_name"
+	EnvironmentExternalId          = "environment_external_id"
+	RootStackId                    = "root_stack_id"
+	CftVersion                     = "cft_version"
+	UnifiedOnboardingRequest       = "onboarding_request"
+	Statuses                       = "statuses"
+	Status                         = "status"
+	Module                         = "module"
+	Feature                        = "feature"
+	StatusMessage                  = "status_message"
+	StackStatus                    = "stack_status"
+	StackMessage                   = "stack_message"
+	RemediationRecommendation      = "remediation_recommendation"
+	Rulesets                       = "rulsets"
+	Enabled                        = "enabled"
+	StackName                      = "stack_name"
+	Parameters                     = "parameters"
+	IamCapabilities                = "iam_capabilities"
+	TemplateUrl                    = "template_url"
+	OnboardingId                   = "onboarding_id"
+	OnboardType                    = "onboard_type"
+	FullProtection                 = "full_protection"
+	CloudVendor                    = "cloud_vendor"
+	EnableStackModify              = "enable_stack_modify"
+	PostureManagementConfiguration = "posture_management_configuration"
+	ServerlessConfiguration        = "serverless_configuration"
+	IntelligenceConfigurations     = "intelligence_configurations"
+)
+
 // GCP onboarding
 const (
 	GCPCloudAccountType                    = "service_account"
