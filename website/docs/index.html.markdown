@@ -8,7 +8,8 @@ description: |-
 
 # Check Point CloudGuard Dome9 Provider
 
-The Check Point CloudGuard Dome9 provider is to interact with [CloudGuard](https://www.checkpoint.com/dome9/) security posture platform to onboard cloud environments and configure compliance policies.
+The Check Point CloudGuard Dome9 provider is used to interact with [CloudGuard Dome9](https://www.checkpoint.com/dome9/) security posture platform 
+to onboard cloud environments and configure compliance policies.
 To use this  provider, you must create CloudGuard API credentials.<br/>
 Use the navigation menu on the left to read about the available resources.
 
@@ -16,12 +17,13 @@ Use the navigation menu on the left to read about the available resources.
 
 This provider requires a CloudGuard API Key and Key secret in order to manage the resources.
 You can generate these credentials in the CloudGuard portal or in the Infinity portal.
-- In the CloudGuard portal, use [https://secure.dome9.com/v2/settings/credentials](https://secure.dome9.com/v2/settings/credentials) and, for more details, see [CloudGuard documentation](https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Documentation/Settings/Credentials.htm?cshid=API_V2)
-- In the Infinity portal,  use [https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials](https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials) and see [CloudGuard documentation](https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/Settings/Credentials.htm?cshid=API_V2)
+- For accounts onboarded through the Infinity Portal, you can generate these credentials at [https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials](https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials) . For more details, see the [CloudGuard documentation](https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Default.htm#cshid=API_V2) for the Infinity Portal.
+  
+- For accounts onboarded through the CloudGuard Portal, use [https://secure.dome9.com/v2/settings/credentials](https://secure.dome9.com/v2/settings/credentials). For more details, see [CloudGuard documentation](https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/Settings/Credentials.htm?cshid=API_V2)
+
+
 
 To manage the full selection of resources, provide the credentials from an account with administrative access permissions.
-
-
 You can use the Key and Secret in the following ways:
 
 - On the CLI, omit the `provider` block from your tf file, and the CLI will prompt for proper credentials.
