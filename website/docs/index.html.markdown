@@ -16,9 +16,9 @@ Use the navigation menu on the left to read about the available resources.
 ## Authentication
 
 This provider requires a CloudGuard API Key and Key secret in order to manage the resources.
-- For accounts onboarded through the Infinity Portal, you can generate these credentials at [https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials](https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials) . For more details, see the [CloudGuard documentation](https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Default.htm#cshid=API_V2) for the Infinity Portal.
+- For accounts onboarded through the Infinity Portal, you can generate these credentials at [https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials](https://portal.checkpoint.com/dashboard/cloudguard#/settings/credentials) . For more details, see the  [CloudGuard documentation](https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/Settings/Credentials.htm?cshid=API_V2) for the Infinity Portal.
   
-- For accounts onboarded through the CloudGuard Portal, use [https://secure.dome9.com/v2/settings/credentials](https://secure.dome9.com/v2/settings/credentials). For more details, see [CloudGuard documentation](https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/Settings/Credentials.htm?cshid=API_V2)
+- For accounts onboarded through the CloudGuard Portal, use [https://secure.dome9.com/v2/settings/credentials](https://secure.dome9.com/v2/settings/credentials). For more details, see  [CloudGuard documentation](https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Default.htm#cshid=API_V2)
 
 To manage the full selection of resources, provide the credentials from an account with administrative access permissions.
 
