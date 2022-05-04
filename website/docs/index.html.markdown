@@ -21,6 +21,7 @@ This provider requires a CloudGuard API Key and Key secret in order to manage th
 - For accounts onboarded through the CloudGuard Portal, use [https://secure.dome9.com/v2/settings/credentials](https://secure.dome9.com/v2/settings/credentials). For more details, see [CloudGuard documentation](https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/CloudGuard-PM-Admin-Guide/Documentation/Settings/Credentials.htm?cshid=API_V2)
 
 To manage the full selection of resources, provide the credentials from an account with administrative access permissions.
+
 You can use the Key and Secret in the following ways:
 
 - On the CLI, omit the `provider` block from your tf file, and the CLI will prompt for proper credentials.
