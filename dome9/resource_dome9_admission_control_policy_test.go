@@ -32,7 +32,7 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 	t.Log("kubernetesAccountGeneratedName: " + kubernetesAccountGeneratedName)
 
 	// Create Kubernetes Account HCL Resource
-	kubernetesAccountHCL := getCloudAccountKubernetesResourceHCLWithfeatures(kubernetesAccountGeneratedName, variable.CloudAccountKubernetesOriginalAccountName,
+	kubernetesAccountHCL := getCloudAccountKubernetesResourceHCLWithfeatures(kubernetesAccountGeneratedName, variable.AdmissionControlKubernetesAccountName,
 		variable.CloudAccountKubernetesRuntimeProtectionEnabled,
 		variable.CloudAccountKubernetesAdmissionControlEnabled,
 		variable.CloudAccountKubernetesImageAssuranceEnabled)
