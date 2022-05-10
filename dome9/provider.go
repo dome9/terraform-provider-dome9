@@ -77,7 +77,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.CloudAccountAzureSecurityGroup:               dataSourceSecurityGroupAzure(),
 			resourcetype.User:                                         dataSourceUser(),
 			resourcetype.ServiceAccount:                               dataSourceServiceAccount(),
-			resourcetype.AdmissionControlPolicy:           dataSourceAdmissionControlPolicy(),
+			resourcetype.AdmissionControlPolicy:                       dataSourceAdmissionControlPolicy(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

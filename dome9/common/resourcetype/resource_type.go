@@ -22,5 +22,5 @@ const (
 	ServiceAccount                               = "dome9_service_account"
 	AwsUnifiedOnboardingUpdateVersionStackConfig = "dome9_aws_unified_onboarding_update_version_stack_config"
 	AwsUnifiedOnboarding                         = "dome9_aws_unified_onboarding"
-	AdmissionControlPolicy           = "dome9_admission_control_policy"
+	AdmissionControlPolicy                       = "dome9_admission_control_policy"
 )

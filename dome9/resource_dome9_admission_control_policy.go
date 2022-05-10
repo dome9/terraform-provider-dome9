@@ -92,8 +92,10 @@ func resourceAdmissionControlPolicyRead(d *schema.ResourceData, meta interface{}
 
 	log.Printf("[INFO] Getting admission control policy: %+v\n", resp)
 	d.SetId(resp.ID)
+	_ = d.Set("target_id", resp.TargetId)
 	_ = d.Set("target_type", resp.TargetType)
 	_ = d.Set("ruleset_id", resp.RulesetId)
+	_ = d.Set("action", resp.Action)
 	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
 		return err
 	}

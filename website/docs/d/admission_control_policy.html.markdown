@@ -8,7 +8,7 @@ description: |-
 
 # Data Source: dome9_admission_control_policy
 
-Use this data source to get information about a Dome9 admission control policy.
+Use this data source to get information about a CloudGuard admission control policy.
 
 ## Example Usage
 
@@ -28,8 +28,8 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `target_id` - Cloud account id in Dome9.
-* `target_type` - Kubernetes Account type (`Environment`, `OrganizationalUnit`).
-* `ruleset_id` - Rule bundle ID.
-* `notification_ids` - Dome9 Notifications IDs [list] .
+* `target_id` - Environment ID / OU ID.
+* `target_type` - Policy Type (`Environment`, `OrganizationalUnit`).
+* `ruleset_id` - Ruleset ID.
+* `notification_ids` - Notification IDs [list] .
 * `action` - Policy action type (`Detection`, `Prevention`).
