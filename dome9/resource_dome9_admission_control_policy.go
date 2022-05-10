@@ -78,7 +78,7 @@ func expandAdmissionControlPolicyRequest(d *schema.ResourceData) admission_polic
 
 func resourceAdmissionControlPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	resp, _, err := d9Client.admissionControlPolicy.GetAdmissionControlPolicy(d.Id())
+	resp, _, err := d9Client.admissionControlPolicy.Get(d.Id())
 
 	if err != nil {
 		if err.(*client.ErrorResponse).IsObjectNotFound() {
@@ -108,7 +108,7 @@ func resourceAdmissionControlPolicyUpdate(d *schema.ResourceData, meta interface
 	log.Printf("[INFO] Updating admission control policy ID: %v\n", d.Id())
 	req := expandAdmissionControlPolicyRequest(d)
 
-	if _, _, err := d9Client.admissionControlPolicy.UpdateAdmissionControlPolicy(&req); err != nil {
+	if _, _, err := d9Client.admissionControlPolicy.Update(&req); err != nil {
 		return err
 	}
 

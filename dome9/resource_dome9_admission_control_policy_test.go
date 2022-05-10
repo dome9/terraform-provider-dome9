@@ -105,7 +105,7 @@ func testAccCheckAdmissionControlPolicyExists(resource string, acPolicy *admissi
 		b, err := json.MarshalIndent(rs, "", "\t")
 		fmt.Println("Resource State : " + string(b))
 		apiClient := testAccProvider.Meta().(*Client)
-		receivedAdmissionControlPolicyResponse, _, err := apiClient.admissionControlPolicy.GetAdmissionControlPolicy(rs.Primary.ID)
+		receivedAdmissionControlPolicyResponse, _, err := apiClient.admissionControlPolicy.Get(rs.Primary.ID)
 
 		policy, err := json.MarshalIndent(receivedAdmissionControlPolicyResponse, "", "\t")
 		fmt.Println("Admission Control Policy : " + string(policy))
@@ -127,7 +127,7 @@ func testAccCheckAdmissionControlPolicyDestroy(s *terraform.State) error {
 			continue
 		}
 
-		admissionControlPolicyResponse, _, err := apiClient.admissionControlPolicy.GetAdmissionControlPolicy(rs.Primary.ID)
+		admissionControlPolicyResponse, _, err := apiClient.admissionControlPolicy.Get(rs.Primary.ID)
 
 		if err == nil {
 			return fmt.Errorf("id %s already exists", rs.Primary.ID)

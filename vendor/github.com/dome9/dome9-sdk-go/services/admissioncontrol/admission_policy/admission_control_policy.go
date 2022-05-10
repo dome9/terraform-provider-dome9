@@ -28,7 +28,7 @@ type AdmissionControlPolicyResponse struct {
 	ErrorMessage    string   `json:"errorMessage"`
 }
 
-func (service *Service) GetAdmissionControlPolicy(id string) (*AdmissionControlPolicyResponse, *http.Response, error) {
+func (service *Service) Get(id string) (*AdmissionControlPolicyResponse, *http.Response, error) {
 	v := new(AdmissionControlPolicyResponse)
 	path := fmt.Sprintf("%s/%s", admissionControlPolicyResourcePath, id)
 	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
@@ -39,7 +39,7 @@ func (service *Service) GetAdmissionControlPolicy(id string) (*AdmissionControlP
 	return v, resp, nil
 }
 
-func (service *Service) GetAllAdmissionControlPolicies() (*[]AdmissionControlPolicyResponse, *http.Response, error) {
+func (service *Service) GetAll() (*[]AdmissionControlPolicyResponse, *http.Response, error) {
 	v := new([]AdmissionControlPolicyResponse)
 	resp, err := service.Client.NewRequestDo("GET", admissionControlPolicyResourcePath, nil, nil, v)
 	if err != nil {
@@ -62,7 +62,7 @@ func (service *Service) Create(body *AdmissionControlPolicyRequest) (*AdmissionC
 	return policy, resp, nil
 }
 
-func (service *Service) UpdateAdmissionControlPolicy(body *AdmissionControlPolicyRequest) (*AdmissionControlPolicyResponse, *http.Response, error) {
+func (service *Service) Update(body *AdmissionControlPolicyRequest) (*AdmissionControlPolicyResponse, *http.Response, error) {
 	v := new([]AdmissionControlPolicyResponse)
 	resp, err := service.Client.NewRequestDo("PUT", admissionControlPolicyResourcePath, nil, []*AdmissionControlPolicyRequest{body}, v)
 	if err != nil {

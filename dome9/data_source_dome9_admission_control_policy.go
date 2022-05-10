@@ -49,7 +49,7 @@ func dataSourceAdmissionControlPolicyRead(d *schema.ResourceData, meta interface
 	policyID := d.Get("id").(string)
 	log.Printf("Getting data for Admission Control Policy id: %s\n", policyID)
 
-	resp, _, err := d9Client.admissionControlPolicy.GetAdmissionControlPolicy(policyID)
+	resp, _, err := d9Client.admissionControlPolicy.Get(policyID)
 	if err != nil {
 		return err
 	}
