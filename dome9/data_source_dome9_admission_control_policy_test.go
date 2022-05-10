@@ -13,17 +13,17 @@ import (
 func TestAccDataSourceAdmissionControlPolicyBasic(t *testing.T) {
 	// Generate All Required Random Names for Testing
 	policyTypeAndName, policyDataSourceTypeAndName, policyGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AdmissionControlPolicy)
-	t.Log("policyTypeAndName: " + policyTypeAndName)
-	t.Log("policyDataSourceTypeAndName: " + policyDataSourceTypeAndName)
-	t.Log("policyGeneratedName: " + policyGeneratedName)
+	// t.Log("policyTypeAndName: " + policyTypeAndName)
+	// t.Log("policyDataSourceTypeAndName: " + policyDataSourceTypeAndName)
+	// t.Log("policyGeneratedName: " + policyGeneratedName)
 
 	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
-	t.Log("notificationTypeAndName: " + notificationTypeAndName)
-	t.Log("notificationGeneratedName: " + notificationGeneratedName)
+	// t.Log("notificationTypeAndName: " + notificationTypeAndName)
+	// t.Log("notificationGeneratedName: " + notificationGeneratedName)
 
 	kubernetesAccountResourceTypeAndName, _, kubernetesAccountGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
-	t.Log("kubernetesAccountResourceTypeAndName: " + kubernetesAccountResourceTypeAndName)
-	t.Log("kubernetesAccountGeneratedName: " + kubernetesAccountGeneratedName)
+	// t.Log("kubernetesAccountResourceTypeAndName: " + kubernetesAccountResourceTypeAndName)
+	// t.Log("kubernetesAccountGeneratedName: " + kubernetesAccountGeneratedName)
 
 	// Create Kubernetes Account HCL Resource
 	kubernetesAccountHCL := getCloudAccountKubernetesResourceHCLWithfeatures(kubernetesAccountGeneratedName, variable.AdmissionControlKubernetesAccountName,
@@ -37,7 +37,7 @@ func TestAccDataSourceAdmissionControlPolicyBasic(t *testing.T) {
 	// Create Admission Control Policy HCL Resource
 	admissionPolicyHCL := getAdmissionControlPolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, false)
-	t.Log("admissionPolicyHCL : " + admissionPolicyHCL)
+	// t.Log("admissionPolicyHCL : " + admissionPolicyHCL)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
