@@ -19,16 +19,8 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 
 	// Generate All Required Random Names for Testing
 	policyTypeAndName, _, policyGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AdmissionControlPolicy)
-	// t.Log("policyTypeAndName: " + policyTypeAndName)
-	// t.Log("policyGeneratedName: " + policyGeneratedName)
-
 	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
-	// t.Log("notificationTypeAndName: " + notificationTypeAndName)
-	// t.Log("notificationGeneratedName: " + notificationGeneratedName)
-
 	kubernetesAccountResourceTypeAndName, _, kubernetesAccountGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
-	// t.Log("kubernetesAccountResourceTypeAndName: " + kubernetesAccountResourceTypeAndName)
-	// t.Log("kubernetesAccountGeneratedName: " + kubernetesAccountGeneratedName)
 
 	// Create Kubernetes Account HCL Resource
 	kubernetesAccountHCL := getCloudAccountKubernetesResourceHCLWithfeatures(kubernetesAccountGeneratedName, variable.AdmissionControlKubernetesAccountName,
@@ -36,19 +28,14 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 		variable.CloudAccountKubernetesAdmissionControlEnabled,
 		variable.CloudAccountKubernetesImageAssuranceEnabled)
 
-	// t.Log("Kubernetes HCL" + kubernetesAccountHCL)
-
 	// Create Compliance Notification HCL Resource
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
-	// t.Log("notificationHCL : " + notificationHCL)
 
 	// Create Admission Control Policy HCL Resource
 	admissionPolicyHCL := getAdmissionControlPolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, false)
-	// t.Log("admissionPolicyHCL : " + admissionPolicyHCL)
 	admissionPolicyUpdatedHCL := getAdmissionControlPolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, true)
-	// t.Log("admissionPolicyUpdatedHCL : " + admissionPolicyUpdatedHCL)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -101,13 +88,8 @@ func testAccCheckAdmissionControlPolicyExists(resource string, acPolicy *admissi
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("no record ID is set")
 		}
-		// b, err := json.MarshalIndent(rs, "", "\t")
-		// fmt.Println("Resource State : " + string(b))
 		apiClient := testAccProvider.Meta().(*Client)
 		receivedAdmissionControlPolicyResponse, _, err := apiClient.admissionControlPolicy.Get(rs.Primary.ID)
-
-		// policy, err := json.MarshalIndent(receivedAdmissionControlPolicyResponse, "", "\t")
-		// fmt.Println("Admission Control Policy : " + string(policy))
 
 		if err != nil {
 			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
