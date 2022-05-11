@@ -21,7 +21,6 @@ resource "dome9_admission_control_policy" "test_ac_policy" {
   target_type  = "Environment or OrganizationalUnit"
   notification_ids    = ["NOTIFICATION IDS"]
   action       = "Admission Control Policy Action"
-  ruleset_platform = "kubernetesruntimeassurance"
 }
 
 ```
@@ -35,7 +34,6 @@ The following arguments are supported:
 * `target_type` - (Required) The admission control policy type ("Environment", "OrganizationalUnit").
 * `notification_ids` - (Required) The notification policy id's for the policy [list].
 * `action` - (Required) The admission control policy action ("Prevention", "Detection").
-* `ruleset_platform` - (Optional) The admission control rule set platform ("kubernetesruntimeassurance").
     
 ## Attributes Reference
 
