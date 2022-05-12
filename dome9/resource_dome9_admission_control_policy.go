@@ -44,8 +44,9 @@ func resourceAdmissionPolicy() *schema.Resource {
 				ValidateFunc: validation.StringInSlice([]string{"Prevention", "Detection"}, false),
 			},
 			"ruleset_platform": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringInSlice([]string{variable.AdmissionControlPolicyRuleSetPlatform}, false),
 			},
 		},
 	}
