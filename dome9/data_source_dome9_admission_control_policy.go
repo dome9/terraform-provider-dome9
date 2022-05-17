@@ -35,10 +35,6 @@ func dataSourceAdmissionControlPolicy() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"ruleset_platform": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 		},
 	}
 }

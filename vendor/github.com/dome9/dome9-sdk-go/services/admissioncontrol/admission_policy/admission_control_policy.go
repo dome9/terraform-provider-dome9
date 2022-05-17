@@ -15,7 +15,6 @@ type AdmissionControlPolicyRequest struct {
 	RulesetId       int      `json:"rulesetId"`
 	NotificationIds []string `json:"notificationIds"`
 	Action          string   `json:"action"`
-	RulesetPlatform string   `json:"rulesetPlatform"`
 }
 
 type AdmissionControlPolicyResponse struct {

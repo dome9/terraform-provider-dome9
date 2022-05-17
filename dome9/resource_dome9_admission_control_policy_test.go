@@ -53,7 +53,6 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "2"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.1"),
-					resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_platform", variable.AdmissionControlPolicyRuleSetPlatform),
 					resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_id", strconv.Itoa(variable.AdmissionControlPolicyDefaultRulesetId)),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.AdmissionControlPolicyTargetType),
@@ -69,7 +68,6 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
-					resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_platform", variable.AdmissionControlPolicyRuleSetPlatform),
 					resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_id", strconv.Itoa(variable.AdmissionControlPolicyDefaultRulesetId)),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.AdmissionControlPolicyTargetType),
@@ -156,7 +154,6 @@ resource "%s" "%s" {
   target_type  = "%s"
   notification_ids    = ["${%s.id}"]
   action       = "%s"
-  ruleset_platform = "%s"
 }
 `,
 		// kubernetes cloud account resource
@@ -171,7 +168,6 @@ resource "%s" "%s" {
 		variable.AdmissionControlPolicyTargetType,
 		notificationTypeAndName,
 		IfThenElse(updateAction, variable.AdmissionControlPolicyPreventAction, variable.AdmissionControlPolicyDetectAction),
-		variable.AdmissionControlPolicyRuleSetPlatform,
 	)
 }
 

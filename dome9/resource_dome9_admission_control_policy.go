@@ -5,7 +5,6 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"log"
 )
 
@@ -43,11 +42,6 @@ func resourceAdmissionPolicy() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"Prevention", "Detection"}, false),
 			},
-			"ruleset_platform": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validation.StringInSlice([]string{variable.AdmissionControlPolicyRuleSetPlatform}, false),
-			},
 		},
 	}
 }
@@ -68,17 +62,12 @@ func resourceAdmissionControlPolicyCreate(d *schema.ResourceData, meta interface
 }
 
 func expandAdmissionControlPolicyRequest(d *schema.ResourceData) admission_policy.AdmissionControlPolicyRequest {
-	rulesetPlatform, isExists := d.GetOk("ruleset_platform")
-	if !isExists {
-		rulesetPlatform = variable.AdmissionControlPolicyRuleSetPlatform
-	}
 	return admission_policy.AdmissionControlPolicyRequest{
 		TargetId:        d.Get("target_id").(string),
 		RulesetId:       d.Get("ruleset_id").(int),
 		NotificationIds: expandNotificationIDs(d, "notification_ids"),
 		TargetType:      d.Get("target_type").(string),
 		Action:          d.Get("action").(string),
-		RulesetPlatform: rulesetPlatform.(string),
 	}
 }
 

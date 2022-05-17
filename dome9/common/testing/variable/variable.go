@@ -181,7 +181,6 @@ const (
 	AdmissionControlPolicyDefaultRulesetId = -2001
 	AdmissionControlPolicyDetectAction     = "Detection"
 	AdmissionControlPolicyPreventAction    = "Prevention"
-	AdmissionControlPolicyRuleSetPlatform  = "kubernetesruntimeassurance"
 	AdmissionControlPolicyTargetType       = "Environment"
 	AdmissionControlKubernetesAccountName  = "test_admission_control_kubernetes_resource_name"
 )

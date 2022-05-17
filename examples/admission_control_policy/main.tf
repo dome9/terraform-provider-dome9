@@ -20,7 +20,6 @@ resource "dome9_admission_control_policy" "admission_control_policy_test" {
   target_type = "Environment"
   notification_ids = ["52008dbc-6fdc-45d5-b588-de2afe13ac5d"]
   action = "Detection"
-  ruleset_platform = "kubernetesruntimeassurance"
 }
 
 data "dome9_admission_control_policy" "admission_control_policy_test" {
