@@ -35,6 +35,7 @@ You can use the Key and Secret in the following ways:
     - Singapore : 'https://api.ap1.dome9.com/v2/'
     - Sydney : 'https://api.ap2.dome9.com/v2/'
     - Mumbai : 'https://api.ap3.dome9.com/v2/'
+    - Canada : 'https://api.cace1.dome9.com/v2/'
 - Fill the provider block with the appropriate arguments:    
 
 
