@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    dome9 = {
-      source = "dome9/dome9"
-      version = "1.24.5"
-    }
-  }
-}
-
 # Configure the Dome9 Provider, works with US region by default
 provider "dome9" {
   dome9_access_id     = "DOME9_API_ACCESS_ID"

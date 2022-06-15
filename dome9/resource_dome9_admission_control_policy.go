@@ -26,7 +26,8 @@ func resourceAdmissionPolicy() *schema.Resource {
 			},
 			"target_type": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
+				Default:      variable.AdmissionControlPolicyTargetType,
 				ValidateFunc: validation.StringInSlice([]string{"Environment", "OrganizationalUnit"}, false),
 			},
 			"ruleset_id": {
@@ -63,15 +64,11 @@ func resourceAdmissionControlPolicyCreate(d *schema.ResourceData, meta interface
 }
 
 func expandAdmissionControlPolicyRequest(d *schema.ResourceData) admission_policy.AdmissionControlPolicyRequest {
-	targetType, isExists := d.GetOk("target_type")
-	if !isExists {
-		targetType = variable.AdmissionControlPolicyTargetType
-	}
 	return admission_policy.AdmissionControlPolicyRequest{
 		TargetId:        d.Get("target_id").(string),
 		RulesetId:       d.Get("ruleset_id").(int),
 		NotificationIds: expandNotificationIDs(d, "notification_ids"),
-		TargetType:      targetType.(string),
+		TargetType:      d.Get("target_type").(string),
 		Action:          d.Get("action").(string),
 	}
 }
