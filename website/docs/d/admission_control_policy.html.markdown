@@ -14,7 +14,7 @@ Use this data source to get information about a CloudGuard admission control pol
 
 ```hcl
 data "dome9_admission_control_policy" "test-policy" {
-  id = dome9_admission_control_policy.test-policy.id
+  id = "d9-admission_control-policy-id"
 }
 ```
 
@@ -22,7 +22,7 @@ data "dome9_admission_control_policy" "test-policy" {
 
 The following arguments are supported:
 
-* `id` - (Required) The id for the cloud account in Dome9. 
+* `id` - (Required) The id for the admission control policy in Dome9. 
 
 ## Attributes Reference
 
@@ -31,5 +31,5 @@ In addition to all arguments above, the following attributes are exported:
 * `target_id` - Environment ID / OU ID.
 * `target_type` - Policy Type (`Environment`, `OrganizationalUnit`).
 * `ruleset_id` - Ruleset ID.
-* `notification_ids` - Notification IDs [list] .
+* `notification_ids` - Notification IDs [list].
 * `action` - Policy action type (`Detection`, `Prevention`).

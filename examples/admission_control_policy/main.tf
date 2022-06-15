@@ -34,18 +34,6 @@ output "getTargetId" {
   value = dome9_admission_control_policy.admission_control_policy_test.target_id
 }
 
-output "getTargetType" {
-  value = dome9_admission_control_policy.admission_control_policy_test.target_type
-}
-
-output "getRulesetId" {
-  value = dome9_admission_control_policy.admission_control_policy_test.ruleset_id
-}
-
 output "getAction" {
   value = dome9_admission_control_policy.admission_control_policy_test.action
-}
-
-output "getNotificationIds" {
-  value = dome9_admission_control_policy.admission_control_policy_test.notification_ids
 }

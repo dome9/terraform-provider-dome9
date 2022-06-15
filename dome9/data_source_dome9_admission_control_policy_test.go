@@ -16,7 +16,7 @@ func TestAccDataSourceAdmissionControlPolicyBasic(t *testing.T) {
 	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 	kubernetesAccountResourceTypeAndName, _, kubernetesAccountGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
 
-	// Create Kubernetes Account HCL Resource
+	// Generate Kubernetes Account HCL Resource
 	kubernetesAccountHCL := getCloudAccountKubernetesResourceHCLWithfeatures(kubernetesAccountGeneratedName, variable.AdmissionControlKubernetesAccountName,
 		variable.CloudAccountKubernetesRuntimeProtectionEnabled,
 		variable.CloudAccountKubernetesAdmissionControlEnabled,
@@ -25,7 +25,7 @@ func TestAccDataSourceAdmissionControlPolicyBasic(t *testing.T) {
 	// Generate Notification HCL Configurations
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
 
-	// Create Admission Control Policy HCL Resource
+	// Generate Admission Control Policy HCL Resource
 	admissionPolicyHCL := getAdmissionControlPolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, false)
 

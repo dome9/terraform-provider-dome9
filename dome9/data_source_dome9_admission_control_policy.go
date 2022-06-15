@@ -51,7 +51,6 @@ func dataSourceAdmissionControlPolicyRead(d *schema.ResourceData, meta interface
 	}
 
 	d.SetId(resp.ID)
-	_ = d.Set("id", resp.ID)
 	_ = d.Set("target_id", resp.TargetId)
 	_ = d.Set("target_type", resp.TargetType)
 	_ = d.Set("ruleset_id", resp.RulesetId)

@@ -8,7 +8,7 @@ description: |-
 
 # dome9_admission_control_policy
 
-This resource is used to create and modify admission control policy in CloudGuard for cloudguard containers. An admission control policy is the combination of a Ruleset applied to a specific Kubernetes environment with specific action.
+This resource is used to create and modify admission control policy in CloudGuard for Kubernetes. An admission control policy is the combination of a Ruleset applied to a specific Kubernetes environment with specific action.
 
 ## Example Usage
 
@@ -16,11 +16,11 @@ Basic usage:
 
 ```hcl
 resource "dome9_admission_control_policy" "test_ac_policy" {
-  target_id    = "ENV ID or OU ID"
+  target_id    = "Environment ID"
   ruleset_id   = 00000
   target_type  = "Environment or OrganizationalUnit"
   notification_ids    = ["NOTIFICATION IDS"]
-  action       = "Admission Control Policy Action"
+  action       = "Detection"
 }
 
 ```
