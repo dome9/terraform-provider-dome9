@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/utils"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -106,21 +107,11 @@ func resourceContinuousCompliancePolicyDelete(d *schema.ResourceData, meta inter
 	return nil
 }
 
-func expandNotificationIDs(d *schema.ResourceData, key string) []string {
-	notificationsIDsData := d.Get(key).([]interface{})
-	notificationIDsList := make([]string, len(notificationsIDsData))
-	for i, notificationID := range notificationsIDsData {
-		notificationIDsList[i] = notificationID.(string)
-	}
-
-	return notificationIDsList
-}
-
 func expandContinuousCompliancePolicyRequest(d *schema.ResourceData) continuous_compliance_policy.ContinuousCompliancePolicyRequest {
 	return continuous_compliance_policy.ContinuousCompliancePolicyRequest{
 		TargetId:        d.Get("target_id").(string),
 		RulesetId:       d.Get("ruleset_id").(int),
-		NotificationIds: expandNotificationIDs(d, "notification_ids"),
+		NotificationIds: utils.CommonMethods{}.ExpandNotificationIDs(d, "notification_ids"),
 		TargetType:      d.Get("target_type").(string),
 	}
 }
