@@ -5,7 +5,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	dome9 "github.com/terraform-providers/terraform-provider-dome9/dome9/common"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"log"
 )
