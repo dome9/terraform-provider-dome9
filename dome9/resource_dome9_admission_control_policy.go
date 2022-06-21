@@ -5,8 +5,8 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/utils"
 	"log"
 )
 
@@ -68,7 +68,7 @@ func expandAdmissionControlPolicyRequest(d *schema.ResourceData) admission_polic
 	return admission_policy.AdmissionControlPolicyRequest{
 		TargetId:        d.Get("target_id").(string),
 		RulesetId:       d.Get("ruleset_id").(int),
-		NotificationIds: utils.CommonMethods{}.ExpandNotificationIDs(d, "notification_ids"),
+		NotificationIds: dome9.CommonMethods{}.ExpandNotificationIDs(d, "notification_ids"),
 		TargetType:      d.Get("target_type").(string),
 		Action:          d.Get("action").(string),
 	}

@@ -1,4 +1,4 @@
-package utils
+package dome9
 
 import "github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
