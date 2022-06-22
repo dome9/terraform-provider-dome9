@@ -7,7 +7,6 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common"
 )
 
 func resourceContinuousCompliancePolicy() *schema.Resource {
@@ -110,7 +109,7 @@ func expandContinuousCompliancePolicyRequest(d *schema.ResourceData) continuous_
 	return continuous_compliance_policy.ContinuousCompliancePolicyRequest{
 		TargetId:        d.Get("target_id").(string),
 		RulesetId:       d.Get("ruleset_id").(int),
-		NotificationIds: dome9.ExpandNotificationIDs(d, "notification_ids"),
+		NotificationIds: expandNotificationIDs(d, "notification_ids"),
 		TargetType:      d.Get("target_type").(string),
 	}
 }
