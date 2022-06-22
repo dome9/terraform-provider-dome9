@@ -56,9 +56,10 @@ github.com/bgentry/go-netrc/netrc
 github.com/bgentry/speakeasy
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/dome9/dome9-sdk-go v1.14.0
+# github.com/dome9/dome9-sdk-go v1.15.2
 github.com/dome9/dome9-sdk-go/dome9
 github.com/dome9/dome9-sdk-go/dome9/client
+github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy
 github.com/dome9/dome9-sdk-go/services/cloudaccounts
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws

@@ -3,11 +3,10 @@ package dome9
 import (
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceContinuousCompliancePolicy() *schema.Resource {
@@ -104,16 +103,6 @@ func resourceContinuousCompliancePolicyDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 	return nil
-}
-
-func expandNotificationIDs(d *schema.ResourceData, key string) []string {
-	notificationsIDsData := d.Get(key).([]interface{})
-	notificationIDsList := make([]string, len(notificationsIDsData))
-	for i, notificationID := range notificationsIDsData {
-		notificationIDsList[i] = notificationID.(string)
-	}
-
-	return notificationIDsList
 }
 
 func expandContinuousCompliancePolicyRequest(d *schema.ResourceData) continuous_compliance_policy.ContinuousCompliancePolicyRequest {

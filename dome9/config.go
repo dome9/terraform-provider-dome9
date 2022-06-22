@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
+	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
@@ -44,6 +45,7 @@ type Client struct {
 	users                            users.Service
 	serviceAccounts                  serviceaccounts.Service
 	awsUnifiedOnboarding             aws_unified_onboarding.Service
+	admissionControlPolicy           admission_policy.Service
 }
 
 type Config struct {
@@ -75,6 +77,7 @@ func (c *Config) Client() (*Client, error) {
 		users:                            *users.New(config),
 		serviceAccounts:                  *serviceaccounts.New(config),
 		awsUnifiedOnboarding:             *aws_unified_onboarding.New(config),
+		admissionControlPolicy:           *admission_policy.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
