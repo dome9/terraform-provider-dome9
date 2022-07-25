@@ -56,6 +56,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.IAMSafeEntity:                    resourceIAMSafeEntity(),
 			resourcetype.ServiceAccount:                   resourceServiceAccount(),
 			resourcetype.AdmissionControlPolicy:           resourceAdmissionPolicy(),
+			resourcetype.Assessment:                       resourceAssessment(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
