@@ -2,6 +2,8 @@ package dome9
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
@@ -18,48 +20,287 @@ func resourceAssessment() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"name": {
+			"id": {
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"dome9_cloud_account_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"credentials": {
-				Type:     schema.TypeMap,
+			"cloudAccountId": {
+				Type:     schema.TypeString,
 				Required: true,
+			},
+			"cloudAccountType": {
+				Type:     schema.TypeString,
+				Required: true,
+				ValidateFunc: validation.StringInSlice(providerconst.AssessmentCloudAccountType, false),
+			},
+			"shouldMinimizeResult": {
+				Type:     schema.TypeBool,
+				Required: true,
+			},
+			"name": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"external_cloud_account_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"request_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"tests": {
+				Type:     schema.TypeList,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"access_key": {
+						"error": {
 							Type:     schema.TypeString,
-							Required: true,
+							Computed: true,
 						},
-						"access_secret": {
-							Type:      schema.TypeString,
-							Required:  true,
-							Sensitive: true,
+						"tested_count": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"relevant_count": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"non_complying_count": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"exclusion_stats": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"tested_count": {
+										Type:     schema.TypeInt,
+										Computed: true,
+									},
+									"relevant_count": {
+										Type:     schema.TypeInt,
+										Computed: true,
+									},
+									"non_complying_count": {
+										Type:     schema.TypeInt,
+										Computed: true,
+									},
+								},
+							},
+						},
+						"entity_results": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"validation_status": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"is_relevant": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+									"is_valid": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+									"is_excluded": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+									"exclusion_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"remediation_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"error": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"test_obj": {
+										Type:     schema.TypeSet,
+										Computed: true,
+									},
+								},
+							},
+						},
+						"rule": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"severity": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"logic": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"description": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"remediation": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"cloudbots": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"complianceTag": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"domain": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"priority": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"controlTitle": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"ruleId": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"category": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"labels": {
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"logic_hash": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"is_default": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+								},
+							},
+						},
+						"test_passed": {
+							Type:     schema.TypeBool,
+							Computed: true,
 						},
 					},
 				},
 			},
-			"vendor": {
-				Type:     schema.TypeString,
+			"location_metadata": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"account": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"srl": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"name": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"external_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"test_entities": {
+				Type:     schema.TypeSet,
 				Computed: true,
 			},
-			"alibaba_account_id": {
-				Type:     schema.TypeString,
+			"data_sync_status": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"entity_type": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"recently_successful_sync": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"general_fetch_permission_issues": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"entities_with_permission_issues": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"external_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"name": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"cloud_vendor_identifier": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"assessment_passed": {
+				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"creation_date": {
-				Type:     schema.TypeString,
+			"has_errors": {
+				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"organizational_unit_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"organizational_unit_path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"organizational_unit_name": {
+			"assessment_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
