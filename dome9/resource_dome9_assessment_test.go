@@ -2,7 +2,7 @@ package dome9
 
 import (
 	"fmt"
-	"os"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -11,14 +11,13 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
-func TestAccResourceCloudAccountAlibabaBasic(t *testing.T) {
+func TestAccResourceAssessmentBasic(t *testing.T) {
 	var cloudAccountAlibaba alibaba.CloudAccountResponse
-	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAlibaba)
+	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.Assessment)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -26,31 +25,25 @@ func TestAccResourceCloudAccountAlibabaBasic(t *testing.T) {
 			testAccCloudAccountAlibabaEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCloudAccountAlibabaDestroy,
+		CheckDestroy: testAccCheckAssessmentDestroy,
 		Steps: []resource.TestStep{
 			{
 				// creation test
-				Config: testAccCheckCloudAccountAlibabaConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAlibabaCreationResourceName),
+				Config: testAccCheckAssessmentConfigure(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountAlibabaExists(resourceTypeAndName, &cloudAccountAlibaba),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAlibabaCreationResourceName),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountAlibabaVendor),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", os.Getenv(environmentvariable.OrganizationalUnitName)),
-				),
-			},
-			{
-				// update name test
-				Config: testAccCheckCloudAccountAlibabaConfigure(resourceTypeAndName, generatedName, variable.CloudAccountAlibabaUpdatedAccountName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountAlibabaExists(resourceTypeAndName, &cloudAccountAlibaba),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountAlibabaUpdatedAccountName),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "bundle_id", strconv.Itoa(variable.BundleID)),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "dome9_cloud_account_id", variable.Dome9CloudAccountID),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_account_id", variable.CloudAccountID),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_account_type", variable.CloudAccountType),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "request_id", variable.RequestID),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckCloudAccountAlibabaDestroy(s *terraform.State) error {
+func testAccCheckAssessmentDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {
@@ -72,43 +65,9 @@ func testAccCheckCloudAccountAlibabaDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCloudAccountAlibabaEnvVarsPreCheck(t *testing.T) {
-	if v := os.Getenv(environmentvariable.CloudAccountAlibabaEnvVarAccessKey); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountAlibabaEnvVarAccessKey)
-	}
-	if v := os.Getenv(environmentvariable.CloudAccountAlibabaEnvVarAccessSecret); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountAlibabaEnvVarAccessSecret)
-	}
-	if v := os.Getenv(environmentvariable.OrganizationalUnitName); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.OrganizationalUnitName)
-	}
-}
-
-func testAccCheckCloudAccountAlibabaExists(resource string, resp *alibaba.CloudAccountResponse) resource.TestCheckFunc {
-	return func(state *terraform.State) error {
-		rs, ok := state.RootModule().Resources[resource]
-		if !ok {
-			return fmt.Errorf("didn't find resource: %s", resource)
-		}
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("no record ID is set")
-		}
-
-		apiClient := testAccProvider.Meta().(*Client)
-		receivedCloudAccount, _, err := apiClient.cloudaccountAlibaba.Get(rs.Primary.ID)
-		if err != nil {
-			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
-		}
-
-		*resp = *receivedCloudAccount
-
-		return nil
-	}
-}
-
-func testAccCheckCloudAccountAlibabaConfigure(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckAssessmentConfigure(resourceTypeAndName, generatedName string) string {
 	return fmt.Sprintf(`
-// Alibaba cloud account creation
+// Assessment creation
 %s
 
 data "%s" "%s" {
@@ -116,7 +75,7 @@ data "%s" "%s" {
 }
 `,
 		// Alibaba cloud account
-		getCloudAccountAlibabaResourceHCL(generatedName, resourceName),
+		getAssessmentResourceHCL(generatedName),
 
 		// data source variables
 		resourcetype.CloudAccountAlibaba,
@@ -125,21 +84,25 @@ data "%s" "%s" {
 	)
 }
 
-func getCloudAccountAlibabaResourceHCL(cloudAccountName, generatedAName string) string {
+func getAssessmentResourceHCL(assessmentName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-	credentials = {
-		access_key    = "%s"
-		access_secret = "%s"
-}
-	name          = "%s"
+      bundle_id = "%v"
+	  dome9_cloud_account_id = "%s"
+	  cloud_account_id = "%s"
+	  cloud_account_type = "%s"
+	  should_minimize_result = "%v"
+	  request_id = "%s"
 }
 `,
-		// Alibaba cloud account variables
-		resourcetype.CloudAccountAlibaba,
-		cloudAccountName,
-		os.Getenv(environmentvariable.CloudAccountAlibabaEnvVarAccessKey),
-		os.Getenv(environmentvariable.CloudAccountAlibabaEnvVarAccessSecret),
-		generatedAName,
+		// Assessment variables
+		resourcetype.Assessment,
+		assessmentName,
+		variable.BundleID,
+		variable.Dome9CloudAccountID,
+		variable.CloudAccountID,
+		variable.CloudAccountType,
+		variable.ShouldMinimizeResult,
+		variable.RequestID,
 	)
 }

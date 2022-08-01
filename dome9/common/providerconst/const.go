@@ -186,4 +186,4 @@ var PermissionTrafficType = map[string]string{
 }
 
 // All Assessments Cloud Accounts Types
-var AssessmentCloudAccountType = []string{"AWS", "Azure", "GCP", "Kubernetes", "Terraform", "Generic", "KubernetesRuntimeAssurance", "ShiftLeft", "SourceCodeAssurance", "ImageAssurance", "Alibaba", "Cft", "ContainerRegistry", "Ers"}
+var AssessmentCloudAccountType = []string{"Aws", "Azure", "GCP", "Kubernetes", "Terraform", "Generic", "KubernetesRuntimeAssurance", "ShiftLeft", "SourceCodeAssurance", "ImageAssurance", "Alibaba", "Cft", "ContainerRegistry", "Ers"}

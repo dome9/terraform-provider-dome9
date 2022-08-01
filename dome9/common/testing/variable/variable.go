@@ -184,3 +184,13 @@ const (
 	AdmissionControlPolicyTargetType       = "Environment"
 	AdmissionControlKubernetesAccountName  = "test_admission_control_kubernetes_resource_name"
 )
+
+// assessment resource/data source
+const (
+	BundleID             = -5
+	Dome9CloudAccountID  = "ac08e6a9-64a2-47d3-a3fd-135aa3c062b5"
+	CloudAccountID       = "591910677983"
+	CloudAccountType     = "Aws"
+	RequestID            = "ac08e6a9-64a2-47d3-a3fd-135aa3c062cc"
+	ShouldMinimizeResult = false
+)

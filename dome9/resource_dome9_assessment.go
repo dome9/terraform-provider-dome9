@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 	"log"
+	"strconv"
 )
 
 func resourceAssessment() *schema.Resource {
@@ -41,6 +42,10 @@ func resourceAssessment() *schema.Resource {
 				Type:     schema.TypeBool,
 				Required: true,
 			},
+			"request_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -53,9 +58,53 @@ func resourceAssessment() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"request_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+			"request": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"is_template": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+						"id": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"dome9_cloud_account_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"cloud_account_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"cloud_account_type": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"should_minimize_result": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"description": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"external_cloud_account_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"request_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
 			},
 			"tests": {
 				Type:     schema.TypeList,
@@ -67,15 +116,15 @@ func resourceAssessment() *schema.Resource {
 							Computed: true,
 						},
 						"tested_count": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"relevant_count": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"non_complying_count": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"exclusion_stats": {
@@ -134,6 +183,30 @@ func resourceAssessment() *schema.Resource {
 									"test_obj": {
 										Type:     schema.TypeSet,
 										Computed: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"id": {
+													Type:     schema.TypeString,
+													Computed: true,
+												},
+												"dome9_id": {
+													Type:     schema.TypeString,
+													Computed: true,
+												},
+												"entity_type": {
+													Type:     schema.TypeString,
+													Computed: true,
+												},
+												"entity_index": {
+													Type:     schema.TypeInt,
+													Computed: true,
+												},
+												"custom_entity_comparison_hash": {
+													Type:     schema.TypeString,
+													Computed: true,
+												},
+											},
+										},
 									},
 								},
 							},
@@ -167,7 +240,7 @@ func resourceAssessment() *schema.Resource {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
-									"complianceTag": {
+									"compliance_tag": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
@@ -179,11 +252,11 @@ func resourceAssessment() *schema.Resource {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
-									"controlTitle": {
+									"control_title": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
-									"ruleId": {
+									"rule_id": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
@@ -249,7 +322,7 @@ func resourceAssessment() *schema.Resource {
 				},
 			},
 			"test_entities": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeMap,
 				Computed: true,
 			},
 			"exclusions": {
@@ -270,7 +343,7 @@ func resourceAssessment() *schema.Resource {
 							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"logicHash": {
+									"logic_hash": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
@@ -351,7 +424,7 @@ func resourceAssessment() *schema.Resource {
 							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"logicHash": {
+									"logic_hash": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
@@ -431,11 +504,11 @@ func resourceAssessment() *schema.Resource {
 							Computed: true,
 						},
 						"recently_successful_sync": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeBool,
 							Computed: true,
 						},
 						"general_fetch_permission_issues": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeBool,
 							Computed: true,
 						},
 						"entities_with_permission_issues": {
@@ -487,7 +560,7 @@ func resourceAssessment() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"passed": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"passed_rules_by_severity": {
@@ -496,30 +569,30 @@ func resourceAssessment() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"informational": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"low": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"medium": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"high": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"critical": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 								},
 							},
 						},
 						"failed": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"failed_rules_by_severity": {
@@ -528,54 +601,54 @@ func resourceAssessment() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"informational": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"low": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"medium": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"high": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"critical": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 								},
 							},
 						},
 						"error": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"failed_tests": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"logically_tested": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"failed_entities": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"excluded_tests": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"excluded_failed_tests": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"excluded_rules": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"excluded_rules_by_severity": {
@@ -584,23 +657,23 @@ func resourceAssessment() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"informational": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"low": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"medium": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"high": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 									"critical": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeInt,
 										Computed: true,
 									},
 								},
@@ -618,7 +691,7 @@ func resourceAssessment() *schema.Resource {
 				Computed: true,
 			},
 			"additional_fields": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeMap,
 				Computed: true,
 			},
 		},
@@ -636,7 +709,7 @@ func resourceAssessmentCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	log.Printf("[INFO] Created assessment. ID: %v\n", resp.ID)
-	d.SetId(string(rune(resp.ID)))
+	d.SetId(strconv.Itoa(resp.ID))
 
 	return resourceAssessmentRead(d, meta)
 }
@@ -654,7 +727,7 @@ func resourceAssessmentRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
-	d.SetId(string(rune(resp.ID)))
+	d.SetId(strconv.Itoa(resp.ID))
 	_ = d.Set("test_entities", resp.TestEntities)
 	_ = d.Set("created_time", resp.CreatedTime)
 	_ = d.Set("assessment_id", resp.AssessmentId)
@@ -778,30 +851,42 @@ func flattenAssessmentTestsEntityResults(entityResults []assessment.EntityResult
 			"exclusion_id":      val.ExclusionID,
 			"remediation_id":    val.RemediationID,
 			"error":             val.Error,
-			"test_obj":          val.TestObj, //TODO: can cause a problem: interface{}
+			"test_obj":          flattenAssessmentTestsEntityResultsTestObj(val.TestObj),
 		}
 	}
 
 	return allEntityResults
 }
 
+func flattenAssessmentTestsEntityResultsTestObj(Request assessment.RuleEngineFailedEntityReference) []interface{} {
+	m := map[string]interface{}{
+		"id":                            Request.Id,
+		"dome9_id":                      Request.Dome9Id,
+		"entity_type":                   Request.EntityType,
+		"entity_index":                  Request.EntityIndex,
+		"custom_entity_comparison_hash": Request.CustomEntityComparisonHash,
+	}
+
+	return []interface{}{m}
+}
+
 func flattenAssessmentTestsRule(Request assessment.Rule) []interface{} {
 	m := map[string]interface{}{
-		"name":          Request.Name,
-		"severity":      Request.Severity,
-		"logic":         Request.Logic,
-		"description":   Request.Description,
-		"remediation":   Request.Remediation,
-		"cloudbots":     Request.Cloudbots,
-		"complianceTag": Request.ComplianceTag,
-		"domain":        Request.Domain,
-		"priority":      Request.Priority,
-		"controlTitle":  Request.ControlTitle,
-		"ruleId":        Request.RuleID,
-		"category":      Request.Category,
-		"labels":        Request.Labels, //TODO: can cause a problem: []string
-		"logic_hash":    Request.LogicHash,
-		"is_default":    Request.IsDefault,
+		"name":           Request.Name,
+		"severity":       Request.Severity,
+		"logic":          Request.Logic,
+		"description":    Request.Description,
+		"remediation":    Request.Remediation,
+		"cloudbots":      Request.Cloudbots,
+		"compliance_tag": Request.ComplianceTag,
+		"domain":         Request.Domain,
+		"priority":       Request.Priority,
+		"control_title":  Request.ControlTitle,
+		"rule_id":        Request.RuleID,
+		"category":       Request.Category,
+		"labels":         Request.Labels,
+		"logic_hash":     Request.LogicHash,
+		"is_default":     Request.IsDefault,
 	}
 
 	return []interface{}{m}
@@ -850,9 +935,9 @@ func flattenAssessmentExclusionOrRemediationRule(ExclusionOrRemediationRule []as
 	allExclusionOrRemediationRule := make([]interface{}, len(ExclusionOrRemediationRule))
 	for i, val := range ExclusionOrRemediationRule {
 		allExclusionOrRemediationRule[i] = map[string]interface{}{
-			"logicHash": val.LogicHash,
-			"id":        val.ID,
-			"name":      val.Name,
+			"logic_hash": val.LogicHash,
+			"id":         val.ID,
+			"name":       val.Name,
 		}
 	}
 
