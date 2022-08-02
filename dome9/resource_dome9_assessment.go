@@ -736,7 +736,13 @@ func resourceAssessmentRead(d *schema.ResourceData, meta interface{}) error {
 func resourceAssessmentDelete(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	log.Printf("[INFO] Deleting assessment ID: %v\n", d.Id())
-	if _, err := d9Client.assessment.Delete(d.Id()); err != nil {
+
+	assessmentId, err := strconv.Atoi(d.Id())
+	if err != nil {
+		return err
+	}
+
+	if _, err := d9Client.assessment.Delete(assessmentId); err != nil {
 		return err
 	}
 
