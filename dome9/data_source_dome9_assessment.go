@@ -1,50 +1,46 @@
 package dome9
 
 import (
-	"github.com/dome9/dome9-sdk-go/dome9/client"
-	"github.com/dome9/dome9-sdk-go/services/assessment"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 	"log"
 	"strconv"
 )
 
-func resourceAssessment() *schema.Resource {
+func dataSourceAssessment() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceAssessmentCreate,
-		Read:   resourceAssessmentRead,
-		Update: resourceAssessmentUpdate,
-		Delete: resourceAssessmentDelete,
+		Read:   dataSourceAssessmentRead,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
-			"bundle_id": {
+			"id": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
+			"bundle_id": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
 			"dome9_cloud_account_id": {
 				Type:     schema.TypeString,
-				Required: true,
+				Computed: true,
 			},
 			"cloud_account_id": {
 				Type:     schema.TypeString,
-				Required: true,
+				Computed: true,
 			},
 			"cloud_account_type": {
 				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validation.StringInSlice(providerconst.AssessmentCloudAccountType, false),
+				Computed: true,
 			},
 			"should_minimize_result": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Computed: true,
 			},
 			"request_id": {
 				Type:     schema.TypeString,
-				Required: true,
+				Computed: true,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -285,6 +281,38 @@ func resourceAssessment() *schema.Resource {
 						"test_passed": {
 							Type:     schema.TypeBool,
 							Computed: true,
+						},
+					},
+				},
+			},
+			"location_metadata": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"account": {
+							Type:     schema.TypeSet,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"srl": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"name": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"external_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -666,339 +694,34 @@ func resourceAssessment() *schema.Resource {
 	}
 }
 
-func resourceAssessmentCreate(d *schema.ResourceData, meta interface{}) error {
+func dataSourceAssessmentRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	req := expandAssessmentRequest(d)
-	log.Printf("[INFO] Creating assessment with request %+v\n", req)
 
-	resp, _, err := d9Client.assessment.Run(&req)
+	id := strconv.Itoa(d.Get("id").(int))
+	log.Printf("Getting data for assessment with id %s\n", id)
+
+	assessmentData, _, err := d9Client.assessment.Get(id)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[INFO] Created assessment. ID: %v\n", resp.ID)
-	d.SetId(strconv.Itoa(resp.ID))
-
-	return resourceAssessmentRead(d, meta)
-}
-
-func resourceAssessmentRead(d *schema.ResourceData, meta interface{}) error {
-	d9Client := meta.(*Client)
-	resp, _, err := d9Client.assessment.Get(d.Id())
-
-	if err != nil {
-		if err.(*client.ErrorResponse).IsObjectNotFound() {
-			log.Printf("[WARN] Removing assessment %s from state because it no longer exists in Dome9", d.Id())
-			d.SetId("")
-			return nil
-		}
-		return err
-	}
-
-	d.SetId(strconv.Itoa(resp.ID))
-	_ = d.Set("test_entities", resp.TestEntities)
-	_ = d.Set("created_time", resp.CreatedTime)
-	_ = d.Set("assessment_id", resp.AssessmentId)
-	_ = d.Set("triggered_by", resp.TriggeredBy)
-	_ = d.Set("assessment_passed", resp.AssessmentPassed)
-	_ = d.Set("has_errors", resp.HasErrors)
-	_ = d.Set("has_data_sync_status_issues", resp.HasDataSyncStatusIssues)
-	_ = d.Set("comparison_custom_id", resp.ComparisonCustomId)
-	_ = d.Set("additional_fields", resp.AdditionalFields)
-
-	if err := d.Set("request", flattenAssessmentRequest(resp.Request)); err != nil {
-		return err
-	}
-
-	if err := d.Set("tests", flattenAssessmentTests(resp.Tests)); err != nil {
-		return err
-	}
-
-	if err := d.Set("exclusions", flattenAssessmentExclusion(resp.Exclusions)); err != nil {
-		return err
-	}
-
-	if err := d.Set("remediations", flattenAssessmentRemediation(resp.Remediations)); err != nil {
-		return err
-	}
-
-	if err := d.Set("data_sync_status", flattenAssessmentDataSyncStatus(resp.DataSyncStatus)); err != nil {
-		return err
-	}
-
-	if err := d.Set("stats", flattenAssessmentStats(resp.Stats)); err != nil {
-		return err
-	}
+	d.SetId(strconv.Itoa(assessmentData.ID))
+	_ = d.Set("request", flattenAssessmentRequest(assessmentData.Request))
+	_ = d.Set("tests", flattenAssessmentTests(assessmentData.Tests))
+	_ = d.Set("test_entities", assessmentData.TestEntities)
+	_ = d.Set("exclusions", flattenAssessmentExclusion(assessmentData.Exclusions))
+	_ = d.Set("remediations", flattenAssessmentRemediation(assessmentData.Remediations))
+	_ = d.Set("data_sync_status", flattenAssessmentDataSyncStatus(assessmentData.DataSyncStatus))
+	_ = d.Set("created_time", assessmentData.CreatedTime)
+	_ = d.Set("assessment_id", assessmentData.AssessmentId)
+	_ = d.Set("triggered_by", assessmentData.TriggeredBy)
+	_ = d.Set("assessment_passed", assessmentData.AssessmentPassed)
+	_ = d.Set("has_errors", assessmentData.HasErrors)
+	_ = d.Set("stats", flattenAssessmentStats(assessmentData.Stats))
+	_ = d.Set("has_data_sync_status_issues", assessmentData.HasDataSyncStatusIssues)
+	_ = d.Set("comparison_custom_id", assessmentData.ComparisonCustomId)
+	_ = d.Set("additional_fields", assessmentData.AdditionalFields)
 
 	return nil
 }
 
-func resourceAssessmentDelete(d *schema.ResourceData, meta interface{}) error {
-	d9Client := meta.(*Client)
-	log.Printf("[INFO] Deleting assessment ID: %v\n", d.Id())
-	if _, err := d9Client.assessment.Delete(d.Id()); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func resourceAssessmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	log.Println("[WARN] An update can not be made to an assessment")
-	return nil
-}
-
-func expandAssessmentRequest(d *schema.ResourceData) assessment.RunBundleRequest {
-	req := assessment.RunBundleRequest{
-		BundleID:               d.Get("bundle_id").(int),
-		Dome9CloudAccountID:    d.Get("dome9_cloud_account_id").(string),
-		CloudAccountID:         d.Get("cloud_account_id").(string),
-		CloudAccountType:       d.Get("cloud_account_type").(string),
-		ShouldMinimizeResult:   d.Get("should_minimize_result").(bool),
-		Name:                   d.Get("name").(string),
-		Description:            d.Get("description").(string),
-		ExternalCloudAccountID: d.Get("external_cloud_account_id").(string),
-		RequestID:              d.Get("request_id").(string),
-	}
-	return req
-}
-
-func flattenAssessmentRequest(Request assessment.Request) []interface{} {
-	m := map[string]interface{}{
-		"is_template":               Request.IsTemplate,
-		"id":                        Request.BundleID,
-		"name":                      Request.Name,
-		"description":               Request.Description,
-		"dome9_cloud_account_id":    Request.Dome9CloudAccountID,
-		"external_cloud_account_id": Request.ExternalCloudAccountID,
-		"cloud_account_id":          Request.CloudAccountID,
-		"cloud_account_type":        Request.CloudAccountType,
-		"request_id":                Request.RequestID,
-		"should_minimize_result":    Request.ShouldMinimizeResult,
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessmentTests(tests []assessment.Test) []interface{} {
-	allTests := make([]interface{}, len(tests))
-	for i, val := range tests {
-		allTests[i] = map[string]interface{}{
-			"error":               val.Error,
-			"tested_count":        val.TestedCount,
-			"relevant_count":      val.RelevantCount,
-			"non_complying_count": val.NonComplyingCount,
-			"exclusion_stats":     flattenAssessmentTestsExclusionStats(val.ExclusionStats),
-			"entity_results":      flattenAssessmentTestsEntityResults(val.EntityResults),
-			"rule":                flattenAssessmentTestsRule(val.Rule),
-			"test_passed":         val.TestPassed,
-		}
-	}
-
-	return allTests
-}
-
-func flattenAssessmentTestsExclusionStats(Request assessment.ExclusionStats) []interface{} {
-	m := map[string]interface{}{
-		"tested_count":        Request.TestedCount,
-		"relevant_count":      Request.RelevantCount,
-		"non_complying_count": Request.NonComplyingCount,
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessmentTestsEntityResults(entityResults []assessment.EntityResult) []interface{} {
-	allEntityResults := make([]interface{}, len(entityResults))
-	for i, val := range entityResults {
-		allEntityResults[i] = map[string]interface{}{
-			"validation_status": val.ValidationStatus,
-			"is_relevant":       val.IsRelevant,
-			"is_valid":          val.IsValid,
-			"is_excluded":       val.IsExcluded,
-			"exclusion_id":      val.ExclusionID,
-			"remediation_id":    val.RemediationID,
-			"error":             val.Error,
-			"test_obj":          flattenAssessmentTestsEntityResultsTestObj(val.TestObj),
-		}
-	}
-
-	return allEntityResults
-}
-
-func flattenAssessmentTestsEntityResultsTestObj(Request assessment.RuleEngineFailedEntityReference) []interface{} {
-	m := map[string]interface{}{
-		"id":                            Request.Id,
-		"dome9_id":                      Request.Dome9Id,
-		"entity_type":                   Request.EntityType,
-		"entity_index":                  Request.EntityIndex,
-		"custom_entity_comparison_hash": Request.CustomEntityComparisonHash,
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessmentTestsRule(Request assessment.Rule) []interface{} {
-	m := map[string]interface{}{
-		"name":           Request.Name,
-		"severity":       Request.Severity,
-		"logic":          Request.Logic,
-		"description":    Request.Description,
-		"remediation":    Request.Remediation,
-		"cloudbots":      Request.Cloudbots,
-		"compliance_tag": Request.ComplianceTag,
-		"domain":         Request.Domain,
-		"priority":       Request.Priority,
-		"control_title":  Request.ControlTitle,
-		"rule_id":        Request.RuleID,
-		"category":       Request.Category,
-		"labels":         Request.Labels,
-		"logic_hash":     Request.LogicHash,
-		"is_default":     Request.IsDefault,
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessmentExclusion(Exclusions []assessment.Exclusion) []interface{} {
-	allExclusions := make([]interface{}, len(Exclusions))
-	for i, val := range Exclusions {
-		allExclusions[i] = map[string]interface{}{
-			"platform":                val.Platform,
-			"id":                      val.ID,
-			"rules":                   flattenAssessmentExclusionOrRemediationRule(val.Rules),
-			"logic_expressions":       val.LogicExpressions,
-			"ruleset_id":              val.RulesetId,
-			"cloud_account_ids":       val.CloudAccountIds,
-			"comment":                 val.Comment,
-			"organizational_unit_ids": val.OrganizationalUnitIds,
-			"date_range":              flattenAssessmentDateRange(val.DateRange),
-		}
-	}
-
-	return allExclusions
-}
-
-func flattenAssessmentRemediation(Exclusions []assessment.Remediation) []interface{} {
-	allExclusions := make([]interface{}, len(Exclusions))
-	for i, val := range Exclusions {
-		allExclusions[i] = map[string]interface{}{
-			"platform":                val.Platform,
-			"id":                      val.ID,
-			"rules":                   flattenAssessmentExclusionOrRemediationRule(val.Rules),
-			"logic_expressions":       val.LogicExpressions,
-			"ruleset_id":              val.RulesetId,
-			"cloud_account_ids":       val.CloudAccountIds,
-			"comment":                 val.Comment,
-			"cloudBots":               val.CloudBots,
-			"organizational_unit_ids": val.OrganizationalUnitIds,
-			"date_range":              flattenAssessmentDateRange(val.DateRange),
-		}
-	}
-
-	return allExclusions
-}
-
-func flattenAssessmentExclusionOrRemediationRule(ExclusionOrRemediationRule []assessment.ExclusionOrRemediationRule) []interface{} {
-	allExclusionOrRemediationRule := make([]interface{}, len(ExclusionOrRemediationRule))
-	for i, val := range ExclusionOrRemediationRule {
-		allExclusionOrRemediationRule[i] = map[string]interface{}{
-			"logic_hash": val.LogicHash,
-			"id":         val.ID,
-			"name":       val.Name,
-		}
-	}
-
-	return allExclusionOrRemediationRule
-}
-
-func flattenAssessmentDateRange(Request assessment.Date) []interface{} {
-	m := map[string]interface{}{
-		"from": Request.From,
-		"to":   Request.To,
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessmentDataSyncStatus(dataSyncStatus []assessment.DataSyncStatus) []interface{} {
-	allDataSyncStatus := make([]interface{}, len(dataSyncStatus))
-	for i, val := range dataSyncStatus {
-		allDataSyncStatus[i] = map[string]interface{}{
-			"entity_type":                     val.EntityType,
-			"recently_successful_sync":        val.RecentlySuccessfulSync,
-			"general_fetch_permission_issues": val.GeneralFetchPermissionIssues,
-			"entities_with_permission_issues": flattenAssessmentDataSyncStatusEntitiesWithPermissionIssues(val.EntitiesWithPermissionIssues),
-		}
-	}
-
-	return allDataSyncStatus
-}
-
-func flattenAssessmentDataSyncStatusEntitiesWithPermissionIssues(entitiesWithPermissionIssues []assessment.EntitiesWithPermissionIssues) []interface{} {
-	allTests := make([]interface{}, len(entitiesWithPermissionIssues))
-	for i, val := range entitiesWithPermissionIssues {
-		allTests[i] = map[string]interface{}{
-			"external_id":             val.ExternalID,
-			"name":                    val.Name,
-			"cloud_vendor_identifier": val.CloudVendorIdentifier,
-		}
-	}
-
-	return allTests
-}
-
-func flattenAssessmentStats(Request assessment.Stats) []interface{} {
-	m := map[string]interface{}{
-		"passed":                     Request.Passed,
-		"passed_rules_by_severity":   flattenAssessmentStatsRulesSeverity(Request.PassedRulesBySeverity),
-		"failed":                     Request.Failed,
-		"failed_rules_by_severity":   flattenAssessmentStatsRulesSeverity(Request.FailedRulesBySeverity),
-		"error":                      Request.Error,
-		"failed_tests":               Request.FailedTests,
-		"logically_tested":           Request.LogicallyTested,
-		"failed_entities":            Request.FailedEntities,
-		"excluded_tests":             Request.ExcludedTests,
-		"excluded_failed_tests":      Request.ExcludedFailedTests,
-		"excluded_rules":             Request.ExcludedRules,
-		"excluded_rules_by_severity": flattenAssessmentStatsRulesSeverity(Request.ExcludedRulesBySeverity),
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessmentStatsRulesSeverity(Request assessment.RulesSeverity) []interface{} {
-	m := map[string]interface{}{
-		"informational": Request.Informational,
-		"low":           Request.Low,
-		"medium":        Request.Medium,
-		"high":          Request.High,
-		"critical":      Request.Critical,
-	}
-
-	return []interface{}{m}
-}
-
-/*
-func flattenAssessment(Request assessment.Request) []interface{} {
-	m := map[string]interface{}{
-		"":    Request.,
-
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessment(Tests []assessment.Test) []interface{} {
-	allTests := make([]interface{}, len(Tests))
-	for i, val := range Tests {
-		allTests[i] = map[string]interface{}{
-			"":  val.,
-
-		}
-	}
-
-	return allTests
-}
-
-*/

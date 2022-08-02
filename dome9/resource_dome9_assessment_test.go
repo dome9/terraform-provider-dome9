@@ -2,13 +2,12 @@ package dome9
 
 import (
 	"fmt"
+	"github.com/dome9/dome9-sdk-go/services/assessment"
 	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
@@ -16,13 +15,12 @@ import (
 )
 
 func TestAccResourceAssessmentBasic(t *testing.T) {
-	var cloudAccountAlibaba alibaba.CloudAccountResponse
+	var assessment assessment.RunBundleResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.Assessment)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountAlibabaEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckAssessmentDestroy,
@@ -31,7 +29,7 @@ func TestAccResourceAssessmentBasic(t *testing.T) {
 				// creation test
 				Config: testAccCheckAssessmentConfigure(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountAlibabaExists(resourceTypeAndName, &cloudAccountAlibaba),
+					testAccCheckAssessmentExists(resourceTypeAndName, &assessment),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "bundle_id", strconv.Itoa(variable.BundleID)),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "dome9_cloud_account_id", variable.Dome9CloudAccountID),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_account_id", variable.CloudAccountID),
@@ -47,22 +45,44 @@ func testAccCheckAssessmentDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.CloudAccountAlibaba {
+		if rs.Type != resourcetype.Assessment {
 			continue
 		}
 
-		resp, _, err := apiClient.cloudaccountAlibaba.Get(rs.Primary.ID)
+		resp, _, err := apiClient.assessment.Get(rs.Primary.ID)
 
 		if err == nil {
 			return fmt.Errorf("id %s already exists", rs.Primary.ID)
 		}
 
 		if resp != nil {
-			return fmt.Errorf("cloudaccounts with id %s exists and wasn't destroyed", rs.Primary.ID)
+			return fmt.Errorf("assessment with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
 
 	return nil
+}
+
+func testAccCheckAssessmentExists(resource string, resp *assessment.RunBundleResponse) resource.TestCheckFunc {
+	return func(state *terraform.State) error {
+		rs, ok := state.RootModule().Resources[resource]
+		if !ok {
+			return fmt.Errorf("didn't find resource: %s", resource)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("no record ID is set")
+		}
+
+		apiClient := testAccProvider.Meta().(*Client)
+		receivedCloudAccount, _, err := apiClient.assessment.Get(rs.Primary.ID)
+		if err != nil {
+			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
+		}
+
+		*resp = *receivedCloudAccount
+
+		return nil
+	}
 }
 
 func testAccCheckAssessmentConfigure(resourceTypeAndName, generatedName string) string {
@@ -74,11 +94,11 @@ data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
-		// Alibaba cloud account
+		// assessment
 		getAssessmentResourceHCL(generatedName),
 
 		// data source variables
-		resourcetype.CloudAccountAlibaba,
+		resourcetype.Assessment,
 		generatedName,
 		resourceTypeAndName,
 	)

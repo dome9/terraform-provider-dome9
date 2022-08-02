@@ -79,6 +79,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.User:                                         dataSourceUser(),
 			resourcetype.ServiceAccount:                               dataSourceServiceAccount(),
 			resourcetype.AdmissionControlPolicy:                       dataSourceAdmissionControlPolicy(),
+			resourcetype.Assessment:                                   dataSourceAssessment(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
