@@ -30,9 +30,9 @@ func TestAccResourceAssessmentBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAssessmentExists(resourceTypeAndName, &assessmentData),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "triggered_by", variable.TriggeredBy),
-					//resource.TestCheckResourceAttr(resourceTypeAndName, "assessment_passed", variable.AssessmentPassed),
-					//resource.TestCheckResourceAttr(resourceTypeAndName, "has_errors", variable.HasErrors),
-					//resource.TestCheckResourceAttr(resourceTypeAndName, "has_data_sync_status_issues", variable.HasDataSyncStatusIssues),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "assessment_passed", variable.AssessmentPassed),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "has_errors", variable.HasErrors),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "has_data_sync_status_issues", variable.HasDataSyncStatusIssues),
 				),
 			},
 		},
