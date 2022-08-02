@@ -3,7 +3,6 @@ package dome9
 import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/assessment"
-	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -15,7 +14,7 @@ import (
 )
 
 func TestAccResourceAssessmentBasic(t *testing.T) {
-	var assessment assessment.RunBundleResponse
+	var assessmentData assessment.RunBundleResponse
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.Assessment)
 
 	resource.Test(t, resource.TestCase{
@@ -29,12 +28,11 @@ func TestAccResourceAssessmentBasic(t *testing.T) {
 				// creation test
 				Config: testAccCheckAssessmentConfigure(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAssessmentExists(resourceTypeAndName, &assessment),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "bundle_id", strconv.Itoa(variable.BundleID)),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "dome9_cloud_account_id", variable.Dome9CloudAccountID),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_account_id", variable.CloudAccountID),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_account_type", variable.CloudAccountType),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "request_id", variable.RequestID),
+					testAccCheckAssessmentExists(resourceTypeAndName, &assessmentData),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "triggered_by", variable.TriggeredBy),
+					//resource.TestCheckResourceAttr(resourceTypeAndName, "assessment_passed", variable.AssessmentPassed),
+					//resource.TestCheckResourceAttr(resourceTypeAndName, "has_errors", variable.HasErrors),
+					//resource.TestCheckResourceAttr(resourceTypeAndName, "has_data_sync_status_issues", variable.HasDataSyncStatusIssues),
 				),
 			},
 		},

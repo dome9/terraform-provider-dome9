@@ -978,27 +978,3 @@ func flattenAssessmentStatsRulesSeverity(Request assessment.RulesSeverity) []int
 
 	return []interface{}{m}
 }
-
-/*
-func flattenAssessment(Request assessment.Request) []interface{} {
-	m := map[string]interface{}{
-		"":    Request.,
-
-	}
-
-	return []interface{}{m}
-}
-
-func flattenAssessment(Tests []assessment.Test) []interface{} {
-	allTests := make([]interface{}, len(Tests))
-	for i, val := range Tests {
-		allTests[i] = map[string]interface{}{
-			"":  val.,
-
-		}
-	}
-
-	return allTests
-}
-
-*/
