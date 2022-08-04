@@ -54,29 +54,29 @@ The following arguments are supported:
   * `external_cloud_account_id` - External cloud account id.
   * `request_id` - Request id.
 * `tests` - List of all the tests that have been run.
-  * `error` - 
-  * `tested_count` - 
-  * `relevant_count` - 
-  * `non_complying_count` - 
-  * `exclusion_stats` - 
-    * `tested_count` - 
-    * `relevant_count` - 
-    * `non_complying_count` - 
-  * `entity_results` - 
-    * `validation_status` - 
-    * `is_relevant` - 
-    * `is_valid` - 
-    * `is_excluded` - 
-    * `exclusion_id` - 
-    * `remediation_id` - 
-    * `error` - 
-    * `test_obj` - 
-      * `id` - 
-      * `dome9_id` - 
-      * `entity_type` - 
-      * `entity_index` - 
-      * `custom_entity_comparison_hash` - 
-  * `rule` - 
+  * `error` - Test error.
+  * `tested_count` - Number of assets that tested.
+  * `relevant_count` - Number of assets that relevant to the test.
+  * `non_complying_count` - Number of assets that non-complying to the test.
+  * `exclusion_stats` - Exclusion stats.
+    * `tested_count` - Number of assets that has been excluded from the test.
+    * `relevant_count` - Number of assets that has been relevant to the test.
+    * `non_complying_count` - Number of assets that has been non-complying to the test.
+  * `entity_results` - Entity results.
+    * `validation_status` - Can be: `Relevant`, `Valid`, `Excluded`.
+    * `is_relevant` - Means if entity is relevant for this rule. for example rule = "Instance where name like '%db%' should have...", returns false in instance name = 'scheduler1'.
+    * `is_valid` - Means if entity is compliant. for example for rule="Instance should have vpc", return true if instance i-123 is under vpc-234, and false if not.
+    * `is_excluded` - Means if entity is excluded. for example for rule="Instance should have vpc exclude name='test'", return true if instance name is test, and false if not.
+    * `exclusion_id` - Guid, can be Null.
+    * `remediation_id` - Guid, can be Null.
+    * `error` - Entity result error.
+    * `test_obj` - The object that has been tested.
+      * `id` - Id of the object.
+      * `dome9_id` - Dome9 id of the object.
+      * `entity_type` - Entity type of the object.
+      * `entity_index` - Entity index of the object.
+      * `custom_entity_comparison_hash` - Custom entity comparison hash of the object.
+  * `rule` - Rule.
     * `name` - Rule name.
     * `severity` - Rule severity.
     * `logic` - Rule logic.
@@ -88,87 +88,87 @@ The following arguments are supported:
     * `priority` - Rule priority.
     * `control_title` - Control title.
     * `rule_id` - Rule id.
-    * `category` - Rule
+    * `category` - Rule category.
     * `labels` - Rule labels.
     * `logic_hash` - Rule logic_hash.
     * `is_default` - Is default rule.
   * `test_passed` - Is test passed: true/false.
 * `test_entities` - Test entities map.
-* `exclusions` - 
-  * `platform` - 
-  * `id` - 
-  * `rules` - 
-    * `logic_hash` - 
-    * `id` - 
-    * `name` - 
-  * `logic_expressions` - 
-  * `ruleset_id` - 
-  * `cloud_account_ids` - 
-  * `comment` - 
-  * `organizational_unit_ids` - 
-  * `date_range` - 
-    * `from` - 
-    * `to` - 
-* `remediations` - 
-  * `platform` -
-  * `id` -
-  * `rules` -
-    * `logic_hash` -
-    * `id` -
-    * `name` -
-  * `logic_expressions` -
-  * `ruleset_id` -
-  * `cloud_account_ids` -
-  * `comment` -
-  * `cloud_bots` -
-  * `organizational_unit_ids` -
-  * `date_range` -
-    * `from` -
-    * `to` -
-* `data_sync_status` - 
-  * `entity_type` - 
-  * `recently_successful_sync` - 
-  * `general_fetch_permission_issues` - 
-  * `entities_with_permission_issues` - 
-    * `external_id` - 
-    * `name` - 
-    * `cloud_vendor_identifier` - 
-* `created_time` - 
-* `assessment_id` - 
-* `triggered_by` - 
-* `assessment_passed` - 
-* `has_errors` - 
-* `stats` - 
-  * `passed` - 
-  * `passed_rules_by_severity` - 
-    * `informational` - 
-    * `low` - 
-    * `medium` - 
-    * `high` - 
-    * `critical` - 
-  * `failed` - 
-  * `failed_rules_by_severity` - 
-    * `informational` -
-    * `low` -
-    * `medium` -
-    * `high` -
-    * `critical` -
-  * `error` - 
-  * `failed_tests` - 
-  * `logically_tested` - 
-  * `failed_entities` - 
-  * `excluded_tests` - 
-  * `excluded_failed_tests` - 
-  * `excluded_rules` - 
-  * `excluded_rules_by_severity` - 
-    * `informational` -
-    * `low` -
-    * `medium` -
-    * `high` -
-    * `critical` -
-* `has_data_sync_status_issues` - 
-* `comparison_custom_id` - 
-* `additional_fields` - 
+* `exclusions` - List of exclusions associated with this assessment.
+  * `platform` - Exclusions platform, can be: `Aws`, `Azure`, `GCP`, `Kubernetes`, `Terraform`, `Generic`, `KubernetesRuntimeAssurance`, `ShiftLeft`, `SourceCodeAssurance`, `ImageAssurance`, `Alibaba`, `Cft`, `ContainerRegistry`, `Ers`.
+  * `id` - Exclusion ID.
+  * `rules` - List of rules to apply the exclusion on.
+    * `logic_hash` - Rule logic hash.
+    * `id` - Rule ID.
+    * `name` - Rule name.
+  * `logic_expressions` - The GSL logic expressions of the exclusion.
+  * `ruleset_id` - Ruleset ID to apply exclusion on.
+  * `cloud_account_ids` - List of cloud account IDs to apply exclusion on.
+  * `comment` - Comment text (free text).
+  * `organizational_unit_ids` - List of organizational unit IDs to apply exclusion on.
+  * `date_range` - Effective date range for the exclusion.
+    * `from` - From date time.
+    * `to` - To date time.
+* `remediations` - List of remediations associated with this assessment.
+  * `platform` - Remediation platform, can be: `Aws`, `Azure`, `GCP`, `Kubernetes`, `Terraform`, `Generic`, `KubernetesRuntimeAssurance`, `ShiftLeft`, `SourceCodeAssurance`, `ImageAssurance`, `Alibaba`, `Cft`, `ContainerRegistry`, `Ers`.
+  * `id` - Exclusion ID.
+  * `rules` - List of rules to apply the exclusion on.
+    * `logic_hash` - Rule logic hash.
+    * `id` - Rule ID.
+    * `name` - Rule name.
+  * `logic_expressions` - The GSL logic expressions of the exclusion.
+  * `ruleset_id` - Ruleset ID to apply exclusion on.
+  * `cloud_account_ids` - List of cloud account IDs to apply exclusion on.
+  * `comment` - Comment text (free text).
+  * `cloud_bots` - Cloud bots execution expressions.
+  * `organizational_unit_ids` - List of organizational unit IDs to apply exclusion on.
+  * `date_range` - Effective date range for the exclusion.
+    * `from` - From date time.
+    * `to` - To date time.
+* `data_sync_status` - Data sync status - list of entities.
+  * `entity_type` - Entity type.
+  * `recently_successful_sync` - Is recently successful sync. True/False.
+  * `general_fetch_permission_issues` - Is general fetch permission issues. True/False.
+  * `entities_with_permission_issues` - List entities with permission issues.
+    * `external_id` - Entity external id.
+    * `name` - Entity name.
+    * `cloud_vendor_identifier` - Entity cloud vendor identifier.
+* `created_time` - Date of assessment.
+* `assessment_id` - Assessment id.
+* `triggered_by` - Reason for assessment.
+* `assessment_passed` - Is assessment_passed. True/False.
+* `has_errors` - Is assessment has errors. True/False.
+* `stats` - Summary statistics for assessment.
+  * `passed` - Number of passed rules.
+  * `passed_rules_by_severity` - Passed rules divided by severity.
+    * `informational` - Informational.
+    * `low` - Low.
+    * `medium` - Medium.
+    * `high` - High.
+    * `critical` - Critical.
+  * `failed` - Number of failed rules.
+  * `failed_rules_by_severity` - Failed rules divided by severity.
+    * `informational` - Informational.
+    * `low` - Low.
+    * `medium` - Medium.
+    * `high` - High.
+    * `critical` - Critical.
+  * `error` - Number of errors
+  * `failed_tests` - Number of failed tests.
+  * `logically_tested` - Total number of tests performed.
+  * `failed_entities` - Number of failed entities.
+  * `excluded_tests` - Number of excluded tests.
+  * `excluded_failed_tests` - Number of excluded tests that also failed.
+  * `excluded_rules` - Number of rules that contains only excluded tests.
+  * `excluded_rules_by_severity` - Excluded rules divided by severity.
+    * `informational` - Informational.
+    * `low` - Low.
+    * `medium` - Medium.
+    * `high` - High.
+    * `critical` - Critical.
+* `has_data_sync_status_issues` - Is has data sync status issues. True/False.
+* `comparison_custom_id` - Comparison custom id.
+* `additional_fields` - Additional fields.
 
 
 
