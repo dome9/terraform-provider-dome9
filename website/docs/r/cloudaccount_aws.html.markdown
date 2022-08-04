@@ -19,7 +19,7 @@ resource "dome9_cloudaccount_aws" "test" {
   name  = "ACCOUNT NAME"
  
   credentials  {
-    ARN    = "ARN"
+    arn    = "ARN"
     secret = "SECRET"
     type   = "RoleBased"
   }
