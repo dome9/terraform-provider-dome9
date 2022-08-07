@@ -68,6 +68,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.CloudAccountAzure:                            dataSourceCloudAccountAzure(),
 			resourcetype.CloudAccountKubernetes:                       dataSourceCloudAccountKubernetes(),
 			resourcetype.ContinuousCompliancePolicy:                   dataSourceContinuousCompliancePolicy(),
+			resourcetype.ContinuousComplianceFinding:                  dataSourceContinuousComplianceFinding(),
 			resourcetype.ContinuousComplianceNotification:             dataSourceContinuousComplianceNotification(),
 			resourcetype.RuleSet:                                      dataSourceRuleSet(),
 			resourcetype.CloudAccountAWSSecurityGroup:                 dataSourceCloudSecurityGroupAWS(),
