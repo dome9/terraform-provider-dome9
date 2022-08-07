@@ -9,7 +9,7 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 		Read: dataSourceContinuousComplianceFindingSearch,
 
 		Schema: map[string]*schema.Schema{
-			"pageSize": {
+			"page_size": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  10,
@@ -19,7 +19,7 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"fieldName": {
+						"field_name": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
@@ -30,12 +30,12 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 					},
 				},
 			},
-			"multiSorting": {
+			"multi_sorting": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"fieldName": {
+						"field_name": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
@@ -51,7 +51,7 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"freeTextPhrase": {
+						"free_text_phrase": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
@@ -60,29 +60,29 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"Name": {
+									"name": {
 										Type:     schema.TypeString,
 										Optional: false,
 									},
-									"Value": {
+									"value": {
 										Type:     schema.TypeString,
 										Optional: false,
 									},
 								},
 							},
 						},
-						"onlyCIEM": {
+						"only_ciem": {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
-						"includedFeatures": {
+						"included_features": {
 							Type:     schema.TypeList,
 							Optional: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
 						},
-						"creationTime": {
+						"creation_time": {
 							Type:     schema.TypeSet,
 							Optional: true,
 							Elem: &schema.Resource{
@@ -101,14 +101,14 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 					},
 				},
 			},
-			"searchAfter": {
+			"search_after": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
-			"dataSource": {
+			"data_source": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
