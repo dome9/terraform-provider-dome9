@@ -71,7 +71,7 @@ func (c *Config) Client() (*Client, error) {
 		cloudaccountKubernetes:           *k8s.New(config),
 		continuousCompliancePolicy:       *continuous_compliance_policy.New(config),
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
-		continuousComplianceFinding:      *continuous_compliance_Finding.New(config),
+		continuousComplianceFinding:      *continuous_compliance_finding.New(config),
 		ruleSet:                          *rulebundles.New(config),
 		awsSecurityGroup:                 *securitygroupaws.New(config),
 		role:                             *roles.New(config),

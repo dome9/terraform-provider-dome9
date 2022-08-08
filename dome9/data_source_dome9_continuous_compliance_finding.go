@@ -6,7 +6,7 @@ import (
 
 func dataSourceContinuousComplianceFinding() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceContinuousComplianceFindingSearch,
+		Read: dataSourceContinuousComplianceFindingRead,
 
 		Schema: map[string]*schema.Schema{
 			"page_size": {
@@ -479,25 +479,40 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 	}
 }
 
-func dataSourceContinuousComplianceFindingSearch(d *schema.ResourceData, meta interface{}) error {
+func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta interface{}) error {
 	//d9Client := meta.(*Client)
-	//
-	//policyID := d.Get("id").(string)
-	//log.Printf("Getting data for Continuous Compliance Policy id: %s\n", policyID)
-	//
-	//resp, _, err := d9Client.continuousCompliancePolicy.Get(policyID)
+	//req := expandContinuousComplianceFindingRequest(d)
+	//log.Printf("[INFO] Creating compliance policy request %+v\n", req)
+	//resp, _, err := d9Client.continuousCompliancePolicy.Create(&req)
 	//if err != nil {
 	//	return err
 	//}
 	//
+	//log.Printf("[INFO] Created compliance policy with ID: %v\n", resp.ID)
 	//d.SetId(resp.ID)
-	//_ = d.Set("target_internal_id", resp.TargetInternalId)
-	//_ = d.Set("target_external_id", resp.TargetExternalId)
-	//_ = d.Set("target_type", resp.TargetType)
-	//_ = d.Set("ruleset_id", resp.RulesetId)
-	//if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
-	//	return err
-	//}
-
-	return nil
+	//
+	//return resourceContinuousCompliancePolicyRead(d, meta)
 }
+
+//func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta interface{}) error {
+//	d9Client := meta.(*Client)
+//
+//	policyID := d.Get("id").(string)
+//	log.Printf("Getting data for Continuous Compliance Policy id: %s\n", policyID)
+//
+//	resp, _, err := d9Client.continuousCompliancePolicy.Get(policyID)
+//	if err != nil {
+//		return err
+//	}
+//
+//	d.SetId(resp.ID)
+//	_ = d.Set("target_internal_id", resp.TargetInternalId)
+//	_ = d.Set("target_external_id", resp.TargetExternalId)
+//	_ = d.Set("target_type", resp.TargetType)
+//	_ = d.Set("ruleset_id", resp.RulesetId)
+//	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
+//		return err
+//	}
+//
+//	return nil
+//}
