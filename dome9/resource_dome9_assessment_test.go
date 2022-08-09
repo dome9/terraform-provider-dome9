@@ -106,10 +106,8 @@ func getAssessmentResourceHCL(assessmentName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
       bundle_id = "%v"
-	  dome9_cloud_account_id = "%s"
 	  cloud_account_id = "%s"
 	  cloud_account_type = "%s"
-	  should_minimize_result = "%v"
 	  request_id = "%s"
 }
 `,
@@ -117,10 +115,8 @@ resource "%s" "%s" {
 		resourcetype.Assessment,
 		assessmentName,
 		variable.BundleID,
-		variable.Dome9CloudAccountID,
 		variable.CloudAccountID,
 		variable.CloudAccountType,
-		variable.ShouldMinimizeResult,
 		variable.RequestID,
 	)
 }

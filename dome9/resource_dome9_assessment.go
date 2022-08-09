@@ -25,10 +25,6 @@ func resourceAssessment() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"dome9_cloud_account_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
 			"cloud_account_id": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -38,13 +34,18 @@ func resourceAssessment() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.StringInSlice(providerconst.AssessmentCloudAccountType, false),
 			},
-			"should_minimize_result": {
-				Type:     schema.TypeBool,
-				Required: true,
-			},
 			"request_id": {
 				Type:     schema.TypeString,
 				Required: true,
+			},
+			"dome9_cloud_account_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"should_minimize_result": {
+				Type:     schema.TypeBool,
+				Default: true,
+				Optional: true,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -288,10 +289,6 @@ func resourceAssessment() *schema.Resource {
 						},
 					},
 				},
-			},
-			"test_entities": {
-				Type:     schema.TypeMap,
-				Computed: true,
 			},
 			"exclusions": {
 				Type:     schema.TypeList,
@@ -696,7 +693,6 @@ func resourceAssessmentRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.SetId(strconv.Itoa(resp.ID))
-	_ = d.Set("test_entities", resp.TestEntities)
 	_ = d.Set("created_time", resp.CreatedTime)
 	_ = d.Set("assessment_id", resp.AssessmentId)
 	_ = d.Set("triggered_by", resp.TriggeredBy)

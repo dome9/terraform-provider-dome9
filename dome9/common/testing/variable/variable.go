@@ -139,7 +139,7 @@ const (
 	}`
 
 	DataSourceSuffix                    = "Data"
-	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/4.5.0/templates/role_based/onboarding.yml`
+	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/3.5.0/templates/role_based/onboarding.yml`
 	AwsUnifiedOnbordingIamCapabilities0 = `CAPABILITY_IAM`
 	AwsUnifiedOnbordingIamCapabilities1 = `CAPABILITY_NAMED_IAM`
 	AwsUnifiedOnbordingIamCapabilities2 = `CAPABILITY_AUTO_EXPAND`
@@ -187,12 +187,10 @@ const (
 
 // assessment resource/data source
 const (
-	BundleID                = 469163
-	Dome9CloudAccountID     = "ac08e6a9-64a2-47d3-a3fd-135aa3c062b5"
-	CloudAccountID          = "591910677983"
+	BundleID                = -40
+	CloudAccountID          = "31406287-79a3-410d-843b-684ef43159f1"
 	CloudAccountType        = "Aws"
 	RequestID               = "ac08e6a9-64a2-47d3-a3fd-135aa3c062cc"
-	ShouldMinimizeResult    = false
 	TriggeredBy             = "Manual"
 	AssessmentPassed        = "false"
 	HasErrors               = "false"

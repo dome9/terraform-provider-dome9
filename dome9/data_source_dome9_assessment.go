@@ -317,10 +317,6 @@ func dataSourceAssessment() *schema.Resource {
 					},
 				},
 			},
-			"test_entities": {
-				Type:     schema.TypeMap,
-				Computed: true,
-			},
 			"exclusions": {
 				Type:     schema.TypeList,
 				Computed: true,
