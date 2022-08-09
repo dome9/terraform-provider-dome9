@@ -80,7 +80,6 @@ The following arguments are supported:
     * `logic_hash` - Rule logic_hash.
     * `is_default` - Is default rule.
   * `test_passed` - Is test passed: true/false.
-* `test_entities` - Test entities map.
 * `exclusions` - List of exclusions associated with this assessment.
   * `platform` - Exclusions platform, can be: `Aws`, `Azure`, `GCP`, `Kubernetes`, `Terraform`, `Generic`, `KubernetesRuntimeAssurance`, `ShiftLeft`, `SourceCodeAssurance`, `ImageAssurance`, `Alibaba`, `Cft`, `ContainerRegistry`, `Ers`.
   * `id` - Exclusion ID.

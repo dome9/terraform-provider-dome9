@@ -30,11 +30,11 @@ resource "dome9_assessment" "test" {
 The following arguments are supported:
 
 * `bundle_id` - (Required) The ruleset id to run.
-* `dome9_cloud_account_id` - (Required) dome9 cloud account id to run the ruleset on.
 * `cloud_account_id` - (Required) Cloud account id to run the ruleset on.
 * `cloud_account_type` - (Required) Cloud account type. Can be: `Aws`, `Azure`, `GCP`, `Kubernetes`, `Terraform`, `Generic`, `KubernetesRuntimeAssurance`, `ShiftLeft`, `SourceCodeAssurance`, `ImageAssurance`, `Alibaba`, `Cft`, `ContainerRegistry`, `Ers`.
-* `should_minimize_result` - (Required) Should minimize result size.
 * `request_id` - (Required) Request id.
+* `dome9_cloud_account_id` - (Optional) dome9 cloud account id to run the ruleset on.
+* `should_minimize_result` - (Optional) Should minimize result size. Default: `true`.
 * `name` - (Optional) Name of the ruleset.
 * `description` - (Optional) Description of the request.
 * `external_cloud_account_id` - (Optional) External cloud account id.
@@ -93,7 +93,6 @@ The following arguments are supported:
     * `logic_hash` - Rule logic_hash.
     * `is_default` - Is default rule.
   * `test_passed` - Is test passed: true/false.
-* `test_entities` - Test entities map.
 * `exclusions` - List of exclusions associated with this assessment.
   * `platform` - Exclusions platform, can be: `Aws`, `Azure`, `GCP`, `Kubernetes`, `Terraform`, `Generic`, `KubernetesRuntimeAssurance`, `ShiftLeft`, `SourceCodeAssurance`, `ImageAssurance`, `Alibaba`, `Cft`, `ContainerRegistry`, `Ers`.
   * `id` - Exclusion ID.
