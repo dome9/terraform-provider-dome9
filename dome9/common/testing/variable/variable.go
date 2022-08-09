@@ -190,7 +190,7 @@ const (
 	BundleID                = -40
 	CloudAccountID          = "31406287-79a3-410d-843b-684ef43159f1"
 	CloudAccountType        = "Aws"
-	RequestID               = "ac08e6a9-64a2-47d3-a3fd-135aa3c062cc"
+	RequestID               = "c7475133-33a9-4a48-8601-dc2ecf407453"
 	TriggeredBy             = "Manual"
 	AssessmentPassed        = "false"
 	HasErrors               = "false"
