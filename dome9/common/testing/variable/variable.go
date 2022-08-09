@@ -139,7 +139,7 @@ const (
 	}`
 
 	DataSourceSuffix                    = "Data"
-	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/3.5.0/templates/role_based/onboarding.yml`
+	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/4.5.0/templates/role_based/onboarding.yml`
 	AwsUnifiedOnbordingIamCapabilities0 = `CAPABILITY_IAM`
 	AwsUnifiedOnbordingIamCapabilities1 = `CAPABILITY_NAMED_IAM`
 	AwsUnifiedOnbordingIamCapabilities2 = `CAPABILITY_AUTO_EXPAND`
@@ -183,4 +183,16 @@ const (
 	AdmissionControlPolicyPreventAction    = "Prevention"
 	AdmissionControlPolicyTargetType       = "Environment"
 	AdmissionControlKubernetesAccountName  = "test_admission_control_kubernetes_resource_name"
+)
+
+// assessment resource/data source
+const (
+	BundleID                = -6
+	CloudAccountID          = "b2b84100-a14f-4dec-ba63-d05cbb79a2d9"
+	CloudAccountType        = "Azure"
+	RequestID               = "c7475133-33a9-4a48-8601-dc2ecf407453"
+	TriggeredBy             = "Manual"
+	AssessmentPassed        = "true"
+	HasErrors               = "false"
+	HasDataSyncStatusIssues = "false"
 )

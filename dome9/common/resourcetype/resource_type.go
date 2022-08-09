@@ -23,4 +23,5 @@ const (
 	AwsUnifiedOnboardingUpdateVersionStackConfig = "dome9_aws_unified_onboarding_update_version_stack_config"
 	AwsUnifiedOnboarding                         = "dome9_aws_unified_onboarding"
 	AdmissionControlPolicy                       = "dome9_admission_control_policy"
+	Assessment                                   = "dome9_assessment"
 )
