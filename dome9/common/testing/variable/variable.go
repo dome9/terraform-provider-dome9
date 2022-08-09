@@ -187,12 +187,12 @@ const (
 
 // assessment resource/data source
 const (
-	BundleID                = -40
-	CloudAccountID          = "31406287-79a3-410d-843b-684ef43159f1"
-	CloudAccountType        = "Aws"
+	BundleID                = -6
+	CloudAccountID          = "b2b84100-a14f-4dec-ba63-d05cbb79a2d9"
+	CloudAccountType        = "Azure"
 	RequestID               = "c7475133-33a9-4a48-8601-dc2ecf407453"
 	TriggeredBy             = "Manual"
-	AssessmentPassed        = "false"
+	AssessmentPassed        = "true"
 	HasErrors               = "false"
-	HasDataSyncStatusIssues = "true"
+	HasDataSyncStatusIssues = "false"
 )
