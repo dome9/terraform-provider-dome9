@@ -1,7 +1,10 @@
 package dome9
 
 import (
+	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_finding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
+	"strconv"
 )
 
 func dataSourceContinuousComplianceFinding() *schema.Resource {
@@ -480,39 +483,122 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 }
 
 func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta interface{}) error {
-	//d9Client := meta.(*Client)
-	//req := expandContinuousComplianceFindingRequest(d)
-	//log.Printf("[INFO] Creating compliance policy request %+v\n", req)
-	//resp, _, err := d9Client.continuousCompliancePolicy.Create(&req)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//log.Printf("[INFO] Created compliance policy with ID: %v\n", resp.ID)
+	d9Client := meta.(*Client)
+	req := expandContinuousComplianceFindingRequest(d)
+	log.Printf("[INFO] Executing continuous compliance finding search with request %+v\n", req)
+	resp, _, err := d9Client.continuousComplianceFinding.Search(&req)
+	if err != nil {
+		return err
+	}
+	log.Printf("[INFO] Successfully executed continuous compliance finding search with response %+v\n", resp)
+
 	//d.SetId(resp.ID)
-	//
-	//return resourceContinuousCompliancePolicyRead(d, meta)
+	return flattenContinuousComplianceFindingSearchResponse(resp)
 }
 
-//func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta interface{}) error {
-//	d9Client := meta.(*Client)
-//
-//	policyID := d.Get("id").(string)
-//	log.Printf("Getting data for Continuous Compliance Policy id: %s\n", policyID)
-//
-//	resp, _, err := d9Client.continuousCompliancePolicy.Get(policyID)
-//	if err != nil {
-//		return err
-//	}
-//
-//	d.SetId(resp.ID)
-//	_ = d.Set("target_internal_id", resp.TargetInternalId)
-//	_ = d.Set("target_external_id", resp.TargetExternalId)
-//	_ = d.Set("target_type", resp.TargetType)
-//	_ = d.Set("ruleset_id", resp.RulesetId)
-//	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
-//		return err
-//	}
-//
-//	return nil
-//}
+func flattenContinuousComplianceFindingSearchResponse(resp continuous_compliance_finding.ContinuousComplianceFindingResponse) []interface{} {
+	m := map[string]interface{}{
+		"is_template": resp,
+	}
+
+	return []interface{}{m}
+}
+
+func flattenContinuousComplianceFindingSearchResponse(resp continuous_compliance_finding.ContinuousComplianceFindingResponse) error {
+	d.SetId(strconv.Itoa(resp.ID))
+	_ = d.Set("created_time", resp.CreatedTime)
+	_ = d.Set("assessment_id", resp.AssessmentId)
+	_ = d.Set("triggered_by", resp.TriggeredBy)
+	_ = d.Set("assessment_passed", resp.AssessmentPassed)
+	_ = d.Set("has_errors", resp.HasErrors)
+	_ = d.Set("has_data_sync_status_issues", resp.HasDataSyncStatusIssues)
+	_ = d.Set("comparison_custom_id", resp.ComparisonCustomId)
+	_ = d.Set("additional_fields", resp.AdditionalFields)
+
+	if err := d.Set("request", flattenAssessmentRequest(resp.Request)); err != nil {
+		return err
+	}
+}
+
+func expandContinuousComplianceFindingRequest(d *schema.ResourceData) continuous_compliance_finding.ContinuousComplianceFindingRequest {
+	req := continuous_compliance_finding.ContinuousComplianceFindingRequest{
+		PageSize:     d.Get("page_size").(int),
+		Sorting:      expandContinuousComplianceFindingSorting(d),
+		MultiSorting: expandContinuousComplianceFindingMultiSorting(d),
+		Filter:       expandContinuousComplianceFindingFilter(d),
+		SearchAfter:  expandContinuousComplianceFindingSearchAfter(d),
+		DataSource:   d.Get("data_source").(string),
+	}
+	return req
+}
+
+func expandContinuousComplianceFindingSearchAfter(d *schema.ResourceData) *[]string {
+	searchAfter := d.Get("filter.search_after").([]interface{})
+	search := make([]string, len(searchAfter))
+	for i, v := range searchAfter {
+		search[i] = v.(string)
+	}
+	return &search
+}
+
+func expandContinuousComplianceFindingFilter(d *schema.ResourceData) *continuous_compliance_finding.Filter {
+	filter := continuous_compliance_finding.Filter{
+		FreeTextPhrase:   d.Get("filter.free_text_phrase").(string),
+		Fields:           expandContinuousComplianceFindingFilterFields(d),
+		OnlyCIEM:         d.Get("filter.only_ciem").(bool),
+		IncludedFeatures: expandContinuousComplianceFindingIncludedFeatures(d),
+		CreationTime:     expandContinuousComplianceFindingCreationTime(d),
+	}
+	return &filter
+}
+
+func expandContinuousComplianceFindingCreationTime(d *schema.ResourceData) *continuous_compliance_finding.DateRange {
+	creationTime := continuous_compliance_finding.DateRange{
+		From: d.Get("filter.creation_time.from").(string),
+		To:   d.Get("filter.creation_time.to").(string),
+	}
+	return &creationTime
+}
+
+func expandContinuousComplianceFindingIncludedFeatures(d *schema.ResourceData) *[]string {
+	includedFeatures := d.Get("filter.included_features").([]interface{})
+	features := make([]string, len(includedFeatures))
+	for i, v := range includedFeatures {
+		features[i] = v.(string)
+	}
+	return &features
+}
+
+func expandContinuousComplianceFindingFilterFields(d *schema.ResourceData) *[]continuous_compliance_finding.FieldFilter {
+	fields := d.Get("filter.fields").([]interface{})
+	fieldFilters := make([]continuous_compliance_finding.FieldFilter, len(fields))
+	for _, v := range fields {
+		field := v.(map[string]interface{})
+		fieldFilters = append(fieldFilters, continuous_compliance_finding.FieldFilter{
+			Name:  field["name"].(string),
+			Value: field["value"].(string),
+		})
+	}
+	return &fieldFilters
+}
+
+func expandContinuousComplianceFindingMultiSorting(d *schema.ResourceData) *[]continuous_compliance_finding.Sorting {
+	multiSorting := d.Get("multi_sorting").([]interface{})
+	sorting := make([]continuous_compliance_finding.Sorting, len(multiSorting))
+	for _, v := range multiSorting {
+		m := v.(map[string]interface{})
+		sorting = append(sorting, continuous_compliance_finding.Sorting{
+			FieldName: m["field_name"].(string),
+			Direction: m["direction"].(int),
+		})
+	}
+	return &sorting
+}
+
+func expandContinuousComplianceFindingSorting(d *schema.ResourceData) *continuous_compliance_finding.Sorting {
+	sorting := continuous_compliance_finding.Sorting{
+		FieldName: d.Get("sorting.field_name").(string),
+		Direction: d.Get("sorting.direction").(int),
+	}
+	return &sorting
+}
