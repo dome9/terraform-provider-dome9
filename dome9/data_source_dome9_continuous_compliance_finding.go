@@ -4,7 +4,6 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_finding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
-	"strconv"
 )
 
 func dataSourceContinuousComplianceFinding() *schema.Resource {
@@ -492,32 +491,49 @@ func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta inte
 	}
 	log.Printf("[INFO] Successfully executed continuous compliance finding search with response %+v\n", resp)
 
-	//d.SetId(resp.ID)
-	return flattenContinuousComplianceFindingSearchResponse(resp)
+	log.Printf("[INFO] Start flattening continuous compliance finding search response\n")
+	if err := d.Set("search_request", flattenFindingResponseSearchRequest(resp.SearchRequest)); err != nil {
+		return err
+	}
+	log.Printf("[INFO] Successfuly finished flattening continuous compliance finding search response\n")
+
+	return nil
 }
 
-func flattenContinuousComplianceFindingSearchResponse(resp continuous_compliance_finding.ContinuousComplianceFindingResponse) []interface{} {
+func flattenFindingResponseSearchRequest(request continuous_compliance_finding.ContinuousComplianceFindingRequest) []interface{} {
 	m := map[string]interface{}{
-		"is_template": resp,
+		"page_size":     request.PageSize,
+		"sorting":       flattenFindingResponseSearchRequestSorting(request.Sorting),
+		"multi_sorting": flattenFindingResponseSearchRequestMultiSorting(request.MultiSorting),
+		"filter":        flattenFindingResponseSearchRequestFilter(request.Filter),
+		"search_after":  flattenFindingResponseSearchRequestSearchAfter(request.SearchAfter),
+		"data_source":   request.DataSource,
 	}
 
 	return []interface{}{m}
 }
 
-func flattenContinuousComplianceFindingSearchResponse(resp continuous_compliance_finding.ContinuousComplianceFindingResponse) error {
-	d.SetId(strconv.Itoa(resp.ID))
-	_ = d.Set("created_time", resp.CreatedTime)
-	_ = d.Set("assessment_id", resp.AssessmentId)
-	_ = d.Set("triggered_by", resp.TriggeredBy)
-	_ = d.Set("assessment_passed", resp.AssessmentPassed)
-	_ = d.Set("has_errors", resp.HasErrors)
-	_ = d.Set("has_data_sync_status_issues", resp.HasDataSyncStatusIssues)
-	_ = d.Set("comparison_custom_id", resp.ComparisonCustomId)
-	_ = d.Set("additional_fields", resp.AdditionalFields)
+func flattenFindingResponseSearchRequestSearchAfter(after *[]string) []interface{} {
+	m := map[string]interface{}{}
+	return []interface{}{m}
+}
 
-	if err := d.Set("request", flattenAssessmentRequest(resp.Request)); err != nil {
-		return err
+func flattenFindingResponseSearchRequestFilter(filter *continuous_compliance_finding.Filter) []interface{} {
+	m := map[string]interface{}{}
+	return []interface{}{m}
+}
+
+func flattenFindingResponseSearchRequestMultiSorting(sorting *[]continuous_compliance_finding.Sorting) []interface{} {
+	m := map[string]interface{}{}
+	return []interface{}{m}
+}
+
+func flattenFindingResponseSearchRequestSorting(sorting *continuous_compliance_finding.Sorting) []interface{} {
+	m := map[string]interface{}{
+		"field_name": sorting.FieldName,
+		"direction":  sorting.Direction,
 	}
+	return []interface{}{m}
 }
 
 func expandContinuousComplianceFindingRequest(d *schema.ResourceData) continuous_compliance_finding.ContinuousComplianceFindingRequest {
