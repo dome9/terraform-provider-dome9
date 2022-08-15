@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"encoding/json"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_finding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
@@ -495,9 +496,151 @@ func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta inte
 	if err := d.Set("search_request", flattenFindingResponseSearchRequest(resp.SearchRequest)); err != nil {
 		return err
 	}
+	if err := d.Set("findings", flattenFindingResponseFindings(resp.Findings)); err != nil {
+		return err
+	}
 	log.Printf("[INFO] Successfuly finished flattening continuous compliance finding search response\n")
 
 	return nil
+}
+
+func flattenFindingResponseFindings(findings []continuous_compliance_finding.Finding) []interface{} {
+	if findings == nil {
+		return nil
+	}
+	allFindings := make([]interface{}, len(findings))
+	for i, val := range findings {
+		allFindings[i] = map[string]interface{}{
+			"id":                          val.Id,
+			"FindingKey":                  val.FindingKey,
+			"CreatedTime":                 val.CreatedTime,
+			"UpdatedTime":                 val.UpdatedTime,
+			"CloudAccountType":            val.CloudAccountType,
+			"Comments":                    flattenFindingResponseFindingsComments(val.Comments),
+			"CloudAccountId":              val.CloudAccountId,
+			"CloudAccountExternalId":      val.CloudAccountExternalId,
+			"OrganizationalUnitId":        val.OrganizationalUnitId,
+			"OrganizationalUnitPath":      val.OrganizationalUnitPath,
+			"BundleId":                    val.BundleId,
+			"AlertType":                   val.AlertType,
+			"RuleId":                      val.RuleId,
+			"RuleName":                    val.RuleName,
+			"RuleLogic":                   val.RuleLogic,
+			"EntityDome9Id":               val.EntityDome9Id,
+			"EntityExternalId":            val.EntityExternalId,
+			"EntityType":                  val.EntityType,
+			"EntityTypeByEnvironmentType": val.EntityTypeByEnvironmentType,
+			"EntityName":                  val.EntityName,
+			"EntityNetwork":               val.EntityNetwork,
+			"EntityTags":                  flattenFindingResponseFindingsEntityTags(val.EntityTags),
+			"Severity":                    val.Severity,
+			"Description":                 val.Description,
+			"Remediation":                 val.Remediation,
+			"Tag":                         val.Tag,
+			"Region":                      val.Region,
+			"BundleName":                  val.BundleName,
+			"Acknowledged":                val.Acknowledged,
+			"Origin":                      val.Origin,
+			"LastSeenTime":                val.LastSeenTime,
+			"OwnerUserName":               val.OwnerUserName,
+			"Magellan":                    flattenFindingResponseFindingsMagellan(val.Magellan),
+			"IsExcluded":                  val.IsExcluded,
+			"WebhookResponses":            flattenFindingResponseFindingsWebhookResponses(val.WebhookResponses),
+			"RemediationActions":          val.RemediationActions,
+			"AdditionalFields":            flattenFindingResponseFindingsAdditionalFields(val.AdditionalFields),
+			"Occurrences":                 val.Occurrences,
+			"ScanId":                      val.ScanId,
+			"Status":                      val.Status,
+			"Category":                    val.Category,
+			"Action":                      val.Action,
+			"Labels":                      val.Labels,
+		}
+	}
+
+	return allFindings
+}
+
+func flattenFindingResponseFindingsAdditionalFields(fields []continuous_compliance_finding.AdditionalField) []interface{} {
+	if fields == nil {
+		return nil
+	}
+	allComments := make([]interface{}, len(fields))
+	for i, val := range fields {
+		allComments[i] = map[string]interface{}{
+			"name":  val.Name,
+			"value": val.Value,
+		}
+	}
+
+	return allComments
+}
+
+func flattenFindingResponseFindingsWebhookResponses(responses map[string]continuous_compliance_finding.WebhookResponse) ([]interface{}, error) {
+	if responses == nil {
+		return nil, nil
+	}
+
+	allResponses := make([]interface{}, len(responses))
+	for i, val := range responses {
+		responseContent, err := flattenFindingResponseFindingsWebhookResponsesResponseContent(val.ResponseContent)
+		if err != nil {
+			return nil, err
+		}
+		allResponses[i] = map[string]interface{}{
+			"request_time":     val.RequestTime,
+			"response_content": responseContent,
+		}
+	}
+
+	return allResponses, nil
+}
+
+func flattenFindingResponseFindingsWebhookResponsesResponseContent(content map[string]interface{}) (string, error) {
+	responseContentBytes, err := json.Marshal(content)
+	if err != nil {
+		return "", err
+	}
+	return string(responseContentBytes), nil
+}
+
+func flattenFindingResponseFindingsMagellan(magellan continuous_compliance_finding.Magellan) []interface{} {
+	m := map[string]interface{}{
+		"alert_window_start_time": magellan.AlertWindowStartTime,
+		"alert_window_end_time":   magellan.AlertWindowEndTime,
+	}
+
+	return []interface{}{m}
+}
+
+func flattenFindingResponseFindingsEntityTags(tags []continuous_compliance_finding.TagRule) []interface{} {
+	if tags == nil {
+		return nil
+	}
+	allTags := make([]interface{}, len(tags))
+	for i, val := range tags {
+		allTags[i] = map[string]interface{}{
+			"key":   val.Key,
+			"value": val.Value,
+		}
+	}
+
+	return allTags
+}
+
+func flattenFindingResponseFindingsComments(comments []continuous_compliance_finding.FindingComment) []interface{} {
+	if comments == nil {
+		return nil
+	}
+	allComments := make([]interface{}, len(comments))
+	for i, val := range comments {
+		allComments[i] = map[string]interface{}{
+			"text":      val.Text,
+			"timestamp": val.Timestamp,
+			"user_name": val.UserName,
+		}
+	}
+
+	return allComments
 }
 
 func flattenFindingResponseSearchRequest(request continuous_compliance_finding.ContinuousComplianceFindingRequest) []interface{} {
@@ -506,7 +649,7 @@ func flattenFindingResponseSearchRequest(request continuous_compliance_finding.C
 		"sorting":       flattenFindingResponseSearchRequestSorting(request.Sorting),
 		"multi_sorting": flattenFindingResponseSearchRequestMultiSorting(request.MultiSorting),
 		"filter":        flattenFindingResponseSearchRequestFilter(request.Filter),
-		"search_after":  flattenFindingResponseSearchRequestSearchAfter(request.SearchAfter),
+		"search_after":  request.SearchAfter,
 		"data_source":   request.DataSource,
 	}
 
@@ -514,21 +657,76 @@ func flattenFindingResponseSearchRequest(request continuous_compliance_finding.C
 }
 
 func flattenFindingResponseSearchRequestSearchAfter(after *[]string) []interface{} {
+	if after == nil {
+		return nil
+	}
+
 	m := map[string]interface{}{}
 	return []interface{}{m}
 }
 
 func flattenFindingResponseSearchRequestFilter(filter *continuous_compliance_finding.Filter) []interface{} {
-	m := map[string]interface{}{}
+	if filter == nil {
+		return nil
+	}
+
+	m := map[string]interface{}{
+		"free_text_phrase":  filter.FreeTextPhrase,
+		"fields":            flattenFindingResponseSearchRequestFilterFields(filter.Fields),
+		"only_ciem":         filter.OnlyCIEM,
+		"included_features": filter.IncludedFeatures,
+		"creation_time":     flattenFindingResponseSearchRequestFilterCreationTime(filter.CreationTime),
+	}
 	return []interface{}{m}
 }
 
-func flattenFindingResponseSearchRequestMultiSorting(sorting *[]continuous_compliance_finding.Sorting) []interface{} {
-	m := map[string]interface{}{}
+func flattenFindingResponseSearchRequestFilterCreationTime(time *continuous_compliance_finding.DateRange) []interface{} {
+	if time == nil {
+		return nil
+	}
+
+	m := map[string]interface{}{
+		"from": time.From,
+		"to":   time.To,
+	}
 	return []interface{}{m}
+}
+
+func flattenFindingResponseSearchRequestFilterFields(fields []continuous_compliance_finding.FieldFilter) []interface{} {
+	if fields == nil {
+		return nil
+	}
+	allFields := make([]interface{}, len(fields))
+	for i, val := range fields {
+		allFields[i] = map[string]interface{}{
+			"name":  val.Name,
+			"value": val.Value,
+		}
+	}
+
+	return allFields
+}
+
+func flattenFindingResponseSearchRequestMultiSorting(sorting []continuous_compliance_finding.Sorting) []interface{} {
+	if sorting == nil {
+		return nil
+	}
+	allSorting := make([]interface{}, len(sorting))
+	for i, val := range sorting {
+		allSorting[i] = map[string]interface{}{
+			"field_name": val.FieldName,
+			"direction":  val.Direction,
+		}
+	}
+
+	return allSorting
 }
 
 func flattenFindingResponseSearchRequestSorting(sorting *continuous_compliance_finding.Sorting) []interface{} {
+	if sorting == nil {
+		return nil
+	}
+
 	m := map[string]interface{}{
 		"field_name": sorting.FieldName,
 		"direction":  sorting.Direction,
@@ -576,16 +774,16 @@ func expandContinuousComplianceFindingCreationTime(d *schema.ResourceData) *cont
 	return &creationTime
 }
 
-func expandContinuousComplianceFindingIncludedFeatures(d *schema.ResourceData) *[]string {
+func expandContinuousComplianceFindingIncludedFeatures(d *schema.ResourceData) []string {
 	includedFeatures := d.Get("filter.included_features").([]interface{})
 	features := make([]string, len(includedFeatures))
 	for i, v := range includedFeatures {
 		features[i] = v.(string)
 	}
-	return &features
+	return features
 }
 
-func expandContinuousComplianceFindingFilterFields(d *schema.ResourceData) *[]continuous_compliance_finding.FieldFilter {
+func expandContinuousComplianceFindingFilterFields(d *schema.ResourceData) []continuous_compliance_finding.FieldFilter {
 	fields := d.Get("filter.fields").([]interface{})
 	fieldFilters := make([]continuous_compliance_finding.FieldFilter, len(fields))
 	for _, v := range fields {
@@ -595,10 +793,10 @@ func expandContinuousComplianceFindingFilterFields(d *schema.ResourceData) *[]co
 			Value: field["value"].(string),
 		})
 	}
-	return &fieldFilters
+	return fieldFilters
 }
 
-func expandContinuousComplianceFindingMultiSorting(d *schema.ResourceData) *[]continuous_compliance_finding.Sorting {
+func expandContinuousComplianceFindingMultiSorting(d *schema.ResourceData) []continuous_compliance_finding.Sorting {
 	multiSorting := d.Get("multi_sorting").([]interface{})
 	sorting := make([]continuous_compliance_finding.Sorting, len(multiSorting))
 	for _, v := range multiSorting {
@@ -608,7 +806,7 @@ func expandContinuousComplianceFindingMultiSorting(d *schema.ResourceData) *[]co
 			Direction: m["direction"].(int),
 		})
 	}
-	return &sorting
+	return sorting
 }
 
 func expandContinuousComplianceFindingSorting(d *schema.ResourceData) *continuous_compliance_finding.Sorting {
