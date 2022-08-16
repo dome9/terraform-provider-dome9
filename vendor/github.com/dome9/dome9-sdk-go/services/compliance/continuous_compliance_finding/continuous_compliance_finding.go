@@ -26,20 +26,20 @@ type FieldFilter struct {
 }
 
 type Filter struct {
-	FreeTextPhrase   string         `json:"freeTextPhrase,omitempty"`
-	Fields           *[]FieldFilter `json:"fields,omitempty"`
-	OnlyCIEM         bool           `json:"onlyCIEM,omitempty"`
-	IncludedFeatures []string       `json:"includedFeatures,omitempty"`
-	CreationTime     *DateRange     `json:"creationTime,omitempty"`
+	FreeTextPhrase   string        `json:"freeTextPhrase,omitempty"`
+	Fields           []FieldFilter `json:"fields,omitempty"`
+	OnlyCIEM         bool          `json:"onlyCIEM,omitempty"`
+	IncludedFeatures []string      `json:"includedFeatures,omitempty"`
+	CreationTime     *DateRange    `json:"creationTime,omitempty"`
 }
 
 type ContinuousComplianceFindingRequest struct {
-	PageSize     int        `json:"pageSize,omitempty"`
-	Sorting      *Sorting   `json:"sorting,omitempty"`
-	MultiSorting *[]Sorting `json:"multiSorting,omitempty"`
-	Filter       *Filter    `json:"filter,omitempty"`
-	SearchAfter  *[]string  `json:"searchAfter,omitempty"`
-	DataSource   string     `json:"dataSource,omitempty"`
+	PageSize     int       `json:"pageSize,omitempty"`
+	Sorting      *Sorting  `json:"sorting,omitempty"`
+	MultiSorting []Sorting `json:"multiSorting,omitempty"`
+	Filter       *Filter   `json:"filter,omitempty"`
+	SearchAfter  *[]string `json:"searchAfter,omitempty"`
+	DataSource   string    `json:"dataSource,omitempty"`
 }
 
 type FindingComment struct {

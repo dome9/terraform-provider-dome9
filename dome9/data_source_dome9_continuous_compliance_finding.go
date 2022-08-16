@@ -497,7 +497,12 @@ func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	if err := d.Set("findings", flattenFindingResponseFindings(resp.Findings)); err != nil {
+	findings, err := flattenFindingResponseFindings(resp.Findings)
+	if err != nil {
+		return err
+	}
+
+	if err := d.Set("findings", findings); err != nil {
 		return err
 	}
 
@@ -531,12 +536,16 @@ func flattenFindingResponseAggregations(aggregations map[string][]continuous_com
 	return allAggregations
 }
 
-func flattenFindingResponseFindings(findings []continuous_compliance_finding.Finding) []interface{} {
+func flattenFindingResponseFindings(findings []continuous_compliance_finding.Finding) ([]interface{}, error) {
 	if findings == nil {
-		return nil
+		return nil, nil
 	}
 	allFindings := make([]interface{}, len(findings))
 	for i, val := range findings {
+		webhookResponses, err := flattenFindingResponseFindingsWebhookResponses(val.WebhookResponses)
+		if err != nil {
+			return nil, err
+		}
 		allFindings[i] = map[string]interface{}{
 			"id":                          val.Id,
 			"FindingKey":                  val.FindingKey,
@@ -572,7 +581,7 @@ func flattenFindingResponseFindings(findings []continuous_compliance_finding.Fin
 			"OwnerUserName":               val.OwnerUserName,
 			"Magellan":                    flattenFindingResponseFindingsMagellan(val.Magellan),
 			"IsExcluded":                  val.IsExcluded,
-			"WebhookResponses":            flattenFindingResponseFindingsWebhookResponses(val.WebhookResponses),
+			"WebhookResponses":            webhookResponses,
 			"RemediationActions":          val.RemediationActions,
 			"AdditionalFields":            flattenFindingResponseFindingsAdditionalFields(val.AdditionalFields),
 			"Occurrences":                 val.Occurrences,
@@ -584,7 +593,7 @@ func flattenFindingResponseFindings(findings []continuous_compliance_finding.Fin
 		}
 	}
 
-	return allFindings
+	return allFindings, nil
 }
 
 func flattenFindingResponseFindingsAdditionalFields(fields []continuous_compliance_finding.AdditionalField) []interface{} {
