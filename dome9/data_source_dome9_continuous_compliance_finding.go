@@ -496,12 +496,39 @@ func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta inte
 	if err := d.Set("search_request", flattenFindingResponseSearchRequest(resp.SearchRequest)); err != nil {
 		return err
 	}
+
 	if err := d.Set("findings", flattenFindingResponseFindings(resp.Findings)); err != nil {
 		return err
 	}
+
+	_ = d.Set("total_findings_count", resp.TotalFindingsCount)
+
+	if err := d.Set("aggregations", flattenFindingResponseAggregations(resp.Aggregations)); err != nil {
+		return err
+	}
+
+	_ = d.Set("search_after", resp.SearchAfter)
 	log.Printf("[INFO] Successfuly finished flattening continuous compliance finding search response\n")
 
 	return nil
+}
+
+func flattenFindingResponseAggregations(aggregations map[string][]continuous_compliance_finding.FieldAggregation) []interface{} {
+	if aggregations == nil {
+		return nil
+	}
+	allAggregations := make([]interface{}, len(aggregations))
+	for _, aggregation := range aggregations {
+		agg := make([]interface{}, len(aggregation))
+		for _, fieldAggregation := range aggregation {
+			agg = append(agg, map[string]interface{}{
+				"value": fieldAggregation.Value,
+				"count": fieldAggregation.Count,
+			})
+		}
+		allAggregations = append(allAggregations, agg)
+	}
+	return allAggregations
 }
 
 func flattenFindingResponseFindings(findings []continuous_compliance_finding.Finding) []interface{} {
@@ -581,15 +608,15 @@ func flattenFindingResponseFindingsWebhookResponses(responses map[string]continu
 	}
 
 	allResponses := make([]interface{}, len(responses))
-	for i, val := range responses {
+	for _, val := range responses {
 		responseContent, err := flattenFindingResponseFindingsWebhookResponsesResponseContent(val.ResponseContent)
 		if err != nil {
 			return nil, err
 		}
-		allResponses[i] = map[string]interface{}{
+		allResponses = append(allResponses, map[string]interface{}{
 			"request_time":     val.RequestTime,
 			"response_content": responseContent,
-		}
+		})
 	}
 
 	return allResponses, nil
