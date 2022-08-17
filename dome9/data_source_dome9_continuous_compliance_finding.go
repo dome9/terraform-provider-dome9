@@ -65,11 +65,11 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:     schema.TypeString,
-										Optional: false,
+										Required: true,
 									},
 									"value": {
 										Type:     schema.TypeString,
-										Optional: false,
+										Required: true,
 									},
 								},
 							},
@@ -92,11 +92,11 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"from": {
 										Type:     schema.TypeString,
-										Optional: false,
+										Required: true,
 									},
 									"to": {
 										Type:     schema.TypeString,
-										Optional: false,
+										Required: true,
 									},
 								},
 							},
@@ -172,11 +172,11 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 											Schema: map[string]*schema.Schema{
 												"name": {
 													Type:     schema.TypeString,
-													Computed: false,
+													Computed: true,
 												},
 												"value": {
 													Type:     schema.TypeString,
-													Computed: false,
+													Computed: true,
 												},
 											},
 										},
@@ -199,11 +199,11 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 											Schema: map[string]*schema.Schema{
 												"from": {
 													Type:     schema.TypeString,
-													Computed: false,
+													Computed: true,
 												},
 												"to": {
 													Type:     schema.TypeString,
-													Computed: false,
+													Computed: true,
 												},
 											},
 										},
