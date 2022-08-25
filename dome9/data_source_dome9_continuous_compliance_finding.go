@@ -478,6 +478,26 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 					},
 				},
 			},
+			"total_findings_count": {
+				Type:     schema.TypeFloat,
+				Computed: true,
+			},
+			"aggregations": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"value": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"count": {
+							Type:     schema.TypeFloat,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }

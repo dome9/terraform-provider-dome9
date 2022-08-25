@@ -29,6 +29,8 @@ func TestAccDataSourceFindingSearchBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "data_source", resourceTypeAndName, "data_source"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "search_request", resourceTypeAndName, "search_request"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "findings", resourceTypeAndName, "findings"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "total_findings_count", resourceTypeAndName, "total_findings_count"),
+					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "aggregations", resourceTypeAndName, "aggregations"),
 				),
 			},
 		},
