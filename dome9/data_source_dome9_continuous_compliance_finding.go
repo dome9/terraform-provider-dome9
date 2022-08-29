@@ -587,12 +587,12 @@ func flattenFindingResponseFindingsComments(comments []continuous_compliance_fin
 
 func expandContinuousComplianceFindingRequest(d *schema.ResourceData) continuous_compliance_finding.ContinuousComplianceFindingRequest {
 	req := continuous_compliance_finding.ContinuousComplianceFindingRequest{
-		PageSize:     d.Get("page_size").(int),
-		Sorting:      expandContinuousComplianceFindingSorting(d),
-		MultiSorting: expandContinuousComplianceFindingMultiSorting(d),
-		Filter:       expandContinuousComplianceFindingFilter(d),
-		SearchAfter:  expandContinuousComplianceFindingSearchAfter(d),
-		DataSource:   d.Get("data_source").(string),
+		PageSize: d.Get("page_size").(int),
+		//Sorting:      expandContinuousComplianceFindingSorting(d),
+		//MultiSorting: expandContinuousComplianceFindingMultiSorting(d),
+		//Filter:       expandContinuousComplianceFindingFilter(d),
+		//SearchAfter:  expandContinuousComplianceFindingSearchAfter(d),
+		DataSource: d.Get("data_source").(string),
 	}
 	return req
 }
@@ -660,10 +660,10 @@ func expandContinuousComplianceFindingMultiSorting(d *schema.ResourceData) []con
 	return sorting
 }
 
-func expandContinuousComplianceFindingSorting(d *schema.ResourceData) *continuous_compliance_finding.Sorting {
+func expandContinuousComplianceFindingSorting(d *schema.ResourceData) continuous_compliance_finding.Sorting {
 	sorting := continuous_compliance_finding.Sorting{
 		FieldName: d.Get("sorting.field_name").(string),
 		Direction: d.Get("sorting.direction").(int),
 	}
-	return &sorting
+	return sorting
 }
