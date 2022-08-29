@@ -5,6 +5,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_finding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
+	"strconv"
 )
 
 func dataSourceContinuousComplianceFinding() *schema.Resource {
@@ -18,17 +19,20 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 				Default:  10,
 			},
 			"sorting": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeMap,
 				Optional: true,
+				Default: nil,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"field_name": {
 							Type:     schema.TypeString,
 							Optional: true,
+							Default: "createdTime",
 						},
 						"direction": {
 							Type:     schema.TypeInt,
 							Optional: true,
+							Default:  0,
 						},
 					},
 				},
@@ -177,7 +181,7 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 							Computed: true,
 						},
 						"bundle_id": {
-							Type:     schema.TypeFloat,
+							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"alert_type": {
@@ -297,7 +301,7 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 							Computed: true,
 						},
 						"webhook_responses": {
-							Type:     schema.TypeSet,
+							Type:     schema.TypeMap,
 							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -306,7 +310,7 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 										Computed: true,
 									},
 									"response_content": {
-										Type:     schema.TypeString,
+										Type:     schema.TypeMap,
 										Computed: true,
 									},
 								},
@@ -369,24 +373,8 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 				},
 			},
 			"total_findings_count": {
-				Type:     schema.TypeFloat,
+				Type:     schema.TypeInt,
 				Computed: true,
-			},
-			"aggregations": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"value": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"count": {
-							Type:     schema.TypeFloat,
-							Computed: true,
-						},
-					},
-				},
 			},
 		},
 	}
@@ -394,7 +382,11 @@ func dataSourceContinuousComplianceFinding() *schema.Resource {
 
 func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
-	req := expandContinuousComplianceFindingRequest(d)
+	req, err := expandContinuousComplianceFindingRequest(d)
+	if err != nil {
+		return err
+	}
+
 	log.Printf("[INFO] Executing continuous compliance finding search with request %+v\n", req)
 	resp, _, err := d9Client.continuousComplianceFinding.Search(&req)
 	if err != nil {
@@ -414,32 +406,10 @@ func dataSourceContinuousComplianceFindingRead(d *schema.ResourceData, meta inte
 
 	_ = d.Set("total_findings_count", resp.TotalFindingsCount)
 
-	if err := d.Set("aggregations", flattenFindingResponseAggregations(resp.Aggregations)); err != nil {
-		return err
-	}
-
 	_ = d.Set("search_after", resp.SearchAfter)
 	log.Printf("[INFO] Successfuly finished flattening continuous compliance finding search response\n")
 
 	return nil
-}
-
-func flattenFindingResponseAggregations(aggregations map[string][]continuous_compliance_finding.FieldAggregation) []interface{} {
-	if aggregations == nil {
-		return nil
-	}
-	allAggregations := make([]interface{}, len(aggregations))
-	for _, aggregation := range aggregations {
-		agg := make([]interface{}, len(aggregation))
-		for _, fieldAggregation := range aggregation {
-			agg = append(agg, map[string]interface{}{
-				"value": fieldAggregation.Value,
-				"count": fieldAggregation.Count,
-			})
-		}
-		allAggregations = append(allAggregations, agg)
-	}
-	return allAggregations
 }
 
 func flattenFindingResponseFindings(findings []continuous_compliance_finding.Finding) ([]interface{}, error) {
@@ -585,16 +555,21 @@ func flattenFindingResponseFindingsComments(comments []continuous_compliance_fin
 	return allComments
 }
 
-func expandContinuousComplianceFindingRequest(d *schema.ResourceData) continuous_compliance_finding.ContinuousComplianceFindingRequest {
+func expandContinuousComplianceFindingRequest(d *schema.ResourceData) (continuous_compliance_finding.ContinuousComplianceFindingRequest, error) {
+	expandContinuousComplianceFindingSorting, err := expandContinuousComplianceFindingSorting(d)
+	if err != nil {
+		return continuous_compliance_finding.ContinuousComplianceFindingRequest{}, err
+	}
+
 	req := continuous_compliance_finding.ContinuousComplianceFindingRequest{
 		PageSize: d.Get("page_size").(int),
-		//Sorting:      expandContinuousComplianceFindingSorting(d),
+		Sorting:  expandContinuousComplianceFindingSorting,
 		//MultiSorting: expandContinuousComplianceFindingMultiSorting(d),
 		//Filter:       expandContinuousComplianceFindingFilter(d),
 		//SearchAfter:  expandContinuousComplianceFindingSearchAfter(d),
 		DataSource: d.Get("data_source").(string),
 	}
-	return req
+	return req, nil
 }
 
 func expandContinuousComplianceFindingSearchAfter(d *schema.ResourceData) *[]string {
@@ -660,10 +635,19 @@ func expandContinuousComplianceFindingMultiSorting(d *schema.ResourceData) []con
 	return sorting
 }
 
-func expandContinuousComplianceFindingSorting(d *schema.ResourceData) continuous_compliance_finding.Sorting {
+func expandContinuousComplianceFindingSorting(d *schema.ResourceData) (*continuous_compliance_finding.Sorting, error) {
+	sorting2 := d.Get("sorting").(map[string]interface{})
+	if len(sorting2) == 0 {
+		return nil, nil
+	}
+	Direction, err := strconv.Atoi(d.Get("sorting.direction").(string))
+	if err != nil {
+		return nil, err
+	}
+
 	sorting := continuous_compliance_finding.Sorting{
 		FieldName: d.Get("sorting.field_name").(string),
-		Direction: d.Get("sorting.direction").(int),
+		Direction: Direction,
 	}
-	return sorting
+	return &sorting, nil
 }
