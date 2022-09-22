@@ -46,11 +46,13 @@ const (
 	CloudAccountKubernetesAdmissionControlEnabled  = true
 	CloudAccountKubernetesRuntimeProtectionEnabled = true
 	CloudAccountKubernetesImageAssuranceEnabled    = true
+	CloudAccountKubernetesFLowLogsEnabled    = true
 
 	// features updates
 	CloudAccountKubernetesAdmissionControlUpdateEnabled  = false
 	CloudAccountKubernetesRuntimeProtectionUpdateEnabled = false
 	CloudAccountKubernetesImageAssuranceUpdateEnabled    = false
+	CloudAccountKubernetesFlowLogsUpdateEnabled    = false
 )
 
 // ip list resource/data source

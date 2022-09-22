@@ -26,7 +26,8 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 	kubernetesAccountHCL := getCloudAccountKubernetesResourceHCLWithfeatures(kubernetesAccountGeneratedName, variable.AdmissionControlKubernetesAccountName,
 		variable.CloudAccountKubernetesRuntimeProtectionEnabled,
 		variable.CloudAccountKubernetesAdmissionControlEnabled,
-		variable.CloudAccountKubernetesImageAssuranceEnabled)
+		variable.CloudAccountKubernetesImageAssuranceEnabled,
+		variable.CloudAccountKubernetesFlowLogsEnabled))
 
 	// Generate Compliance Notification HCL Resource
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())

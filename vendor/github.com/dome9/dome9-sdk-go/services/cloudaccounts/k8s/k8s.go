@@ -24,6 +24,7 @@ type CloudAccountResponse struct {
 	RuntimeProtectionEnabled bool      `json:"runtimeProtection"`
 	AdmissionControlEnabled  bool      `json:"admissionControl"`
 	ImageAssuranceEnabled    bool      `json:"vulnerabilityAssessment"`
+	FLowLogsEnabled          bool      `json:"flowLogs"`
 }
 
 type CloudAccountUpdateNameRequest struct {
@@ -46,6 +47,11 @@ type AdmissionControlEnableRequest struct {
 
 type ImageAssuranceEnableRequest struct {
 	CloudAccountId string `json:"cloudAccountId"`
+	Enabled        bool   `json:"enabled"`
+}
+
+type FlowLogsEnableRequest struct {
+	CloudAccountId string `json:"k8sAccountId"`
 	Enabled        bool   `json:"enabled"`
 }
 
@@ -136,6 +142,18 @@ func (service *Service) EnableAdmissionControl(body AdmissionControlEnableReques
 
 func (service *Service) EnableImageAssurance(body ImageAssuranceEnableRequest) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SImageAssurance, cloudaccounts.RESTfulPathK8sEnable)
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+/*
+	flow-logs
+*/
+func (service *Service) EnableFlowLogs(body FlowLogsEnableRequest) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SFlowLogs, cloudaccounts.RESTfulPathK8sEnable)
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
 	if err != nil {
 		return nil, err

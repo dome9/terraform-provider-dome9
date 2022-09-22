@@ -29,3 +29,7 @@ output "get_admission_control_state" {
 output "get_runtime_protection_state" {
   value = "${data.dome9_cloudaccount_kubernetes.kubernetes_ds.runtime_protection.0.enabled}"
 }
+
+output "get_flow_logs_state" {
+  value = "${data.dome9_cloudaccount_kubernetes.kubernetes_ds.flow_logs.0.enabled}"
+}

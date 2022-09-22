@@ -42,4 +42,5 @@ In addition to all arguments above, the following attributes exported:
     * `enabled` - Is Admission Control enabled
 * `image_assurance` - Image Assurance details
     * `enabled` - Is Image Assurance enabled
-    
+* `flow_logs` - Flow Logs details
+    * `enabled` - Is Flow Logs enabled

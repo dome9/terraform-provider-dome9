@@ -49,6 +49,8 @@ const (
 	RESTfulPathK8SAdmissionControl = "admission-control"
 	//image-assurance
 	RESTfulPathK8SImageAssurance = "vulnerabilityAssessment"
+	//flow-logs
+	RESTfulPathK8SFlowLogs = "flow-logs"
 )
 
 // Alibaba service paths

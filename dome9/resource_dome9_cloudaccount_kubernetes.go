@@ -89,6 +89,20 @@ func resourceCloudAccountKubernetes() *schema.Resource {
 					},
 				},
 			},
+			"flow_logs": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -141,6 +155,7 @@ func resourceCloudAccountKubernetesRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
 	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
 	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
+	_ = d.Set("flow_logs", expandFlowLogsConfig(resp))
 
 	return nil
 }
@@ -222,6 +237,13 @@ func featuresCreate(d *schema.ResourceData, d9Client *Client, newId string) erro
 		}
 	}
 
+	flowLogs, ok := d.GetOk("flow_logs")
+	if ok {
+		if err := configureFlowLogs(flowLogs, newId, d9Client); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -252,6 +274,15 @@ func featuresUpdate(d *schema.ResourceData, d9Client *Client) error {
 			return err
 		}
 	}
+
+	if d.HasChange("flow_logs") {
+		log.Println("Flow Logs has been changed")
+
+		flowLogs := d.Get("flow_logs")
+		if err := configureFlowLogs(flowLogs, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -277,6 +308,12 @@ func featuresDelete(d *schema.ResourceData, d9Client *Client) error {
 		}
 	}
 
+	flowLogs, ok := d.GetOk("flow_logs")
+	if ok {
+		if err := disableFlowLogsIfEnabled(flowLogs, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -313,6 +350,16 @@ func configureImageAssurance(ImageAssurance interface{}, clusterId string, d9Cli
 
 	return nil
 }
+func configureFlowLogs(FlowLogs interface{}, clusterId string, d9Client *Client) error {
+	FlowLogsConfig := FlowLogs.([]interface{})[0].(map[string]interface{})
+	req := createFlowLogsEnableRequest(clusterId, FlowLogsConfig["enabled"].(bool))
+	log.Println("[INFO] Configuring Flow Logs for Kubernetes Cloud Account")
+	if _, err := d9Client.cloudaccountKubernetes.EnableFlowLogs(req); err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func createRuntimeProtectionEnableRequest(clusterId string, enabled bool) k8s.RuntimeProtectionEnableRequest {
 	return k8s.RuntimeProtectionEnableRequest{
@@ -330,6 +377,12 @@ func createAdmissionControlEnableRequest(clusterId string, enabled bool) k8s.Adm
 
 func createImageAssuranceEnableRequest(clusterId string, enabled bool) k8s.ImageAssuranceEnableRequest {
 	return k8s.ImageAssuranceEnableRequest{
+		CloudAccountId: clusterId,
+		Enabled:        enabled,
+	}
+}
+func createFlowLogsEnableRequest(clusterId string, enabled bool) k8s.FlowLogsEnableRequest {
+	return k8s.FlowLogsEnableRequest{
 		CloudAccountId: clusterId,
 		Enabled:        enabled,
 	}
@@ -356,6 +409,14 @@ func expandImageAssuranceConfig(resp *k8s.CloudAccountResponse) []interface{} {
 	ImageAssuranceConfig["enabled"] = resp.ImageAssuranceEnabled
 
 	return []interface{}{ImageAssuranceConfig}
+}
+
+func expandFlowLogsConfig(resp *k8s.CloudAccountResponse) []interface{} {
+	FlowLogsConfig := make(map[string]interface{})
+
+	FlowLogsConfig["enabled"] = resp.FLowLogsEnabled
+
+	return []interface{}{FlowLogsConfig}
 }
 
 func disableRuntimeProtectionIfEnabled(runtimeProtection interface{}, clusterId string, d9Client *Client) error {
@@ -393,6 +454,20 @@ func disableImageAssuranceIfEnabled(ImageAssurance interface{}, clusterId string
 		req := createImageAssuranceEnableRequest(clusterId, false)
 		log.Println("[INFO] Disabling Image Assurance for Kubernetes Cloud Account")
 		if _, err := d9Client.cloudaccountKubernetes.EnableImageAssurance(req); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func disableFlowLogsIfEnabled(FlowLogs interface{}, clusterId string, d9Client *Client) error {
+	FlowLogsConfig := FlowLogs.([]interface{})[0].(map[string]interface{})
+
+	if FlowLogsConfig["enabled"].(bool) {
+		req := createFlowLogsEnableRequest(clusterId, false)
+		log.Println("[INFO] Disabling Flow Logs for Kubernetes Cloud Account")
+		if _, err := d9Client.cloudaccountKubernetes.EnableFlowLogs(req); err != nil {
 			return err
 		}
 	}

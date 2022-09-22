@@ -83,6 +83,19 @@ func dataSourceCloudAccountKubernetes() *schema.Resource {
 					},
 				},
 			},
+			"flow_logs": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -109,6 +122,6 @@ func dataSourceKubernetesRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
 	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
 	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
-
+	_ = d.Set("flow_logs", expandFlowLogsConfig(resp))
 	return nil
 }
