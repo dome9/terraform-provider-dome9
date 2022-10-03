@@ -21,7 +21,7 @@ func TestAccDataSourceAdmissionControlPolicyBasic(t *testing.T) {
 		variable.CloudAccountKubernetesRuntimeProtectionEnabled,
 		variable.CloudAccountKubernetesAdmissionControlEnabled,
 		variable.CloudAccountKubernetesImageAssuranceEnabled,
-	    variable.CloudAccountKubernetesFlowLogsEnabled)
+		variable.CloudAccountKubernetesThreatIntelligenceEnabled)
 
 	// Generate Notification HCL Configurations
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())

@@ -34,7 +34,7 @@ func TestAccDataSourceCloudAccountKubernetesBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "runtime_protection.0.enabled"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "admission_control.0.enabled"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "image_assurance.0.enabled"),
-					resource.TestCheckResourceAttrSet(resourceTypeAndName, "flow_logs.0.enabled"),
+					resource.TestCheckResourceAttrSet(resourceTypeAndName, "threat_intelligence.0.enabled"),
 				),
 			},
 		},

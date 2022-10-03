@@ -13,18 +13,18 @@ type CloudAccountRequest struct {
 }
 
 type CloudAccountResponse struct {
-	ID                       string    `json:"id"` //The k8s cluster ID
-	Name                     string    `json:"name"`
-	CreationDate             time.Time `json:"creationDate"`
-	Vendor                   string    `json:"vendor"`
-	OrganizationalUnitID     string    `json:"organizationalUnitId,omitempty"`
-	OrganizationalUnitPath   string    `json:"organizationalUnitPath,omitempty"`
-	OrganizationalUnitName   string    `json:"organizationalUnitName,omitempty"`
-	ClusterVersion           string    `json:"clusterVersion"`
-	RuntimeProtectionEnabled bool      `json:"runtimeProtection"`
-	AdmissionControlEnabled  bool      `json:"admissionControl"`
-	ImageAssuranceEnabled    bool      `json:"vulnerabilityAssessment"`
-	FLowLogsEnabled          bool      `json:"flowLogs"`
+	ID                        string    `json:"id"` //The k8s cluster ID
+	Name                      string    `json:"name"`
+	CreationDate              time.Time `json:"creationDate"`
+	Vendor                    string    `json:"vendor"`
+	OrganizationalUnitID      string    `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitPath    string    `json:"organizationalUnitPath,omitempty"`
+	OrganizationalUnitName    string    `json:"organizationalUnitName,omitempty"`
+	ClusterVersion            string    `json:"clusterVersion"`
+	RuntimeProtectionEnabled  bool      `json:"runtimeProtection"`
+	AdmissionControlEnabled   bool      `json:"admissionControl"`
+	ImageAssuranceEnabled     bool      `json:"vulnerabilityAssessment"`
+	ThreatIntelligenceEnabled bool      `json:"threatIntelligence"`
 }
 
 type CloudAccountUpdateNameRequest struct {
@@ -50,7 +50,7 @@ type ImageAssuranceEnableRequest struct {
 	Enabled        bool   `json:"enabled"`
 }
 
-type FlowLogsEnableRequest struct {
+type ThreatIntelligenceEnableRequest struct {
 	CloudAccountId string `json:"k8sAccountId"`
 	Enabled        bool   `json:"enabled"`
 }
@@ -149,11 +149,12 @@ func (service *Service) EnableImageAssurance(body ImageAssuranceEnableRequest) (
 
 	return resp, nil
 }
+
 /*
-	flow-logs
+flow-logs
 */
-func (service *Service) EnableFlowLogs(body FlowLogsEnableRequest) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SFlowLogs, cloudaccounts.RESTfulPathK8sEnable)
+func (service *Service) EnableThreatIntelligence(body ThreatIntelligenceEnableRequest) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SThreatIntelligence, cloudaccounts.RESTfulPathK8sEnable)
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
 	if err != nil {
 		return nil, err

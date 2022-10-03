@@ -27,7 +27,7 @@ resource "dome9_cloudaccount_kubernetes" "test" {
   image_assurance {
     enabled = true
   }
-  flow_logs {
+  threat_intelligence {
     enabled = true
   }
 }
@@ -45,8 +45,8 @@ The following arguments supported:
    * `enabled` - (Required) Is Admission Control enabled
 * `image_assurance` - (Optional) Image Assurance which has the following configuration:
    * `enabled` - (Required) Is Image Assurance enabled
-* `flow_logs` - (Optional) Flow Logs which has the following configuration:
-   * `enabled` - (Required) Is Flow Logs enabled
+* `threat_intelligence` - (Optional) Flow Logs which has the following configuration:
+   * `enabled` - (Required) Is Threat intelligence enabled
 ## Attributes Reference
 
 * `id` - The id of the account in Dome9.

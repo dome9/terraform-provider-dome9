@@ -43,16 +43,16 @@ const (
 	CloudAccountKubernetesUpdatedAccountName  = "test_cloudaccount_kubernetes_updated_resource_name"
 
 	// features
-	CloudAccountKubernetesAdmissionControlEnabled  = true
-	CloudAccountKubernetesRuntimeProtectionEnabled = true
-	CloudAccountKubernetesImageAssuranceEnabled    = true
-	CloudAccountKubernetesFLowLogsEnabled    = true
+	CloudAccountKubernetesAdmissionControlEnabled   = true
+	CloudAccountKubernetesRuntimeProtectionEnabled  = true
+	CloudAccountKubernetesImageAssuranceEnabled     = true
+	CloudAccountKubernetesThreatIntelligenceEnabled = true
 
 	// features updates
-	CloudAccountKubernetesAdmissionControlUpdateEnabled  = false
-	CloudAccountKubernetesRuntimeProtectionUpdateEnabled = false
-	CloudAccountKubernetesImageAssuranceUpdateEnabled    = false
-	CloudAccountKubernetesFlowLogsUpdateEnabled    = false
+	CloudAccountKubernetesAdmissionControlUpdateEnabled   = false
+	CloudAccountKubernetesRuntimeProtectionUpdateEnabled  = false
+	CloudAccountKubernetesImageAssuranceUpdateEnabled     = false
+	CloudAccountKubernetesThreatIntelligenceUpdateEnabled = false
 )
 
 // ip list resource/data source

@@ -89,7 +89,7 @@ func resourceCloudAccountKubernetes() *schema.Resource {
 					},
 				},
 			},
-			"flow_logs": {
+			"threat_intelligence": {
 				Type:     schema.TypeList,
 				MaxItems: 1,
 				Optional: true,
@@ -155,7 +155,7 @@ func resourceCloudAccountKubernetesRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
 	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
 	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
-	_ = d.Set("flow_logs", expandFlowLogsConfig(resp))
+	_ = d.Set("threat_intelligence", expandThreatIntelligenceConfig(resp))
 
 	return nil
 }
@@ -237,9 +237,9 @@ func featuresCreate(d *schema.ResourceData, d9Client *Client, newId string) erro
 		}
 	}
 
-	flowLogs, ok := d.GetOk("flow_logs")
+	ThreatIntelligence, ok := d.GetOk("threat_intelligence")
 	if ok {
-		if err := configureFlowLogs(flowLogs, newId, d9Client); err != nil {
+		if err := configureThreatIntelligence(ThreatIntelligence, newId, d9Client); err != nil {
 			return err
 		}
 	}
@@ -275,11 +275,11 @@ func featuresUpdate(d *schema.ResourceData, d9Client *Client) error {
 		}
 	}
 
-	if d.HasChange("flow_logs") {
-		log.Println("Flow Logs has been changed")
+	if d.HasChange("threat_intelligence") {
+		log.Println("Threat Intelligence has been changed")
 
-		flowLogs := d.Get("flow_logs")
-		if err := configureFlowLogs(flowLogs, d.Id(), d9Client); err != nil {
+		ThreatIntelligence := d.Get("threat_intelligence")
+		if err := configureThreatIntelligence(ThreatIntelligence, d.Id(), d9Client); err != nil {
 			return err
 		}
 	}
@@ -308,9 +308,9 @@ func featuresDelete(d *schema.ResourceData, d9Client *Client) error {
 		}
 	}
 
-	flowLogs, ok := d.GetOk("flow_logs")
+	ThreatIntelligence, ok := d.GetOk("threat_intelligence")
 	if ok {
-		if err := disableFlowLogsIfEnabled(flowLogs, d.Id(), d9Client); err != nil {
+		if err := disableThreatIntelligenceIfEnabled(ThreatIntelligence, d.Id(), d9Client); err != nil {
 			return err
 		}
 	}
@@ -350,11 +350,11 @@ func configureImageAssurance(ImageAssurance interface{}, clusterId string, d9Cli
 
 	return nil
 }
-func configureFlowLogs(FlowLogs interface{}, clusterId string, d9Client *Client) error {
-	FlowLogsConfig := FlowLogs.([]interface{})[0].(map[string]interface{})
-	req := createFlowLogsEnableRequest(clusterId, FlowLogsConfig["enabled"].(bool))
+func configureThreatIntelligence(ThreatIntelligence interface{}, clusterId string, d9Client *Client) error {
+	ThreatIntelligenceConfig := ThreatIntelligence.([]interface{})[0].(map[string]interface{})
+	req := createThreatIntelligenceEnableRequest(clusterId, ThreatIntelligenceConfig["enabled"].(bool))
 	log.Println("[INFO] Configuring Flow Logs for Kubernetes Cloud Account")
-	if _, err := d9Client.cloudaccountKubernetes.EnableFlowLogs(req); err != nil {
+	if _, err := d9Client.cloudaccountKubernetes.EnableThreatIntelligence(req); err != nil {
 		return err
 	}
 
@@ -381,8 +381,8 @@ func createImageAssuranceEnableRequest(clusterId string, enabled bool) k8s.Image
 		Enabled:        enabled,
 	}
 }
-func createFlowLogsEnableRequest(clusterId string, enabled bool) k8s.FlowLogsEnableRequest {
-	return k8s.FlowLogsEnableRequest{
+func createThreatIntelligenceEnableRequest(clusterId string, enabled bool) k8s.ThreatIntelligenceEnableRequest {
+	return k8s.ThreatIntelligenceEnableRequest{
 		CloudAccountId: clusterId,
 		Enabled:        enabled,
 	}
@@ -411,12 +411,12 @@ func expandImageAssuranceConfig(resp *k8s.CloudAccountResponse) []interface{} {
 	return []interface{}{ImageAssuranceConfig}
 }
 
-func expandFlowLogsConfig(resp *k8s.CloudAccountResponse) []interface{} {
-	FlowLogsConfig := make(map[string]interface{})
+func expandThreatIntelligenceConfig(resp *k8s.CloudAccountResponse) []interface{} {
+	ThreatIntelligenceConfig := make(map[string]interface{})
 
-	FlowLogsConfig["enabled"] = resp.FLowLogsEnabled
+	ThreatIntelligenceConfig["enabled"] = resp.ThreatIntelligenceEnabled
 
-	return []interface{}{FlowLogsConfig}
+	return []interface{}{ThreatIntelligenceConfig}
 }
 
 func disableRuntimeProtectionIfEnabled(runtimeProtection interface{}, clusterId string, d9Client *Client) error {
@@ -461,13 +461,13 @@ func disableImageAssuranceIfEnabled(ImageAssurance interface{}, clusterId string
 	return nil
 }
 
-func disableFlowLogsIfEnabled(FlowLogs interface{}, clusterId string, d9Client *Client) error {
-	FlowLogsConfig := FlowLogs.([]interface{})[0].(map[string]interface{})
+func disableThreatIntelligenceIfEnabled(ThreatIntelligence interface{}, clusterId string, d9Client *Client) error {
+	ThreatIntelligenceConfig := ThreatIntelligence.([]interface{})[0].(map[string]interface{})
 
-	if FlowLogsConfig["enabled"].(bool) {
-		req := createFlowLogsEnableRequest(clusterId, false)
+	if ThreatIntelligenceConfig["enabled"].(bool) {
+		req := createThreatIntelligenceEnableRequest(clusterId, false)
 		log.Println("[INFO] Disabling Flow Logs for Kubernetes Cloud Account")
-		if _, err := d9Client.cloudaccountKubernetes.EnableFlowLogs(req); err != nil {
+		if _, err := d9Client.cloudaccountKubernetes.EnableThreatIntelligence(req); err != nil {
 			return err
 		}
 	}
