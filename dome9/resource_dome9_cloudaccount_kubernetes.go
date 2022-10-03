@@ -353,7 +353,7 @@ func configureImageAssurance(ImageAssurance interface{}, clusterId string, d9Cli
 func configureThreatIntelligence(ThreatIntelligence interface{}, clusterId string, d9Client *Client) error {
 	ThreatIntelligenceConfig := ThreatIntelligence.([]interface{})[0].(map[string]interface{})
 	req := createThreatIntelligenceEnableRequest(clusterId, ThreatIntelligenceConfig["enabled"].(bool))
-	log.Println("[INFO] Configuring Flow Logs for Kubernetes Cloud Account")
+	log.Println("[INFO] Configuring Threat Intelligence for Kubernetes Cloud Account")
 	if _, err := d9Client.cloudaccountKubernetes.EnableThreatIntelligence(req); err != nil {
 		return err
 	}
@@ -466,7 +466,7 @@ func disableThreatIntelligenceIfEnabled(ThreatIntelligence interface{}, clusterI
 
 	if ThreatIntelligenceConfig["enabled"].(bool) {
 		req := createThreatIntelligenceEnableRequest(clusterId, false)
-		log.Println("[INFO] Disabling Flow Logs for Kubernetes Cloud Account")
+		log.Println("[INFO] Disabling Threat Intelligence for Kubernetes Cloud Account")
 		if _, err := d9Client.cloudaccountKubernetes.EnableThreatIntelligence(req); err != nil {
 			return err
 		}

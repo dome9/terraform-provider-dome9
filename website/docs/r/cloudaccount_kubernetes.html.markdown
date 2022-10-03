@@ -45,7 +45,7 @@ The following arguments supported:
    * `enabled` - (Required) Is Admission Control enabled
 * `image_assurance` - (Optional) Image Assurance which has the following configuration:
    * `enabled` - (Required) Is Image Assurance enabled
-* `threat_intelligence` - (Optional) Flow Logs which has the following configuration:
+* `threat_intelligence` - (Optional) Threat Intelligence which has the following configuration:
    * `enabled` - (Required) Is Threat intelligence enabled
 ## Attributes Reference
 
