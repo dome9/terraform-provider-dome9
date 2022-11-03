@@ -1,35 +1,42 @@
-package admission_policy
+package imageassurance_policy
 
 import (
 	"fmt"
 	"net/http"
+	"github.com/dome9/dome9-sdk-go/dome9"
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 )
 
 const (
-	admissionControlPolicyResourcePath = "kubernetes/admissionControl/policy"
+	ImageAssurancePolicyResourcePath = "kubernetes/imageAssurance/policy"
 )
 
-type AdmissionControlPolicyRequest struct {
-	TargetId        string   `json:"targetId"`
-	TargetType      string   `json:"targetType,omitempty"`
-	RulesetId       int      `json:"rulesetId"`
-	NotificationIds []string `json:"notificationIds"`
-	Action          string   `json:"action"`
+type Service struct {
+	Client *client.Client
 }
 
-type AdmissionControlPolicyResponse struct {
-	ID              string   `json:"id"`
-	TargetId        string   `json:"targetId"`
-	TargetType      string   `json:"targetType"`
-	RulesetId       int      `json:"rulesetId"`
-	Action          string   `json:"action"`
-	NotificationIds []string `json:"notificationIds"`
-	ErrorMessage    string   `json:"errorMessage"`
+func New(c *dome9.Config) *Service {
+	return &Service{Client: client.NewClient(c)}
 }
 
-func (service *Service) Get(id string) (*AdmissionControlPolicyResponse, *http.Response, error) {
-	v := new(AdmissionControlPolicyResponse)
-	path := fmt.Sprintf("%s/%s", admissionControlPolicyResourcePath, id)
+type ImageAssurancePolicyRequest struct {
+	TargetId                        string   `json:"targetId"`
+	TargetType                      string   `json:"targetType,omitempty"`
+	NotificationIds                 []string `json:"notificationIds"`
+	RulesetId                       int      `json:"rulesetId"`
+	AdmissionControllerAction       string   `json:"admissionControllerAction"`
+	AdmissionControlUnScannedAction string   `json:"admissionControlUnScannedAction"`
+}
+
+type ImageAssurancePolicyResponse struct {
+	ImageAssurancePolicyRequest
+	ID                              string   `json:"id"`
+	ErrorMessage                    string   `json:"errorMessage"`
+}
+
+func (service *Service) Get(id string) (*ImageAssurancePolicyResponse, *http.Response, error) {
+	v := new(ImageAssurancePolicyResponse)
+	path := fmt.Sprintf("%s/%s", ImageAssurancePolicyResourcePath, id)
 	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
@@ -38,9 +45,9 @@ func (service *Service) Get(id string) (*AdmissionControlPolicyResponse, *http.R
 	return v, resp, nil
 }
 
-func (service *Service) GetAll() (*[]AdmissionControlPolicyResponse, *http.Response, error) {
-	v := new([]AdmissionControlPolicyResponse)
-	resp, err := service.Client.NewRequestDo("GET", admissionControlPolicyResourcePath, nil, nil, v)
+func (service *Service) GetAll() (*[]ImageAssurancePolicyResponse, *http.Response, error) {
+	v := new([]ImageAssurancePolicyResponse)
+	resp, err := service.Client.NewRequestDo("GET", ImageAssurancePolicyResourcePath, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -48,26 +55,26 @@ func (service *Service) GetAll() (*[]AdmissionControlPolicyResponse, *http.Respo
 	return v, resp, nil
 }
 
-func (service *Service) Create(body *AdmissionControlPolicyRequest) (*AdmissionControlPolicyResponse, *http.Response, error) {
-	v := new([]AdmissionControlPolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", admissionControlPolicyResourcePath, nil, []*AdmissionControlPolicyRequest{body}, v)
+func (service *Service) Create(body *ImageAssurancePolicyRequest) (*ImageAssurancePolicyResponse, *http.Response, error) {
+	v := new([]ImageAssurancePolicyResponse)
+	resp, err := service.Client.NewRequestDo("POST", ImageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
 	if err != nil {
 		return nil, nil, err
 	}
-	policy := new(AdmissionControlPolicyResponse)
+	policy := new(ImageAssurancePolicyResponse)
 	if len(*v) > 0 {
 		policy = &(*v)[0]
 	}
 	return policy, resp, nil
 }
 
-func (service *Service) Update(body *AdmissionControlPolicyRequest) (*AdmissionControlPolicyResponse, *http.Response, error) {
-	v := new([]AdmissionControlPolicyResponse)
-	resp, err := service.Client.NewRequestDo("PUT", admissionControlPolicyResourcePath, nil, []*AdmissionControlPolicyRequest{body}, v)
+func (service *Service) Update(body *ImageAssurancePolicyRequest) (*ImageAssurancePolicyResponse, *http.Response, error) {
+	v := new([]ImageAssurancePolicyResponse)
+	resp, err := service.Client.NewRequestDo("PUT", ImageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
 	if err != nil {
 		return nil, nil, err
 	}
-	policy := new(AdmissionControlPolicyResponse)
+	policy := new(ImageAssurancePolicyResponse)
 	if len(*v) > 0 {
 		policy = &(*v)[0]
 	}
@@ -75,7 +82,7 @@ func (service *Service) Update(body *AdmissionControlPolicyRequest) (*AdmissionC
 }
 
 func (service *Service) Delete(id string) (*http.Response, error) {
-	path := fmt.Sprintf("%s/%s", admissionControlPolicyResourcePath, id)
+	path := fmt.Sprintf("%s/%s", ImageAssurancePolicyResourcePath, id)
 	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
 	if err != nil {
 		return nil, err

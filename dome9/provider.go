@@ -57,6 +57,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.ServiceAccount:                   resourceServiceAccount(),
 			resourcetype.AdmissionControlPolicy:           resourceAdmissionPolicy(),
 			resourcetype.Assessment:                       resourceAssessment(),
+			resourcetype.ImageAssurancePolicy:             resourceAdmissionPolicy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
@@ -80,6 +81,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.ServiceAccount:                               dataSourceServiceAccount(),
 			resourcetype.AdmissionControlPolicy:                       dataSourceAdmissionControlPolicy(),
 			resourcetype.Assessment:                                   dataSourceAssessment(),
+			resourcetype.ImageAssurancePolicy:                         dataSourceAdmissionControlPolicy(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
