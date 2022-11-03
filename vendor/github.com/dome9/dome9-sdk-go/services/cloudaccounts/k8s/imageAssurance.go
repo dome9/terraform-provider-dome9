@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"net/http"
-	k8s "github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s"
 )
 
 type Service k8s.Service
