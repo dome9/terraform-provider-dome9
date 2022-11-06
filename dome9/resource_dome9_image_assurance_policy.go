@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
-	imageassurancePolicy "github.com/dome9/dome9-sdk-go/services/imageassurance/policy"
+	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
