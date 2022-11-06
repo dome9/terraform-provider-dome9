@@ -1,20 +1,20 @@
 ---
 layout: 'dome9'
 page_title: 'Check Point CloudGuard Dome9: dome9_image_assurance_policy'
-sidebar_current: 'docs-datasource-dome9-imageassurance-policy'
+sidebar_current: 'docs-datasource-dome9-image-assurance-policy'
 description: |-
-    Get information about a Dome9 imageassurance policy.
+    Get information about a Dome9 image assurance policy.
 ---
 
 # Data Source: dome9_image_assurance_policy
 
-Use this data source to get information about a CloudGuard imageassurance policy.
+Use this data source to get information about a CloudGuard image assurance policy.
 
 ## Example Usage
 
 ```hcl
 data "dome9_image_assurance_policy" "test-policy" {
-  id = "d9-imageassurance-policy-id"
+  id = "d9-image-assurance-policy-id"
 }
 ```
 
@@ -22,7 +22,7 @@ data "dome9_image_assurance_policy" "test-policy" {
 
 The following arguments are supported:
 
--   `id` - (Required) The id for the imageassurance policy in Dome9.
+-   `id` - (Required) The id for the image assurance policy in Dome9.
 
 ## Attributes Reference
 

@@ -3,19 +3,19 @@ layout: 'dome9'
 page_title: 'Check Point CloudGuard Dome9: dome9_image_assurance_policy'
 sidebar_current: 'docs-resource-dome9-admission-control-policy'
 description: |-
-    Creates imageassurance policies in Dome9
+    Creates image assurance policies in Dome9
 ---
 
 # dome9_image_assurance_policy
 
-This resource is used to create and modify imageassurance policy in CloudGuard for Kubernetes. An imageassurance policy is the combination of a Ruleset applied to a specific Kubernetes environment with specific action, ruleset type have to be 'kubernetesruntimeassurance''.
+This resource is used to create and modify image assurance policy in CloudGuard for Kubernetes. An image assurance policy is the combination of a Ruleset applied to a specific Kubernetes environment with specific action.
 
 ## Example Usage
 
 Basic usage:
 
 ```hcl
-resource "dome9_image_assurance_policy" "test_ac_policy" {
+resource "dome9_image_assurance_policy" "test_ia_policy" {
   target_id    = "Environment ID"
   ruleset_id   = 00000
   target_type  = "Environment"
