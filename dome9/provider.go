@@ -81,7 +81,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.ServiceAccount:                               dataSourceServiceAccount(),
 			resourcetype.AdmissionControlPolicy:                       dataSourceAdmissionControlPolicy(),
 			resourcetype.Assessment:                                   dataSourceAssessment(),
-			resourcetype.ImageAssurancePolicy:                         dataSourceAdmissionControlPolicy(),
+			resourcetype.ImageAssurancePolicy:                         dataSourceImageAssurancePolicy(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
