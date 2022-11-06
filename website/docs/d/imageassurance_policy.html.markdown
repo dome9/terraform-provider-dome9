@@ -32,5 +32,5 @@ In addition to all arguments above, the following attributes are exported:
 -   `target_type` - Policy Type (`Environment`, `OrganizationalUnit`).
 -   `ruleset_id` - Ruleset ID.
 -   `notification_ids` - Notification IDs [list].
--   `admission_control_action` - Policy action type (`Detection`, `Prevention`).
--   `admission_control_unscanned_action` - Policy action type (`Detection`, `Prevention`).
+-   `admission_control_action` - Image Admission Policy action type (`Detection`, `Prevention`).
+-   `admission_control_unscanned_action` - Image Admission Policy action type (`Detection`, `Prevention`).
