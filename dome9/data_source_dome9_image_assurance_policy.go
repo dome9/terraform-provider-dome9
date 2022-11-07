@@ -58,7 +58,7 @@ func dataSourceImageAssurancePolicyRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("target_id", resp.TargetId)
 	_ = d.Set("target_type", resp.TargetType)
 	_ = d.Set("ruleset_id", resp.RulesetId)
-	_ = d.Set("admission_control_action", resp.AdmissionControlAction)
+	_ = d.Set("admission_control_action", resp.AdmissionControllerAction)
 	_ = d.Set("admission_control_unscanned_action", resp.AdmissionControlUnScannedAction)
 	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
 		return err

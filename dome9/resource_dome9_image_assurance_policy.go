@@ -67,8 +67,8 @@ func resourceImageAssurancePolicyCreate(d *schema.ResourceData, meta interface{}
 	return resourceImageAssurancePolicyRead(d, meta)
 }
 
-func expandImageAssurancePolicyRequest(d *schema.ResourceData) imageassurancePolicy.ImageAssurancePolicyRequest {
-	return imageassurancePolicy.ImageAssurancePolicyRequest{
+func expandImageAssurancePolicyRequest(d *schema.ResourceData) imageassurance_policy.ImageAssurancePolicyRequest {
+	return imageassurance_policy.ImageAssurancePolicyRequest{
 		TargetId:                        d.Get("target_id").(string),
 		RulesetId:                       d.Get("ruleset_id").(int),
 		NotificationIds:                 expandNotificationIDs(d, "notification_ids"),
