@@ -19,7 +19,7 @@ type Client struct {
 // NewClient returns a new client for the specified apiKey.
 func NewClient(config *dome9.Config) (c *Client) {
 	if config == nil {
-		config, _ = dome9.NewConfig("", "", "")
+		config, _ = dome9.NewConfig("", "", "", nil)
 	}
 	c = &Client{Config: config}
 	return
@@ -74,6 +74,15 @@ func (client *Client) newRequest(method, urlPath string, options, body interface
 	req.Header.Add("Accept", "application/json")
 	if body != nil {
 		req.Header.Add("Content-Type", "application/json")
+	}
+
+	customHeaders := client.Config.Headers
+	if customHeaders != nil {
+		for headerKey, headerValues := range customHeaders {
+			for _, headerValue := range headerValues {
+				req.Header.Add(headerKey, headerValue)
+			}
+		}
 	}
 
 	return req, nil

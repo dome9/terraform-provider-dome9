@@ -22,6 +22,8 @@ type Config struct {
 	Logger *log.Logger
 	// Credentials for basic authentication.
 	AccessID, SecretKey string
+	//Add Custom Http Headers for Http Request
+	Headers http.Header
 }
 
 /*
@@ -30,7 +32,7 @@ By default it will try to read the access and te secret from the environment var
 */
 
 // TODO Add healthCheck method to NewConfig
-func NewConfig(accessID, secretKey, rawUrl string) (*Config, error) {
+func NewConfig(accessID, secretKey, rawUrl string, headers http.Header) (*Config, error) {
 	if accessID == "" || secretKey == "" {
 		accessID = os.Getenv("DOME9_ACCESS_ID")
 		secretKey = os.Getenv("DOME9_SECRET_KEY")
@@ -51,6 +53,7 @@ func NewConfig(accessID, secretKey, rawUrl string) (*Config, error) {
 		Logger:     logger,
 		AccessID:   accessID,
 		SecretKey:  secretKey,
+		Headers:    headers,
 	}, err
 }
 

@@ -3,6 +3,7 @@ package dome9
 import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
 	"log"
+	"net/http"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
@@ -51,13 +52,14 @@ type Client struct {
 }
 
 type Config struct {
-	AccessID  string
-	SecretKey string
-	BaseURL   string
+	AccessID      string
+	SecretKey     string
+	BaseURL       string
+	CustomHeaders http.Header
 }
 
 func (c *Config) Client() (*Client, error) {
-	config, err := dome9.NewConfig(c.AccessID, c.SecretKey, c.BaseURL)
+	config, err := dome9.NewConfig(c.AccessID, c.SecretKey, c.BaseURL, c.CustomHeaders)
 	if err != nil {
 		return nil, err
 	}

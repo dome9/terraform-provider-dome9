@@ -6,6 +6,7 @@ const (
 	RESTfulPathGCP     = "GoogleCloudAccount"
 	RESTfulPathK8S     = "KubernetesAccount"
 	RESTfulPathAlibaba = "AlibabaCloudAccount"
+	RESTfulPathK8SNew  = "kubernetes/account"
 )
 
 // AWS service paths
@@ -46,7 +47,7 @@ const (
 	//runtime-protection
 	RESTfulPathK8SRuntimeProtection = "runtime-protection"
 	//admission-control
-	RESTfulPathK8SAdmissionControl = "admission-control"
+	RESTfulPathK8SAdmissionControl = "admissionControl"
 	//image-assurance
 	RESTfulPathK8SImageAssurance = "vulnerabilityAssessment"
 	//threat-intelligence

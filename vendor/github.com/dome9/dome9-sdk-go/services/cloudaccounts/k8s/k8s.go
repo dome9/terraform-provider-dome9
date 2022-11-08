@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -41,8 +42,9 @@ type RuntimeProtectionEnableRequest struct {
 }
 
 type AdmissionControlEnableRequest struct {
-	CloudAccountId string `json:"k8sAccountId"`
-	Enabled        bool   `json:"enabled"`
+	CloudAccountId      string `json:"k8sAccountId"`
+	Enabled             bool   `json:"enabled"`
+	CreateDefaultPolicy bool   `json:"create_default_policy"`
 }
 
 type ImageAssuranceEnableRequest struct {
@@ -127,8 +129,12 @@ func (service *Service) EnableRuntimeProtection(body RuntimeProtectionEnableRequ
 */
 
 func (service *Service) EnableAdmissionControl(body AdmissionControlEnableRequest) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SAdmissionControl, cloudaccounts.RESTfulPathK8sEnable)
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8SNew, body.CloudAccountId, cloudaccounts.RESTfulPathK8SAdmissionControl,
+		cloudaccounts.RESTfulPathK8sEnable)
+	headers := make(http.Header)
+	headers.Add("CreateDefaultPolicy", strconv.FormatBool(body.CreateDefaultPolicy))
+	service.Client.Config.Headers = headers
+	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
