@@ -128,12 +128,14 @@ func (service *Service) EnableRuntimeProtection(body RuntimeProtectionEnableRequ
 	admission-control
 */
 
-func (service *Service) EnableAdmissionControl(body AdmissionControlEnableRequest) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8SNew, body.CloudAccountId, cloudaccounts.RESTfulPathK8SAdmissionControl,
-		cloudaccounts.RESTfulPathK8sEnable)
-	headers := make(http.Header)
-	headers.Add("CreateDefaultPolicy", strconv.FormatBool(body.CreateDefaultPolicy))
-	service.Client.Config.Headers = headers
+func (service *Service) EnableAdmissionControl(req AdmissionControlEnableRequest) (*http.Response, error) {
+	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8SNew, req.CloudAccountId, cloudaccounts.RESTfulPathK8SAdmissionControl,
+		IfThenElse(req.Enabled, cloudaccounts.RESTfulPathK8sEnable, cloudaccounts.RESTfulPathK8sDisable))
+	if req.Enabled {
+		headers := make(http.Header)
+		headers.Add(cloudaccounts.CreateDefaultACPolicyHeader, strconv.FormatBool(req.CreateDefaultPolicy))
+		service.Client.Config.Headers = headers
+	}
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, nil, nil)
 	if err != nil {
 		return nil, err
@@ -167,4 +169,11 @@ func (service *Service) EnableThreatIntelligence(body ThreatIntelligenceEnableRe
 	}
 
 	return resp, nil
+}
+
+func IfThenElse(condition bool, a interface{}, b interface{}) interface{} {
+	if condition {
+		return a
+	}
+	return b
 }

@@ -67,6 +67,11 @@ func dataSourceCloudAccountKubernetes() *schema.Resource {
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
+						"create_default_policy": {
+							Type:     schema.TypeBool,
+							Required: false,
+							Default:  true,
+						},
 					},
 				},
 			},

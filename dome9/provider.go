@@ -3,6 +3,7 @@ package dome9
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"net/http"
 
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
@@ -87,9 +88,10 @@ func Provider() terraform.ResourceProvider {
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config := Config{
-		AccessID:  d.Get(providerconst.ProviderAccessID).(string),
-		SecretKey: d.Get(providerconst.ProviderSecretKey).(string),
-		BaseURL:   d.Get(providerconst.ProviderBaseURL).(string),
+		AccessID:      d.Get(providerconst.ProviderAccessID).(string),
+		SecretKey:     d.Get(providerconst.ProviderSecretKey).(string),
+		BaseURL:       d.Get(providerconst.ProviderBaseURL).(string),
+		CustomHeaders: make(http.Header),
 	}
 
 	return config.Client()

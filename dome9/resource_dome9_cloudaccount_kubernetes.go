@@ -75,6 +75,7 @@ func resourceCloudAccountKubernetes() *schema.Resource {
 						"create_default_policy": {
 							Type:     schema.TypeBool,
 							Required: false,
+							Default:  true,
 						},
 					},
 				},
@@ -336,7 +337,8 @@ func configureAdmissionControl(admissionControl interface{}, clusterId string, d
 	admissionControlConfig := admissionControl.([]interface{})[0].(map[string]interface{})
 	log.Println("[INFO] Configuring Admission Control for Kubernetes Cloud Account")
 
-	enableReq := createAdmissionControlEnableRequest(clusterId, admissionControlConfig["enabled"].(bool))
+	enableReq := createAdmissionControlEnableRequest(clusterId, admissionControlConfig["enabled"].(bool),
+		admissionControlConfig["create_default_policy"].(bool))
 	if _, err := d9Client.cloudaccountKubernetes.EnableAdmissionControl(enableReq); err != nil {
 		return err
 	}
@@ -372,10 +374,11 @@ func createRuntimeProtectionEnableRequest(clusterId string, enabled bool) k8s.Ru
 	}
 }
 
-func createAdmissionControlEnableRequest(clusterId string, enabled bool) k8s.AdmissionControlEnableRequest {
+func createAdmissionControlEnableRequest(clusterId string, enabled bool, createDefaultPolicy bool) k8s.AdmissionControlEnableRequest {
 	return k8s.AdmissionControlEnableRequest{
-		CloudAccountId: clusterId,
-		Enabled:        enabled,
+		CloudAccountId:      clusterId,
+		Enabled:             enabled,
+		CreateDefaultPolicy: createDefaultPolicy,
 	}
 }
 
@@ -441,7 +444,7 @@ func disableAdmissionControlIfEnabled(admissionControl interface{}, clusterId st
 	admissionControlConfig := admissionControl.([]interface{})[0].(map[string]interface{})
 
 	if admissionControlConfig["enabled"].(bool) {
-		req := createAdmissionControlEnableRequest(clusterId, false)
+		req := createAdmissionControlEnableRequest(clusterId, false, false)
 		log.Println("[INFO] Disabling Admission Control for Kubernetes Cloud Account")
 		if _, err := d9Client.cloudaccountKubernetes.EnableAdmissionControl(req); err != nil {
 			return err

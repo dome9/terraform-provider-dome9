@@ -77,7 +77,7 @@ func (client *Client) newRequest(method, urlPath string, options, body interface
 	}
 
 	customHeaders := client.Config.Headers
-	if customHeaders != nil {
+	if customHeaders != nil && len(customHeaders) > 0 {
 		for headerKey, headerValues := range customHeaders {
 			for _, headerValue := range headerValues {
 				req.Header.Add(headerKey, headerValue)

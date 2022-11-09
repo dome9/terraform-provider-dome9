@@ -44,10 +44,12 @@ const (
 	RESTfulServicePathK8SName               = "AccountName"
 	RESTfulServicePathK8SOrganizationalUnit = "organizationalUnit"
 	RESTfulPathK8sEnable                    = "enable"
+	RESTfulPathK8sDisable                   = "disable"
 	//runtime-protection
 	RESTfulPathK8SRuntimeProtection = "runtime-protection"
 	//admission-control
 	RESTfulPathK8SAdmissionControl = "admissionControl"
+	CreateDefaultACPolicyHeader    = "CreateDefaultPolicy"
 	//image-assurance
 	RESTfulPathK8SImageAssurance = "vulnerabilityAssessment"
 	//threat-intelligence
