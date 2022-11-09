@@ -57,26 +57,33 @@ func resourceAdmissionControlPolicyCreate(d *schema.ResourceData, meta interface
 	d9Client := meta.(*Client)
 	req := expandAdmissionControlPolicyRequest(d)
 	log.Printf("[INFO] Creating Admission Control policy request %+v\n", req)
+	resp, _, err := d9Client.admissionControlPolicy.Create(&req)
+	if err != nil {
+		return err
+	}
+	log.Printf("[INFO] Created admission control Policy with ID: %v\n", resp.ID)
+	d.SetId(resp.ID)
+
 	if d.Get("disable_default_policy").(bool) {
-		log.Printf("[INFO] Disable All Admission Control Default Policies\n")
-		AllPolicies, _, error := d9Client.admissionControlPolicy.GetAll()
-		if error != nil && len(*AllPolicies) > 0 {
-			for _, policy := range *AllPolicies {
-				if policy.RulesetId == variable.AdmissionControlPolicyDefaultRulesetId {
-					if _, err := d9Client.admissionControlPolicy.Delete(policy.ID); err != nil {
-						log.Printf("[ERROR]Can't Delete Default Policy with details %+v\n", policy)
+		AllPolicies, _, err := d9Client.admissionControlPolicy.GetAll()
+		if err != nil {
+			log.Printf("[ERROR] Can't Get All Admission Control Policies , ex = %v\n", err)
+		} else {
+			log.Printf("[INFO] Disable All Admission Control Default Policies\n")
+			if err == nil && len(*AllPolicies) > 0 {
+				for _, policy := range *AllPolicies {
+					if policy.RulesetId == variable.AdmissionControlPolicyDefaultRulesetId &&
+						policy.TargetId == resp.TargetId {
+						if _, err := d9Client.admissionControlPolicy.Delete(policy.ID); err != nil {
+							log.Printf("[ERROR] Can't Delete Default Policy with details %+v\n", policy)
+						} else {
+							log.Printf("[INFO] Admission Control Default Policy deleted with these details :  %+v\n", policy)
+						}
 					}
 				}
 			}
 		}
 	}
-	resp, _, err := d9Client.admissionControlPolicy.Create(&req)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[INFO] Created admission control Policy with ID: %v\n", resp.ID)
-	d.SetId(resp.ID)
 
 	return resourceAdmissionControlPolicyRead(d, meta)
 }

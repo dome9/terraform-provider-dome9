@@ -74,7 +74,7 @@ func resourceCloudAccountKubernetes() *schema.Resource {
 						},
 						"create_default_policy": {
 							Type:     schema.TypeBool,
-							Required: false,
+							Optional: true,
 							Default:  true,
 						},
 					},
