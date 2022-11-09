@@ -44,6 +44,11 @@ func resourceAdmissionPolicy() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"Prevention", "Detection"}, false),
 			},
+			"disable_default_policy": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 	}
 }
@@ -52,6 +57,19 @@ func resourceAdmissionControlPolicyCreate(d *schema.ResourceData, meta interface
 	d9Client := meta.(*Client)
 	req := expandAdmissionControlPolicyRequest(d)
 	log.Printf("[INFO] Creating Admission Control policy request %+v\n", req)
+	if d.Get("disable_default_policy").(bool) {
+		log.Printf("[INFO] Disable All Admission Control Default Policies\n")
+		AllPolicies, _, error := d9Client.admissionControlPolicy.GetAll()
+		if error != nil && len(*AllPolicies) > 0 {
+			for _, policy := range *AllPolicies {
+				if policy.RulesetId == variable.AdmissionControlPolicyDefaultRulesetId {
+					if _, err := d9Client.admissionControlPolicy.Delete(policy.ID); err != nil {
+						log.Printf("[ERROR]Can't Delete Default Policy with details %+v\n", policy)
+					}
+				}
+			}
+		}
+	}
 	resp, _, err := d9Client.admissionControlPolicy.Create(&req)
 	if err != nil {
 		return err
