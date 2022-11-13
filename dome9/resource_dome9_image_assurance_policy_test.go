@@ -50,7 +50,8 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 				Config: testAccCheckImageAssurancePolicyBasic(admissionPolicyHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageAssurancePolicyExists(policyTypeAndName, &response),
-					resource.TestCheckResourceAttr(policyTypeAndName, "action", variable.ImageAssurancePolicyDetectAction),
+					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", variable.ImageAssurancePolicyDetectAction),
+					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_unscanned_action", variable.ImageAssurancePolicyDetectAction),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "2"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
@@ -66,7 +67,8 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 				Config: testAccCheckImageAssurancePolicyBasic(admissionPolicyUpdatedHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageAssurancePolicyExists(policyTypeAndName, &response),
-					resource.TestCheckResourceAttr(policyTypeAndName, "action", variable.ImageAssurancePolicyPreventAction),
+					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", variable.ImageAssurancePolicyPreventAction),
+					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_unscanned_action", variable.ImageAssurancePolicyPreventAction),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
@@ -124,17 +126,17 @@ func testAccCheckImageAssurancePolicyDestroy(s *terraform.State) error {
 
 func testAccCheckImageAssurancePolicyBasic(policyHCL, policyName, policyTypeAndName string) string {
 	return fmt.Sprintf(`
-// admission control policy resource
+// image assurance policy resource
 %s
 
-// admission control policy data source
+// image assurance policy data source
 data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
-		// admission control policy resource
+		// image assurance policy resource
 		policyHCL,
-		// Admission Control policy data source variables
+		// image assurance policy data source variables
 		resourcetype.ImageAssurancePolicy,
 		policyName,
 		policyTypeAndName,
@@ -149,20 +151,21 @@ func getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesCloudAcc
 // continuous compliance notification resource
 %s
 
-// admission control policy resource creation
+// image assurance policy resource creation
 resource "%s" "%s" {
   target_id    = "${%s.id}"
   ruleset_id   = "%d"
   target_type  = "%s"
   notification_ids    = ["${%s.id}"]
-  action       = "%s"
+  admission_control_action       = "%s"
+  admission_control_unscanned_action       = "%s"
 }
 `,
 		// kubernetes cloud account resource
 		kubernetesAccountHCL,
 		// continuous compliance notification resource
 		notificationHCL,
-		// Admission Control Policy resource type
+		// image assurance Policy resource type
 		resourcetype.ImageAssurancePolicy,
 		policyName,
 		kubernetesCloudAccountTypeAndName,

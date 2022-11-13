@@ -27,7 +27,7 @@ func TestAccDataSourceImageAssurancePolicyBasic(t *testing.T) {
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
 
 	// Generate Image Assurance Policy HCL Resource
-	admissionPolicyHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
+	imageAssurancePolicyHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, false)
 
 	resource.Test(t, resource.TestCase{
@@ -38,9 +38,10 @@ func TestAccDataSourceImageAssurancePolicyBasic(t *testing.T) {
 		CheckDestroy: testAccCheckImageAssurancePolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckImageAssurancePolicyBasic(admissionPolicyHCL, policyGeneratedName, policyTypeAndName),
+				Config: testAccCheckImageAssurancePolicyBasic(imageAssurancePolicyHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "action", policyTypeAndName, "action"),
+					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "admission_control_action", policyTypeAndName, "admission_control_action"),
+					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "admission_control_unscanned_action", policyTypeAndName, "admission_control_unscanned_action"),
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "id", policyTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "target_id", policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "2"),
