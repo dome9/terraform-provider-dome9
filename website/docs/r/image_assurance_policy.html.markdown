@@ -20,7 +20,8 @@ resource "dome9_image_assurance_policy" "test_ia_policy" {
   ruleset_id   = 00000
   target_type  = "Environment"
   notification_ids    = ["NOTIFICATION IDS"]
-  action       = "Detection"
+  admission_control_action       = "Detection"
+  admission_control_unscanned_action       = "Detection"
 }
 
 ```
