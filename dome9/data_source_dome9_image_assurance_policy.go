@@ -47,7 +47,7 @@ func dataSourceImageAssurancePolicyRead(d *schema.ResourceData, meta interface{}
 	d9Client := meta.(*Client)
 
 	policyID := d.Get("id").(string)
-	log.Printf("Getting data for Admission Control Policy id: %s\n", policyID)
+	log.Printf("Getting data for Image Assurance Policy id: %s\n", policyID)
 
 	resp, _, err := d9Client.imageAssurancePolicy.Get(policyID)
 	if err != nil {
