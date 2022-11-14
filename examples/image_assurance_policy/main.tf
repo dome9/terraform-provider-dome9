@@ -6,7 +6,7 @@ provider "dome9" {
 
 resource "dome9_image_assurance_policy" "image_assurance_policy_test" {
   target_id = "1212c5a5-ccc7-451a-8b3f-f19b5fc041f4"
-  ruleset_id = -2001
+  ruleset_id = -2002
   // options: ["Environment", "OrganizationalUnit"]
   target_type = "Environment"
   notification_ids = ["52008dbc-6fdc-45d5-b588-de2afe13ac5d"]

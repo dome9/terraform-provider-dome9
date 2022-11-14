@@ -188,7 +188,7 @@ const (
 )
 
 const (
-	ImageAssurancePolicyDefaultRulesetId = -2001
+	ImageAssurancePolicyDefaultRulesetId = -2002
 	ImageAssurancePolicyDetectAction     = "Detection"
 	ImageAssurancePolicyPreventAction    = "Prevention"
 	ImageAssurancePolicyTargetType       = "Environment"
