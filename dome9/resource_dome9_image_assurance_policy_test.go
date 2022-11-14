@@ -33,10 +33,10 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 	// Generate Compliance Notification HCL Resource
 	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
 
-	// Generate Admission Control Policy HCL Resource
-	admissionPolicyHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
+	// Generate Image Assurance Policy HCL Resource
+	imageAssurancePolicyHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, false)
-	admissionPolicyUpdatedHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
+	imageAssurancePolicyUpdatedHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, true)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -47,7 +47,7 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// Create Policy Test Step
-				Config: testAccCheckImageAssurancePolicyBasic(admissionPolicyHCL, policyGeneratedName, policyTypeAndName),
+				Config: testAccCheckImageAssurancePolicyBasic(imageAssurancePolicyHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageAssurancePolicyExists(policyTypeAndName, &response),
 					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", variable.ImageAssurancePolicyDetectAction),
@@ -64,7 +64,7 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 			},
 			{
 				// Update Policy Test Step from Detection to Prevention
-				Config: testAccCheckImageAssurancePolicyBasic(admissionPolicyUpdatedHCL, policyGeneratedName, policyTypeAndName),
+				Config: testAccCheckImageAssurancePolicyBasic(imageAssurancePolicyUpdatedHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckImageAssurancePolicyExists(policyTypeAndName, &response),
 					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", variable.ImageAssurancePolicyPreventAction),
@@ -117,7 +117,7 @@ func testAccCheckImageAssurancePolicyDestroy(s *terraform.State) error {
 		}
 
 		if ImageAssurancePolicyResponse != nil {
-			return fmt.Errorf("admission control policy with id %s exists and wasn't destroyed", rs.Primary.ID)
+			return fmt.Errorf("imageAssurance policy with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
 
