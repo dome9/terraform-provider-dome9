@@ -77,6 +77,21 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.ImageAssurancePolicyTargetType),
 				),
 			},
+			{
+				// check nil values in actions
+				Config: testCheckImageAssurancePolicyBasic(imageAssurancePolicyUpdatedHCL, policyGeneratedName, policyTypeAndName),
+				Check: resource.ComposeTestCheckFunc(
+					testCheckImageAssurancePolicyExists(policyTypeAndName, &response),
+					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", nil),
+					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_unscanned_action", nil),
+					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
+					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
+					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
+					resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_id", strconv.Itoa(variable.ImageAssurancePolicyDefaultRulesetId)),
+					resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
+					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.ImageAssurancePolicyTargetType),
+				),
+			},
 		},
 	})
 }
