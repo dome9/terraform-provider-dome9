@@ -1,7 +1,7 @@
 ---
 layout: 'dome9'
 page_title: 'Check Point CloudGuard Dome9: dome9_image_assurance_policy'
-sidebar_current: 'docs-resource-dome9-admission-control-policy'
+sidebar_current: 'docs-resource-dome9-image-assurance-policy'
 description: |-
     Creates image assurance policies in Dome9
 ---
@@ -34,8 +34,8 @@ The following arguments are supported:
 -   `ruleset_id` - (Required) The bundle id for the bundle that will be used in the policy.
 -   `target_type` - (Required) The imageassurance policy type ("Environment", "OrganizationalUnit").
 -   `notification_ids` - (Required) The notification policy id's for the policy [list].
--   `admission_control_action` - (Required) The imageassurance policy action ("Prevention", "Detection").
--   `admission_control_unscanned_action` - (Required) The imageassurance policy action ("Prevention", "Detection").
+-   `admission_control_action` - (Optional) The imageassurance policy action ("Prevention", "Detection").
+-   `admission_control_unscanned_action` - (Optional) The imageassurance policy action ("Prevention", "Detection").
 
 ## Attributes Reference
 

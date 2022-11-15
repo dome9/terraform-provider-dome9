@@ -47,9 +47,9 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// Create Policy Test Step
-				Config: testAccCheckImageAssurancePolicyBasic(imageAssurancePolicyHCL, policyGeneratedName, policyTypeAndName),
+				Config: testCheckImageAssurancePolicyBasic(imageAssurancePolicyHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImageAssurancePolicyExists(policyTypeAndName, &response),
+					testCheckImageAssurancePolicyExists(policyTypeAndName, &response),
 					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", variable.ImageAssurancePolicyDetectAction),
 					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_unscanned_action", variable.ImageAssurancePolicyDetectAction),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
@@ -64,9 +64,9 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 			},
 			{
 				// Update Policy Test Step from Detection to Prevention
-				Config: testAccCheckImageAssurancePolicyBasic(imageAssurancePolicyUpdatedHCL, policyGeneratedName, policyTypeAndName),
+				Config: testCheckImageAssurancePolicyBasic(imageAssurancePolicyUpdatedHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckImageAssurancePolicyExists(policyTypeAndName, &response),
+					testCheckImageAssurancePolicyExists(policyTypeAndName, &response),
 					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", variable.ImageAssurancePolicyPreventAction),
 					resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_unscanned_action", variable.ImageAssurancePolicyPreventAction),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
@@ -81,7 +81,7 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckImageAssurancePolicyExists(resource string, acPolicy *imageAssurancePolicy.ImageAssurancePolicyResponse) resource.TestCheckFunc {
+func testCheckImageAssurancePolicyExists(resource string, acPolicy *imageAssurancePolicy.ImageAssurancePolicyResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
@@ -117,14 +117,14 @@ func testAccCheckImageAssurancePolicyDestroy(s *terraform.State) error {
 		}
 
 		if ImageAssurancePolicyResponse != nil {
-			return fmt.Errorf("imageAssurance policy with id %s exists and wasn't destroyed", rs.Primary.ID)
+			return fmt.Errorf("image assurance policy with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
 
 	return nil
 }
 
-func testAccCheckImageAssurancePolicyBasic(policyHCL, policyName, policyTypeAndName string) string {
+func testCheckImageAssurancePolicyBasic(policyHCL, policyName, policyTypeAndName string) string {
 	return fmt.Sprintf(`
 // image assurance policy resource
 %s
