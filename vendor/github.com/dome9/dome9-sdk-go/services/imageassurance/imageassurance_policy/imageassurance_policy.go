@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	ImageAssurancePolicyResourcePath = "kubernetes/imageAssurance/policy"
+	imageAssurancePolicyResourcePath = "kubernetes/imageAssurance/policy"
 )
 
 type Service struct {
@@ -21,22 +21,27 @@ func New(c *dome9.Config) *Service {
 
 type ImageAssurancePolicyRequest struct {
 	TargetId                        string   `json:"targetId"`
-	TargetType                      string   `json:"targetType,omitempty"`
+	TargetType                      string   `json:"targetType"`
+	NotificationIds                 []string `json:"notificationIds"`
+	RulesetId                       int      `json:"rulesetId"`
+	AdmissionControllerAction       string   `json:"admissionControllerAction,omitempty"`
+	AdmissionControlUnScannedAction string   `json:"admissionControlUnScannedAction,omitempty"`
+}
+
+type ImageAssurancePolicyResponse struct {
+	ID                              string   `json:"id"`
+	TargetId                        string   `json:"targetId"`
+	TargetType                      string   `json:"targetType"`
 	NotificationIds                 []string `json:"notificationIds"`
 	RulesetId                       int      `json:"rulesetId"`
 	AdmissionControllerAction       string   `json:"admissionControllerAction"`
 	AdmissionControlUnScannedAction string   `json:"admissionControlUnScannedAction"`
-}
-
-type ImageAssurancePolicyResponse struct {
-	ImageAssurancePolicyRequest
-	ID                              string   `json:"id"`
 	ErrorMessage                    string   `json:"errorMessage"`
 }
 
 func (service *Service) Get(id string) (*ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new(ImageAssurancePolicyResponse)
-	path := fmt.Sprintf("%s/%s", ImageAssurancePolicyResourcePath, id)
+	path := fmt.Sprintf("%s/%s", imageAssurancePolicyResourcePath, id)
 	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
@@ -47,7 +52,7 @@ func (service *Service) Get(id string) (*ImageAssurancePolicyResponse, *http.Res
 
 func (service *Service) GetAll() (*[]ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new([]ImageAssurancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("GET", ImageAssurancePolicyResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDo("GET", imageAssurancePolicyResourcePath, nil, nil, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -57,7 +62,7 @@ func (service *Service) GetAll() (*[]ImageAssurancePolicyResponse, *http.Respons
 
 func (service *Service) Create(body *ImageAssurancePolicyRequest) (*ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new([]ImageAssurancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", ImageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDo("POST", imageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -70,7 +75,7 @@ func (service *Service) Create(body *ImageAssurancePolicyRequest) (*ImageAssuran
 
 func (service *Service) Update(body *ImageAssurancePolicyRequest) (*ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new([]ImageAssurancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("PUT", ImageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDo("PUT", imageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -82,7 +87,7 @@ func (service *Service) Update(body *ImageAssurancePolicyRequest) (*ImageAssuran
 }
 
 func (service *Service) Delete(id string) (*http.Response, error) {
-	path := fmt.Sprintf("%s/%s", ImageAssurancePolicyResourcePath, id)
+	path := fmt.Sprintf("%s/%s", imageAssurancePolicyResourcePath, id)
 	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
 	if err != nil {
 		return nil, err
