@@ -38,7 +38,7 @@ func TestAccDataSourceImageAssurancePolicyBasic(t *testing.T) {
 		CheckDestroy: testAccCheckImageAssurancePolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckImageAssurancePolicyBasic(imageAssurancePolicyHCL, policyGeneratedName, policyTypeAndName),
+				Config: testCheckImageAssurancePolicyBasic(imageAssurancePolicyHCL, policyGeneratedName, policyTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "admission_control_action", policyTypeAndName, "admission_control_action"),
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "admission_control_unscanned_action", policyTypeAndName, "admission_control_unscanned_action"),
