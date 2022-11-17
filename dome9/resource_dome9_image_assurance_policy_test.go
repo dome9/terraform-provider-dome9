@@ -173,5 +173,6 @@ resource "%s" "%s" {
 		variable.ImageAssurancePolicyTargetType,
 		notificationTypeAndName,
 		IfThenElse(updateAction, variable.ImageAssurancePolicyPreventAction, variable.ImageAssurancePolicyDetectAction),
+		IfThenElse(updateAction, variable.ImageAssurancePolicyPreventAction, variable.ImageAssurancePolicyDetectAction),
 	)
 }
