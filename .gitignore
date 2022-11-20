@@ -1,3 +1,6 @@
 
 .idea/
 terraform-provider-dome9*
+**/.terraform
+**/.terraform*
+**/terraform.tfstate*
