@@ -6,6 +6,7 @@ import (
 
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
+	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
@@ -47,6 +48,7 @@ type Client struct {
 	serviceAccounts                  serviceaccounts.Service
 	awsUnifiedOnboarding             aws_unified_onboarding.Service
 	admissionControlPolicy           admission_policy.Service
+	imageAssurancePolicy             imageassurance_policy.Service
 	assessment                       assessment.Service
 }
 
@@ -80,6 +82,7 @@ func (c *Config) Client() (*Client, error) {
 		serviceAccounts:                  *serviceaccounts.New(config),
 		awsUnifiedOnboarding:             *aws_unified_onboarding.New(config),
 		admissionControlPolicy:           *admission_policy.New(config),
+		imageAssurancePolicy:             *imageassurance_policy.New(config),
 		assessment:                       *assessment.New(config),
 	}
 

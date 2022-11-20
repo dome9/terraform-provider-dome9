@@ -24,4 +24,5 @@ const (
 	AwsUnifiedOnboarding                         = "dome9_aws_unified_onboarding"
 	AdmissionControlPolicy                       = "dome9_admission_control_policy"
 	Assessment                                   = "dome9_assessment"
+	ImageAssurancePolicy                         = "dome9_image_assurance_policy"
 )

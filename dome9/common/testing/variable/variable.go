@@ -187,6 +187,14 @@ const (
 	AdmissionControlKubernetesAccountName  = "test_admission_control_kubernetes_resource_name"
 )
 
+const (
+	ImageAssurancePolicyDefaultRulesetId = -2002
+	ImageAssurancePolicyDetectAction     = "Detection"
+	ImageAssurancePolicyPreventAction    = "Prevention"
+	ImageAssurancePolicyTargetType       = "Environment"
+	ImageAssuranceKubernetesAccountName  = "test_image_assurance_policy_kubernetes_resource_name"
+)
+
 // assessment resource/data source
 const (
 	BundleID                = -6
