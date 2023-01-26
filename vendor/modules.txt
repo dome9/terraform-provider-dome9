@@ -56,11 +56,11 @@ github.com/bgentry/go-netrc/netrc
 github.com/bgentry/speakeasy
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/dome9/dome9-sdk-go v1.15.2
+# github.com/dome9/dome9-sdk-go v1.17.3-0.20230125071951-351a5841c28a
 github.com/dome9/dome9-sdk-go/dome9
 github.com/dome9/dome9-sdk-go/dome9/client
 github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy
-github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy
+github.com/dome9/dome9-sdk-go/services/assessment
 github.com/dome9/dome9-sdk-go/services/cloudaccounts
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws
@@ -71,6 +71,7 @@ github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws
 github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure
 github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification
 github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy
+github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy
 github.com/dome9/dome9-sdk-go/services/iplist
 github.com/dome9/dome9-sdk-go/services/organizationalunits
 github.com/dome9/dome9-sdk-go/services/roles
