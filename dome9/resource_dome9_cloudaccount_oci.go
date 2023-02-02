@@ -1,7 +1,7 @@
 package dome9
 
 import (
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/Oci"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 )
@@ -88,14 +88,14 @@ func resourceCloudAccountOciTempData() *schema.Resource {
 func resourceCloudAccountOciCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	req := expandCloudAccountOciRequest(d)
-	log.Printf("[INFO] Creating Oci Cloud Account with request %+v\n", req)
+	log.Printf("[INFO] Creating oci Cloud Account with request %+v\n", req)
 
-	resp, _, err := d9Client.cloudaccountOci.Create(req)
+	resp, _, err := d9Client.cloudaccountOci.CreateTempData(req)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[INFO] Created Oci Temp Data information. ID: %v\n", resp.ID)
+	log.Printf("[INFO] Created oci Temp Data information. ID: %v\n", resp.ID)
 	d.SetId(resp.ID)
 
 	return resourceCloudAccountOciRead(d, meta)
@@ -113,14 +113,14 @@ func resourceCloudAccountOciUpdate(d *schema.ResourceData, meta interface{}) err
 	return nil
 }
 
-func expandCloudAccountOciRequest(d *schema.ResourceData) Oci.CloudAccountRequest {
-	req := Oci.CloudAccountRequest{
-		Name: d.Get("name").(string),
-		Credentials: Oci.CloudAccountCredentialsRequest{
-			AccessKey:    d.Get("credentials.access_key").(string),
-			AccessSecret: d.Get("credentials.access_secret").(string),
-		},
-		OrganizationalUnitID: d.Get("organizational_unit_id").(string),
+func expandCloudAccountOciRequest(d *schema.ResourceData) oci.CloudAccountRequestTempData {
+	req := oci.CloudAccountRequestTempData{
+		Name:       d.Get("name").(string),
+		TenancyId:  d.Get("tenancy_id").(string),
+		HomeRegion: d.Get("home_region").(string),
+		UserName:   d.Get("user_name").(string),
+		GroupName:  d.Get("group_name").(string),
+		PolicyName: d.Get("policy_name").(string),
 	}
 	return req
 }

@@ -8,8 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/Oci"
-
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
@@ -108,14 +106,14 @@ func testAccCheckCloudAccountOciExists(resource string, resp *Oci.CloudAccountRe
 
 func testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, resourceName string) string {
 	return fmt.Sprintf(`
-// Oci cloud account creation
+// oci cloud account creation
 %s
 
 data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
-		// Oci cloud account
+		// oci cloud account
 		getCloudAccountOciResourceHCL(generatedName, resourceName),
 
 		// data source variables
@@ -135,7 +133,7 @@ resource "%s" "%s" {
 	name          = "%s"
 }
 `,
-		// Oci cloud account variables
+		// oci cloud account variables
 		resourcetype.CloudAccountOci,
 		cloudAccountName,
 		os.Getenv(environmentvariable.CloudAccountOciEnvVarAccessKey),
