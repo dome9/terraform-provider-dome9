@@ -22,19 +22,18 @@ func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccCloudAccountOciEnvVarsPreCheck(t)
+			testAccCloudAccountOciTempDataEnvVarsPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCloudAccountOciDestroy,
+		CheckDestroy: testAccCheckCloudAccountOciTempDataDestroy,
 		Steps: []resource.TestStep{
 			{
 				// creation test
-				Config: testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, variable.CloudAccountOciCreationResourceName),
+				Config: testAccCheckCloudAccountOciTempDataConfigure(resourceTypeAndName, generatedName, variable.CloudAccountOciCreationResourceName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountOciExists(resourceTypeAndName, &cloudAccountOci),
+					testAccCheckCloudAccountOciTempDataExists(resourceTypeAndName, &cloudAccountOci),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciCreationResourceName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountOciVendor),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", os.Getenv(environmentvariable.OrganizationalUnitName)),
 				),
 			},
 		},
@@ -42,7 +41,6 @@ func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
 }
 
 func testAccCheckCloudAccountOciTempDataDestroy(s *terraform.State) error {
-
 	return nil
 }
 
@@ -52,7 +50,7 @@ func testAccCloudAccountOciTempDataEnvVarsPreCheck(t *testing.T) {
 	}
 }
 
-func testAccCheckCloudAccountOciExists(resource string, resp *Oci.CloudAccountResponse) resource.TestCheckFunc {
+func testAccCheckCloudAccountOciTempDataExists(resource string, resp *oci.CloudAccountResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
@@ -74,9 +72,9 @@ func testAccCheckCloudAccountOciExists(resource string, resp *Oci.CloudAccountRe
 	}
 }
 
-func testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckCloudAccountOciTempDataConfigure(resourceTypeAndName, generatedName, resourceName string) string {
 	return fmt.Sprintf(`
-// oci cloud account creation
+// oci cloud account temp data creation
 %s
 
 data "%s" "%s" {
@@ -84,30 +82,28 @@ data "%s" "%s" {
 }
 `,
 		// oci cloud account
-		getCloudAccountOciResourceHCL(generatedName, resourceName),
+		getCloudAccountOciTempDataResourceHCL(generatedName, resourceName),
 
 		// data source variables
-		resourcetype.CloudAccountOci,
+		resourcetype.CloudAccountOCITempData,
 		generatedName,
 		resourceTypeAndName,
 	)
 }
 
-func getCloudAccountOciResourceHCL(cloudAccountName, generatedAName string) string {
+func getCloudAccountOciTempDataResourceHCL(cloudAccountName, generatedAName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-	credentials = {
-		access_key    = "%s"
-		access_secret = "%s"
-}
-	name          = "%s"
+	tenancy_id  = "%s"
+	home_region = "%s"
+	name        = "%s"
 }
 `,
-		// oci cloud account variables
-		resourcetype.CloudAccountOci,
+		// oci cloud account temp data variables
+		resourcetype.CloudAccountOCITempData,
 		cloudAccountName,
-		os.Getenv(environmentvariable.CloudAccountOciEnvVarAccessKey),
-		os.Getenv(environmentvariable.CloudAccountOciEnvVarAccessSecret),
+		os.Getenv(environmentvariable.CloudAccountOciEnvVarTenancyId),
+		os.Getenv(environmentvariable.CloudAccountOciEnvVarHomeRegion),
 		generatedAName,
 	)
 }

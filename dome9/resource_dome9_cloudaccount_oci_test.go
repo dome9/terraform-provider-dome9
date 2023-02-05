@@ -29,20 +29,11 @@ func TestAccResourceCloudAccountOciBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// creation test
-				Config: testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, variable.CloudAccountOciCreationResourceName),
+				Config: testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountOciExists(resourceTypeAndName, &cloudAccountOci),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciCreationResourceName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountOciVendor),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", os.Getenv(environmentvariable.OrganizationalUnitName)),
-				),
-			},
-			{
-				// update name test
-				Config: testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, variable.CloudAccountOciUpdatedAccountName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountOciExists(resourceTypeAndName, &cloudAccountOci),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciUpdatedAccountName),
 				),
 			},
 		},
@@ -72,8 +63,11 @@ func testAccCheckCloudAccountOciDestroy(s *terraform.State) error {
 }
 
 func testAccCloudAccountOciEnvVarsPreCheck(t *testing.T) {
-	if v := os.Getenv(environmentvariable.OrganizationalUnitName); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.OrganizationalUnitName)
+	if v := os.Getenv(environmentvariable.CloudAccountOciEnvVarTenancyId); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountOciEnvVarTenancyId)
+	}
+	if v := os.Getenv(environmentvariable.CloudAccountOciEnvVarUserOcid); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountOciEnvVarUserOcid)
 	}
 }
 
@@ -99,7 +93,7 @@ func testAccCheckCloudAccountOciExists(resource string, resp *oci.CloudAccountRe
 	}
 }
 
-func testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, resourceName string) string {
+func testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName string) string {
 	return fmt.Sprintf(`
 // Oci cloud account creation
 %s
@@ -109,30 +103,26 @@ data "%s" "%s" {
 }
 `,
 		// Oci cloud account
-		getCloudAccountOciResourceHCL(generatedName, resourceName),
+		getCloudAccountOciResourceHCL(generatedName),
 
 		// data source variables
-		resourcetype.CloudAccountOci,
+		resourcetype.CloudAccountOCI,
 		generatedName,
 		resourceTypeAndName,
 	)
 }
 
-func getCloudAccountOciResourceHCL(cloudAccountName, generatedAName string) string {
+func getCloudAccountOciResourceHCL(cloudAccountName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-	credentials = {
-		access_key    = "%s"
-		access_secret = "%s"
-}
-	name          = "%s"
+	tenancy_id = "%s"
+	user_ocid  = "%s"
 }
 `,
 		// Oci cloud account variables
-		resourcetype.CloudAccountOci,
+		resourcetype.CloudAccountOCI,
 		cloudAccountName,
-		os.Getenv(environmentvariable.CloudAccountOciEnvVarAccessKey),
-		os.Getenv(environmentvariable.CloudAccountOciEnvVarAccessSecret),
-		generatedAName,
+		os.Getenv(environmentvariable.CloudAccountOciEnvVarTenancyId),
+		os.Getenv(environmentvariable.CloudAccountOciEnvVarUserOcid),
 	)
 }

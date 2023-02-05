@@ -11,6 +11,13 @@ const (
 	CloudAccountAlibabaEnvVarAccessSecret = "ALIBABA_ACCESS_SECRET"
 )
 
+// Oci environment variable
+const (
+	CloudAccountOciEnvVarTenancyId  = "OCI_TENANCY_ID"
+	CloudAccountOciEnvVarHomeRegion = "OCI_HOME_REGION"
+	CloudAccountOciEnvVarUserOcid   = "OCI_USER_OCID"
+)
+
 // AWS environment variable
 const (
 	CloudAccountAWSEnvVarArn        = "ARN"
