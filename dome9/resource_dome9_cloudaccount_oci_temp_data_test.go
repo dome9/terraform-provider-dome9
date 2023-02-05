@@ -3,16 +3,14 @@ package dome9
 import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
-	"os"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+	"os"
+	"testing"
 )
 
 func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
@@ -29,7 +27,7 @@ func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// creation test
-				Config: testAccCheckCloudAccountOciTempDataConfigure(resourceTypeAndName, generatedName, variable.CloudAccountOciCreationResourceName),
+				Config: getCloudAccountOciTempDataResourceHCL(generatedName, variable.CloudAccountOciCreationResourceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountOciTempDataExists(resourceTypeAndName, &cloudAccountOci),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciCreationResourceName),
@@ -41,12 +39,16 @@ func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
 }
 
 func testAccCheckCloudAccountOciTempDataDestroy(s *terraform.State) error {
+	// temp data cant be removed (there is TTL to it)
 	return nil
 }
 
 func testAccCloudAccountOciTempDataEnvVarsPreCheck(t *testing.T) {
-	if v := os.Getenv(environmentvariable.OrganizationalUnitName); v == "" {
-		t.Fatalf("%s must be set for acceptance tests", environmentvariable.OrganizationalUnitName)
+	if v := os.Getenv(environmentvariable.CloudAccountOciEnvVarTenancyId); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountOciEnvVarTenancyId)
+	}
+	if v := os.Getenv(environmentvariable.CloudAccountOciEnvVarHomeRegion); v == "" {
+		t.Fatalf("%s must be set for acceptance tests", environmentvariable.CloudAccountOciEnvVarHomeRegion)
 	}
 }
 
@@ -70,25 +72,6 @@ func testAccCheckCloudAccountOciTempDataExists(resource string, resp *oci.CloudA
 
 		return nil
 	}
-}
-
-func testAccCheckCloudAccountOciTempDataConfigure(resourceTypeAndName, generatedName, resourceName string) string {
-	return fmt.Sprintf(`
-// oci cloud account temp data creation
-%s
-
-data "%s" "%s" {
-  id = "${%s.id}"
-}
-`,
-		// oci cloud account
-		getCloudAccountOciTempDataResourceHCL(generatedName, resourceName),
-
-		// data source variables
-		resourcetype.CloudAccountOCITempData,
-		generatedName,
-		resourceTypeAndName,
-	)
 }
 
 func getCloudAccountOciTempDataResourceHCL(cloudAccountName, generatedAName string) string {

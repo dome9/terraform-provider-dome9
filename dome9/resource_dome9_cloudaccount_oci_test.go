@@ -3,16 +3,14 @@ package dome9
 import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
-	"os"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
+	"os"
+	"testing"
 )
 
 func TestAccResourceCloudAccountOciBasic(t *testing.T) {

@@ -1,11 +1,10 @@
 package dome9
 
 import (
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
-
-	"github.com/dome9/dome9-sdk-go/dome9/client"
 )
 
 func resourceCloudAccountOCI() *schema.Resource {
@@ -33,6 +32,10 @@ func resourceCloudAccountOCI() *schema.Resource {
 				Default:  "00000000-0000-0000-0000-000000000000",
 			},
 			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"home_region": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
