@@ -7,6 +7,13 @@ const (
 	CloudAccountAlibabaVendor               = "alibaba"
 )
 
+// oci resource/data source
+const (
+	CloudAccountOciCreationResourceName = "test_cloudaccount_oci"
+	CloudAccountOciUpdatedAccountName   = "updated_cloud_account_name"
+	CloudAccountOciVendor               = "Oci"
+)
+
 // aws resource/data source
 const (
 	CloudAccountAWSCreationResourceName    = "test_cloudaccount_aws"

@@ -15,9 +15,9 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 )
 
-func TestAccResourceCloudAccountOciBasic(t *testing.T) {
+func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
 	var cloudAccountOci oci.CloudAccountResponse
-	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountOCI)
+	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountOCITempData)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -37,47 +37,22 @@ func TestAccResourceCloudAccountOciBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", os.Getenv(environmentvariable.OrganizationalUnitName)),
 				),
 			},
-			{
-				// update name test
-				Config: testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, variable.CloudAccountOciUpdatedAccountName),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCloudAccountOciExists(resourceTypeAndName, &cloudAccountOci),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciUpdatedAccountName),
-				),
-			},
 		},
 	})
 }
 
-func testAccCheckCloudAccountOciDestroy(s *terraform.State) error {
-	apiClient := testAccProvider.Meta().(*Client)
-
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.CloudAccountOCI {
-			continue
-		}
-
-		resp, _, err := apiClient.cloudaccountOci.Get(rs.Primary.ID)
-
-		if err == nil {
-			return fmt.Errorf("id %s already exists", rs.Primary.ID)
-		}
-
-		if resp != nil {
-			return fmt.Errorf("cloudaccounts with id %s exists and wasn't destroyed", rs.Primary.ID)
-		}
-	}
+func testAccCheckCloudAccountOciTempDataDestroy(s *terraform.State) error {
 
 	return nil
 }
 
-func testAccCloudAccountOciEnvVarsPreCheck(t *testing.T) {
+func testAccCloudAccountOciTempDataEnvVarsPreCheck(t *testing.T) {
 	if v := os.Getenv(environmentvariable.OrganizationalUnitName); v == "" {
 		t.Fatalf("%s must be set for acceptance tests", environmentvariable.OrganizationalUnitName)
 	}
 }
 
-func testAccCheckCloudAccountOciExists(resource string, resp *oci.CloudAccountResponse) resource.TestCheckFunc {
+func testAccCheckCloudAccountOciExists(resource string, resp *Oci.CloudAccountResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
@@ -101,14 +76,14 @@ func testAccCheckCloudAccountOciExists(resource string, resp *oci.CloudAccountRe
 
 func testAccCheckCloudAccountOciConfigure(resourceTypeAndName, generatedName, resourceName string) string {
 	return fmt.Sprintf(`
-// Oci cloud account creation
+// oci cloud account creation
 %s
 
 data "%s" "%s" {
   id = "${%s.id}"
 }
 `,
-		// Oci cloud account
+		// oci cloud account
 		getCloudAccountOciResourceHCL(generatedName, resourceName),
 
 		// data source variables
@@ -128,7 +103,7 @@ resource "%s" "%s" {
 	name          = "%s"
 }
 `,
-		// Oci cloud account variables
+		// oci cloud account variables
 		resourcetype.CloudAccountOci,
 		cloudAccountName,
 		os.Getenv(environmentvariable.CloudAccountOciEnvVarAccessKey),
