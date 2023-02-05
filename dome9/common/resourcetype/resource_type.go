@@ -6,7 +6,7 @@ const (
 	CloudAccountAWS                              = "dome9_cloudaccount_aws"
 	CloudAccountAzure                            = "dome9_cloudaccount_azure"
 	CloudAccountGCP                              = "dome9_cloudaccount_gcp"
-	CloudAccountOCI                              = "dome9_cloudaccount_OCI"
+	CloudAccountOCI                              = "dome9_cloudaccount_oci"
 	CloudAccountOCITempData                      = "dome9_cloudaccount_oci_temp_data"
 	CloudAccountKubernetes                       = "dome9_cloudaccount_kubernetes"
 	IPList                                       = "dome9_iplist"
