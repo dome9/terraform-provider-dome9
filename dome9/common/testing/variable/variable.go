@@ -10,8 +10,7 @@ const (
 // oci resource/data source
 const (
 	CloudAccountOciCreationResourceName = "test_cloudaccount_oci"
-	CloudAccountOciUpdatedAccountName   = "updated_cloud_account_name"
-	CloudAccountOciVendor               = "Oci"
+	CloudAccountOciVendor               = "oci"
 )
 
 // aws resource/data source

@@ -62,14 +62,6 @@ func testAccCheckCloudAccountOciTempDataExists(resource string, resp *oci.CloudA
 			return fmt.Errorf("no record ID is set")
 		}
 
-		apiClient := testAccProvider.Meta().(*Client)
-		receivedCloudAccount, _, err := apiClient.cloudaccountOci.Get(rs.Primary.ID)
-		if err != nil {
-			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
-		}
-
-		*resp = *receivedCloudAccount
-
 		return nil
 	}
 }

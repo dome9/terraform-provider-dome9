@@ -33,7 +33,7 @@ func dataSourceCloudAccountOCI() *schema.Resource {
 				Computed: true,
 			},
 			"credentials": {
-				Type:     schema.TypeMap,
+				Type:     schema.TypeSet,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
