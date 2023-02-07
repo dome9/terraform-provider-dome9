@@ -40,7 +40,7 @@ func resourceCloudAccountOCI() *schema.Resource {
 				Computed: true,
 			},
 			"credentials": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

@@ -29,20 +29,8 @@ func resourceCloudAccountOciTempData() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"user_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"group_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"policy_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"credentials": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeMap,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -131,19 +119,16 @@ func expandCloudAccountOciTempDataRequest(d *schema.ResourceData) oci.CloudAccou
 		Name:       d.Get("name").(string),
 		TenancyId:  d.Get("tenancy_id").(string),
 		HomeRegion: d.Get("home_region").(string),
-		UserName:   d.Get("user_name").(string),
-		GroupName:  d.Get("group_name").(string),
-		PolicyName: d.Get("policy_name").(string),
 	}
 	return req
 }
 
-func flattenOciCredentials(CredentialsResponse oci.CloudAccountCredentialsResponse) []interface{} {
+func flattenOciCredentials(CredentialsResponse oci.CloudAccountCredentialsResponse) map[string]interface{} {
 	m := map[string]interface{}{
 		"user":        CredentialsResponse.User,
 		"fingerprint": CredentialsResponse.Fingerprint,
 		"public_key":  CredentialsResponse.PublicKey,
 	}
 
-	return []interface{}{m}
+	return m
 }
