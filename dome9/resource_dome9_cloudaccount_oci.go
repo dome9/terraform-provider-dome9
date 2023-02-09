@@ -119,7 +119,7 @@ func resourceCloudAccountOciRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("organizational_unit_name", resp.OrganizationalUnitName)
 	_ = d.Set("vendor", resp.Vendor)
 
-	if err := d.Set("credentials", flattenOciCredentials(resp.Credentials)); err != nil {
+	if err := d.Set("credentials", flattenOciCredentialsResponse(resp.Credentials)); err != nil {
 		return err
 	}
 

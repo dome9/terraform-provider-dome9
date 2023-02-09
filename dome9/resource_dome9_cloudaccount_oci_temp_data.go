@@ -95,7 +95,7 @@ func resourceCloudAccountOciTempDataCreate(d *schema.ResourceData, meta interfac
 	_ = d.Set("organizational_unit_name", resp.OrganizationalUnitName)
 	_ = d.Set("vendor", resp.Vendor)
 
-	if err := d.Set("credentials", flattenOciCredentials(resp.Credentials)); err != nil {
+	if err := d.Set("credentials", flattenOciCredentialsResponse(resp.Credentials)); err != nil {
 		return err
 	}
 
@@ -123,7 +123,7 @@ func expandCloudAccountOciTempDataRequest(d *schema.ResourceData) oci.CloudAccou
 	return req
 }
 
-func flattenOciCredentials(CredentialsResponse oci.CloudAccountCredentialsResponse) map[string]interface{} {
+func flattenOciCredentialsResponse(CredentialsResponse oci.CloudAccountCredentialsResponse) map[string]interface{} {
 	m := map[string]interface{}{
 		"user":        CredentialsResponse.User,
 		"fingerprint": CredentialsResponse.Fingerprint,

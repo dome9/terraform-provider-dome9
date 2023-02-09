@@ -10,7 +10,7 @@ description: |- Onboard OCI cloud account
 This resource is used to onboard oci cloud accounts to Dome9. This is the first and pre-requisite step in order to
 apply Dome9 features, such as compliance testing, on the account.
 
-The resource can be used only after 'dome9_cloudaccount_oci_temp_data' resource is created.
+**The resource can be used only after 'dome9_cloudaccount_oci_temp_data' resource is created.**
 
 ## Example Usage
 
