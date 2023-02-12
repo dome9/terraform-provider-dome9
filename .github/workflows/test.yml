@@ -42,4 +42,7 @@ jobs:
           CLIENT_X509_CERT_URL: ${{ secrets.TEST_GCP_CLIENT_X509_CERT_URL }}
           ALIBABA_ACCESS_KEY: ${{ secrets.TEST_ALIBABA_ACCESS_KEY }}
           ALIBABA_ACCESS_SECRET: ${{ secrets.TEST_ALIBABA_ACCESS_SECRET }}
+          OCI_TENANCY_ID: ${{ secrets.OCI_TENANCY_ID }}
+          OCI_HOME_REGION: ${{ secrets.OCI_HOME_REGION }}
+          OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
         run: go test -v -timeout 2400s ./...
