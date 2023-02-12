@@ -56,6 +56,7 @@ func testAccCheckCloudAccountOciDestroy(s *terraform.State) error {
 			return fmt.Errorf("cloudaccounts with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
+	
 	return nil
 }
 
