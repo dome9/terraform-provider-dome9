@@ -32,7 +32,7 @@ In addition to all arguments above, the following attributes are exported:
 * `name` - The name of the ruleset in Dome9.
 * `account_id` - The account id of the ruleset in Dome9.
 * `description` - A description of the ruleset (what it represents); defaults to empty string.
-* `cloud_vendor` - Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure` or `google`.
+* `cloud_vendor` - (Required) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure`, `google`, or `imageassurance` (for Image Assurance rulesets).
 * `language` - Language of the rules; defaults to 'en' (English).
 * `hide_in_compliance` - hide in compliance - true/false.
 * `min_feature_tier` - Min feature tier.
