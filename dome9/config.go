@@ -6,16 +6,17 @@ import (
 
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
-	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
+	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
 	"github.com/dome9/dome9-sdk-go/services/iplist"
 	"github.com/dome9/dome9-sdk-go/services/organizationalunits"
 	"github.com/dome9/dome9-sdk-go/services/roles"
@@ -37,6 +38,7 @@ type Client struct {
 	cloudaccountGCP                  gcp.Service
 	cloudaccountKubernetes           k8s.Service
 	cloudaccountAlibaba              alibaba.Service
+	cloudaccountOci                  oci.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
 	ruleSet                          rulebundles.Service
@@ -67,6 +69,7 @@ func (c *Config) Client() (*Client, error) {
 	client := &Client{
 		iplist:                           *iplist.New(config),
 		cloudaccountAlibaba:              *alibaba.New(config),
+		cloudaccountOci:                  *oci.New(config),
 		cloudaccountAWS:                  *aws.New(config),
 		cloudaccountAzure:                *azure.New(config),
 		cloudaccountGCP:                  *gcp.New(config),
