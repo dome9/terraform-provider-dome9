@@ -6,6 +6,7 @@ const (
 	RESTfulPathGCP     = "GoogleCloudAccount"
 	RESTfulPathK8S     = "KubernetesAccount"
 	RESTfulPathAlibaba = "AlibabaCloudAccount"
+	RESTfulPathOci     = "oci-cloud-account"
 )
 
 // AWS service paths
@@ -58,6 +59,12 @@ const (
 	RESTfulServicePathAlibabaName               = "AccountName"
 	RESTfulServicePathAlibabaOrganizationalUnit = "organizationalUnit"
 	RESTfulServicePathAlibabaCredentials        = "Credentials"
+)
+
+// Oci service paths
+const (
+	RESTfulServicePathOciTempData           = "save-temp-data"
+	RESTfulServicePathOciOrganizationalUnit = "organizational-Unit"
 )
 
 type QueryParameters struct {

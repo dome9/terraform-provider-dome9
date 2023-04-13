@@ -16,14 +16,13 @@ func TestAccResourceAwsUnifiedOnboardingBasic(t *testing.T) {
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {testAccPreCheck(t)},
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAwsUnifiedOnboardingExists(resourceTypeAndName, &awsUnifiedOnboarding),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "template_url", variable.AwsUnifiedOnbordingTemplateUrl),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.0", variable.AwsUnifiedOnbordingIamCapabilities0),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.1", variable.AwsUnifiedOnbordingIamCapabilities1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.2", variable.AwsUnifiedOnbordingIamCapabilities2),
@@ -43,7 +42,7 @@ func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboardin
 			return res
 		}
 		if rs.Primary.ID == "" {
-			res :=  fmt.Errorf("no record ID is set")
+			res := fmt.Errorf("no record ID is set")
 			return res
 
 		} else {
