@@ -44,9 +44,10 @@ func resourceCloudAccountAzure() *schema.Resource {
 				ValidateFunc: validation.StringInSlice(providerconst.OperationMode, true),
 			},
 			"vendor": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "azure",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "azure",
+				ValidateFunc: validation.StringInSlice(providerconst.CloudVendors, false),
 			},
 			"client_id": {
 				Type:     schema.TypeString,
