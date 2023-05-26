@@ -109,6 +109,7 @@ const (
 	AF_SOUTH_1          = "26"
 	EU_SOUTH_1          = "27"
 	AP_NORTHEAST_3      = "28"
+	ME_CENTRAL_1	    = "29"
 )
 
 // Azure consts
