@@ -189,7 +189,7 @@ var AWSRegionsEnum = map[string]string{
 	"ap_southeast_3":      AP_SOUTHEAST_3,	
 	"ap_southeast_4":      AP_SOUTHEAST_4,	
 	"eu_central_2":        EU_CENTRAL_2,	
-	"eu_south_2":          EU_SOUTH_2		
+	"eu_south_2":          EU_SOUTH_2,		
 }
 
 var PermissionTrafficType = map[string]string{
