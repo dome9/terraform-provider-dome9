@@ -233,29 +233,49 @@ net_sec {
       new_group_behavior = "ReadOnly"
       region             = "eu_north_1"
     }
-	regions {
+    regions {
       new_group_behavior = "ReadOnly"
       region             = "ap_east_1"
     }
-	regions {
+    regions {
       new_group_behavior = "ReadOnly"
       region             = "me_south_1"
     }
-	regions {
+    regions {
       new_group_behavior = "ReadOnly"
       region             = "af_south_1"
     }
-	regions {
+    regions {
       new_group_behavior = "ReadOnly"
       region             = "eu_south_1"
     }
-	regions {
+    regions {
       new_group_behavior = "ReadOnly"
       region             = "ap_northeast_3"
     }
-        regions {
+    regions {
       new_group_behavior = "ReadOnly"
       region             = "me_central_1"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_south_2"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_southeast_3"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ap_southeast_4"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "eu_central_2"
+    }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "eu_south_2"
     }
   }
 `,
