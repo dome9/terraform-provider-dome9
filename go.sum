@@ -35,8 +35,6 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/dome9/dome9-sdk-go v1.18.1 h1:M1+QMbUXhlFS1cHEyJEL8COAbMNSLqm3oAgXBVE5OIY=
-github.com/dome9/dome9-sdk-go v1.18.1/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
 github.com/dome9/dome9-sdk-go v1.18.3 h1:KqGg1OQzAxLmwTCkx64GZU8J/mrCeZKYrWfOyyVFn1A=
 github.com/dome9/dome9-sdk-go v1.18.3/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
