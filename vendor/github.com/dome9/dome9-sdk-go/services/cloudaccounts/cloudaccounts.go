@@ -4,7 +4,7 @@ const (
 	RESTfulPathAWS     = "cloudaccounts"
 	RESTfulPathAzure   = "AzureCloudAccount"
 	RESTfulPathGCP     = "GoogleCloudAccount"
-	RESTfulPathK8S     = "KubernetesAccount"
+	RESTfulPathK8S     = "kubernetes/account"
 	RESTfulPathAlibaba = "AlibabaCloudAccount"
 	RESTfulPathOci     = "oci-cloud-account"
 )
@@ -44,14 +44,15 @@ const (
 	RESTfulServicePathK8SName               = "AccountName"
 	RESTfulServicePathK8SOrganizationalUnit = "organizationalUnit"
 	RESTfulPathK8sEnable                    = "enable"
+	RESTfulPathK8sDisable                   = "disable"
 	//runtime-protection
-	RESTfulPathK8SRuntimeProtection = "runtime-protection"
+	RESTfulPathK8SRuntimeProtection = "runtimeProtection"
 	//admission-control
-	RESTfulPathK8SAdmissionControl = "admission-control"
+	RESTfulPathK8SAdmissionControl = "admissionControl"
 	//image-assurance
-	RESTfulPathK8SImageAssurance = "vulnerabilityAssessment"
+	RESTfulPathK8SImageAssurance = "imageAssurance"
 	//threat-intelligence
-	RESTfulPathK8SThreatIntelligence = "magellan-kubernetes-flowlogs"
+	RESTfulPathK8SThreatIntelligence = "threatIntelligence"
 )
 
 // Alibaba service paths
