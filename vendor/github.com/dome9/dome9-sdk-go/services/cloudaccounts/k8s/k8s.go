@@ -13,18 +13,23 @@ type CloudAccountRequest struct {
 }
 
 type CloudAccountResponse struct {
-	ID                        string    `json:"id"` //The k8s cluster ID
-	Name                      string    `json:"name"`
-	CreationDate              time.Time `json:"creationDate"`
-	Vendor                    string    `json:"vendor"`
-	OrganizationalUnitID      string    `json:"organizationalUnitId,omitempty"`
-	OrganizationalUnitPath    string    `json:"organizationalUnitPath,omitempty"`
-	OrganizationalUnitName    string    `json:"organizationalUnitName,omitempty"`
-	ClusterVersion            string    `json:"clusterVersion"`
-	RuntimeProtectionEnabled  bool      `json:"runtimeProtection"`
-	AdmissionControlEnabled   bool      `json:"admissionControl"`
-	ImageAssuranceEnabled     bool      `json:"vulnerabilityAssessment"`
-	ThreatIntelligenceEnabled bool      `json:"magellan"`
+	ID                              string    `json:"id"` //The k8s cluster ID
+	Name                            string    `json:"name"`
+	CreationDate                    time.Time `json:"creationDate"`
+	Vendor                          string    `json:"vendor"`
+	OrganizationalUnitID            string    `json:"organizationalUnitId,omitempty"`
+	OrganizationalUnitPath          string    `json:"organizationalUnitPath,omitempty"`
+	OrganizationalUnitName          string    `json:"organizationalUnitName,omitempty"`
+	ClusterVersion                  string    `json:"clusterVersion"`
+	RuntimeProtectionEnabled        bool      `json:"runtimeProtectionEnabled"`
+	RuntimeProtectionNetwork        bool      `json:"runtimeProtectionNetwork"`
+	RuntimeProtectionProfiling      bool      `json:"runtimeProtectionProfiling"`
+	RuntimeProtectionFileReputation bool      `json:"runtimeProtectionFileReputation"`
+	AdmissionControlEnabled         bool      `json:"admissionControlEnabled"`
+	AdmissionControlFailOpen        bool      `json:"admissionControlFailOpen"`
+	ImageAssuranceEnabled           bool      `json:"imageAssuranceEnabled"`
+	ThreatIntelligenceEnabled       bool      `json:"threatIntelligenceEnabled"`
+	Description                     string    `json:"description"`
 }
 
 type CloudAccountUpdateNameRequest struct {
@@ -112,8 +117,15 @@ func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdat
 	runtime-protection
 */
 
+func GetEnableDisablePath(enabled bool) string {
+	if enabled {
+		return cloudaccounts.RESTfulPathK8sEnable
+	}
+	return cloudaccounts.RESTfulPathK8sDisable
+}
+
 func (service *Service) EnableRuntimeProtection(body RuntimeProtectionEnableRequest) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SRuntimeProtection, cloudaccounts.RESTfulPathK8sEnable)
+	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SRuntimeProtection, GetEnableDisablePath(body.Enabled))
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
 	if err != nil {
 		return nil, err
@@ -127,7 +139,7 @@ func (service *Service) EnableRuntimeProtection(body RuntimeProtectionEnableRequ
 */
 
 func (service *Service) EnableAdmissionControl(body AdmissionControlEnableRequest) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SAdmissionControl, cloudaccounts.RESTfulPathK8sEnable)
+	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SAdmissionControl, GetEnableDisablePath(body.Enabled))
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
 	if err != nil {
 		return nil, err
@@ -141,7 +153,7 @@ func (service *Service) EnableAdmissionControl(body AdmissionControlEnableReques
 */
 
 func (service *Service) EnableImageAssurance(body ImageAssuranceEnableRequest) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SImageAssurance, cloudaccounts.RESTfulPathK8sEnable)
+	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SImageAssurance, GetEnableDisablePath(body.Enabled))
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
 	if err != nil {
 		return nil, err
@@ -154,7 +166,7 @@ func (service *Service) EnableImageAssurance(body ImageAssuranceEnableRequest) (
 threat-intelligence
 */
 func (service *Service) EnableThreatIntelligence(body ThreatIntelligenceEnableRequest) (*http.Response, error) {
-	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, cloudaccounts.RESTfulPathK8SThreatIntelligence, cloudaccounts.RESTfulPathK8sEnable)
+	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SThreatIntelligence, GetEnableDisablePath(body.Enabled))
 	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
 	if err != nil {
 		return nil, err
