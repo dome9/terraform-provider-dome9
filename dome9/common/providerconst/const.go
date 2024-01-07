@@ -115,6 +115,7 @@ const (
 	AP_SOUTHEAST_4	    = "32"
 	EU_CENTRAL_2	    = "33"
 	EU_SOUTH_2	    = "34"
+	IL_CENTRAL_1 =  "35"
 )
 
 // Azure consts
@@ -124,7 +125,7 @@ var AzureSecurityGroupProtocol = []string{"UDP", "TCP", "ANY"}
 var AzureSecurityGroupSourceScopeTypes = []string{"CIDR", "IPList", "Tag"}
 
 // The 21 regions Dome9 manages in AWS cloud account
-var AWSRegions = []string{"us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3", "me_central_1", "ap_south_2", "ap_southeast_3", "ap_southeast_4", "eu_central_2", "eu_south_2"}
+var AWSRegions = []string{"us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3", "me_central_1", "ap_south_2", "ap_southeast_3", "ap_southeast_4", "eu_central_2", "eu_south_2", "il-central-1"}
 
 // The 2 regions Dome9 manages in AWSGOV cloud account
 var AWSGOVRegions = []string{"us_gov_west_1", "us_gov_east_1"}
@@ -189,7 +190,8 @@ var AWSRegionsEnum = map[string]string{
 	"ap_southeast_3":      AP_SOUTHEAST_3,	
 	"ap_southeast_4":      AP_SOUTHEAST_4,	
 	"eu_central_2":        EU_CENTRAL_2,	
-	"eu_south_2":          EU_SOUTH_2,		
+	"eu_south_2":          EU_SOUTH_2,
+	"il_central_1":        IL_CENTRAL_1,
 }
 
 var PermissionTrafficType = map[string]string{
