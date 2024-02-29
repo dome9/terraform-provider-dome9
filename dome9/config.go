@@ -2,6 +2,7 @@ package dome9
 
 import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
+	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
@@ -52,6 +53,7 @@ type Client struct {
 	admissionControlPolicy           admission_policy.Service
 	imageAssurancePolicy             imageassurance_policy.Service
 	assessment                       assessment.Service
+	awpAwsOnboarding                 awp_aws_onboarding.Service
 }
 
 type Config struct {
@@ -87,6 +89,7 @@ func (c *Config) Client() (*Client, error) {
 		admissionControlPolicy:           *admission_policy.New(config),
 		imageAssurancePolicy:             *imageassurance_policy.New(config),
 		assessment:                       *assessment.New(config),
+		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
