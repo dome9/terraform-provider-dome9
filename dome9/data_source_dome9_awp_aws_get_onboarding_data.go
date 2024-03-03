@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"encoding/base64"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -9,11 +10,7 @@ func dataSourceAwpAwsOnboardingData() *schema.Resource {
 		Read: dataSourceAwpAwsOnboardingDataRead,
 
 		Schema: map[string]*schema.Schema{
-			"cloudguard_account_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"scan_mode": {
+			"externalAwsAccountId": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -53,6 +50,10 @@ func dataSourceAwpAwsOnboardingData() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"crossAccountRoleExternalId": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -75,6 +76,13 @@ func dataSourceAwpAwsOnboardingDataRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("remoteSnapshotsUtilsFunctionRunTime", resp.RemoteSnapshotsUtilsFunctionRunTime)
 	_ = d.Set("remoteSnapshotsUtilsFunctionTimeOut", resp.RemoteSnapshotsUtilsFunctionTimeOut)
 	_ = d.Set("awpClientSideSecurityGroupName", resp.AwpClientSideSecurityGroupName)
+	cloudAccountID, _, err := d9Client.awpAwsOnboarding.GetCloudAccountId(d.Get("externalAwsAccountId").(string))
+	if err != nil {
+		return err
+	}
+	combinedString := resp.CloudGuardBackendAccountId + "-" + cloudAccountID
+	encodedString := base64.StdEncoding.EncodeToString([]byte(combinedString))
+	_ = d.Set("crossAccountRoleExternalId", encodedString)
 
 	return nil
 }
