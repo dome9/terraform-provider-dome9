@@ -10,7 +10,7 @@ func dataSourceAwpAwsOnboardingData() *schema.Resource {
 		Read: dataSourceAwpAwsOnboardingDataRead,
 
 		Schema: map[string]*schema.Schema{
-			"externalAwsAccountId": {
+			"external_aws_account_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -22,35 +22,35 @@ func dataSourceAwpAwsOnboardingData() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"cloudGuardBackendAccountId": {
+			"cloud_guard_backend_account_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"agentlessBucketName": {
+			"agentless_bucket_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"remoteFunctionsPrefixKey": {
+			"remote_functions_prefix_key": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"remoteSnapshotsUtilsFunctionName": {
+			"remote_snapshots_utils_function_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"remoteSnapshotsUtilsFunctionRunTime": {
+			"remote_snapshots_utils_function_run_time": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"remoteSnapshotsUtilsFunctionTimeOut": {
+			"remote_snapshots_utils_function_time_out": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"awpClientSideSecurityGroupName": {
+			"awp_client_side_security_group_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"crossAccountRoleExternalId": {
+			"cross_account_role_external_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -69,20 +69,20 @@ func dataSourceAwpAwsOnboardingDataRead(d *schema.ResourceData, meta interface{}
 	d.SetId(resp.CloudGuardBackendAccountId)
 	_ = d.Set("stage", resp.Stage)
 	_ = d.Set("region", resp.Region)
-	_ = d.Set("cloudGuardBackendAccountId", resp.CloudGuardBackendAccountId)
-	_ = d.Set("agentlessBucketName", resp.AgentlessBucketName)
-	_ = d.Set("remoteFunctionsPrefixKey", resp.RemoteFunctionsPrefixKey)
-	_ = d.Set("remoteSnapshotsUtilsFunctionName", resp.RemoteSnapshotsUtilsFunctionName)
-	_ = d.Set("remoteSnapshotsUtilsFunctionRunTime", resp.RemoteSnapshotsUtilsFunctionRunTime)
-	_ = d.Set("remoteSnapshotsUtilsFunctionTimeOut", resp.RemoteSnapshotsUtilsFunctionTimeOut)
-	_ = d.Set("awpClientSideSecurityGroupName", resp.AwpClientSideSecurityGroupName)
-	cloudAccountID, _, err := d9Client.awpAwsOnboarding.GetCloudAccountId(d.Get("externalAwsAccountId").(string))
+	_ = d.Set("cloud_guard_backend_account_id", resp.CloudGuardBackendAccountId)
+	_ = d.Set("agentless_bucket_name", resp.AgentlessBucketName)
+	_ = d.Set("remote_functions_prefix_key", resp.RemoteFunctionsPrefixKey)
+	_ = d.Set("remote_snapshots_utils_function_name", resp.RemoteSnapshotsUtilsFunctionName)
+	_ = d.Set("remote_snapshots_utils_function_run_time", resp.RemoteSnapshotsUtilsFunctionRunTime)
+	_ = d.Set("remote_snapshots_utils_function_time_out", resp.RemoteSnapshotsUtilsFunctionTimeOut)
+	_ = d.Set("awp_client_side_security_group_name", resp.AwpClientSideSecurityGroupName)
+	cloudAccountID, _, err := d9Client.awpAwsOnboarding.GetCloudAccountId(d.Get("external_aws_account_id").(string))
 	if err != nil {
 		return err
 	}
 	combinedString := resp.CloudGuardBackendAccountId + "-" + cloudAccountID
 	encodedString := base64.StdEncoding.EncodeToString([]byte(combinedString))
-	_ = d.Set("crossAccountRoleExternalId", encodedString)
+	_ = d.Set("cross_account_role_external_id", encodedString)
 
 	return nil
 }
