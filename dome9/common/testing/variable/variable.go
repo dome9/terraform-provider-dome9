@@ -211,3 +211,8 @@ const (
 	HasErrors               = "false"
 	HasDataSyncStatusIssues = "false"
 )
+
+// awp aws onboarding data resource/data source
+const (
+	AwpAwsAccountID = "478980137264"
+)
