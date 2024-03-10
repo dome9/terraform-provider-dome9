@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -106,9 +107,22 @@ type GetAWPOnboardingResponse struct {
 	CentralizedCloudAccountId       string                    `json:"centralizedCloudAccountId"`
 }
 
-func (service *Service) CreateAWPOnboarding(id string, req CreateAWPOnboardingRequest) (*http.Response, error) {
-	path := fmt.Sprintf("%s/%s/enable", awsOnboardingResourcePath, id)
-	resp, err := service.Client.NewRequestDo("POST", path, nil, req, nil)
+func (service *Service) CreateAWPOnboarding(id string, req CreateAWPOnboardingRequest, queryParams map[string]string) (*http.Response, error) {
+	// Create the base path
+	basePath := fmt.Sprintf("%s/%s/enable", awsOnboardingResourcePath, id)
+
+	// Add the query parameters to the path
+	pathWithQueryParams := basePath
+	if len(queryParams) > 0 {
+		var params []string
+		for key, value := range queryParams {
+			params = append(params, fmt.Sprintf("%s=%s", key, value))
+		}
+		pathWithQueryParams = fmt.Sprintf("%s?%s", basePath, strings.Join(params, "&"))
+	}
+
+	// Make the request
+	resp, err := service.Client.NewRequestDo("POST", pathWithQueryParams, nil, req, nil)
 	if err != nil {
 		return nil, err
 	}
