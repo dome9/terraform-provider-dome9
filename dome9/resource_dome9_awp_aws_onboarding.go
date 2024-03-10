@@ -127,6 +127,11 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
+			"should_create_policy": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 		CustomizeDiff: func(diff *schema.ResourceDiff, v interface{}) error {
 			scanMode, scanModeOk := diff.GetOk("scan_mode")
@@ -148,7 +153,10 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 	cloudguardAccountId := d.Get("cloudguard_account_id").(string)
 	req := expandAWPOnboardingRequest(d)
 	log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
-	_, err := d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req)
+	queryParams := map[string]string{
+		"shouldCreatePolicy": d.Get("should_create_policy").(string),
+	}
+	_, err := d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, queryParams)
 	if err != nil {
 		return err
 	}
