@@ -27,5 +27,6 @@ const (
 	AdmissionControlPolicy                       = "dome9_admission_control_policy"
 	Assessment                                   = "dome9_assessment"
 	ImageAssurancePolicy                         = "dome9_image_assurance_policy"
-	AwpAwsOnboardingData                         = "dome9_awp_aws_get_onboarding_data"
+	AwpAwsGetOnboardingData                      = "dome9_awp_aws_get_onboarding_data"
+	AwpAwsOnboarding                             = "dome9_awp_aws_onboarding"
 )

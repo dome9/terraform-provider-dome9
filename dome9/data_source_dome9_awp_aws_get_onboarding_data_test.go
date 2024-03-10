@@ -23,7 +23,7 @@ func TestAccDataSourceAwpAwsOnboardingDataBasic(t *testing.T) {
 	awsCloudFormationStackHcl := getAwsCloudFormationStackResourceHCL(cloudFormationStackGeneratedName, awsUnifiedOnboardingResourceTypeAndName)
 
 	// Get dome9_awp_aws_get_onboarding_data resource names
-	_, awpAwsOnboardingDataSourceTypeAndName, awpAwsOnboardingDataGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwpAwsOnboardingData)
+	_, awpAwsOnboardingDataSourceTypeAndName, awpAwsOnboardingDataGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwpAwsGetOnboardingData)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -63,7 +63,7 @@ data "%s" "%s" {
 	`,
 		awsUnifiedOnboardingHcl,
 		awsCloudFormationStackHcl,
-		resourcetype.AwpAwsOnboardingData,
+		resourcetype.AwpAwsGetOnboardingData,
 		awpAwsGetOnboardingDataGeneratedName,
 		awsUnifiedOnboardingDataResourceAndType,
 	)

@@ -83,7 +83,6 @@ type AgentlessAccountSettings struct {
 type CreateAWPOnboardingRequest struct {
 	CrossAccountRoleName       string                   `json:"crossAccountRoleName"`
 	CrossAccountRoleExternalId string                   `json:"crossAccountRoleExternalId"`
-	CloudGuardAWPStackName     string                   `json:"cloudGuardAWPStackName"`
 	ScanMode                   string                   `json:"scanMode"`
 	IsTerraform                bool                     `json:"isTerraform"`
 	AgentlessAccountSettings   AgentlessAccountSettings `json:"agentlessAccountSettings"`
@@ -95,16 +94,16 @@ type AccountIssues struct {
 }
 
 type GetAWPOnboardingResponse struct {
-	AgentlessAccountSettings        AgentlessAccountSettings `json:"agentlessAccountSettings"`
-	MissingAwpPrivateNetworkRegions []string                 `json:"missingAwpPrivateNetworkRegions"`
-	AccountIssues                   AccountIssues            `json:"accountIssues"`
-	CloudAccountId                  string                   `json:"cloudAccountId"`
-	AgentlessProtectionEnabled      bool                     `json:"agentlessProtectionEnabled"`
-	ScanMode                        string                   `json:"scanMode"`
-	Provider                        string                   `json:"provider"`
-	ShouldUpdate                    bool                     `json:"shouldUpdate"`
-	IsOrgOnboarding                 bool                     `json:"isOrgOnboarding"`
-	CentralizedCloudAccountId       string                   `json:"centralizedCloudAccountId"`
+	AgentlessAccountSettings        *AgentlessAccountSettings `json:"agentlessAccountSettings"`
+	MissingAwpPrivateNetworkRegions []string                  `json:"missingAwpPrivateNetworkRegions"`
+	AccountIssues                   *AccountIssues            `json:"accountIssues"`
+	CloudAccountId                  string                    `json:"cloudAccountId"`
+	AgentlessProtectionEnabled      bool                      `json:"agentlessProtectionEnabled"`
+	ScanMode                        string                    `json:"scanMode"`
+	Provider                        string                    `json:"provider"`
+	ShouldUpdate                    bool                      `json:"shouldUpdate"`
+	IsOrgOnboarding                 bool                      `json:"isOrgOnboarding"`
+	CentralizedCloudAccountId       string                    `json:"centralizedCloudAccountId"`
 }
 
 func (service *Service) CreateAWPOnboarding(id string, req CreateAWPOnboardingRequest) (*http.Response, error) {
