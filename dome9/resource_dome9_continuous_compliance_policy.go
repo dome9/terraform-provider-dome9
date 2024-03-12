@@ -74,6 +74,7 @@ func resourceContinuousCompliancePolicyRead(d *schema.ResourceData, meta interfa
 
 	log.Printf("[INFO] Getting continuous compliance policy: %+v\n", resp)
 	d.SetId(resp.ID)
+	_ = d.Set("target_id", resp.TargetInternalId)
 	_ = d.Set("target_type", resp.TargetType)
 	_ = d.Set("ruleset_id", resp.RulesetId)
 	if err := d.Set("notification_ids", resp.NotificationIds); err != nil {
