@@ -82,11 +82,11 @@ type AgentlessAccountSettings struct {
 }
 
 type CreateAWPOnboardingRequest struct {
-	CrossAccountRoleName       string                   `json:"crossAccountRoleName"`
-	CrossAccountRoleExternalId string                   `json:"crossAccountRoleExternalId"`
-	ScanMode                   string                   `json:"scanMode"`
-	IsTerraform                bool                     `json:"isTerraform"`
-	AgentlessAccountSettings   AgentlessAccountSettings `json:"agentlessAccountSettings"`
+	CrossAccountRoleName       string                    `json:"crossAccountRoleName"`
+	CrossAccountRoleExternalId string                    `json:"crossAccountRoleExternalId"`
+	ScanMode                   string                    `json:"scanMode"`
+	IsTerraform                bool                      `json:"isTerraform"`
+	AgentlessAccountSettings   *AgentlessAccountSettings `json:"agentlessAccountSettings"`
 }
 
 type AccountIssues struct {

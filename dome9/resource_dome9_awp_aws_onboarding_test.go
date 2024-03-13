@@ -46,7 +46,7 @@ resource "%s" "%s" {
 		disabled_regions = ["us-east-1", "us-west-1"]  # Example disabled regions
 		scan_machine_interval_in_hours = 6
 		max_concurrence_scans_per_region = 2
-		skip_function_apps_scan = false
+		skip_function_apps_scan = true
 		custom_tags = {
 			tag1 = "value1"
 			tag2 = "value2"

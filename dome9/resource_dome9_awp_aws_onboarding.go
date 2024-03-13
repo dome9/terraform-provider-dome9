@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"log"
 	"strconv"
-	"strings"
 )
 
 func resourceAwpAwsOnboarding() *schema.Resource {
@@ -49,40 +48,37 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				}, false),
 			},
 			"agentless_account_settings": {
-				Type:     schema.TypeMap,
+				Type:     schema.TypeSet,
 				Optional: true,
-				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disabled_regions": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Default:  []string{},
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 						},
 						"scan_machine_interval_in_hours": {
 							Type:     schema.TypeInt,
 							Optional: true,
-							Computed: true,
 							Default:  4,
 						},
 						"max_concurrence_scans_per_region": {
 							Type:     schema.TypeInt,
 							Optional: true,
-							Computed: true,
 							Default:  1,
 						},
 						"skip_function_apps_scan": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Computed: true,
 						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Optional: true,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
 						},
 					},
 				},
@@ -95,7 +91,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 			},
 			"account_issues": {
 				Type:     schema.TypeList,
-				Optional: true,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -219,13 +214,13 @@ func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) erro
 	_ = d.Set("centralized_cloud_account_id", resp.CentralizedCloudAccountId)
 
 	if resp.AgentlessAccountSettings != nil {
-		if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettings(*resp.AgentlessAccountSettings)); err != nil {
+		if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettings(resp.AgentlessAccountSettings)); err != nil {
 			return err
 		}
 	}
 
 	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssues(*resp.AccountIssues)); err != nil {
+		if err := d.Set("account_issues", flattenAccountIssues(resp.AccountIssues)); err != nil {
 			return err
 		}
 	}
@@ -246,27 +241,28 @@ func resourceAWPAWSOnboardingDelete(d *schema.ResourceData, meta interface{}) er
 	return nil
 }
 
-func expandAgentlessAccountSettings(d *schema.ResourceData) awp_aws_onboarding.AgentlessAccountSettings {
-	// Initialize default values
-	agentlessAccountSettings := awp_aws_onboarding.AgentlessAccountSettings{
+func expandAgentlessAccountSettings(d *schema.ResourceData) *awp_aws_onboarding.AgentlessAccountSettings {
+	if _, ok := d.GetOk("agentless_account_settings"); !ok {
+		// If "agentless_account_settings" key doesn't exist, return nil (since these settings are optional)
+		return nil
+	}
+	agentlessAccountSettingsItem := d.Get("agentless_account_settings").(*schema.Set).List()[0]
+	agentlessAccountSettingsMap := agentlessAccountSettingsItem.(map[string]interface{})
+
+	// Initialize the AgentlessAccountSettings struct with default values
+	agentlessAccountSettings := &awp_aws_onboarding.AgentlessAccountSettings{
 		DisabledRegions:              make([]string, 0),
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   4,
 		MaxConcurrenceScansPerRegion: 1,
 		SkipFunctionAppsScan:         true,
 	}
-	if _, ok := d.GetOk("agentless_account_settings"); !ok {
-		// If "agentless_account_settings" key doesn't exist, return empty AgentlessAccountSettings
-		return agentlessAccountSettings
-	}
-
-	agentlessAccountSettingsMap := d.Get("agentless_account_settings").(map[string]interface{})
 
 	// Check if the key exists and is not nil
 	if disabledRegionsInterface, ok := agentlessAccountSettingsMap["disabled_regions"].([]interface{}); ok {
 		disabledRegions := make([]string, len(disabledRegionsInterface))
-		for i, v := range disabledRegionsInterface {
-			disabledRegions[i] = v.(string)
+		for i, disabledRegion := range disabledRegionsInterface {
+			disabledRegions[i] = disabledRegion.(string)
 		}
 		agentlessAccountSettings.DisabledRegions = disabledRegions
 	}
@@ -294,31 +290,19 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) awp_aws_onboarding.A
 	return agentlessAccountSettings
 }
 
-func flattenAgentlessAccountSettings(settings awp_aws_onboarding.AgentlessAccountSettings) map[string]interface{} {
-
-	// Flatten DisabledRegions
-	disabledRegions := make([]string, len(settings.DisabledRegions))
-	for i, region := range settings.DisabledRegions {
-		disabledRegions[i] = region
-	}
-
-	// Flatten CustomTags
-	customTags := make(map[string]interface{})
-	for key, value := range settings.CustomTags {
-		customTags[key] = value
-	}
+func flattenAgentlessAccountSettings(settings *awp_aws_onboarding.AgentlessAccountSettings) []interface{} {
 
 	m := map[string]interface{}{
-		"disabled_regions":                 strings.Join(disabledRegions, ","),
-		"scan_machine_interval_in_hours":   strconv.Itoa(settings.ScanMachineIntervalInHours),
-		"max_concurrence_scans_per_region": strconv.Itoa(settings.MaxConcurrenceScansPerRegion),
-		"skip_function_apps_scan":          strconv.FormatBool(settings.SkipFunctionAppsScan),
-		"custom_tags":                      fmt.Sprintf("%v", customTags),
+		"disabled_regions":                 settings.DisabledRegions,
+		"scan_machine_interval_in_hours":   settings.ScanMachineIntervalInHours,
+		"max_concurrence_scans_per_region": settings.MaxConcurrenceScansPerRegion,
+		"skip_function_apps_scan":          settings.SkipFunctionAppsScan,
+		"custom_tags":                      settings.CustomTags,
 	}
-	return m
+	return []interface{}{m}
 }
 
-func flattenAccountIssues(accountIssues awp_aws_onboarding.AccountIssues) []interface{} {
+func flattenAccountIssues(accountIssues *awp_aws_onboarding.AccountIssues) []interface{} {
 	m := map[string]interface{}{
 		"regions": accountIssues.Regions,
 		"account": accountIssues.Account,
