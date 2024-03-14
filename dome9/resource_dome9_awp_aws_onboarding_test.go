@@ -81,13 +81,12 @@ resource "%s" "%s" {
 	force_delete = false
 	should_create_policy = false
 	agentless_account_settings {
-		disabled_regions = ["us-east-1", "us-west-1"]  # Example disabled regions
-		scan_machine_interval_in_hours = 6
-		max_concurrence_scans_per_region = 2
+		disabled_regions = ["us-east-1"]
+		scan_machine_interval_in_hours = 8
+		max_concurrence_scans_per_region = 4
 		skip_function_apps_scan = true
 		custom_tags = {
 			tag1 = "value1"
-			tag2 = "value2"
 		}
 	}
 }

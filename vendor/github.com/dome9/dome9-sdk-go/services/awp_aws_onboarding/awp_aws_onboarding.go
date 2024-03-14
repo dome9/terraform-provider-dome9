@@ -188,3 +188,15 @@ func (service *Service) GetCloudAccountId(externalAccountId string) (string, *ht
 	}
 	return respData.ID, resp, nil
 }
+
+func (service *Service) UpdateAWPSettings(cloudProvider, id string, req AgentlessAccountSettings) (*http.Response, error) {
+	// Construct the URL path
+	path := fmt.Sprintf("workload/agentless/%s/accounts/%s/settings", cloudProvider, id)
+	// Make a PATCH request with the JSON body
+	resp, err := service.Client.NewRequestDo("PATCH", path, nil, req, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}

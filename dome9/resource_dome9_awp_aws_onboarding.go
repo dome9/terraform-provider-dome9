@@ -324,6 +324,7 @@ func flattenAccountIssues(accountIssues *awp_aws_onboarding.AccountIssues) []int
 }
 
 func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) error {
+	d9Client := meta.(*Client)
 	log.Println("An update occurred")
 
 	if d.HasChange("delete_force") {
@@ -336,6 +337,24 @@ func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) er
 	if d.HasChange("should_create_policy") {
 		log.Println("should_create_policy has been changed")
 		if err := d.Set("should_create_policy", d.Get("should_create_policy").(bool)); err != nil {
+			return err
+		}
+	}
+	// Check if there are changes in the AgentlessAccountSettings fields
+	if d.HasChange("agentless_account_settings") {
+		log.Println("agentless_account_settings has been changed")
+		// Build the update request
+		newAgentlessAccountSettings, err := expandAgentlessAccountSettings(d)
+		if err != nil {
+			return err
+		}
+		// Send the update request
+		_, err = d9Client.awpAwsOnboarding.UpdateAWPSettings(d.Get("cloud_provider").(string), d.Id(), *newAgentlessAccountSettings)
+		if err != nil {
+			return err
+		}
+		log.Printf("[INFO] Updated agentless account settings for cloud account %s\n", d.Id())
+		if err != nil {
 			return err
 		}
 	}
