@@ -144,7 +144,7 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 			"force_delete": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
+				Default:  true,
 			},
 		},
 		CustomizeDiff: func(diff *schema.ResourceDiff, v interface{}) error {
@@ -254,7 +254,8 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 		// If "agentless_account_settings" key doesn't exist, return nil (since these settings are optional)
 		return nil, nil
 	}
-	agentlessAccountSettingsItem := d.Get("agentless_account_settings").(*schema.Set).List()[0]
+	agentlessAccountSettingsList := d.Get("agentless_account_settings").(*schema.Set).List()
+	agentlessAccountSettingsItem := agentlessAccountSettingsList[len(agentlessAccountSettingsList)-1]
 	agentlessAccountSettingsMap := agentlessAccountSettingsItem.(map[string]interface{})
 
 	// Initialize the AgentlessAccountSettings struct with default values
