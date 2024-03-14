@@ -26,8 +26,15 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 				Config: testAccCheckAWPAWSOnboardingBasic(generatedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAwpAccountExists(resourceTypeAndName, &awpCloudAccountInfo),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "cloudguard_account_id", "2775e042-928c-4deb-9259-13fe0cfb0ea6"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "cloudguard_account_id", "8f9cfb94-4365-4a29-a7b9-cabbb7fe9430"),
 					// Add more TestCheckResourceAttr functions for each attribute to check
+				),
+			},
+			{
+				Config: testAccCheckAWPAWSOnboardingUpdate(generatedName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceTypeAndName, "force_delete", "false"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "should_create_policy", "false"),
 				),
 			},
 		},
@@ -42,6 +49,7 @@ resource "%s" "%s" {
 	cross_account_role_external_id = "%s"
 	scan_mode = "%s"
 	force_delete = true
+	should_create_policy = true
 	agentless_account_settings {
 		disabled_regions = ["us-east-1", "us-west-1"]  # Example disabled regions
 		scan_machine_interval_in_hours = 6
@@ -56,9 +64,39 @@ resource "%s" "%s" {
 `,
 		resourcetype.AwpAwsOnboarding,
 		generatedName,
-		"2775e042-928c-4deb-9259-13fe0cfb0ea6",
+		"8f9cfb94-4365-4a29-a7b9-cabbb7fe9430",
 		"CloudGuardAWPCrossAccountRole",
-		"NDYwNjc4MTkzOTI2LTI3NzVlMDQyLTkyOGMtNGRlYi05MjU5LTEzZmUwY2ZiMGVhNg==",
+		"NDYwNjc4MTkzOTI2LThmOWNmYjk0LTQzNjUtNGEyOS1hN2I5LWNhYmJiN2ZlOTQzMA==",
+		"inAccount",
+	)
+}
+
+func testAccCheckAWPAWSOnboardingUpdate(generatedName string) string {
+	return fmt.Sprintf(`
+resource "%s" "%s" {
+	cloudguard_account_id = "%s"
+	cross_account_role_name = "%s"
+	cross_account_role_external_id = "%s"
+	scan_mode = "%s"
+	force_delete = false
+	should_create_policy = false
+	agentless_account_settings {
+		disabled_regions = ["us-east-1", "us-west-1"]  # Example disabled regions
+		scan_machine_interval_in_hours = 6
+		max_concurrence_scans_per_region = 2
+		skip_function_apps_scan = true
+		custom_tags = {
+			tag1 = "value1"
+			tag2 = "value2"
+		}
+	}
+}
+`,
+		resourcetype.AwpAwsOnboarding,
+		generatedName,
+		"8f9cfb94-4365-4a29-a7b9-cabbb7fe9430",
+		"CloudGuardAWPCrossAccountRole",
+		"NDYwNjc4MTkzOTI2LThmOWNmYjk0LTQzNjUtNGEyOS1hN2I5LWNhYmJiN2ZlOTQzMA==",
 		"inAccount",
 	)
 }
