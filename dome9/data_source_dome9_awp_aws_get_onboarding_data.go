@@ -10,7 +10,7 @@ func dataSourceAwpAwsOnboardingData() *schema.Resource {
 		Read: dataSourceAwpAwsOnboardingDataRead,
 
 		Schema: map[string]*schema.Schema{
-			"external_aws_account_id": {
+			"cloudguard_account_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -76,7 +76,7 @@ func dataSourceAwpAwsOnboardingDataRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("remote_snapshots_utils_function_run_time", resp.RemoteSnapshotsUtilsFunctionRunTime)
 	_ = d.Set("remote_snapshots_utils_function_time_out", resp.RemoteSnapshotsUtilsFunctionTimeOut)
 	_ = d.Set("awp_client_side_security_group_name", resp.AwpClientSideSecurityGroupName)
-	cloudAccountID, _, err := d9Client.awpAwsOnboarding.GetCloudAccountId(d.Get("external_aws_account_id").(string))
+	cloudAccountID, _, err := d9Client.awpAwsOnboarding.GetCloudAccountId(d.Get("cloudguard_account_id").(string))
 	if err != nil {
 		return err
 	}

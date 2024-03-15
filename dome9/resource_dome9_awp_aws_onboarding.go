@@ -46,8 +46,8 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				ValidateFunc: validation.StringInSlice([]string{
 					"inAccount",
 					"saas",
-					"in-account-hub",
-					"in-account-sub",
+					"inAccountHub",
+					"inAccountSub",
 				}, false),
 			},
 			"agentless_account_settings": {
