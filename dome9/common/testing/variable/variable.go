@@ -214,5 +214,16 @@ const (
 
 // awp aws onboarding data resource/data source
 const (
-	AwpAwsAccountID = "478980137264"
+	AwpAwsAccountID                    = "478980137264"
+	OnboardedAwsCloudGuardAccountID    = "7a64e5fb-1e22-47ed-a8b0-0f5a4786bb28"
+	AwpAwsCrossAccountRoleName         = "CloudGuardAWPCrossAccountRole"
+	ScanMode                           = "inAccount"
+	DisabledRegions                    = "[\"us-east-1\", \"us-west-1\"]"
+	DisabledRegionsUpdate              = "[\"us-east-1\", \"us-west-1\", \"ap-northeast-1\", \"ap-southeast-2\"]"
+	ScanMachineIntervalInHours         = "6"
+	ScanMachineIntervalInHoursUpdate   = "10"
+	MaxConcurrenceScansPerRegion       = "4"
+	MaxConcurrenceScansPerRegionUpdate = "8"
+	CustomTags                         = "{\"tag1\": \"value1\", \"tag2\": \"value2\"}"
+	CustomTagsUpdate                   = "{\"tag1\": \"value1\", \"tag2\": \"value2\", \"tag3\": \"value3\""
 )
