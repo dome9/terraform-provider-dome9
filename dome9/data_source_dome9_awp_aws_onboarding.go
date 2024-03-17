@@ -2,7 +2,6 @@ package dome9
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"log"
 )
 
@@ -22,12 +21,6 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 			"scan_mode": {
 				Type:     schema.TypeString,
 				Computed: true,
-				ValidateFunc: validation.StringInSlice([]string{
-					"inAccount",
-					"saas",
-					"inAccountHub",
-					"inAccountSub",
-				}, false),
 			},
 			"agentless_account_settings": {
 				Type:     schema.TypeSet,

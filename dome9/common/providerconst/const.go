@@ -201,8 +201,3 @@ var PermissionTrafficType = map[string]string{
 
 // All Assessments Cloud Accounts Types
 var AssessmentCloudAccountType = []string{"Aws", "Azure", "GCP", "Kubernetes", "Terraform", "Generic", "KubernetesRuntimeAssurance", "ShiftLeft", "SourceCodeAssurance", "ImageAssurance", "Alibaba", "Cft", "ContainerRegistry", "Ers"}
-
-// AWP onboarding
-const (
-	AwsCloudFormationStack = "aws_cloudformation_stack"
-)

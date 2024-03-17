@@ -1,4 +1,3 @@
-
 # Dome9 Provider Configurations
 terraform {
 	required_providers {
@@ -6,52 +5,98 @@ terraform {
 			source = "dome9/dome9"
 			version = "1.29.6"
 		}
-	}
-}
-
-provider "dome9" {
-	dome9_access_id     = "DOME9_CLOUDGUARD_API_ACCESS_ID"
-	dome9_secret_key    = "DOME9_CLOUDGUARD_API_SECRET_KEY"
-	base_url            = "DOME9_API_BASE_URL"
-}
-
-terraform {
-	required_providers {
 		aws = {
 			source = "hashicorp/aws"
-			version = "5.37.0"
+			version = "5.39.1"
 		}
 	}
 }
 
+provider "dome9" {
+	dome9_access_id     = "DOME9_ACCESS_ID"
+	dome9_secret_key    = "DOME9_SECRET_KEY"
+	base_url            = "DOME9_BASE_URL"
+}
+
 provider "aws" {
-	region     = "us-east-1"
-	profile = "custom"
+	region     = "AWS_REGION"
+	access_key = "AWS_ACCESS_KEY"
+	secret_key = "AWS_SECRET_KEY"
+	token      = "AWS_SESSION_TOKEN"
+}
+
+/*
+resource "dome9_aws_unified_onboarding" "omark_aws_account_onboarding" {
+	cloud_vendor = "aws"
+	onboard_type = "Simple"
+	full_protection = true
+	enable_stack_modify = true
+	posture_management_configuration = {
+		rulesets = "[0]"
+	}
+	serverless_configuration  = {
+		enabled = false
+	}
+	intelligence_configurations = {
+		rulesets = "[0]"
+		enabled = false
+	}
+}
+
+resource "aws_cloudformation_stack" "stack"{
+	name = dome9_aws_unified_onboarding.omark_aws_account_onboarding.stack_name
+	template_url = dome9_aws_unified_onboarding.omark_aws_account_onboarding.template_url
+	parameters = dome9_aws_unified_onboarding.omark_aws_account_onboarding.parameters
+	capabilities = dome9_aws_unified_onboarding.omark_aws_account_onboarding.iam_capabilities
+}
+
+data "dome9_aws_unified_onboarding" "omark_aws_account_onboarding_data" {
+	id = dome9_aws_unified_onboarding.omark_aws_account_onboarding.id
+	depends_on = [
+		aws_cloudformation_stack.stack
+	]
+}
+
+output "environment_external_id" {
+	value = data.dome9_aws_unified_onboarding.omark_aws_account_onboarding_data.environment_external_id
+	description = "The external ID of the environment"
+}
+*/
+
+resource "dome9_cloudaccount_aws" "omark_aws_account" {
+	name  = "omark_aws_account"
+	credentials  {
+		arn    = "arn:aws:iam::478980137264:role/CloudGuard-Connect"
+		secret = "IAM_ROLE_SECRET"
+		type   = "RoleBased"
+	}
+	net_sec {
+		regions {
+			new_group_behavior = "ReadOnly"
+			region             = "us_west_2"
+		}
+	}
 }
 
 data "dome9_awp_aws_get_onboarding_data" "dome9_awp_aws_onboarding_data_source" {
-	cloudguard_account_id = "ae481d4a-603b-4fa6-8f31-6c6d57920e96"
-	scan_mode = "inAccount"
+	cloud_account_id = dome9_cloudaccount_aws.omark_aws_account.external_account_number
+	depends_on = [
+		dome9_cloudaccount_aws.omark_aws_account
+	]
 }
 
-#onboarding Enable/Disable AWP on AWS Account
-
-resource "dome9_awp_aws_onboarding" "awp_onboarding_on_aws" {
-	cloudguard_account_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode
-	cross_account_role_name = "CloudGuardAWPCrossAccountRole" # default value can be applicable
-	# should be similar to "NjM0NzI5NTk3NjIzLWFlNDgxZDRhLTYwM2ItNGZhNi04ZjMxLTZjNmQ1NzkyMGU5Ng=="
-	cross_account_external_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cross_account_external_id
-	scan_mode = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode
-	should_create_policy = false
-	force_delete = false
-	account_settings = {
-
-	}
-	version = ""
-	# Add depends_on to ensure this resource is created last
-	depends_on = [
-		aws_iam_role_policy_attachment.CloudGuardAWPCrossAccountRoleAttachment
-	]
+locals {
+	scan_mode = "inAccount"
+	stage = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.stage
+	region = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.region
+	cloud_guard_backend_account_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cloud_guard_backend_account_id
+	agentless_bucket_name = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.agentless_bucket_name
+	remote_functions_prefix_key = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.remote_functions_prefix_key
+	remote_snapshots_utils_function_name = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.remote_snapshots_utils_function_name
+	remote_snapshots_utils_function_run_time = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.remote_snapshots_utils_function_run_time
+	remote_snapshots_utils_function_time_out = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.remote_snapshots_utils_function_time_out
+	awp_client_side_security_group_name = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.awp_client_side_security_group_name
+	cross_account_role_external_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cross_account_role_external_id
 }
 
 data "aws_partition" "current" {}
@@ -69,12 +114,12 @@ resource "aws_iam_role" "CloudGuardAWPCrossAccountRole" {
 		Statement = [{
 			Effect    = "Allow"
 			Principal = {
-				AWS = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.d9_aws_account_id
+				AWS = local.cloud_guard_backend_account_id
 			}
 			Action    = "sts:AssumeRole"
 			Condition = {
 				StringEquals = {
-					"sts:ExternalId" = "${data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cross_account_external_id}"
+					"sts:ExternalId" = local.cross_account_role_external_id
 				}
 			}
 		}]
@@ -118,12 +163,12 @@ resource "aws_iam_policy" "CloudGuardAWP" {
 			{
 				Effect   = "Allow"
 				Action   = "cloudformation:DescribeStacks"
-				Resource = "arn:${data.aws_partition.current.partition}:cloudformation:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:stack/stackName/*"
+				Resource = "arn:${data.aws_partition.current.partition}:cloudformation:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:stack/*"
 			},
 			{
 				Effect   = "Allow"
 				Action   = "s3:GetObject"
-				Resource = "arn:${data.aws_partition.current.partition}:s3:::agentless-prod-us/remote_functions*"
+				Resource = "arn:${data.aws_partition.current.partition}:s3:::${local.agentless_bucket_name}/${local.remote_functions_prefix_key}*"
 			}
 		]
 	})
@@ -137,7 +182,7 @@ resource "aws_iam_role_policy_attachment" "CloudGuardAWPCrossAccountRoleAttachme
 
 # Cross account role policy
 resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy" {
-	count = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "inAccount" ? 1 : 0
+	count = local.scan_mode == "inAccount" ? 1 : 0
 	name        = "CloudGuardAWPCrossAccountRolePolicy"
 	description = "Policy for CloudGuard AWP Cross Account Role"
 
@@ -174,7 +219,7 @@ resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy" {
 }
 
 resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy_SaaS" {
-	count = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "saas" ? 1 : 0
+	count = local.scan_mode == "saas" ? 1 : 0
 	name        = "CloudGuardAWPCrossAccountRolePolicy_SaaS"
 	description = "Policy for CloudGuard AWP Cross Account Role - SaaS Mode"
 
@@ -187,7 +232,7 @@ resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy_SaaS" {
 					"kms:DescribeKey",
 					"kms:ReplicateKey",
 				]
-				Resource = [aws_kms_key.CloudGuardAWPKey.arn]
+				Resource = [aws_kms_key.CloudGuardAWPKey[count.index].arn]
 			},
 			{
 				Effect = "Allow"
@@ -197,7 +242,7 @@ resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy_SaaS" {
 					"kms:CancelKeyDeletion",
 					"kms:TagResource",
 				]
-				Resource = aws_kms_key.CloudGuardAWPKey.arn
+				Resource = aws_kms_key.CloudGuardAWPKey[count.index].arn
 			},
 			{
 				Effect = "Allow"
@@ -211,14 +256,14 @@ resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy_SaaS" {
 }
 
 resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachment" {
-	count       = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "inAccount" ? 1 : 0
+	count       = local.scan_mode == "inAccount" ? 1 : 0
 	name       = "CloudGuardAWPCrossAccountRolePolicyAttachment"
 	policy_arn  = aws_iam_policy.CloudGuardAWPCrossAccountRolePolicy[count.index].arn
 	roles       = [aws_iam_role.CloudGuardAWPCrossAccountRole.name]
 }
 
 resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachment_SaaS" {
-	count = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "saas" ? 1 : 0
+	count = local.scan_mode == "saas" ? 1 : 0
 	name       = "CloudGuardAWPCrossAccountRolePolicyAttachment_SaaS"
 	policy_arn  = aws_iam_policy.CloudGuardAWPCrossAccountRolePolicy_SaaS[count.index].arn
 	roles       = [aws_iam_role.CloudGuardAWPCrossAccountRole.name]
@@ -227,53 +272,29 @@ resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachm
 
 # AWP proxy lambda function
 resource "aws_lambda_function" "CloudGuardAWPSnapshotsUtilsFunction" {
-	function_name    = "CloudGuardAWPSnapshotsUtils"
+	function_name    = local.remote_snapshots_utils_function_name
 	handler          = "snapshots_utils.lambda_handler"
 	description      = "CloudGuard AWP Proxy for managing remote actions and resources"
 	role             = aws_iam_role.CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.arn
 	runtime          = "python3.9"
 	memory_size      = 256
-	timeout          = 900
-	s3_bucket        = "agentless-prod-us"
-	s3_key           = "remote_functions/CloudGuardAWPSnapshotsUtils7.zip"
+	timeout          = local.remote_snapshots_utils_function_time_out
+	s3_bucket        = local.agentless_bucket_name
+	s3_key           = "${local.remote_functions_prefix_key}/${local.remote_snapshots_utils_function_name}7.zip"
 
 	environment {
 		variables = {
-			CP_AWP_AWS_ACCOUNT        = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.d9_aws_account_id
-			CP_AWP_MR_KMS_KEY_ID      = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "saas" ? aws_kms_key.CloudGuardAWPKey.arn : ""
-			CP_AWP_SCAN_MODE          = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode
-			CP_AWP_SECURITY_GROUP_NAME = "CloudGuardAWPSecurityGroup"
+			CP_AWP_AWS_ACCOUNT        = local.cloud_guard_backend_account_id
+			CP_AWP_MR_KMS_KEY_ID      = local.scan_mode == "saas" ? aws_kms_key.CloudGuardAWPKey[0].arn : ""
+			CP_AWP_SCAN_MODE          = local.scan_mode
+			CP_AWP_SECURITY_GROUP_NAME = local.awp_client_side_security_group_name
 			AWS_PARTITION             = data.aws_partition.current.partition
+			CP_AWP_LOG_LEVEL		  = "DEBUG"
 		}
 	}
 
 	tags = {
 		Owner = "CG.AWP"
-	}
-
-	# Use provisioners to invoke the Lambda function after creation and destruction
-	# Define Provisioners to do some equivalent to AWS Custom Resource
-	# Create Provisioner is not relevant
-	provisioner "local-exec" {
-		when    = "create"
-		command = <<EOF
-aws lambda invoke \
-    --function-name ${aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction.function_name} \
-    --invocation-type RequestResponse \
-    --payload '{"action": "create"}' \
-    /dev/null
-EOF
-	}
-
-	provisioner "local-exec" {
-		when    = "destroy"
-		command = <<EOF
-aws lambda invoke \
-    --function-name ${aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction.function_name} \
-    --invocation-type RequestResponse \
-    --payload '{"action": "destroy"}' \
-    /dev/null
-EOF
 	}
 }
 
@@ -282,13 +303,16 @@ resource "aws_lambda_permission" "allow_cloudguard" {
 	action        = "lambda:InvokeFunction"
 	function_name = aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction.function_name
 	principal     = "s3.amazonaws.com"
-	source_arn    = "arn:${data.aws_partition.current.partition}:s3:::agentless-prod-us/*"
+	source_arn    = "arn:${data.aws_partition.current.partition}:s3:::${local.agentless_bucket_name}/*"
 }
 # END AWP proxy lambda function
 
 resource "aws_cloudwatch_log_group" "CloudGuardAWPSnapshotsUtilsLogGroup" {
 	name              = "/aws/lambda/CloudGuardAWPSnapshotsUtils"
 	retention_in_days = 30
+	depends_on = [
+		aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction
+	]
 }
 
 # AWP proxy lambda function role
@@ -364,7 +388,7 @@ resource "aws_iam_role_policy_attachment" "CloudGuardAWPSnapshotsUtilsLambdaExec
 
 # AWP proxy lambda function role policy
 resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy" {
-	count       = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "inAccount" ? 1 : 0
+	count       = local.scan_mode == "inAccount" ? 1 : 0
 	name        = "CloudGuardAWPLambdaExecutionRolePolicy"
 	description = "Policy for CloudGuard AWP Lambda Execution Role"
 
@@ -385,7 +409,7 @@ resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy" {
 					"ec2:DeleteVolume",
 				]
 				Resource = "*"
-				Condition = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "inAccount" ? {
+				Condition = local.scan_mode == "inAccount" ? {
 					StringEquals = {
 						"aws:ResourceTag/Owner" = "CG.AWP"
 					}
@@ -447,7 +471,7 @@ resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy" {
 					"ec2:CreateNetworkAclEntry",
 				]
 				Resource = "*"
-				Condition = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "inAccount" ? {
+				Condition = local.scan_mode == "inAccount" ? {
 					StringEquals = {
 						"aws:ResourceTag/Owner" = "CG.AWP"
 					}
@@ -458,7 +482,7 @@ resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy" {
 }
 
 resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy_SaaS" {
-	count       = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "saas" ? 1 : 0
+	count       = local.scan_mode == "saas" ? 1 : 0
 	name        = "CloudGuardAWPLambdaExecutionRolePolicy_SaaS"
 	description = "Policy for CloudGuard AWP Lambda Execution Role - SaaS Mode"
 
@@ -507,30 +531,41 @@ resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy_SaaS" {
 }
 
 resource "aws_iam_policy_attachment" "CloudGuardAWPLambdaExecutionRolePolicyAttachment" {
-	count       = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "inAccount" ? 1 : 0
+	count       = local.scan_mode == "inAccount" ? 1 : 0
 	name = "CloudGuardAWPLambdaExecutionRolePolicyAttachment"
 	policy_arn  = aws_iam_policy.CloudGuardAWPLambdaExecutionRolePolicy[count.index].arn
 	roles       = [aws_iam_role.CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.name]
 }
 
 resource "aws_iam_policy_attachment" "CloudGuardAWPLambdaExecutionRolePolicyAttachment_SaaS" {
-	count       = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "saas" ? 1 : 0
+	count       = local.scan_mode == "saas" ? 1 : 0
 	name = "CloudGuardAWPLambdaExecutionRolePolicyAttachment"
 	policy_arn  = aws_iam_policy.CloudGuardAWPLambdaExecutionRolePolicy_SaaS[count.index].arn
 	roles       = [aws_iam_role.CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.name]
 }
 # END AWP proxy lambda function role policy
 
+resource "aws_lambda_invocation" "CloudGuardAWPSnapshotsUtilsCleanupFunctionInvocation" {
+	function_name = aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction.function_name
+	input = jsonencode({
+		"target_account_id" : data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.external_aws_account_id
+	})
+	lifecycle_scope = "CRUD"
+	depends_on      = [
+		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment,
+		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment_SaaS
+	]
+}
+
 # AWP MR key for snapshot re-encryption
 resource "aws_kms_key" "CloudGuardAWPKey" {
-	count       = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.scan_mode == "saas" ? 1 : 0
-
+	count       = local.scan_mode == "saas" ? 1 : 0
 	description          = "CloudGuard AWP Multi-Region primary key for snapshots re-encryption (for Saas mode only)"
 	enable_key_rotation  = true
-	pending_window_in_days = 7
+	deletion_window_in_days = 7
 
 	# Conditionally set multi-region based on IsChinaPartition
-	multi_region         = data.aws_partition.current.partition == "aws-cn" ? false : true
+	multi_region = data.aws_partition.current.partition == "aws-cn" ? false : true
 
 	policy = jsonencode({
 		Version = "2012-10-17"
@@ -549,7 +584,7 @@ resource "aws_kms_key" "CloudGuardAWPKey" {
 				Sid       = "Allow usage of the key"
 				Effect    = "Allow"
 				Principal = {
-					AWS = "arn:${data.aws_partition.current.partition}:iam::${data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.d9_aws_account_id}:root"
+					AWS = "arn:${data.aws_partition.current.partition}:iam::${local.cloud_guard_backend_account_id}:root"
 				}
 				Action = [
 					"kms:DescribeKey",
@@ -567,7 +602,7 @@ resource "aws_kms_key" "CloudGuardAWPKey" {
 				Sid       = "Allow attachment of persistent resources"
 				Effect    = "Allow"
 				Principal = {
-					AWS = "arn:${data.aws_partition.current.partition}:iam::${data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.d9_aws_account_id}:root"
+					AWS = "arn:${data.aws_partition.current.partition}:iam::${local.cloud_guard_backend_account_id}:root"
 				}
 				Action = [
 					"kms:CreateGrant",
@@ -585,3 +620,28 @@ resource "aws_kms_key" "CloudGuardAWPKey" {
 	})
 }
 #END AWP MR key for snapshot re-encryption
+
+resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
+	cloudguard_account_id = dome9_cloudaccount_aws.omark_aws_account.id
+	cross_account_role_name = aws_iam_role.CloudGuardAWPCrossAccountRole.name
+	cross_account_role_external_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cross_account_role_external_id
+	scan_mode = "inAccount"
+	agentless_account_settings {
+		disabled_regions = ["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]
+		scan_machine_interval_in_hours = 10
+		max_concurrence_scans_per_region = 6
+		skip_function_apps_scan = true
+		custom_tags = {
+			tag1 = "value1"
+			tag2 = "value2"
+			tag3 = "value3"
+		}
+	}
+	force_delete = true
+	depends_on = [
+		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment,
+		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment_SaaS,
+		aws_iam_role.CloudGuardAWPCrossAccountRole,
+		aws_iam_role_policy_attachment.CloudGuardAWPCrossAccountRoleAttachment
+	]
+}

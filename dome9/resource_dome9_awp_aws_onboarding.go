@@ -51,7 +51,8 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				}, false),
 			},
 			"agentless_account_settings": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
+				MaxItems: 1,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -139,7 +140,7 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 			"should_create_policy": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
+				Default:  true,
 			},
 			"force_delete": {
 				Type:     schema.TypeBool,
@@ -254,9 +255,8 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 		// If "agentless_account_settings" key doesn't exist, return nil (since these settings are optional)
 		return nil, nil
 	}
-	agentlessAccountSettingsList := d.Get("agentless_account_settings").(*schema.Set).List()
-	agentlessAccountSettingsItem := agentlessAccountSettingsList[len(agentlessAccountSettingsList)-1]
-	agentlessAccountSettingsMap := agentlessAccountSettingsItem.(map[string]interface{})
+	agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
+	agentlessAccountSettingsMap := agentlessAccountSettingsList[0].(map[string]interface{})
 
 	// Initialize the AgentlessAccountSettings struct with default values
 	agentlessAccountSettings := &awp_aws_onboarding.AgentlessAccountSettings{

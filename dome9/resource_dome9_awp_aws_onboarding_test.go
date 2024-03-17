@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -8,6 +9,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
@@ -19,6 +21,10 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 	// Generate All Required Random Names for Testing
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwpAwsOnboarding)
 	CrossAccountRoleExternalId := os.Getenv(environmentvariable.AwpAwsCrossAccountRoleExternalIdEnvVar)
+	disabledRegion1, _ := getRegionByIndex(variable.DisabledRegions, 0)
+	disabledRegion2, _ := getRegionByIndex(variable.DisabledRegions, 1)
+	disabledRegionUpdate3, _ := getRegionByIndex(variable.DisabledRegionsUpdate, 2)
+	disabledRegionUpdate4, _ := getRegionByIndex(variable.DisabledRegionsUpdate, 3)
 
 	// Generate the Awp AWS onboarding HCL Resources
 	awpAwsOnboardingHcl := getAwpAwsOnboardingResourceHCL(generatedName, CrossAccountRoleExternalId, false)
@@ -39,11 +45,12 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_name", variable.AwpAwsCrossAccountRoleName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_external_id", CrossAccountRoleExternalId),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions", variable.DisabledRegions),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHours),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrence_scans_per_region", variable.MaxConcurrenceScansPerRegion),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.skip_function_apps_scan", "true"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags", variable.CustomTags),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "2"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "force_delete", "true"),
@@ -58,11 +65,14 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_name", variable.AwpAwsCrossAccountRoleName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_external_id", CrossAccountRoleExternalId),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions", variable.DisabledRegionsUpdate),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.2", disabledRegionUpdate3),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.3", disabledRegionUpdate4),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHoursUpdate),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrence_scans_per_region", variable.MaxConcurrenceScansPerRegionUpdate),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.skip_function_apps_scan", "true"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags", variable.CustomTagsUpdate),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "3"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "force_delete", "true"),
@@ -79,7 +89,20 @@ func testAccCheckAWPAWSOnboardingDestroy(state *terraform.State) error {
 		if rs.Type != resourcetype.AwpAwsOnboarding {
 			continue
 		}
-		getOnboardingResponse, _, err := apiClient.awpAwsOnboarding.GetAWPOnboarding("aws", rs.Primary.ID)
+		maxRetries := 3
+		retryInterval := time.Second * 5
+		var getOnboardingResponse *awp_aws_onboarding.GetAWPOnboardingResponse
+		var err error
+		for i := 0; i < maxRetries; i++ {
+			getOnboardingResponse, _, err = apiClient.awpAwsOnboarding.GetAWPOnboarding("aws", rs.Primary.ID)
+			if err == nil || getOnboardingResponse != nil {
+				// If the request was successful or the resource still exists, wait for the retry interval before trying again
+				time.Sleep(retryInterval)
+			} else {
+				// If the request failed with a 404 status code, break the loop
+				break
+			}
+		}
 		if err == nil {
 			return fmt.Errorf("error Awp Aws Onboarding still exists, ID: %s", rs.Primary.ID)
 		}
@@ -87,7 +110,6 @@ func testAccCheckAWPAWSOnboardingDestroy(state *terraform.State) error {
 		if getOnboardingResponse != nil {
 			return fmt.Errorf("error Awp Aws Onboarding still exists and wasn't destroyed, ID: %s", rs.Primary.ID)
 		}
-
 	}
 	return nil
 }
@@ -131,11 +153,11 @@ resource "%s" "%s" {
 	cross_account_role_external_id = "%s"
 	scan_mode = "%s"
 	agentless_account_settings {
-		disabled_regions = "%s"
+		disabled_regions = %s
 		scan_machine_interval_in_hours = "%s"
 		max_concurrence_scans_per_region = "%s"
 		skip_function_apps_scan = "true"
-		custom_tags = "%s"
+		custom_tags = %s
 	}
 }
 `,
@@ -156,4 +178,16 @@ func testAwpAwsEnvVarsPreCheck(t *testing.T) {
 	if v := os.Getenv(environmentvariable.AwpAwsCrossAccountRoleExternalIdEnvVar); v == "" {
 		t.Fatalf("%s must be set for acceptance tests", environmentvariable.AwpAwsCrossAccountRoleExternalIdEnvVar)
 	}
+}
+
+func getRegionByIndex(regionsRaw string, index int) (string, error) {
+	var regions []string
+	err := json.Unmarshal([]byte(regionsRaw), &regions)
+	if err != nil {
+		return "", err
+	}
+	if index < 0 || index >= len(regions) {
+		return "", fmt.Errorf("index out of range")
+	}
+	return regions[index], nil
 }
