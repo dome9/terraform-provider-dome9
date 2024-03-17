@@ -43,7 +43,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 			"scan_mode": {
 				Type:     schema.TypeString,
 				Required: true,
-				Default:  "saas",
 				ValidateFunc: validation.StringInSlice([]string{
 					"inAccount",
 					"saas",
