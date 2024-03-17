@@ -87,7 +87,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.Assessment:                                   dataSourceAssessment(),
 			resourcetype.ImageAssurancePolicy:                         dataSourceImageAssurancePolicy(),
 			resourcetype.AwpAwsGetOnboardingData:                      dataSourceAwpAwsOnboardingData(),
-			resourcetype.AwpAwsOnboardingData:                         dataSourceAwpAwsOnboarding(),
+			resourcetype.AwpAwsOnboarding:                             dataSourceAwpAwsOnboarding(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
