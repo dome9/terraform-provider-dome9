@@ -15,59 +15,21 @@ terraform {
 provider "dome9" {
 	dome9_access_id     = "DOME9_ACCESS_ID"
 	dome9_secret_key    = "DOME9_SECRET_KEY"
-	base_url            = "DOME9_BASE_URL"
+	base_url            = "https://api.us7.falconetix.com/v2/"
 }
 
 provider "aws" {
-	region     = "AWS_REGION"
-	access_key = "AWS_ACCESS_KEY"
-	secret_key = "AWS_SECRET_KEY"
-	token      = "AWS_SESSION_TOKEN"
+	region     = "us-west-2"
+	access_key = ""
+	secret_key = ""
+	token      = ""
 }
-
-/*
-resource "dome9_aws_unified_onboarding" "omark_aws_account_onboarding" {
-	cloud_vendor = "aws"
-	onboard_type = "Simple"
-	full_protection = true
-	enable_stack_modify = true
-	posture_management_configuration = {
-		rulesets = "[0]"
-	}
-	serverless_configuration  = {
-		enabled = false
-	}
-	intelligence_configurations = {
-		rulesets = "[0]"
-		enabled = false
-	}
-}
-
-resource "aws_cloudformation_stack" "stack"{
-	name = dome9_aws_unified_onboarding.omark_aws_account_onboarding.stack_name
-	template_url = dome9_aws_unified_onboarding.omark_aws_account_onboarding.template_url
-	parameters = dome9_aws_unified_onboarding.omark_aws_account_onboarding.parameters
-	capabilities = dome9_aws_unified_onboarding.omark_aws_account_onboarding.iam_capabilities
-}
-
-data "dome9_aws_unified_onboarding" "omark_aws_account_onboarding_data" {
-	id = dome9_aws_unified_onboarding.omark_aws_account_onboarding.id
-	depends_on = [
-		aws_cloudformation_stack.stack
-	]
-}
-
-output "environment_external_id" {
-	value = data.dome9_aws_unified_onboarding.omark_aws_account_onboarding_data.environment_external_id
-	description = "The external ID of the environment"
-}
-*/
 
 resource "dome9_cloudaccount_aws" "omark_aws_account" {
 	name  = "omark_aws_account"
 	credentials  {
-		arn    = "arn:aws:iam::478980137264:role/CloudGuard-Connect"
-		secret = "IAM_ROLE_SECRET"
+		arn    = "ARN for IAM Role"
+		secret = "Secret for IAM Role"
 		type   = "RoleBased"
 	}
 	net_sec {
@@ -548,7 +510,7 @@ resource "aws_iam_policy_attachment" "CloudGuardAWPLambdaExecutionRolePolicyAtta
 resource "aws_lambda_invocation" "CloudGuardAWPSnapshotsUtilsCleanupFunctionInvocation" {
 	function_name = aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction.function_name
 	input = jsonencode({
-		"target_account_id" : data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.external_aws_account_id
+		"target_account_id" : data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cloud_account_id
 	})
 	lifecycle_scope = "CRUD"
 	depends_on      = [
@@ -625,7 +587,7 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 	cloudguard_account_id = dome9_cloudaccount_aws.omark_aws_account.id
 	cross_account_role_name = aws_iam_role.CloudGuardAWPCrossAccountRole.name
 	cross_account_role_external_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cross_account_role_external_id
-	scan_mode = "inAccount"
+	scan_mode = local.scan_mode
 	agentless_account_settings {
 		disabled_regions = ["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]
 		scan_machine_interval_in_hours = 10
@@ -637,11 +599,17 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 			tag3 = "value3"
 		}
 	}
-	force_delete = true
 	depends_on = [
 		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment,
 		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment_SaaS,
 		aws_iam_role.CloudGuardAWPCrossAccountRole,
 		aws_iam_role_policy_attachment.CloudGuardAWPCrossAccountRoleAttachment
+	]
+}
+
+data "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
+	id = dome9_awp_aws_onboarding.awp_aws_onboarding_test.cloudguard_account_id
+	depends_on = [
+		dome9_awp_aws_onboarding.awp_aws_onboarding_test
 	]
 }
