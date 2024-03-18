@@ -25,8 +25,8 @@ provider "aws" {
 	token      = ""
 }
 
-resource "dome9_cloudaccount_aws" "omark_aws_account" {
-	name  = "omark_aws_account"
+resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
+	name  = "aws_onboarding_account_test"
 	credentials  {
 		arn    = "ARN for IAM Role"
 		secret = "Secret for IAM Role"
@@ -41,14 +41,14 @@ resource "dome9_cloudaccount_aws" "omark_aws_account" {
 }
 
 data "dome9_awp_aws_get_onboarding_data" "dome9_awp_aws_onboarding_data_source" {
-	cloud_account_id = dome9_cloudaccount_aws.omark_aws_account.external_account_number
+	cloud_account_id = dome9_cloudaccount_aws.aws_onboarding_account_test.external_account_number
 	depends_on = [
-		dome9_cloudaccount_aws.omark_aws_account
+		dome9_cloudaccount_aws.aws_onboarding_account_test
 	]
 }
 
 locals {
-	scan_mode = "inAccount"
+	scan_mode = "saas"
 	stage = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.stage
 	region = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.region
 	cloud_guard_backend_account_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cloud_guard_backend_account_id
@@ -583,14 +583,24 @@ resource "aws_kms_key" "CloudGuardAWPKey" {
 }
 #END AWP MR key for snapshot re-encryption
 
+resource "aws_kms_alias" "CloudGuardAWPKeyAlias" {
+	count      = local.scan_mode == "saas" ? 1 : 0
+	name       = "alias/CloudGuardAWPKey"
+	target_key_id = aws_kms_key.CloudGuardAWPKey[count.index].arn
+	depends_on = [
+		aws_kms_key.CloudGuardAWPKey
+	]
+}
+
+
 resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
-	cloudguard_account_id = dome9_cloudaccount_aws.omark_aws_account.id
+	cloudguard_account_id = dome9_cloudaccount_aws.aws_onboarding_account_test.id
 	cross_account_role_name = aws_iam_role.CloudGuardAWPCrossAccountRole.name
-	cross_account_role_external_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cross_account_role_external_id
+	cross_account_role_external_id = local.cross_account_role_external_id
 	scan_mode = local.scan_mode
 	agentless_account_settings {
 		disabled_regions = ["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]
-		scan_machine_interval_in_hours = 10
+		scan_machine_interval_in_hours = 24
 		max_concurrence_scans_per_region = 6
 		skip_function_apps_scan = true
 		custom_tags = {
