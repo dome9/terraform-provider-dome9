@@ -23,7 +23,7 @@ type AgentlessAwsTerraformOnboardingDataResponse struct {
 	RemoteSnapshotsUtilsFunctionRunTime        string `json:"remoteSnapshotsUtilsFunctionRunTime"`
 	RemoteSnapshotsUtilsFunctionTimeOut        int    `json:"remoteSnapshotsUtilsFunctionTimeOut"`
 	AwpClientSideSecurityGroupName             string `json:"awpClientSideSecurityGroupName"`
-	RemoteSnapshotsUtilsFunctionS3PreSignedUrl string `json:"s3BucketPreSigneUrl"`
+	RemoteSnapshotsUtilsFunctionS3PreSignedUrl string `json:"remoteSnapshotsUtilsFunctionCodePreSigneUrl"`
 }
 
 type CloudAccountResponse struct {
