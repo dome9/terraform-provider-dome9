@@ -9,6 +9,14 @@ terraform {
 			source = "hashicorp/aws"
 			version = "5.39.1"
 		}
+		http = {
+			source  = "hashicorp/http"
+			version = "3.4.2"
+		}
+		local = {
+			source  = "hashicorp/local"
+			version = "2.1.0"  // specify the version you want to use
+		}
 	}
 }
 
@@ -48,7 +56,7 @@ data "dome9_awp_aws_get_onboarding_data" "dome9_awp_aws_onboarding_data_source" 
 }
 
 locals {
-	scan_mode = "saas"
+	scan_mode = "inAccount"
 	stage = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.stage
 	region = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.region
 	cloud_guard_backend_account_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cloud_guard_backend_account_id
@@ -59,6 +67,7 @@ locals {
 	remote_snapshots_utils_function_time_out = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.remote_snapshots_utils_function_time_out
 	awp_client_side_security_group_name = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.awp_client_side_security_group_name
 	cross_account_role_external_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cross_account_role_external_id
+	remote_snapshots_utils_function_s3_pre_signed_url = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.remote_snapshots_utils_function_s3_pre_signed_url
 }
 
 data "aws_partition" "current" {}
@@ -232,6 +241,21 @@ resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachm
 }
 # END Cross account role policy
 
+# Download the remote function file from S3 pre-signed URL
+data "http" "CloudGuardAWPSnapshotsUtilsFunctionZip" {
+	url = local.remote_snapshots_utils_function_s3_pre_signed_url
+	method = "GET"
+	request_headers = {
+		Accept = "application/zip"
+	}
+}
+
+# store the remote function file in a local file to be used in the lambda function
+resource "local_file" "CloudGuardAWPSnapshotsUtilsFunctionZip" {
+	filename = "${local.remote_snapshots_utils_function_name}7.zip"
+	content_base64 = data.http.CloudGuardAWPSnapshotsUtilsFunctionZip.response_body_base64
+}
+
 # AWP proxy lambda function
 resource "aws_lambda_function" "CloudGuardAWPSnapshotsUtilsFunction" {
 	function_name    = local.remote_snapshots_utils_function_name
@@ -241,8 +265,7 @@ resource "aws_lambda_function" "CloudGuardAWPSnapshotsUtilsFunction" {
 	runtime          = "python3.9"
 	memory_size      = 256
 	timeout          = local.remote_snapshots_utils_function_time_out
-	s3_bucket        = local.agentless_bucket_name
-	s3_key           = "${local.remote_functions_prefix_key}/${local.remote_snapshots_utils_function_name}7.zip"
+	filename         = local_file.CloudGuardAWPSnapshotsUtilsFunctionZip.filename
 
 	environment {
 		variables = {

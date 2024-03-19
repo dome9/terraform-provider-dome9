@@ -54,6 +54,10 @@ func dataSourceAwpAwsOnboardingData() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"remote_snapshots_utils_function_s3_pre_signed_url": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -83,6 +87,7 @@ func dataSourceAwpAwsOnboardingDataRead(d *schema.ResourceData, meta interface{}
 	combinedString := resp.CloudGuardBackendAccountId + "-" + cloudAccountID
 	encodedString := base64.StdEncoding.EncodeToString([]byte(combinedString))
 	_ = d.Set("cross_account_role_external_id", encodedString)
+	_ = d.Set("remote_snapshots_utils_function_s3_pre_signed_url", resp.RemoteSnapshotsUtilsFunctionS3PreSignedUrl)
 
 	return nil
 }
