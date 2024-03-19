@@ -34,6 +34,7 @@ func TestAccDataSourceAwpAwsOnboardingDataBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(awpAwsOnboardingDataSourceTypeAndName, "remote_snapshots_utils_function_time_out"),
 					resource.TestCheckResourceAttrSet(awpAwsOnboardingDataSourceTypeAndName, "awp_client_side_security_group_name"),
 					resource.TestCheckResourceAttrSet(awpAwsOnboardingDataSourceTypeAndName, "cross_account_role_external_id"),
+					resource.TestCheckResourceAttrSet(awpAwsOnboardingDataSourceTypeAndName, "remote_snapshots_utils_function_s3_pre_signed_url"),
 				),
 			},
 		},

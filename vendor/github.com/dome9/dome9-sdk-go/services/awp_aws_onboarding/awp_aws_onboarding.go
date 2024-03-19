@@ -14,15 +14,16 @@ const (
 )
 
 type AgentlessAwsTerraformOnboardingDataResponse struct {
-	Stage                               string `json:"stage"`
-	Region                              string `json:"region"`
-	CloudGuardBackendAccountId          string `json:"cloudGuardBackendAccountId"`
-	AgentlessBucketName                 string `json:"agentlessBucketName"`
-	RemoteFunctionsPrefixKey            string `json:"remoteFunctionsPrefixKey"`
-	RemoteSnapshotsUtilsFunctionName    string `json:"remoteSnapshotsUtilsFunctionName"`
-	RemoteSnapshotsUtilsFunctionRunTime string `json:"remoteSnapshotsUtilsFunctionRunTime"`
-	RemoteSnapshotsUtilsFunctionTimeOut int    `json:"remoteSnapshotsUtilsFunctionTimeOut"`
-	AwpClientSideSecurityGroupName      string `json:"awpClientSideSecurityGroupName"`
+	Stage                                      string `json:"stage"`
+	Region                                     string `json:"region"`
+	CloudGuardBackendAccountId                 string `json:"cloudGuardBackendAccountId"`
+	AgentlessBucketName                        string `json:"agentlessBucketName"`
+	RemoteFunctionsPrefixKey                   string `json:"remoteFunctionsPrefixKey"`
+	RemoteSnapshotsUtilsFunctionName           string `json:"remoteSnapshotsUtilsFunctionName"`
+	RemoteSnapshotsUtilsFunctionRunTime        string `json:"remoteSnapshotsUtilsFunctionRunTime"`
+	RemoteSnapshotsUtilsFunctionTimeOut        int    `json:"remoteSnapshotsUtilsFunctionTimeOut"`
+	AwpClientSideSecurityGroupName             string `json:"awpClientSideSecurityGroupName"`
+	RemoteSnapshotsUtilsFunctionS3PreSignedUrl string `json:"s3BucketPreSigneUrl"`
 }
 
 type CloudAccountResponse struct {
