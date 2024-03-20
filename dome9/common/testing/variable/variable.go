@@ -214,7 +214,7 @@ const (
 
 // awp aws onboarding data resource/data source
 const (
-	OnboardedAwsCloudGuardAccountID    = "bac8978a-5b86-4d9e-a732-00cbc430b2a6"
+	OnboardedAwsCloudGuardAccountID    = "36f79243-5456-4aa7-88c1-6637cad1f426"
 	AwpAwsCrossAccountRoleName         = "CloudGuardAWPCrossAccountRole"
 	ScanMode                           = "inAccount"
 	DisabledRegions                    = `["us-east-1", "us-west-1"]`
