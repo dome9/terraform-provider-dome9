@@ -1,4 +1,4 @@
-# Dome9 Provider Configurations
+# Required Providers Configuration Block for Dome9, AWS, HTTP, and Local
 terraform {
 	required_providers {
 		dome9 = {
@@ -15,29 +15,47 @@ terraform {
 		}
 		local = {
 			source  = "hashicorp/local"
-			version = "2.1.0"  // specify the version you want to use
+			version = "2.5.1"
 		}
 	}
 }
-
+# The Dome9 provider is used to interact with the resources supported by Dome9.
+# The provider needs to be configured with the proper credentials before it can be used.
+# Use the dome9_access_id and dome9_secret_key attributes of the provider to provide the Dome9 access key and secret key.
+# The base_url attribute is used to specify the base URL of the Dome9 API.
+# The Dome9 provider supports several options for providing these credentials. The following example demonstrates the use of static credentials:
+#you can read the Dome9 provider documentation to understand the full set of options available for providing credentials.
+#https://registry.terraform.io/providers/dome9/dome9/latest/docs#authentication
 provider "dome9" {
 	dome9_access_id     = "DOME9_ACCESS_ID"
 	dome9_secret_key    = "DOME9_SECRET_KEY"
-	base_url            = "https://api.us7.falconetix.com/v2/"
+	base_url            = "https://api.dome9.com/v2/"
 }
 
+# AWS Provider Configurations
+# The AWS provider is used to interact with the resources supported by AWS.
+# The provider needs to be configured with the proper credentials before it can be used.
+# Use the access_key, secret_key, and token attributes of the provider to provide the credentials.
+# also you can use the shared_credentials_file attribute to provide the path to the shared credentials file.
+# The AWS provider supports several options for providing these credentials. The following example demonstrates the use of static credentials:
+#you can read the AWS provider documentation to understand the full set of options available for providing credentials.
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration
 provider "aws" {
-	region     = "us-west-2"
-	access_key = ""
-	secret_key = ""
-	token      = ""
+	region     = "AWS_REGION"
+	access_key = "AWS_ACCESS_KEY"
+	secret_key = "AWS_SECRET_KEY"
+	token      = "AWS_SESSION_TOKEN"
 }
 
+# The resource block defines a Dome9 AWS Cloud Account onboarding.
+# The Dome9 AWS Cloud Account onboarding resource allows you to onboard an AWS account to Dome9.
+# this resource is optional and can be ignored and you need to pass CloudGuard account id Dome9 AWP AWS Onboarding resource and "dome9_awp_aws_get_onboarding_data" data source.
+/*
 resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
 	name  = "aws_onboarding_account_test"
 	credentials  {
-		arn    = "ARN for IAM Role"
-		secret = "Secret for IAM Role"
+		arn    = "arn:aws:iam::478980137264:role/CloudGuard-Connect"
+		secret = "@R2PUjk0up42HHDtD9CByVF8"
 		type   = "RoleBased"
 	}
 	net_sec {
@@ -47,16 +65,19 @@ resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
 		}
 	}
 }
+*/
 
+# The dome9_awp_aws_get_onboarding_data data source allows you to get the onboarding data of an AWS account.
+# you can pass the CloudGuard account id to get the onboarding data of the AWS account or the external account number for the AWS account.
 data "dome9_awp_aws_get_onboarding_data" "dome9_awp_aws_onboarding_data_source" {
-	cloud_account_id = dome9_cloudaccount_aws.aws_onboarding_account_test.external_account_number
-	depends_on = [
-		dome9_cloudaccount_aws.aws_onboarding_account_test
-	]
+	cloud_account_id = "CLOUDGUARD_ACCOUNT_ID or EXTERNAL_AWS_ACCOUNT_NUMBER"
 }
 
+# The local block defines a local value that can be used to store the data that is used in multiple places in the configuration.
+# the scan_mode is used to define the scan mode of the Dome9 AWP AWS Onboarding.
+# the valid values are "inAccount" and "saas". you need to select one of them based on the scan mode of the Dome9 AWP AWS Onboarding.
 locals {
-	scan_mode = "inAccount"
+	scan_mode = "inAccount or saas" # the valid values are "inAccount" and "saas" when onboarding the AWS account to Dome9 AWP.
 	stage = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.stage
 	region = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.region
 	cloud_guard_backend_account_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cloud_guard_backend_account_id
@@ -70,13 +91,28 @@ locals {
 	remote_snapshots_utils_function_s3_pre_signed_url = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.remote_snapshots_utils_function_s3_pre_signed_url
 }
 
+# <All these AWS Resources SHOULD NOT be changed in its configuration, otherwise, the awp onboarding process will not work properly>
+# CloudGuardAWPCrossAccountRole : The IAM role that is used to allow AWP to access the AWS account.
+# CloudGuardAWPCrossAccountRolePolicy : The IAM policy that is used to define the permissions for the CloudGuardAWPCrossAccountRole.
+# CloudGuardAWPSnapshotsUtilsFunction : The Lambda function that is used to manage remote actions and resources.
+# CloudGuardAWPSnapshotsUtilsFunctionZip : The local file that is used to store the remote function file to be used in the lambda function.
+# CloudGuardAWPSnapshotsUtilsLogGroup : The CloudWatch log group that is used to store the logs of the CloudGuardAWPSnapshotsUtilsFunction.
+# CloudGuardAWPSnapshotsUtilsLambdaExecutionRole : The IAM role that is used to allow the CloudGuardAWPSnapshotsUtilsFunction to execute.
+# CloudGuardAWPSnapshotsPolicy : The IAM policy that is used to define the permissions for the CloudGuardAWPSnapshotsUtilsFunction.
+# CloudGuardAWPLambdaExecutionRolePolicy : The IAM policy that is used to define the permissions for the CloudGuardAWPSnapshotsUtilsFunction.
+# CloudGuardAWPLambdaExecutionRolePolicy_SaaS : The IAM policy that is used to define the permissions for the CloudGuardAWPSnapshotsUtilsFunction in SaaS mode.
+# CloudGuardAWPKey : The KMS key that is used to re-encrypt the snapshots in SaaS mode.
+# CloudGuardAWPKeyAlias : The KMS key alias that is used to reference the KMS key in SaaS mode.
+# CloudGuardAWPSnapshotsUtilsCleanupFunctionInvocation : The Lambda invocation that is used to clean up the resources after the onboarding process.
+# The data block defines a data source that can be used to get the current AWS partition.
 data "aws_partition" "current" {}
-
+# The data block defines a data source that can be used to get the current AWS region.
 data "aws_region" "current" {}
-
+# The data block defines a data source that can be used to get the current AWS caller identity.
 data "aws_caller_identity" "current" {}
 
 # Cross account role to allow CloudGuard access
+# The CloudGuardAWPCrossAccountRole resource defines an IAM role that is used to allow AWP to access the AWS account.
 resource "aws_iam_role" "CloudGuardAWPCrossAccountRole" {
 	name               = "CloudGuardAWPCrossAccountRole"
 	description        = "CloudGuard AWP Cross Account Role"
@@ -99,6 +135,7 @@ resource "aws_iam_role" "CloudGuardAWPCrossAccountRole" {
 	depends_on = [aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction]
 }
 
+# The CloudGuardAWPCrossAccountRolePolicy resource defines an IAM policy that is used to define the permissions for the CloudGuardAWPCrossAccountRole.
 resource "aws_iam_policy" "CloudGuardAWP" {
 	name        = "CloudGuardAWP"
 	description = "Policy for CloudGuard AWP"
@@ -145,6 +182,7 @@ resource "aws_iam_policy" "CloudGuardAWP" {
 	})
 }
 
+# The CloudGuardAWPCrossAccountRoleAttachment resource attaches the CloudGuardAWPCrossAccountRolePolicy to the CloudGuardAWPCrossAccountRole.
 resource "aws_iam_role_policy_attachment" "CloudGuardAWPCrossAccountRoleAttachment" {
 	role       = aws_iam_role.CloudGuardAWPCrossAccountRole.name
 	policy_arn = aws_iam_policy.CloudGuardAWP.arn
@@ -152,6 +190,7 @@ resource "aws_iam_role_policy_attachment" "CloudGuardAWPCrossAccountRoleAttachme
 # end resources for CloudGuardAWPCrossAccountRole
 
 # Cross account role policy
+# The CloudGuardAWPCrossAccountRolePolicy resource defines an IAM policy that is used to define the permissions for the CloudGuardAWPCrossAccountRole.
 resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy" {
 	count = local.scan_mode == "inAccount" ? 1 : 0
 	name        = "CloudGuardAWPCrossAccountRolePolicy"
@@ -189,6 +228,7 @@ resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy" {
 	})
 }
 
+# The CloudGuardAWPCrossAccountRolePolicy_SaaS resource defines an IAM policy that is used to define the permissions for the CloudGuardAWPCrossAccountRole in SaaS mode.
 resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy_SaaS" {
 	count = local.scan_mode == "saas" ? 1 : 0
 	name        = "CloudGuardAWPCrossAccountRolePolicy_SaaS"
@@ -226,6 +266,7 @@ resource "aws_iam_policy" "CloudGuardAWPCrossAccountRolePolicy_SaaS" {
 	})
 }
 
+# The CloudGuardAWPCrossAccountRolePolicyAttachment resource attaches the CloudGuardAWPCrossAccountRolePolicy to the CloudGuardAWPCrossAccountRole.
 resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachment" {
 	count       = local.scan_mode == "inAccount" ? 1 : 0
 	name       = "CloudGuardAWPCrossAccountRolePolicyAttachment"
@@ -233,6 +274,7 @@ resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachm
 	roles       = [aws_iam_role.CloudGuardAWPCrossAccountRole.name]
 }
 
+# The CloudGuardAWPCrossAccountRolePolicyAttachment_SaaS resource attaches the CloudGuardAWPCrossAccountRolePolicy_SaaS to the CloudGuardAWPCrossAccountRole.
 resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachment_SaaS" {
 	count = local.scan_mode == "saas" ? 1 : 0
 	name       = "CloudGuardAWPCrossAccountRolePolicyAttachment_SaaS"
@@ -241,7 +283,7 @@ resource "aws_iam_policy_attachment" "CloudGuardAWPCrossAccountRolePolicyAttachm
 }
 # END Cross account role policy
 
-# Download the remote function file from S3 pre-signed URL
+# The CloudGuardAWPSnapshotsUtilsFunctionZip resource defines http data source to download the remote function file from S3 pre-signed URL.
 data "http" "CloudGuardAWPSnapshotsUtilsFunctionZip" {
 	url = local.remote_snapshots_utils_function_s3_pre_signed_url
 	method = "GET"
@@ -250,13 +292,14 @@ data "http" "CloudGuardAWPSnapshotsUtilsFunctionZip" {
 	}
 }
 
-# store the remote function file in a local file to be used in the lambda function
+# The CloudGuardAWPSnapshotsUtilsFunctionZip resource defines a local file that is used to store the remote function file to be used in the lambda function.
 resource "local_file" "CloudGuardAWPSnapshotsUtilsFunctionZip" {
 	filename = "${local.remote_snapshots_utils_function_name}7.zip"
 	content_base64 = data.http.CloudGuardAWPSnapshotsUtilsFunctionZip.response_body_base64
 }
 
 # AWP proxy lambda function
+# The CloudGuardAWPSnapshotsUtilsFunction resource defines a lambda function that is used to manage remote actions and resources.
 resource "aws_lambda_function" "CloudGuardAWPSnapshotsUtilsFunction" {
 	function_name    = local.remote_snapshots_utils_function_name
 	handler          = "snapshots_utils.lambda_handler"
@@ -292,6 +335,7 @@ resource "aws_lambda_permission" "allow_cloudguard" {
 }
 # END AWP proxy lambda function
 
+# CloudGuardAWPSnapshotsUtilsLogGroup : The CloudWatch log group that is used to store the logs of the CloudGuardAWPSnapshotsUtilsFunction.
 resource "aws_cloudwatch_log_group" "CloudGuardAWPSnapshotsUtilsLogGroup" {
 	name              = "/aws/lambda/CloudGuardAWPSnapshotsUtils"
 	retention_in_days = 30
@@ -301,6 +345,7 @@ resource "aws_cloudwatch_log_group" "CloudGuardAWPSnapshotsUtilsLogGroup" {
 }
 
 # AWP proxy lambda function role
+# The CloudGuardAWPSnapshotsUtilsLambdaExecutionRole resource defines an IAM role that is used to allow the CloudGuardAWPSnapshotsUtilsFunction to execute.
 resource "aws_iam_role" "CloudGuardAWPSnapshotsUtilsLambdaExecutionRole" {
 	name               = "CloudGuardAWPLambdaExecutionRole"
 	description        = "CloudGuard AWP proxy lambda function execution role"
@@ -322,6 +367,7 @@ resource "aws_iam_role" "CloudGuardAWPSnapshotsUtilsLambdaExecutionRole" {
 	}
 }
 
+# The CloudGuardAWPSnapshotsPolicy resource defines an IAM policy that is used to define the permissions for the CloudGuardAWPSnapshotsUtilsFunction.
 resource "aws_iam_policy" "CloudGuardAWPSnapshotsPolicy" {
 	name        = "CloudGuardAWPSnapshotsPolicy"
 	description = "Policy for managing snapshots at client side and delete AWP keys"
@@ -365,6 +411,7 @@ resource "aws_iam_policy" "CloudGuardAWPSnapshotsPolicy" {
 	})
 }
 
+# The CloudGuardAWPSnapshotsUtilsLambdaExecutionRoleAttachment resource attaches the CloudGuardAWPSnapshotsPolicy to the CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.
 resource "aws_iam_role_policy_attachment" "CloudGuardAWPSnapshotsUtilsLambdaExecutionRoleAttachment" {
 	role       = aws_iam_role.CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.name
 	policy_arn = aws_iam_policy.CloudGuardAWPSnapshotsPolicy.arn
@@ -372,6 +419,7 @@ resource "aws_iam_role_policy_attachment" "CloudGuardAWPSnapshotsUtilsLambdaExec
 # END AWP proxy lambda function role
 
 # AWP proxy lambda function role policy
+# The CloudGuardAWPLambdaExecutionRolePolicy resource defines an IAM policy that is used to define the permissions for the CloudGuardAWPSnapshotsUtilsFunction.
 resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy" {
 	count       = local.scan_mode == "inAccount" ? 1 : 0
 	name        = "CloudGuardAWPLambdaExecutionRolePolicy"
@@ -466,6 +514,7 @@ resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy" {
 	})
 }
 
+# The CloudGuardAWPLambdaExecutionRolePolicyAttachment resource attaches the CloudGuardAWPLambdaExecutionRolePolicy to the CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.
 resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy_SaaS" {
 	count       = local.scan_mode == "saas" ? 1 : 0
 	name        = "CloudGuardAWPLambdaExecutionRolePolicy_SaaS"
@@ -515,6 +564,7 @@ resource "aws_iam_policy" "CloudGuardAWPLambdaExecutionRolePolicy_SaaS" {
 	})
 }
 
+# The CloudGuardAWPLambdaExecutionRolePolicyAttachment resource attaches the CloudGuardAWPLambdaExecutionRolePolicy to the CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.
 resource "aws_iam_policy_attachment" "CloudGuardAWPLambdaExecutionRolePolicyAttachment" {
 	count       = local.scan_mode == "inAccount" ? 1 : 0
 	name = "CloudGuardAWPLambdaExecutionRolePolicyAttachment"
@@ -522,6 +572,7 @@ resource "aws_iam_policy_attachment" "CloudGuardAWPLambdaExecutionRolePolicyAtta
 	roles       = [aws_iam_role.CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.name]
 }
 
+# The CloudGuardAWPLambdaExecutionRolePolicyAttachment_SaaS resource attaches the CloudGuardAWPLambdaExecutionRolePolicy_SaaS to the CloudGuardAWPSnapshotsUtilsLambdaExecutionRole.
 resource "aws_iam_policy_attachment" "CloudGuardAWPLambdaExecutionRolePolicyAttachment_SaaS" {
 	count       = local.scan_mode == "saas" ? 1 : 0
 	name = "CloudGuardAWPLambdaExecutionRolePolicyAttachment"
@@ -530,6 +581,7 @@ resource "aws_iam_policy_attachment" "CloudGuardAWPLambdaExecutionRolePolicyAtta
 }
 # END AWP proxy lambda function role policy
 
+# aws_lambda_invocation : The Lambda invocation that is used to clean up the resources after the onboarding process.
 resource "aws_lambda_invocation" "CloudGuardAWPSnapshotsUtilsCleanupFunctionInvocation" {
 	function_name = aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction.function_name
 	input = jsonencode({
@@ -543,6 +595,7 @@ resource "aws_lambda_invocation" "CloudGuardAWPSnapshotsUtilsCleanupFunctionInvo
 }
 
 # AWP MR key for snapshot re-encryption
+# The CloudGuardAWPKey resource defines a KMS key that is used to re-encrypt the snapshots in SaaS mode.
 resource "aws_kms_key" "CloudGuardAWPKey" {
 	count       = local.scan_mode == "saas" ? 1 : 0
 	description          = "CloudGuard AWP Multi-Region primary key for snapshots re-encryption (for Saas mode only)"
@@ -606,6 +659,7 @@ resource "aws_kms_key" "CloudGuardAWPKey" {
 }
 #END AWP MR key for snapshot re-encryption
 
+# The CloudGuardAWPKeyAlias resource defines a KMS key alias that is used to reference the KMS key in SaaS mode.
 resource "aws_kms_alias" "CloudGuardAWPKeyAlias" {
 	count      = local.scan_mode == "saas" ? 1 : 0
 	name       = "alias/CloudGuardAWPKey"
@@ -615,9 +669,20 @@ resource "aws_kms_alias" "CloudGuardAWPKeyAlias" {
 	]
 }
 
-
+# The dome9_awp_aws_onboarding resource defines a Dome9 AWP AWS Onboarding.
+# The Dome9 AWP AWS Onboarding resource allows you to onboard an AWS account to Dome9 AWP.
+# The cloudguard_account_id attribute is used to specify the CloudGuard account id of the AWS account.
+# The cross_account_role_name attribute is used to specify the name of the cross account role that is used to allow AWP to access the AWS account.
+# The cross_account_role_external_id attribute is used to specify the external id of the cross account role that is used to allow AWP to access the AWS account.
+# The scan_mode attribute is used to specify the scan mode of the Dome9 AWP AWS Onboarding. The valid values are "inAccount" and "saas".
+# The agentless_account_settings attribute is used to specify the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The disabled_regions attribute is used to specify the disabled regions of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The scan_machine_interval_in_hours attribute is used to specify the scan machine interval in hours of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The max_concurrence_scans_per_region attribute is used to specify the max concurrence scans per region of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The skip_function_apps_scan attribute is used to specify whether to skip the function apps scan of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP AWS Onboarding.
 resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
-	cloudguard_account_id = dome9_cloudaccount_aws.aws_onboarding_account_test.id
+	cloudguard_account_id = "CLOUDGUARD_ACCOUNT_ID or EXTERNAL_AWS_ACCOUNT_NUMBER"
 	cross_account_role_name = aws_iam_role.CloudGuardAWPCrossAccountRole.name
 	cross_account_role_external_id = local.cross_account_role_external_id
 	scan_mode = local.scan_mode
@@ -640,6 +705,7 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 	]
 }
 
+# The dome9_awp_aws_onboarding data source allows you to get the onboarding data of an AWS account.
 data "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 	id = dome9_awp_aws_onboarding.awp_aws_onboarding_test.cloudguard_account_id
 	depends_on = [
