@@ -44,7 +44,7 @@ The following arguments are supported:
 * `cross_account_role_external_id` - (Required) The external id of the cross account role.
 * `scan_mode` - (Required) The scan mode. Valid values are "inAccount", "saas", "inAccountHub", "inAccountSub".
 * `agentless_account_settings` - (Optional) The agentless account settings.
-  * `disabled_regions` - (Optional) The disabled regions. valid values are "us-east-1", "us-west-1", "us-west-2", "eu-west-1", "eu-central-1", "ap-northeast-1", "ap-southeast-1", "ap-southeast-2", "ap-northeast-2", "ap-south-1", "sa-east-1".
+  * `disabled_regions` - (Optional) The disabled regions. valid values are "af-south-1", "ap-south-1", "eu-north-1", "eu-west-3", "eu-south-1", "eu-west-2", "eu-west-1", "ap-northeast-3", "ap-northeast-2", "me-south-1", "ap-northeast-1", "me-central-1", "ca-central-1", "sa-east-1", "ap-east-1", "ap-southeast-1", "ap-southeast-2", "eu-central-1", "ap-southeast-3", "us-east-1", "us-east-2", "us-west-1", "us-west-2"
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
   * `max_concurrence_scans_per_region` - (Optional) The max concurrence scans per region
   * `skip_function_apps_scan` - (Optional) Whether to skip function apps scan. Default is false.
