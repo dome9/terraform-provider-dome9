@@ -151,13 +151,11 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 		CustomizeDiff: func(diff *schema.ResourceDiff, v interface{}) error {
 			scanMode, scanModeOk := diff.GetOk("scan_mode")
 			centralizedCloudAccountId, centralizedCloudAccountIdOk := diff.GetOk("centralized_cloud_account_id")
-
-			if scanModeOk && scanMode == "in-account-sub" {
+			if scanModeOk && scanMode == "inAccountSub" {
 				if !centralizedCloudAccountIdOk || centralizedCloudAccountId == "" {
-					return fmt.Errorf("'centralized_cloud_account_id' must be set and not empty when 'scan_mode' is 'in-account-sub'")
+					return fmt.Errorf("'centralized_cloud_account_id' must be set and not empty when 'scan_mode' is 'inAccountSub'")
 				}
 			}
-
 			return nil
 		},
 	}
