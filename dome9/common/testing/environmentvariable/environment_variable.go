@@ -23,7 +23,7 @@ const (
 	CloudAccountAWSEnvVarArn               = "ARN"
 	CloudAccountUpdatedAWSEnvVarArn        = "ARN_UPDATE"
 	CloudAccountAWSEnvVarSecret            = "SECRET"
-	AwpAwsCrossAccountRoleExternalIdEnvVar = "AWP_EXTERNAL_ID"
+	AwpAwsCrossAccountRoleExternalIdEnvVar = "AWP_EXTERNAL_ID" // it is backed up by this ssm parameter : arn:aws:ssm:us-east-1:969432878134:parameter/dome9/common/consec/automation/CrossAccountRoleExternalId
 )
 
 // Azure environment variable

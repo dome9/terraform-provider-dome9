@@ -1,3 +1,5 @@
+# This is an example of how to use the Dome9 AWP AWS Onboarding Terraform provider.
+## Providers ##
 # Required Providers Configuration Block for Dome9, AWS, HTTP, and Local
 terraform {
 	required_providers {
@@ -47,6 +49,8 @@ provider "aws" {
 	token      = "AWS_SESSION_TOKEN"
 }
 
+## CloudGuard Account Onboarding (Pre-requisite) ##
+
 # The resource block defines a Dome9 AWS Cloud Account onboarding.
 # The Dome9 AWS Cloud Account onboarding resource allows you to onboard an AWS account to Dome9.
 # this resource is optional and can be ignored and you need to pass CloudGuard account id Dome9 AWP AWS Onboarding resource and "dome9_awp_aws_get_onboarding_data" data source.
@@ -54,8 +58,8 @@ provider "aws" {
 resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
 	name  = "aws_onboarding_account_test"
 	credentials  {
-		arn    = "arn:aws:iam::478980137264:role/CloudGuard-Connect"
-		secret = "@R2PUjk0up42HHDtD9CByVF8"
+		arn    = "arn:aws:iam::<customer_account_id>:role/CloudGuard-Connect"
+		secret = "<secret>"
 		type   = "RoleBased"
 	}
 	net_sec {
@@ -67,6 +71,8 @@ resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
 }
 */
 
+## CloudGuard AWP Configuration ##
+
 # The dome9_awp_aws_get_onboarding_data data source allows you to get the onboarding data of an AWS account.
 # you can pass the CloudGuard account id to get the onboarding data of the AWS account or the external account number for the AWS account.
 data "dome9_awp_aws_get_onboarding_data" "dome9_awp_aws_onboarding_data_source" {
@@ -77,8 +83,7 @@ data "dome9_awp_aws_get_onboarding_data" "dome9_awp_aws_onboarding_data_source" 
 # the scan_mode is used to define the scan mode of the Dome9 AWP AWS Onboarding.
 # the valid values are "inAccount" and "saas". you need to select one of them based on the scan mode of the Dome9 AWP AWS Onboarding.
 locals {
-	scan_mode = "inAccount or saas" # the valid values are "inAccount" and "saas" when onboarding the AWS account to Dome9 AWP.
-	stage = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.stage
+	scan_mode = "inAccount|saas" # the valid values are "inAccount" and "saas" when onboarding the AWS account to Dome9 AWP.	stage = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.stage
 	region = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.region
 	cloud_guard_backend_account_id = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.cloud_guard_backend_account_id
 	agentless_bucket_name = data.dome9_awp_aws_get_onboarding_data.dome9_awp_aws_onboarding_data_source.agentless_bucket_name
@@ -134,6 +139,9 @@ resource "aws_iam_role" "CloudGuardAWPCrossAccountRole" {
 
 	depends_on = [aws_lambda_function.CloudGuardAWPSnapshotsUtilsFunction]
 }
+
+## CloudGuard AWP Resources ##
+// Note: count - Used as condition to create resources based on the scan mode.
 
 # The CloudGuardAWPCrossAccountRolePolicy resource defines an IAM policy that is used to define the permissions for the CloudGuardAWPCrossAccountRole.
 resource "aws_iam_policy" "CloudGuardAWP" {
@@ -317,7 +325,6 @@ resource "aws_lambda_function" "CloudGuardAWPSnapshotsUtilsFunction" {
 			CP_AWP_SCAN_MODE          = local.scan_mode
 			CP_AWP_SECURITY_GROUP_NAME = local.awp_client_side_security_group_name
 			AWS_PARTITION             = data.aws_partition.current.partition
-			CP_AWP_LOG_LEVEL		  = "DEBUG"
 		}
 	}
 
@@ -682,21 +689,24 @@ resource "aws_kms_alias" "CloudGuardAWPKeyAlias" {
 # The skip_function_apps_scan attribute is used to specify whether to skip the function apps scan of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP AWS Onboarding.
 resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
-	cloudguard_account_id = "CLOUDGUARD_ACCOUNT_ID or EXTERNAL_AWS_ACCOUNT_NUMBER"
+	cloudguard_account_id = "dome9_cloudaccount_aws.aws_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <EXTERNAL_AWS_ACCOUNT_NUMBER>"
 	cross_account_role_name = aws_iam_role.CloudGuardAWPCrossAccountRole.name
 	cross_account_role_external_id = local.cross_account_role_external_id
 	scan_mode = local.scan_mode
-	agentless_account_settings {
-		disabled_regions = ["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]
-		scan_machine_interval_in_hours = 24
-		max_concurrence_scans_per_region = 6
-		skip_function_apps_scan = true
-		custom_tags = {
-			tag1 = "value1"
-			tag2 = "value2"
-			tag3 = "value3"
-		}
-	}
+	# Optional Settings
+	# e.g:
+	#   agentless_account_settings {
+	#     disabled_regions                 = []   // e.g: ["us-west-1", "us-west-2"]
+	#     scan_machine_interval_in_hours   = 24
+	#     max_concurrence_scans_per_region = 20
+	#     skip_function_apps_scan          = false
+	#     custom_tags = {
+	#       # example of custom tags
+	#       tag1 = "value1"
+	#       tag2 = "value2"
+	#       tag3 = "value3"
+	#     }
+	#   }
 	depends_on = [
 		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment,
 		aws_iam_policy_attachment.CloudGuardAWPLambdaExecutionRolePolicyAttachment_SaaS,
@@ -705,7 +715,7 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 	]
 }
 
-# The dome9_awp_aws_onboarding data source allows you to get the onboarding data of an AWS account.
+# The dome9_awp_aws_onboarding data source allows you to get the onboarding data of an AWS account (Optional).
 data "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 	id = dome9_awp_aws_onboarding.awp_aws_onboarding_test.cloudguard_account_id
 	depends_on = [
