@@ -220,10 +220,9 @@ func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) erro
 	_ = d.Set("is_org_onboarding", resp.IsOrgOnboarding)
 	_ = d.Set("centralized_cloud_account_id", resp.CentralizedCloudAccountId)
 
-	if resp.AgentlessAccountSettings != nil {
-		if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettings(resp.AgentlessAccountSettings)); err != nil {
-			return err
-		}
+	err = setAgentlessAccountSettings(resp, d)
+	if err != nil {
+		return err
 	}
 
 	if resp.AccountIssues != nil {
@@ -299,6 +298,22 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 	}
 
 	return agentlessAccountSettings, nil
+}
+
+func setAgentlessAccountSettings(resp *awp_aws_onboarding.GetAWPOnboardingResponse, d *schema.ResourceData) error {
+	if resp.AgentlessAccountSettings != nil {
+		// Check if all fields of AgentlessAccountSettings are nil
+		if resp.AgentlessAccountSettings.DisabledRegions != nil ||
+			resp.AgentlessAccountSettings.ScanMachineIntervalInHours != 0 ||
+			resp.AgentlessAccountSettings.MaxConcurrenceScansPerRegion != 0 ||
+			resp.AgentlessAccountSettings.SkipFunctionAppsScan != false ||
+			resp.AgentlessAccountSettings.CustomTags != nil {
+			if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettings(resp.AgentlessAccountSettings)); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func flattenAgentlessAccountSettings(settings *awp_aws_onboarding.AgentlessAccountSettings) []interface{} {
