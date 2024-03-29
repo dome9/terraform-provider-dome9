@@ -254,13 +254,21 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 	}
 	agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
 	agentlessAccountSettingsMap := agentlessAccountSettingsList[0].(map[string]interface{})
+	scanMode := d.Get("scan_mode").(string)
+
+	var scanMachineIntervalInHours int
+	if scanMode == "saas" {
+		scanMachineIntervalInHours = 24
+	} else {
+		scanMachineIntervalInHours = 4
+	}
 
 	// Initialize the AgentlessAccountSettings struct with default values
 	agentlessAccountSettings := &awp_aws_onboarding.AgentlessAccountSettings{
 		DisabledRegions:              make([]string, 0),
 		CustomTags:                   make(map[string]string),
-		ScanMachineIntervalInHours:   4,
-		MaxConcurrenceScansPerRegion: 1,
+		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
+		MaxConcurrenceScansPerRegion: 20,
 		SkipFunctionAppsScan:         true,
 	}
 
@@ -278,10 +286,18 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 	}
 
 	if scanMachineInterval, ok := agentlessAccountSettingsMap["scan_machine_interval_in_hours"].(int); ok {
+		if scanMode == "saas" && (scanMachineInterval < 24 || scanMachineInterval > 1000) {
+			return nil, fmt.Errorf("scan_machine_interval_in_hours must be between 24 and 1000 for saas mode")
+		} else if scanMode == "inAccount" && (scanMachineInterval < 4 || scanMachineInterval > 1000) {
+			return nil, fmt.Errorf("scan_machine_interval_in_hours must be between 4 and 1000 for inAccount mode")
+		}
 		agentlessAccountSettings.ScanMachineIntervalInHours = scanMachineInterval
 	}
 
 	if maxConcurrenceScans, ok := agentlessAccountSettingsMap["max_concurrence_scans_per_region"].(int); ok {
+		if maxConcurrenceScans < 1 || maxConcurrenceScans > 20 {
+			return nil, fmt.Errorf("max_concurrence_scans_per_region must be between 1 and 20")
+		}
 		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrenceScans
 	}
 
