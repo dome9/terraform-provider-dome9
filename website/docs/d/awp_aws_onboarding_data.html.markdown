@@ -1,12 +1,12 @@
 ---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_awp_aws_get_onboarding_data"
+page_title: "Check Point CloudGuard Dome9: dome9_awp_aws_onboarding_data"
 sidebar_current: "docs-datasource-dome9-awp-aws-get-onboarding-data"
 description: |-
   Get information about AWS AWP onboarding data in Dome9.
 ---
 
-# Data Source: dome9_awp_aws_get_onboarding_data
+# Data Source: dome9_awp_aws_onboarding_data
 
 Use this data source to get information about AWS AWP onboarding data in Dome9.
 

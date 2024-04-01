@@ -12,8 +12,8 @@ import (
 )
 
 func TestAccDataSourceAwpAwsOnboardingDataBasic(t *testing.T) {
-	// Get dome9_awp_aws_get_onboarding_data resource names
-	_, awpAwsOnboardingDataSourceTypeAndName, awpAwsOnboardingDataGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwpAwsGetOnboardingData)
+	// Get dome9_awp_aws_onboarding_data resource names
+	_, awpAwsOnboardingDataSourceTypeAndName, awpAwsOnboardingDataGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwpAwsOnboardingData)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -41,14 +41,14 @@ func TestAccDataSourceAwpAwsOnboardingDataBasic(t *testing.T) {
 	})
 }
 
-func testAccCheckAwpAwsOnboardingDataBasic(awpAwsGetOnboardingDataGeneratedName string) string {
+func testAccCheckAwpAwsOnboardingDataBasic(awpAwsOnboardingDataGeneratedName string) string {
 	res := fmt.Sprintf(`
 data "%s" "%s" {
 	cloud_account_id = "%s"
 }
 	`,
-		resourcetype.AwpAwsGetOnboardingData,
-		awpAwsGetOnboardingDataGeneratedName,
+		resourcetype.AwpAwsOnboardingData,
+		awpAwsOnboardingDataGeneratedName,
 		variable.OnboardedAwsCloudGuardAccountID,
 	)
 	log.Printf("[INFO] testAccCheckAwpAwsOnboardingDataBasic:%+v\n", res)
