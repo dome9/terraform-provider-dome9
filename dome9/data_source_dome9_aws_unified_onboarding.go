@@ -6,7 +6,6 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
 
-
 func dataSourceAwsUnifiedOnboarding() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceAwsUnifiedOnboardingReadInfo,
@@ -175,12 +174,12 @@ func expendStatuses(statuses aws_unified_onboarding.Statuses) interface{} {
 
 	for i, statusItem := range statuses {
 		statusesList[i] = map[string]interface{}{
-			providerconst.Module : statusItem.Module,
-			providerconst.Feature: statusItem.Feature,
-			providerconst.Status: statusItem.Status,
-			providerconst.StatusMessage: statusItem.StackMessage,
-			providerconst.StackStatus: statusItem.StackStatus,
-			providerconst.StackMessage: statusItem.StackMessage,
+			providerconst.Module:                    statusItem.Module,
+			providerconst.Feature:                   statusItem.Feature,
+			providerconst.Status:                    statusItem.Status,
+			providerconst.StatusMessage:             statusItem.StackMessage,
+			providerconst.StackStatus:               statusItem.StackStatus,
+			providerconst.StackMessage:              statusItem.StackMessage,
 			providerconst.RemediationRecommendation: statusItem.RemediationRecommendation,
 		}
 	}

@@ -3,14 +3,15 @@ package dome9
 import (
 	"errors"
 	"fmt"
+	"log"
+	"strconv"
+	"strings"
+
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
-	"log"
-	"strconv"
-	"strings"
 )
 
 func resourceAwpAwsOnboarding() *schema.Resource {

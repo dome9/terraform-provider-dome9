@@ -5,7 +5,6 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
 )
 
-
 func dataSourceAwsUnifiedOnboardingUpdateVersionStackConfig() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceAwsUnifiedOnboardingReadConfig,
