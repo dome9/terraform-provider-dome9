@@ -73,10 +73,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 							Optional: true,
 							Default:  1,
 						},
-						"skip_function_apps_scan": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Optional: true,
@@ -269,7 +265,6 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
 		MaxConcurrenceScansPerRegion: 20,
-		SkipFunctionAppsScan:         true,
 	}
 
 	// Check if the key exists and is not nil
@@ -299,10 +294,6 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 			return nil, fmt.Errorf("max_concurrence_scans_per_region must be between 1 and 20")
 		}
 		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrenceScans
-	}
-
-	if skipFunctionAppsScan, ok := agentlessAccountSettingsMap["skip_function_apps_scan"].(bool); ok {
-		agentlessAccountSettings.SkipFunctionAppsScan = skipFunctionAppsScan
 	}
 
 	if customTagsInterface, ok := agentlessAccountSettingsMap["custom_tags"].(map[string]interface{}); ok {
@@ -338,7 +329,6 @@ func flattenAgentlessAccountSettings(settings *awp_aws_onboarding.AgentlessAccou
 		"disabled_regions":                 settings.DisabledRegions,
 		"scan_machine_interval_in_hours":   settings.ScanMachineIntervalInHours,
 		"max_concurrence_scans_per_region": settings.MaxConcurrenceScansPerRegion,
-		"skip_function_apps_scan":          settings.SkipFunctionAppsScan,
 		"custom_tags":                      settings.CustomTags,
 	}
 	return []interface{}{m}

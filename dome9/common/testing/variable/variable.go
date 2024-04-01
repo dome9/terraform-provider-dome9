@@ -221,7 +221,7 @@ const (
 	DisabledRegionsUpdate              = `["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]`
 	ScanMachineIntervalInHours         = "6"
 	ScanMachineIntervalInHoursUpdate   = "10"
-	MaxConcurrenceScansPerRegion       = "4"
+	MaxConcurrencyScansPerRegion       = "4"
 	MaxConcurrenceScansPerRegionUpdate = "8"
 	CustomTags                         = `{
 			tag1 = "value1"

@@ -13,7 +13,7 @@ Use this data source to get information about AWS AWP onboarding data in Dome9.
 ## Example Usage
 
 ```hcl
-data "dome9_awp_aws_get_onboarding_data" "test" {
+data "dome9_awp_aws_onboarding_data" "test" {
   cloud_account_id = "d9-aws-cloud-account-id"
 }
 

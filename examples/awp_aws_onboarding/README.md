@@ -1,4 +1,4 @@
-# Attach IAM safe Example
+# AWP AWS Onboarding Example
 
 This example will show you how to use Terraform to onboarding AWP AWS cloud account that protected by dome9.
 This example codifies [this API](https://docs.cgn.portal.checkpoint.com/reference/agentless).

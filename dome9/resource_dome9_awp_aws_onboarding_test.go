@@ -48,8 +48,7 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHours),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrence_scans_per_region", variable.MaxConcurrenceScansPerRegion),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.skip_function_apps_scan", "true"),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrence_scans_per_region", variable.MaxConcurrencyScansPerRegion),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "2"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
@@ -71,7 +70,6 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.3", disabledRegionUpdate4),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHoursUpdate),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrence_scans_per_region", variable.MaxConcurrenceScansPerRegionUpdate),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.skip_function_apps_scan", "true"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "3"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
@@ -156,7 +154,6 @@ resource "%s" "%s" {
 		disabled_regions = %s
 		scan_machine_interval_in_hours = "%s"
 		max_concurrence_scans_per_region = "%s"
-		skip_function_apps_scan = "true"
 		custom_tags = %s
 	}
 }
@@ -169,7 +166,7 @@ resource "%s" "%s" {
 		variable.ScanMode,
 		IfThenElse(updateAction, variable.DisabledRegionsUpdate, variable.DisabledRegions),
 		IfThenElse(updateAction, variable.ScanMachineIntervalInHoursUpdate, variable.ScanMachineIntervalInHours),
-		IfThenElse(updateAction, variable.MaxConcurrenceScansPerRegionUpdate, variable.MaxConcurrenceScansPerRegion),
+		IfThenElse(updateAction, variable.MaxConcurrenceScansPerRegionUpdate, variable.MaxConcurrencyScansPerRegion),
 		IfThenElse(updateAction, variable.CustomTagsUpdate, variable.CustomTags),
 	)
 }

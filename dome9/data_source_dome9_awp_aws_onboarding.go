@@ -42,10 +42,6 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"skip_function_apps_scan": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Computed: true,
