@@ -27,8 +27,11 @@ provider "aws" {
   token      = "AWS_SESSION_TOKEN"
 }
 
+# ToDo
+  # change the repo url to correct links after publishing the module
 # There is a need to use this terraform module [terraform-dome9-awp-aws] to create all the prerequisites for the onboarding process (All the needed AWS Resources)
 # for further information please refer to the module documentation [terraform-dome9-awp-aws](https://registry.terraform.io/modules/dome9/awp-aws/dome9/latest)
+# for more examples (simple and complete), you can visit this github examples [terraform-dome9-awp-aws](https://github.com/dome9/terraform-dome9-awp-aws/tree/AL-2317-AWP-Terraform-AWS-Module/examples)
 # Example for the module use:
 module "terraform-dome9-awp-aws" {
   source = "github.com/dome9/terraform-dome9-awp-aws"
@@ -84,9 +87,6 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 # The dome9_awp_aws_onboarding data source allows you to get the onboarding data of an AWS account (Optional).
 data "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
   id = dome9_awp_aws_onboarding.awp_aws_onboarding_test.cloudguard_account_id
-  depends_on = [
-    dome9_awp_aws_onboarding.awp_aws_onboarding_test
-  ]
 }
 ```
 

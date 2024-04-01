@@ -1,3 +1,16 @@
+terraform {
+	required_providers {
+		dome9 = {
+			source = "dome9/dome9"
+			version = ">=1.29.6"
+		}
+		aws = {
+			source  = "hashicorp/aws"
+			version = ">= 3.0"
+		}
+	}
+}
+
 # The Dome9 provider is used to interact with the resources supported by Dome9.
 # The provider needs to be configured with the proper credentials before it can be used.
 # Use the dome9_access_id and dome9_secret_key attributes of the provider to provide the Dome9 access key and secret key.
@@ -26,14 +39,34 @@ provider "aws" {
 	token      = "AWS_SESSION_TOKEN"
 }
 
+# Onboarding AWS Account to CloudGuard Dome9 Account
+# This resource is optional and can be ignored and you need to pass CloudGuard account id to the module directly at the parameter awp_cloud_account_id.
+# to know how to get the credentials for the onboarding process, please refer to the following link:
+## https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Documentation/Assets/AWS/OnboardAWS.htm
+resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
+	name  = "aws_onboarding_account_test"
+	credentials  {
+		arn    = "CloudGuard Connect Role ARN"
+		secret = "CloudGuard Connect Role Secret"
+		type   = "RoleBased"
+	}
+	net_sec {
+		regions {
+			new_group_behavior = "ReadOnly"
+			region             = "us_west_2"
+		}
+	}
+}
+
 # There is a need to use this terraform module [terraform-dome9-awp-aws] to create all the prerequisites for the onboarding process (All the needed AWS Resources)
 # Example for the module use:
 module "terraform-dome9-awp-aws" {
-	source = "github.com/dome9/terraform-dome9-awp-aws"
+	source = "github.com/dome9/terraform-dome9-awp-aws?ref=AL-2317-AWP-Terraform-AWS-Module"
 	awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID>"
 	awp_scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
+
 	# Optional customizations:
-	# awp_cross_account_role_name = "CheckPoint-AWP-CrossAccount-Role"
+	# awp_cross_account_role_name = "CheckPoint-AWP-CrossAccount-Role-22"
 	# awp_cross_account_role_external_id = "AWP_Fake@ExternalID123"
 
 	# Optional account Settings
@@ -49,40 +82,4 @@ module "terraform-dome9-awp-aws" {
 	#       ...
 	#     }
 	# }
-}
-
-# The dome9_awp_aws_onboarding resource defines a Dome9 AWP AWS Onboarding.
-# The Dome9 AWP AWS Onboarding resource allows you to onboard an AWS account to Dome9 AWP.
-# The cloudguard_account_id attribute is used to specify the CloudGuard account id of the AWS account.
-# The cross_account_role_name attribute is used to specify the name of the cross account role that is used to allow AWP to access the AWS account.
-# The cross_account_role_external_id attribute is used to specify the external id of the cross account role that is used to allow AWP to access the AWS account.
-# The scan_mode attribute is used to specify the scan mode of the Dome9 AWP AWS Onboarding. The valid values are "inAccount" and "saas".
-# The agentless_account_settings attribute is used to specify the agentless account settings of the Dome9 AWP AWS Onboarding.
-# The disabled_regions attribute is used to specify the disabled regions of the agentless account settings of the Dome9 AWP AWS Onboarding.
-# The scan_machine_interval_in_hours attribute is used to specify the scan machine interval in hours of the agentless account settings of the Dome9 AWP AWS Onboarding.
-# The max_concurrence_scans_per_region attribute is used to specify the max concurrence scans per region of the agentless account settings of the Dome9 AWP AWS Onboarding.
-# The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP AWS Onboarding.
-resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
-	cloudguard_account_id = "dome9_cloudaccount_aws.aws_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <EXTERNAL_AWS_ACCOUNT_NUMBER>"
-	cross_account_role_name = "<AWP Cross account role name>"
-	cross_account_role_external_id = "<AWP Cross account role external id>"
-	scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
-	agentless_account_settings {
-		disabled_regions = ["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]
-		scan_machine_interval_in_hours = 24
-		max_concurrence_scans_per_region = 20
-		custom_tags = {
-			tag1 = "value1"
-			tag2 = "value2"
-			tag3 = "value3"
-		}
-	}
-}
-
-# The dome9_awp_aws_onboarding data source allows you to get the onboarding data of an AWS account (Optional).
-data "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
-	id = dome9_awp_aws_onboarding.awp_aws_onboarding_test.cloudguard_account_id
-	depends_on = [
-		dome9_awp_aws_onboarding.awp_aws_onboarding_test
-	]
 }
