@@ -43,6 +43,7 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 			"scan_mode": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"inAccount",
 					"saas",
@@ -66,12 +67,12 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 						"scan_machine_interval_in_hours": {
 							Type:     schema.TypeInt,
 							Optional: true,
-							Default:  4,
+							Default: 24,
 						},
 						"max_concurrence_scans_per_region": {
 							Type:     schema.TypeInt,
 							Optional: true,
-							Default:  1,
+							Default: 20,
 						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
