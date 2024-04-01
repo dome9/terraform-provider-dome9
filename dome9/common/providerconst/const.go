@@ -109,13 +109,13 @@ const (
 	AF_SOUTH_1          = "26"
 	EU_SOUTH_1          = "27"
 	AP_NORTHEAST_3      = "28"
-	ME_CENTRAL_1        = "29"
-	AP_SOUTH_2          = "30"
-	AP_SOUTHEAST_3      = "31"
-	AP_SOUTHEAST_4      = "32"
-	EU_CENTRAL_2        = "33"
-	EU_SOUTH_2          = "34"
-	IL_CENTRAL_1        = "35"
+	ME_CENTRAL_1	    = "29"
+	AP_SOUTH_2	    = "30"
+	AP_SOUTHEAST_3	    = "31"
+	AP_SOUTHEAST_4	    = "32"
+	EU_CENTRAL_2	    = "33"
+	EU_SOUTH_2	    = "34"
+	IL_CENTRAL_1 	    = "35"
 )
 
 // Azure consts
@@ -185,11 +185,11 @@ var AWSRegionsEnum = map[string]string{
 	"af_south_1":          AF_SOUTH_1,
 	"eu_south_1":          EU_SOUTH_1,
 	"ap_northeast_3":      AP_NORTHEAST_3,
-	"me_central_1":        ME_CENTRAL_1,
-	"ap_south_2":          AP_SOUTH_2,
-	"ap_southeast_3":      AP_SOUTHEAST_3,
-	"ap_southeast_4":      AP_SOUTHEAST_4,
-	"eu_central_2":        EU_CENTRAL_2,
+	"me_central_1":        ME_CENTRAL_1,	
+	"ap_south_2":          AP_SOUTH_2,		
+	"ap_southeast_3":      AP_SOUTHEAST_3,	
+	"ap_southeast_4":      AP_SOUTHEAST_4,	
+	"eu_central_2":        EU_CENTRAL_2,	
 	"eu_south_2":          EU_SOUTH_2,
 	"il_central_1":        IL_CENTRAL_1,
 }
