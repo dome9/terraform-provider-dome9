@@ -48,7 +48,7 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHours),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrence_scans_per_region", variable.MaxConcurrencyScansPerRegion),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrent_scans_per_region", variable.MaxConcurrencyScansPerRegion),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "2"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
@@ -69,7 +69,7 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.2", disabledRegionUpdate3),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.3", disabledRegionUpdate4),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHoursUpdate),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrence_scans_per_region", variable.MaxConcurrenceScansPerRegionUpdate),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrent_scans_per_region", variable.MaxConcurrenceScansPerRegionUpdate),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "3"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
@@ -153,7 +153,7 @@ resource "%s" "%s" {
 	agentless_account_settings {
 		disabled_regions = %s
 		scan_machine_interval_in_hours = "%s"
-		max_concurrence_scans_per_region = "%s"
+		max_concurrent_scans_per_region = "%s"
 		custom_tags = %s
 	}
 }

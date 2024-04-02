@@ -38,7 +38,7 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"max_concurrence_scans_per_region": {
+						"max_concurrent_scans_per_region": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},

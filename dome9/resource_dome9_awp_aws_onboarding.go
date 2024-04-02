@@ -68,12 +68,12 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 						"scan_machine_interval_in_hours": {
 							Type:     schema.TypeInt,
 							Optional: true,
-							Default: 24,
+							Default:  24,
 						},
-						"max_concurrence_scans_per_region": {
+						"max_concurrent_scans_per_region": {
 							Type:     schema.TypeInt,
 							Optional: true,
-							Default: 20,
+							Default:  20,
 						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
@@ -87,7 +87,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 			},
 			"missing_awp_private_network_regions": {
 				Type:     schema.TypeList,
-				Optional: true,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
@@ -291,9 +290,9 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 		agentlessAccountSettings.ScanMachineIntervalInHours = scanMachineInterval
 	}
 
-	if maxConcurrenceScans, ok := agentlessAccountSettingsMap["max_concurrence_scans_per_region"].(int); ok {
+	if maxConcurrenceScans, ok := agentlessAccountSettingsMap["max_concurrent_scans_per_region"].(int); ok {
 		if maxConcurrenceScans < 1 || maxConcurrenceScans > 20 {
-			return nil, fmt.Errorf("max_concurrence_scans_per_region must be between 1 and 20")
+			return nil, fmt.Errorf("max_concurrent_scans_per_region must be between 1 and 20")
 		}
 		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrenceScans
 	}
@@ -328,10 +327,10 @@ func setAgentlessAccountSettings(resp *awp_aws_onboarding.GetAWPOnboardingRespon
 func flattenAgentlessAccountSettings(settings *awp_aws_onboarding.AgentlessAccountSettings) []interface{} {
 
 	m := map[string]interface{}{
-		"disabled_regions":                 settings.DisabledRegions,
-		"scan_machine_interval_in_hours":   settings.ScanMachineIntervalInHours,
-		"max_concurrence_scans_per_region": settings.MaxConcurrenceScansPerRegion,
-		"custom_tags":                      settings.CustomTags,
+		"disabled_regions":                settings.DisabledRegions,
+		"scan_machine_interval_in_hours":  settings.ScanMachineIntervalInHours,
+		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
+		"custom_tags":                     settings.CustomTags,
 	}
 	return []interface{}{m}
 }

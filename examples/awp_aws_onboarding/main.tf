@@ -74,7 +74,7 @@ module "terraform-dome9-awp-aws" {
 	#   awp_account_settings_aws = {
 	#     scan_machine_interval_in_hours = 24
 	#     disabled_regions = ["ap-northeast-1", "ap-northeast-2", ...]
-	#     max_concurrence_scans_per_region = 20
+	#     max_concurrent_scans_per_region = 20
 	#     custom_tags = {
 	#       tag1 = "value1"
 	#       tag2 = "value2"
