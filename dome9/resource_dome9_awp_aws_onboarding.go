@@ -153,6 +153,13 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 					return fmt.Errorf("'centralized_cloud_account_id' must be set and not empty when 'scan_mode' is 'inAccountSub'")
 				}
 			}
+			// Add checks for unsupported fields
+			unsupportedFields := []string{"cross_account_role_name", "cross_account_role_external_id"}
+			for _, field := range unsupportedFields {
+				if diff.HasChange(field) {
+					return fmt.Errorf("changing the '%s' field is not supported", field)
+				}
+			}
 			return nil
 		},
 	}
