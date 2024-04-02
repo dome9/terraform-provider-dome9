@@ -95,7 +95,6 @@ data "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
 The following arguments are supported:
 
 * `cloudguard_account_id` - (Required) The CloudGuard account id.
-* `centralized_cloud_account_id` - (Optional) The centralized cloud account id.
 * `cross_account_role_name` - (Required) The name of the cross account role.
 * `cross_account_role_external_id` - (Required) The external id of the cross account role.
 * `scan_mode` - (Required) The scan mode. Valid values are "inAccount", "saas", "inAccountHub", "inAccountSub".

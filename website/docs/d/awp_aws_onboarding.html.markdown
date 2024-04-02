@@ -30,7 +30,6 @@ The following arguments supported:
 
 In addition to all arguments above, the following attributes exported:
 
-* `centralized_cloud_account_id` - The centralized CloudGuard account ID if configured.
 * `scan_mode` - The scan mode of the onboarding process
 * `agentless_account_settings` - The settings for the agentless account that the awp scanner will be configured with.
 * `missing_awp_private_network_regions` - The regions missing AWP private network.

@@ -29,10 +29,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"centralized_cloud_account_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"cross_account_role_name": {
 				Type:     schema.TypeString,
 				ForceNew: true,
@@ -147,16 +143,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Default:  true,
 			},
 		},
-		CustomizeDiff: func(diff *schema.ResourceDiff, v interface{}) error {
-			scanMode, scanModeOk := diff.GetOk("scan_mode")
-			centralizedCloudAccountId, centralizedCloudAccountIdOk := diff.GetOk("centralized_cloud_account_id")
-			if scanModeOk && scanMode == "inAccountSub" {
-				if !centralizedCloudAccountIdOk || centralizedCloudAccountId == "" {
-					return fmt.Errorf("'centralized_cloud_account_id' must be set and not empty when 'scan_mode' is 'inAccountSub'")
-				}
-			}
-			return nil
-		},
 	}
 }
 
@@ -217,7 +203,6 @@ func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) erro
 	_ = d.Set("cloud_provider", resp.Provider)
 	_ = d.Set("should_update", resp.ShouldUpdate)
 	_ = d.Set("is_org_onboarding", resp.IsOrgOnboarding)
-	_ = d.Set("centralized_cloud_account_id", resp.CentralizedCloudAccountId)
 
 	err = setAgentlessAccountSettings(resp, d)
 	if err != nil {
@@ -316,7 +301,6 @@ func setAgentlessAccountSettings(resp *awp_aws_onboarding.GetAWPOnboardingRespon
 		if resp.AgentlessAccountSettings.DisabledRegions != nil ||
 			resp.AgentlessAccountSettings.ScanMachineIntervalInHours != 0 ||
 			resp.AgentlessAccountSettings.MaxConcurrenceScansPerRegion != 0 ||
-			resp.AgentlessAccountSettings.SkipFunctionAppsScan != false ||
 			resp.AgentlessAccountSettings.CustomTags != nil {
 			if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettings(resp.AgentlessAccountSettings)); err != nil {
 				return err
@@ -377,9 +361,6 @@ func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) er
 			return err
 		}
 		log.Printf("[INFO] Updated agentless account settings for cloud account %s\n", d.Id())
-		if err != nil {
-			return err
-		}
 	}
 
 	return nil

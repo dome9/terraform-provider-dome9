@@ -14,10 +14,6 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"centralized_cloud_account_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"scan_mode": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -118,7 +114,6 @@ func dataSourceAwpAwsOnboardingRead(d *schema.ResourceData, meta interface{}) er
 
 	d.SetId(resp.CloudAccountId)
 	// Set other schema fields here
-	_ = d.Set("centralized_cloud_account_id", resp.CentralizedCloudAccountId)
 	_ = d.Set("scan_mode", resp.ScanMode)
 	_ = d.Set("missing_awp_private_network_regions", resp.MissingAwpPrivateNetworkRegions)
 	_ = d.Set("cloud_account_id", resp.CloudAccountId)
