@@ -2,7 +2,7 @@ terraform {
 	required_providers {
 		dome9 = {
 			source = "dome9/dome9"
-			version = ">=1.29.6"
+			version = ">=1.29.7"
 		}
 		aws = {
 			source  = "hashicorp/aws"
@@ -61,19 +61,20 @@ resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
 # There is a need to use this terraform module [terraform-dome9-awp-aws] to create all the prerequisites for the onboarding process (All the needed AWS Resources)
 # Example for the module use:
 module "terraform-dome9-awp-aws" {
-	source = "github.com/dome9/terraform-dome9-awp-aws?ref=AL-2317-AWP-Terraform-AWS-Module"
-	awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID>"
+	source = "github.com/dome9/terraform-dome9-awp-aws"
+	awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID> or <AWS_ACCOUNT_ID>"
 	awp_scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
 
 	# Optional customizations:
-	# awp_cross_account_role_name = "CheckPoint-AWP-CrossAccount-Role-22"
-	# awp_cross_account_role_external_id = "AWP_Fake@ExternalID123"
+	# e.g:
+	# awp_cross_account_role_name = "<CROSS_ACCOUNT_ROLE_NAME>"
+	# awp_cross_account_role_external_id = "<CROSS_ACCOUNT_ROLE_EXTERNAL_ID>"
 
 	# Optional account Settings
 	# e.g:
 	#   awp_account_settings_aws = {
 	#     scan_machine_interval_in_hours = 24
-	#     disabled_regions = ["ap-northeast-1", "ap-northeast-2", ...]
+	#     disabled_regions = ["ap-northeast-1", "ap-northeast-2", ...] # List of regions to disable
 	#     max_concurrent_scans_per_region = 20
 	#     custom_tags = {
 	#       tag1 = "value1"

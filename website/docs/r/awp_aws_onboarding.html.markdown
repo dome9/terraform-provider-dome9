@@ -27,33 +27,34 @@ provider "aws" {
   token      = "AWS_SESSION_TOKEN"
 }
 
-# ToDo
-  # change the repo url to correct links after publishing the module
+
 # There is a need to use this terraform module [terraform-dome9-awp-aws] to create all the prerequisites for the onboarding process (All the needed AWS Resources)
 # for further information please refer to the module documentation [terraform-dome9-awp-aws](https://registry.terraform.io/modules/dome9/awp-aws/dome9/latest)
-# for more examples (simple and complete), you can visit this github examples [terraform-dome9-awp-aws](https://github.com/dome9/terraform-dome9-awp-aws/tree/AL-2317-AWP-Terraform-AWS-Module/examples)
+# for more examples (simple and complete), you can visit this github examples [terraform-dome9-awp-aws](https://github.com/dome9/terraform-dome9-awp-aws/blob/master/examples)
 # Example for the module use:
 module "terraform-dome9-awp-aws" {
-  source = "github.com/dome9/terraform-dome9-awp-aws"
-  awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID>"
-  awp_scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
-  # Optional customizations:
-  # awp_cross_account_role_name = "CheckPoint-AWP-CrossAccount-Role"
-  # awp_cross_account_role_external_id = "AWP_Fake@ExternalID123"
+	source = "github.com/dome9/terraform-dome9-awp-aws"
+	awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID> or <AWS_ACCOUNT_ID>"
+	awp_scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
 
-  # Optional account Settings
-  # e.g:
-  #   awp_account_settings_aws = {
-  #     scan_machine_interval_in_hours = 24
-  #     disabled_regions = ["ap-northeast-1", "ap-northeast-2", ...]
-  #     max_concurrent_scans_per_region = 20
-  #     custom_tags = {
-  #       tag1 = "value1"
-  #       tag2 = "value2"
-  #       tag3 = "value3"
-  #       ...
-  #     }
-  # }
+	# Optional customizations:
+	# e.g:
+	# awp_cross_account_role_name = "<CROSS_ACCOUNT_ROLE_NAME>"
+	# awp_cross_account_role_external_id = "<CROSS_ACCOUNT_ROLE_EXTERNAL_ID>"
+
+	# Optional account Settings
+	# e.g:
+	#   awp_account_settings_aws = {
+	#     scan_machine_interval_in_hours = 24
+	#     disabled_regions = ["ap-northeast-1", "ap-northeast-2", ...] # List of regions to disable
+	#     max_concurrent_scans_per_region = 20
+	#     custom_tags = {
+	#       tag1 = "value1"
+	#       tag2 = "value2"
+	#       tag3 = "value3"
+	#       ...
+	#     }
+	# }
 }
 
 # The dome9_awp_aws_onboarding resource defines a Dome9 AWP AWS Onboarding.
