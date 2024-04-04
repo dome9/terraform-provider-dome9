@@ -45,4 +45,5 @@ jobs:
           OCI_TENANCY_ID: ${{ secrets.OCI_TENANCY_ID }}
           OCI_HOME_REGION: ${{ secrets.OCI_HOME_REGION }}
           OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
+          AWP_EXTERNAL_ID: ${{ secrets.AWP_EXTERNAL_ID }}
         run: go test -v -timeout 2400s ./...

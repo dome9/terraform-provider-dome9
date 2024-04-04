@@ -157,7 +157,7 @@ func getEnabledFromMap(configurations map[string]interface{}) bool {
 	if len(configurations) > 0 {
 		enabled := configurations[providerconst.Enabled]
 
-		if enabled != ""  && enabled != nil {
+		if enabled != "" && enabled != nil {
 			v := enabled.(string)
 			b, _ = strconv.ParseBool(v)
 		}
@@ -209,8 +209,7 @@ func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *aws_unified_onboard
 	}
 }
 
-func
-resourceUnifiedOnboardingDelete(data *schema.ResourceData, i interface{}) error {
+func resourceUnifiedOnboardingDelete(data *schema.ResourceData, i interface{}) error {
 	return nil
 }
 

@@ -20,9 +20,10 @@ const (
 
 // AWS environment variable
 const (
-	CloudAccountAWSEnvVarArn        = "ARN"
-	CloudAccountUpdatedAWSEnvVarArn = "ARN_UPDATE"
-	CloudAccountAWSEnvVarSecret     = "SECRET"
+	CloudAccountAWSEnvVarArn               = "ARN"
+	CloudAccountUpdatedAWSEnvVarArn        = "ARN_UPDATE"
+	CloudAccountAWSEnvVarSecret            = "SECRET"
+	AwpAwsCrossAccountRoleExternalIdEnvVar = "AWP_EXTERNAL_ID"
 )
 
 // Azure environment variable

@@ -87,7 +87,7 @@ func dataSourceAlibabaRead(d *schema.ResourceData, meta interface{}) error {
 	return nil
 }
 
-func setCredentials(credentials alibaba.CloudAccountCredentialsResponse) map[string]interface{}{
+func setCredentials(credentials alibaba.CloudAccountCredentialsResponse) map[string]interface{} {
 	return map[string]interface{}{
 		"access_key": credentials.AccessKey,
 	}

@@ -44,7 +44,7 @@ func resourceAssessment() *schema.Resource {
 			},
 			"should_minimize_result": {
 				Type:     schema.TypeBool,
-				Default: true,
+				Default:  true,
 				Optional: true,
 			},
 			"name": {
