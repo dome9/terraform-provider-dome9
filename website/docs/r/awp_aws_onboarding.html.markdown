@@ -66,7 +66,7 @@ module "terraform-dome9-awp-aws" {
 # The agentless_account_settings attribute is used to specify the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The disabled_regions attribute is used to specify the disabled regions of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The scan_machine_interval_in_hours attribute is used to specify the scan machine interval in hours of the agentless account settings of the Dome9 AWP AWS Onboarding.
-# The max_concurrent_scans_per_region attribute is used to specify the max concurrence scans per region of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The max_concurrent_scans_per_region attribute is used to specify the max concurrent scans per region of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP AWS Onboarding.
 resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_aws.aws_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <EXTERNAL_AWS_ACCOUNT_NUMBER>"
@@ -102,7 +102,7 @@ The following arguments are supported:
 * `agentless_account_settings` - (Optional) The agentless account settings.
   * `disabled_regions` - (Optional) The disabled regions. valid values are "af-south-1", "ap-south-1", "eu-north-1", "eu-west-3", "eu-south-1", "eu-west-2", "eu-west-1", "ap-northeast-3", "ap-northeast-2", "me-south-1", "ap-northeast-1", "me-central-1", "ca-central-1", "sa-east-1", "ap-east-1", "ap-southeast-1", "ap-southeast-2", "eu-central-1", "ap-southeast-3", "us-east-1", "us-east-2", "us-west-1", "us-west-2"
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
-  * `max_concurrent_scans_per_region` - (Optional) The max concurrence scans per region
+  * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
   * `custom_tags` - (Optional) The custom tags.
 * `should_create_policy` - (Optional) Whether to create a policy. Default is true.
     

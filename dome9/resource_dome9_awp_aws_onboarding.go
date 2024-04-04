@@ -242,9 +242,9 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 
 	var scanMachineIntervalInHours int
 	if scanMode == "saas" {
-		scanMachineIntervalInHours = 24
+		scanMachineIntervalInHours = providerconst.DefaultScanMachineIntervalInHoursSaas
 	} else {
-		scanMachineIntervalInHours = 4
+		scanMachineIntervalInHours = providerconst.DefaultScanMachineIntervalInHoursInAccount
 	}
 
 	// Initialize the AgentlessAccountSettings struct with default values
@@ -252,7 +252,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 		DisabledRegions:              make([]string, 0),
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
-		MaxConcurrenceScansPerRegion: 20,
+		MaxConcurrenceScansPerRegion: providerconst.DefaultMaxConcurrentScansPerRegion,
 	}
 
 	// Check if the key exists and is not nil
@@ -269,19 +269,19 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 	}
 
 	if scanMachineInterval, ok := agentlessAccountSettingsMap["scan_machine_interval_in_hours"].(int); ok {
-		if scanMode == "saas" && (scanMachineInterval < 24 || scanMachineInterval > 1000) {
-			return nil, fmt.Errorf("scan_machine_interval_in_hours must be between 24 and 1000 for saas mode")
-		} else if scanMode == "inAccount" && (scanMachineInterval < 4 || scanMachineInterval > 1000) {
-			return nil, fmt.Errorf("scan_machine_interval_in_hours must be between 4 and 1000 for inAccount mode")
+		if scanMode == "saas" && (scanMachineInterval < providerconst.DefaultScanMachineIntervalInHoursSaas || scanMachineInterval > providerconst.MaxScanMachineIntervalInHours) {
+			return nil, fmt.Errorf("scan_machine_interval_in_hours must be between %d and %d for saas mode", providerconst.DefaultScanMachineIntervalInHoursSaas, providerconst.MaxScanMachineIntervalInHours)
+		} else if scanMode == "inAccount" && (scanMachineInterval < providerconst.DefaultScanMachineIntervalInHoursInAccount || scanMachineInterval > providerconst.MaxScanMachineIntervalInHours) {
+			return nil, fmt.Errorf("scan_machine_interval_in_hours must be between %d and %d for inAccount mode", providerconst.DefaultScanMachineIntervalInHoursInAccount, providerconst.MaxScanMachineIntervalInHours)
 		}
 		agentlessAccountSettings.ScanMachineIntervalInHours = scanMachineInterval
 	}
 
-	if maxConcurrenceScans, ok := agentlessAccountSettingsMap["max_concurrent_scans_per_region"].(int); ok {
-		if maxConcurrenceScans < 1 || maxConcurrenceScans > 20 {
+	if maxConcurrentScans, ok := agentlessAccountSettingsMap["max_concurrent_scans_per_region"].(int); ok {
+		if maxConcurrentScans < providerconst.MinMaxConcurrentScansPerRegion || maxConcurrentScans > providerconst.DefaultMaxConcurrentScansPerRegion {
 			return nil, fmt.Errorf("max_concurrent_scans_per_region must be between 1 and 20")
 		}
-		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrenceScans
+		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrentScans
 	}
 
 	if customTagsInterface, ok := agentlessAccountSettingsMap["custom_tags"].(map[string]interface{}); ok {
