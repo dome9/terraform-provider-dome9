@@ -34,19 +34,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			// "awp_hub_external_account_id": {
-			// 	Type:     schema.TypeString,
-			// 	Optional: true,
-			// 	ForceNew: true,
-			// 	ValidateFunc: func(i interface{}, k string) (ws []string, errors []error) {
-			// 		val := i.(map[string]interface{})[k].(string)
-			// 		mode := i.(map[string]interface{})["scan_mode"].(string)
-			// 		if mode == "inAccountSub" && val == "" {
-			// 			errors = append(errors, fmt.Errorf("awp_hub_external_account_id must be set when scan_mode is 'inAccountSub'"))
-			// 		}
-			// 		return
-			// 	},
-			// },
 			"cross_account_role_name": {
 				Type:     schema.TypeString,
 				ForceNew: true,
