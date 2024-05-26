@@ -168,46 +168,56 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 	d9client := meta.(*Client)
 	cloudguardAccountId := d.Get("cloudguard_account_id").(string)
 	cloudGuardHubAccountID := ""
-	hubExternalAccountId, hubValueAccepted := d.Get("awp_hub_external_account_id").(string)
-	if hubValueAccepted && hubExternalAccountId != "" {
+	scanMode := d.Get("scan_mode").(string)
+	if scanMode == "inAccountSub" {
+		hubExternalAccountId := d.Get("awp_hub_external_account_id").(string)
 		cgHubAccountId, _, err := d9client.awpAwsOnboarding.GetCloudAccountId(hubExternalAccountId)
 		if err != nil {
 			return err
 		}
 		cloudGuardHubAccountID = cgHubAccountId
 	}
-
-	req, err := expandAWPOnboardingRequest(d, cloudGuardHubAccountID)
-	if err != nil {
-		return err
-	}
-	log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
 	options := awp_aws_onboarding.CreateOptions{
 		ShouldCreatePolicy: strconv.FormatBool(d.Get("should_create_policy").(bool)),
 	}
-	_, err = d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, options)
+	agentlessAccountSettings, err := expandAgentlessAccountSettings(d)
 	if err != nil {
 		return err
 	}
+	if scanMode == "inAccountSub" || scanMode == "inAccountHub" {
+		req := awp_aws_onboarding.CreateAWPOnboardingCentralizedRequest{
+			CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
+			CentralizedCloudAccountId:  cloudGuardHubAccountID,
+			CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
+			IsTerraform:                true,
+			AgentlessAccountSettings:   agentlessAccountSettings,
+		}
+		log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
+
+		_, err = d9client.awpAwsOnboarding.CreateAWPOnboardingCentralized(cloudguardAccountId, req, scanMode, options)
+		if err != nil {
+			return err
+		}
+	} else {
+		req := awp_aws_onboarding.CreateAWPOnboardingRequest{
+			CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
+			CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
+			IsTerraform:                true,
+			AgentlessAccountSettings:   agentlessAccountSettings,
+			ScanMode:                   d.Get("scan_mode").(string),
+		}
+		log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
+
+		_, err = d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, options)
+		if err != nil {
+			return err
+		}
+	}
+
 	d.SetId(cloudguardAccountId) // set the resource ID to the CloudGuard Account ID
 	log.Printf("[INFO] Created AWP AWS Onboarding with CloudGuard Account ID: %v\n", cloudguardAccountId)
 
 	return resourceAWPAWSOnboardingRead(d, meta)
-}
-
-func expandAWPOnboardingRequest(d *schema.ResourceData, cloudGuardHubAccountID string) (awp_aws_onboarding.CreateAWPOnboardingRequest, error) {
-	agentlessAccountSettings, err := expandAgentlessAccountSettings(d)
-	if err != nil {
-		return awp_aws_onboarding.CreateAWPOnboardingRequest{}, err
-	}
-	return awp_aws_onboarding.CreateAWPOnboardingRequest{
-		CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
-		CentralizedCloudAccountId:  cloudGuardHubAccountID,
-		CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
-		ScanMode:                   d.Get("scan_mode").(string),
-		IsTerraform:                true,
-		AgentlessAccountSettings:   agentlessAccountSettings,
-	}, nil
 }
 
 func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) error {
