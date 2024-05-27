@@ -97,6 +97,10 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
+			"centralized_cloud_account_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			}
 		},
 	}
 }
@@ -121,6 +125,7 @@ func dataSourceAwpAwsOnboardingRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("cloud_provider", resp.Provider)
 	_ = d.Set("should_update", resp.ShouldUpdate)
 	_ = d.Set("is_org_onboarding", resp.IsOrgOnboarding)
+	_ = d.Set("centralized_cloud_account_id", resp.CentralizedCloudAccountId)
 
 	if resp.AgentlessAccountSettings != nil {
 		if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettings(resp.AgentlessAccountSettings)); err != nil {

@@ -2,11 +2,12 @@ package dome9
 
 import (
 	"fmt"
+	"os"
+	"testing"
+
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
-	"os"
-	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -39,6 +40,7 @@ func TestAccDataSourceAwpAwsOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(awpAwsOnboardingDataSourceTypeAndName, "agentless_account_settings.0.custom_tags.%", awpAwsOnboardingResourceTypeAndName, "agentless_account_settings.0.custom_tags.%"),
 					resource.TestCheckResourceAttrPair(awpAwsOnboardingDataSourceTypeAndName, "missing_awp_private_network_regions", awpAwsOnboardingResourceTypeAndName, "missing_awp_private_network_regions"),
 					resource.TestCheckResourceAttrPair(awpAwsOnboardingDataSourceTypeAndName, "agentless_protection_enabled", awpAwsOnboardingResourceTypeAndName, "agentless_protection_enabled"),
+					resource.TestCheckResourceAttrPair(awpAwsOnboardingDataSourceTypeAndName, "centralized_cloud_account_id", awpAwsOnboardingResourceTypeAndName, "awp_hub_external_account_id"),
 				),
 			},
 		},
