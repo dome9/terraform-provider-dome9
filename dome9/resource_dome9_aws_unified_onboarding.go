@@ -5,6 +5,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/aws_unified_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
+	"log"
 	"strconv"
 )
 
@@ -12,7 +13,7 @@ func resourceAwsUnifiedOnboarding() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceUnifiedOnboardingCreate,
 		Read:   unifiedOnboardingResourceRead,
-		Update: resourceUnifiedOnboardingUpdat,
+		Update: resourceUnifiedOnboardingUpdate,
 		Delete: resourceUnifiedOnboardingDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -209,11 +210,17 @@ func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *aws_unified_onboard
 	}
 }
 
-func resourceUnifiedOnboardingDelete(data *schema.ResourceData, i interface{}) error {
+func resourceUnifiedOnboardingDelete(data *schema.ResourceData, meta interface{}) error {
+	d9Client := meta.(*Client)
+	log.Printf("[INFO] Deleting AWS Cloud Account ID: %v\n", data.Id())
+	if _, err := d9Client.awsUnifiedOnboarding.Delete(data.Id()); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func resourceUnifiedOnboardingUpdat(data *schema.ResourceData, i interface{}) error {
+func resourceUnifiedOnboardingUpdate(data *schema.ResourceData, i interface{}) error {
 	return nil
 }
 
