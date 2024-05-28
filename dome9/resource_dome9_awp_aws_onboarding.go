@@ -34,6 +34,11 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"awp_organization_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
 			"cross_account_role_name": {
 				Type:     schema.TypeString,
 				ForceNew: true,
@@ -154,15 +159,9 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) error {
 	d9client := meta.(*Client)
 	cloudguardAccountId := d.Get("cloudguard_account_id").(string)
-	cloudGuardHubAccountID := ""
-	scanMode := d.Get("scan_mode").(string)
-	if scanMode == "inAccountSub" {
-		hubExternalAccountId := d.Get("awp_hub_external_account_id").(string)
-		cgHubAccountId, _, err := d9client.awpAwsOnboarding.GetCloudAccountId(hubExternalAccountId)
-		if err != nil {
-			return err
-		}
-		cloudGuardHubAccountID = cgHubAccountId
+	cloudGuardHubAccountID, err := checkCentralized(d, meta)
+	if err != nil {
+		return err
 	}
 	options := awp_aws_onboarding.CreateOptions{
 		ShouldCreatePolicy: strconv.FormatBool(d.Get("should_create_policy").(bool)),
@@ -171,40 +170,61 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 	if err != nil {
 		return err
 	}
+	scanMode := d.Get("scan_mode").(string)
+	var req interface{}
 	if scanMode == "inAccountSub" || scanMode == "inAccountHub" {
-		req := awp_aws_onboarding.CreateAWPOnboardingCentralizedRequest{
+		req = awp_aws_onboarding.CreateAWPOnboardingCentralizedRequest{
 			CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
 			CentralizedCloudAccountId:  cloudGuardHubAccountID,
 			CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
 			IsTerraform:                true,
 			AgentlessAccountSettings:   agentlessAccountSettings,
 		}
-		log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
-
-		_, err = d9client.awpAwsOnboarding.CreateAWPOnboardingCentralized(cloudguardAccountId, req, scanMode, options)
-		if err != nil {
-			return err
-		}
 	} else {
-		req := awp_aws_onboarding.CreateAWPOnboardingRequest{
+		req = awp_aws_onboarding.CreateAWPOnboardingRequest{
 			CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
 			CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
 			IsTerraform:                true,
 			AgentlessAccountSettings:   agentlessAccountSettings,
 			ScanMode:                   d.Get("scan_mode").(string),
 		}
-		log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
+	}
 
-		_, err = d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, options)
-		if err != nil {
-			return err
-		}
+	log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
+
+	_, err = d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, scanMode, options)
+	if err != nil {
+		return err
 	}
 
 	d.SetId(cloudguardAccountId) // set the resource ID to the CloudGuard Account ID
 	log.Printf("[INFO] Created AWP AWS Onboarding with CloudGuard Account ID: %v\n", cloudguardAccountId)
 
 	return resourceAWPAWSOnboardingRead(d, meta)
+}
+
+func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) {
+	scanMode := d.Get("scan_mode").(string)
+	if scanMode == "inAccountSub" {
+		d9client := meta.(*Client)
+		hubExternalAccountId, exist := d.Get("awp_hub_external_account_id").(string)
+		if !exist || hubExternalAccountId == "" {
+			errorMsg := fmt.Sprintf("awp_hub_external_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
+			return "", errors.New(errorMsg)
+		}
+		cgHubAccountId, _, err := d9client.awpAwsOnboarding.GetCloudAccountId(hubExternalAccountId)
+		if err != nil {
+			return "", err
+		}
+		return cgHubAccountId, nil
+	} else if scanMode == "inAccountHub" {
+		awpOrganizationId, exist := d.Get("awp_organization_id").(string)
+		if !exist || awpOrganizationId == "" {
+			errorMsg := fmt.Sprintf("awp_organization_id is required when scan_mode is inAccountHub, got '%s'", awpOrganizationId)
+			return "", errors.New(errorMsg)
+		}
+	}
+	return "", nil
 }
 
 func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) error {

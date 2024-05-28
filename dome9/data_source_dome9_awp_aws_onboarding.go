@@ -1,8 +1,9 @@
 package dome9
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceAwpAwsOnboarding() *schema.Resource {
@@ -100,7 +101,7 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 			"centralized_cloud_account_id": {
 				Type:     schema.TypeString,
 				Computed: true,
-			}
+			},
 		},
 	}
 }
