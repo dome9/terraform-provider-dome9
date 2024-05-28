@@ -186,7 +186,7 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 			CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
 			IsTerraform:                true,
 			AgentlessAccountSettings:   agentlessAccountSettings,
-			ScanMode:                   d.Get("scan_mode").(string),
+			ScanMode:                   scanMode,
 		}
 	}
 
