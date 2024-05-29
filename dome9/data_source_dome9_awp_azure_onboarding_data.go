@@ -49,11 +49,11 @@ func dataSourceAwpAzureOnboardingDataRead(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	d.SetId(resp.AwpCloudAccountId)
+	d.SetId(resp.CloudAccountId)
 	_ = d.Set("region", resp.Region)
 	_ = d.Set("app_client_id", resp.AppClientId)
-	_ = d.Set("awp_cloud_account_id", resp.AwpCloudAccountId)
-	_ = d.Set("awp_centralized_cloud_account_id", resp.AwpCentralizedCloudAccountId)
+	_ = d.Set("awp_cloud_account_id", resp.CloudAccountId)
+	_ = d.Set("awp_centralized_cloud_account_id", resp.CentralizedCloudAccountId)
 
 	if err != nil {
 		return err
