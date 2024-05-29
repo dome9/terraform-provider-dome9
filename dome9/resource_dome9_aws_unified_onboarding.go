@@ -212,8 +212,13 @@ func addOnboardingIdAsSchemaId(d *schema.ResourceData, resp *aws_unified_onboard
 
 func resourceUnifiedOnboardingDelete(data *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
+	receivedAwsUnifiedOnboardingResponse, _, err := d9Client.awsUnifiedOnboarding.Get(data.Id())
+	if err != nil {
+		return err
+	}
+
 	log.Printf("[INFO] Deleting AWS Cloud Account ID: %v\n", data.Id())
-	if _, err := d9Client.awsUnifiedOnboarding.Delete(data.Id()); err != nil {
+	if _, err := d9Client.awsUnifiedOnboarding.Delete(receivedAwsUnifiedOnboardingResponse.EnvironmentId); err != nil {
 		return err
 	}
 
