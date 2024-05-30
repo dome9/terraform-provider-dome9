@@ -35,8 +35,8 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/dome9/dome9-sdk-go v1.18.4 h1:Krml7YzbGRLHp4O3hNh1/a12Xk5pPJpya7W0ixIyIVQ=
-github.com/dome9/dome9-sdk-go v1.18.4/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
+github.com/dome9/dome9-sdk-go v1.18.6 h1:F7tNp9eZSbDEKCXxY3nLxPz0DZbhLqdq4djCenNYvRE=
+github.com/dome9/dome9-sdk-go v1.18.6/go.mod h1:CF7nXCQk74ApsoG2i1+ziC/pnnnsyMeG6Mpho8cRAGM=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=

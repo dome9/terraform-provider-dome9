@@ -20,7 +20,7 @@ func TestAccResourceAwsUnifiedOnboardingBasic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, generatedName),
+				Config: testAccCheckAwsUnifiedOnboardingBasic(resourceTypeAndName, generatedName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAwsUnifiedOnboardingExists(resourceTypeAndName, &awsUnifiedOnboarding),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "iam_capabilities.0", variable.AwsUnifiedOnbordingIamCapabilities0),
@@ -60,7 +60,7 @@ func testAccCheckAwsUnifiedOnboardingExists(resource string, awsUnifiedOnboardin
 	}
 }
 
-func testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName string, generatedName string) string {
+func testAccCheckAwsUnifiedOnboardingBasic(resourceTypeAndName string, generatedName string) string {
 	res := fmt.Sprintf(`
 // AwsUnifiedOnbording resource
 

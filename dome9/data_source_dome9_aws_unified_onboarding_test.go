@@ -20,7 +20,7 @@ func TestAccDataSourceAWSUnifiedOnboardingBasic(t *testing.T) {
 		CheckDestroy: testAccCheckAWSUnifiedOnboardingDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckAwsUnifiedOnbordingBasic(resourceTypeAndName, resourceName),
+				Config: testAccCheckAwsUnifiedOnboardingBasic(resourceTypeAndName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "ID", dataName+variable.DataSourceSuffix, "ID"),
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "provider", dataName+variable.DataSourceSuffix, "provider"),
