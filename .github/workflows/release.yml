@@ -17,6 +17,9 @@ on:
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_RUNNER_DEBUG: true
+
     steps:
       -
         name: Checkout
