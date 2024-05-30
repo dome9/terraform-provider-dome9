@@ -202,7 +202,7 @@ const (
 
 // assessment resource/data source
 const (
-	BundleID                = -6
+	BundleID                = 1155005
 	CloudAccountID          = "b2b84100-a14f-4dec-ba63-d05cbb79a2d9"
 	CloudAccountType        = "Azure"
 	RequestID               = "c7475133-33a9-4a48-8601-dc2ecf407453"
