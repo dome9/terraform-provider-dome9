@@ -8,6 +8,12 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    concurrency:
+      group: tests
+      cancel-in-progress: false
+    env:
+      ACTIONS_RUNNER_DEBUG: true
+
     steps:
       - uses: actions/checkout@v2
 
