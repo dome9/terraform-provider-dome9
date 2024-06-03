@@ -27,6 +27,7 @@ func TestAccDataSourceAWSUnifiedOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "parameters.Version", dataName+variable.DataSourceSuffix, "cft_version"),
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "parameters.OnboardingId", dataName+variable.DataSourceSuffix, "onboarding_id"),
 				),
+				ExpectError: regexp.MustCompile(`.+00000000-0000-0000-0000-000000000000\/DeleteForce, 404.+`),
 			},
 		},
 	})

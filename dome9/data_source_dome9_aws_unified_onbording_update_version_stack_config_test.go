@@ -33,6 +33,7 @@ func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t
 					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "iam_capabilities.1", resourceTypeAndName, "iam_capabilities.1"),
 					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "iam_capabilities.2", resourceTypeAndName, "iam_capabilities.2"),
 				),
+				ExpectError: regexp.MustCompile(`.+00000000-0000-0000-0000-000000000000\/DeleteForce, 404.+`),
 			},
 		},
 	})
