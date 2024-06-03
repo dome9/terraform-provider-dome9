@@ -1,5 +1,6 @@
 package cloudaccounts
 
+// Single onboarding
 const (
 	RESTfulPathAWS     = "cloudaccounts"
 	RESTfulPathAzure   = "AzureCloudAccount"
@@ -7,6 +8,12 @@ const (
 	RESTfulPathK8S     = "kubernetes/account"
 	RESTfulPathAlibaba = "AlibabaCloudAccount"
 	RESTfulPathOci     = "oci-cloud-account"
+)
+
+// Organization onboarding
+const (
+	RESTfulServicePathAwsOrgMgmtOnboarding = "aws-organization-management-onboarding"
+	RESTfulServicePathAwsOrgMgmt           = "aws-organization-management"
 )
 
 // AWS service paths
@@ -66,6 +73,14 @@ const (
 const (
 	RESTfulServicePathOciTempData           = "save-temp-data"
 	RESTfulServicePathOciOrganizationalUnit = "organizational-Unit"
+)
+
+// AWS organization onboarding service paths
+const (
+	RESTfulServicePathAwsOrgMgmtOnboardingMgmtStack          = "management-stack"
+	RESTfulServicePathAwsOrgMgmtOnboardingMemberAccountStack = "member-account-configuration"
+	RESTfulServicePathAwsOrgMgmtStacksetArn                  = "stackset-arn"
+	RESTfulServicePathAwsOrgMgmtConfiguration                = "configuration"
 )
 
 type QueryParameters struct {
