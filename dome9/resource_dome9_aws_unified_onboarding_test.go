@@ -67,7 +67,7 @@ func testAccCheckAwsUnifiedOnboardingBasic(resourceTypeAndName string, generated
 %s
 
 data "%s" "%s" {
-  id = "${%s.ID}"
+  id = "${%s.id}"
 }
 `,
 		// continuous compliance notification resource
