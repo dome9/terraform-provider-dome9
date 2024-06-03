@@ -23,8 +23,8 @@ type CreateAWPOnboardingDataRequest struct {
 type AgentlessAzureTerraformOnboardingDataResponse struct {
 	Region                                     string `json:"region"`
 	AppClientId                                string `json:"appClientId"`
-	AwpCloudAccountId                          string `json:"awpCloudAccountId"`
-	AwpCentralizedCloudAccountId               string `json:"awpCentralizedCloudAccountId"`
+	CloudAccountId                          string `json:"CloudAccountId"`
+	CentralizedCloudAccountId               string `json:"CentralizedCloudAccountId"`
 }
 
 type CloudAccountResponse struct {
@@ -75,7 +75,7 @@ type Serverless struct {
 	CodeDependencyAnalyzerEnabled bool `json:"codeDependencyAnalyzerEnabled"`
 }
 
-type AgentlessAccountSettings struct {
+type AgentlessAzureAccountSettings struct {
 	DisabledRegions              []string          `json:"disabledRegions"`
 	ScanMachineIntervalInHours   int               `json:"scanMachineIntervalInHours"`
 	MaxConcurrenceScansPerRegion int               `json:"maxConcurrenceScansPerRegion"`
@@ -83,11 +83,11 @@ type AgentlessAccountSettings struct {
 	CustomTags                   map[string]string `json:"customTags"`
 }
 
-type CreateAWPOnboardingRequest struct {
-    CentralizedCloudAccountId  string                    `json:"centralizedCloudAccountId"`
-	ScanMode                   string                    `json:"scanMode"`
-	IsTerraform                bool                      `json:"isTerraform"`
-	AgentlessAccountSettings   *AgentlessAccountSettings `json:"agentlessAccountSettings"`
+type CreateAWPAzureOnboardingRequest struct {
+    CentralizedCloudAccountId  string                         `json:"centralizedCloudAccountId"`
+	ScanMode                   string                         `json:"scanMode"`
+	IsTerraform                bool                           `json:"isTerraform"`
+	AgentlessAccountSettings   *AgentlessAzureAccountSettings `json:"agentlessAccountSettings"`
 }
 
 type AccountIssues struct {
@@ -96,23 +96,23 @@ type AccountIssues struct {
 }
 
 type GetAWPOnboardingResponse struct {
-	AgentlessAccountSettings        *AgentlessAccountSettings `json:"agentlessAccountSettings"`
-	MissingAwpPrivateNetworkRegions *[]string                 `json:"missingAwpPrivateNetworkRegions"`
-	AccountIssues                   *AccountIssues            `json:"accountIssues"`
-	CloudAccountId                  string                    `json:"cloudAccountId"`
-	AgentlessProtectionEnabled      bool                      `json:"agentlessProtectionEnabled"`
-	ScanMode                        string                    `json:"scanMode"`
-	Provider                        string                    `json:"provider"`
-	ShouldUpdate                    bool                      `json:"shouldUpdate"`
-	IsOrgOnboarding                 bool                      `json:"isOrgOnboarding"`
-	CentralizedCloudAccountId       string                    `json:"centralizedCloudAccountId"`
+	AgentlessAccountSettings        *AgentlessAzureAccountSettings `json:"agentlessAccountSettings"`
+	MissingAwpPrivateNetworkRegions *[]string                      `json:"missingAwpPrivateNetworkRegions"`
+	AccountIssues                   *AccountIssues                 `json:"accountIssues"`
+	CloudAccountId                  string                         `json:"cloudAccountId"`
+	AgentlessProtectionEnabled      bool                           `json:"agentlessProtectionEnabled"`
+	ScanMode                        string                         `json:"scanMode"`
+	Provider                        string                         `json:"provider"`
+	ShouldUpdate                    bool                           `json:"shouldUpdate"`
+	IsOrgOnboarding                 bool                           `json:"isOrgOnboarding"`
+	CentralizedCloudAccountId       string                         `json:"centralizedCloudAccountId"`
 }
 
 type CreateOptions struct {
 	ShouldCreatePolicy string `url:"shouldCreatePolicy"`
 }
 
-func (service *Service) CreateAWPOnboarding(id string, req CreateAWPOnboardingRequest, queryParams CreateOptions) (*http.Response, error) {
+func (service *Service) CreateAWPOnboarding(id string, req CreateAWPAzureOnboardingRequest, queryParams CreateOptions) (*http.Response, error) {
 	// Define the maximum number of retries and the interval between retries
 	maxRetries := 3
 	retryInterval := time.Second * 5
@@ -196,7 +196,7 @@ func (service *Service) GetCloudAccountId(externalAccountId string) (string, *ht
 	return respData.ID, resp, nil
 }
 
-func (service *Service) UpdateAzureSettings(cloudProvider, id string, req AgentlessAccountSettings) (*http.Response, error) {
+func (service *Service) UpdateAzureSettings(cloudProvider, id string, req AgentlessAzureAccountSettings) (*http.Response, error) {
 	// Construct the URL path
 	path := fmt.Sprintf("workload/agentless/%s/accounts/%s/settings", cloudProvider, id)
 	// Make a PATCH request with the JSON body

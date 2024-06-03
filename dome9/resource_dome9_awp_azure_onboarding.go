@@ -163,12 +163,12 @@ func resourceAWPAzureOnboardingCreate(d *schema.ResourceData, meta interface{}) 
 	return resourceAWPAzureOnboardingRead(d, meta)
 }
 
-func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboarding.CreateAWPOnboardingRequest, error) {
+func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboarding.CreateAWPAzureOnboardingRequest, error) {
 	agentlessAccountSettings, err := expandAgentlessAccountSettingsAzure(d)
 	if err != nil {
-		return awp_azure_onboarding.CreateAWPOnboardingRequest{}, err
+		return awp_azure_onboarding.CreateAWPAzureOnboardingRequest{}, err
 	}
-	return awp_azure_onboarding.CreateAWPOnboardingRequest{
+	return awp_azure_onboarding.CreateAWPAzureOnboardingRequest{
 		ScanMode:                   d.Get("scan_mode").(string),
 		IsTerraform:                true,
 		AgentlessAccountSettings:   agentlessAccountSettings,
@@ -224,7 +224,7 @@ func resourceAWPAzureOnboardingDelete(d *schema.ResourceData, meta interface{}) 
 	return nil
 }
 
-func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_azure_onboarding.AgentlessAccountSettings, error) {
+func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_azure_onboarding.AgentlessAzureAccountSettings, error) {
 	if _, ok := d.GetOk("agentless_account_settings"); !ok {
 		// If "agentless_account_settings" key doesn't exist, return nil (since these settings are optional)
 		return nil, nil
@@ -241,7 +241,7 @@ func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_azure_onb
 	}
 
 	// Initialize the AgentlessAccountSettings struct with default values
-	agentlessAccountSettings := &awp_azure_onboarding.AgentlessAccountSettings{
+	agentlessAccountSettings := &awp_azure_onboarding.AgentlessAzureAccountSettings{
 		DisabledRegions:              make([]string, 0),
 		SkipFunctionAppsScan:         false,
 		CustomTags:                   make(map[string]string),
@@ -308,7 +308,7 @@ func setAgentlessAccountSettingsAzure(resp *awp_azure_onboarding.GetAWPOnboardin
 	return nil
 }
 
-func flattenAgentlessAccountSettingsAzure(settings *awp_azure_onboarding.AgentlessAccountSettings) []interface{} {
+func flattenAgentlessAccountSettingsAzure(settings *awp_azure_onboarding.AgentlessAzureAccountSettings) []interface{} {
 
 	m := map[string]interface{}{
 		"disabled_regions":                settings.DisabledRegions,
