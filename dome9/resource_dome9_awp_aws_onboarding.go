@@ -29,12 +29,7 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"awp_hub_external_account_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-			},
-			"awp_organization_id": {
+			"awp_centralized_cloud_account_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
@@ -207,9 +202,9 @@ func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) 
 	scanMode := d.Get("scan_mode").(string)
 	if scanMode == "inAccountSub" {
 		d9client := meta.(*Client)
-		hubExternalAccountId, exist := d.Get("awp_hub_external_account_id").(string)
+		hubExternalAccountId, exist := d.Get("awp_centralized_cloud_account_id").(string)
 		if !exist || hubExternalAccountId == "" {
-			errorMsg := fmt.Sprintf("awp_hub_external_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
+			errorMsg := fmt.Sprintf("awp_centralized_cloud_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
 			return "", errors.New(errorMsg)
 		}
 		cgHubAccountId, _, err := d9client.awpAwsOnboarding.GetCloudAccountId(hubExternalAccountId)
@@ -217,12 +212,6 @@ func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) 
 			return "", err
 		}
 		return cgHubAccountId, nil
-	} else if scanMode == "inAccountHub" {
-		awpOrganizationId, exist := d.Get("awp_organization_id").(string)
-		if !exist || awpOrganizationId == "" {
-			errorMsg := fmt.Sprintf("awp_organization_id is required when scan_mode is inAccountHub, got '%s'", awpOrganizationId)
-			return "", errors.New(errorMsg)
-		}
 	}
 	return "", nil
 }
