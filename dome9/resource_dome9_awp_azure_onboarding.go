@@ -45,6 +45,11 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 				Optional: true,
 				Default: nil,
 			},
+			"management_group_id":{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default: nil,
+			},
 			"agentless_account_settings": {
 				Type:     schema.TypeList,
 				MaxItems: 1,
@@ -171,6 +176,7 @@ func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboardi
 	return awp_azure_onboarding.CreateAWPAzureOnboardingRequest{
 		ScanMode:                   d.Get("scan_mode").(string),
 		IsTerraform:                true,
+		ManagementGroupId:          d.Get("management_group_id").(string),
 		AgentlessAccountSettings:   agentlessAccountSettings,
 		CentralizedCloudAccountId:  d.Get("centralized_cloud_account_id").(string),
 	}, nil
