@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"regexp"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
