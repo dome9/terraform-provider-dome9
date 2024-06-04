@@ -104,6 +104,7 @@ github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding
 github.com/dome9/dome9-sdk-go/services/cloudaccounts
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws
+github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s

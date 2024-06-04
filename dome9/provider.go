@@ -61,6 +61,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.Assessment:                       resourceAssessment(),
 			resourcetype.ImageAssurancePolicy:             resourceImageAssurancePolicy(),
 			resourcetype.AwpAwsOnboarding:                 resourceAwpAwsOnboarding(),
+			resourcetype.AWSOrganizationOnboarding:        resourceAwsOrganizationOnboarding(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
