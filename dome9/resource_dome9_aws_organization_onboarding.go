@@ -32,10 +32,6 @@ func resourceAwsOrganizationOnboarding() *schema.Resource {
 			"secret": {
 				Type:     schema.TypeString,
 				Required: true,
-				ValidateFunc: validation.StringMatch(
-					regexp.MustCompile(`^[\w+=,.@:\/-]{12,1224}$`),
-					"ExternalId minimum length is 12 and maximum length is 1224.",
-				),
 			},
 			"api_key": {
 				Type:     schema.TypeString,
@@ -44,10 +40,6 @@ func resourceAwsOrganizationOnboarding() *schema.Resource {
 			"stack_set_arn": {
 				Type:     schema.TypeString,
 				Required: true,
-				ValidateFunc: validation.StringMatch(
-					regexp.MustCompile(`put your stack set ARN regex pattern here`),
-					"Invalid StackSet ARN format.",
-				),
 			},
 			"aws_organization_name": {
 				Type:     schema.TypeString,
