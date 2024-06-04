@@ -69,9 +69,10 @@ func testAccCheckCloudAccountOciTempDataExists(resource string, resp *oci.CloudA
 func getCloudAccountOciTempDataResourceHCL(cloudAccountName, generatedAName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-	tenancy_id  = "%s"
-	home_region = "%s"
-	name        = "%s"
+	tenancy_id                      = "%s"
+	home_region                     = "%s"
+	name                            = "%s"
+	TenantAdministratorEmailAddress = ""
 }
 `,
 		// oci cloud account temp data variables
