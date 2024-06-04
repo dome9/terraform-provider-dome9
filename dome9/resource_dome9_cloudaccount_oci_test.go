@@ -2,6 +2,7 @@ package dome9
 
 import (
 	"fmt"
+	"regexp"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
