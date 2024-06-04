@@ -2,7 +2,6 @@ package dome9
 
 import (
 	"fmt"
-	"regexp"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
@@ -20,6 +19,7 @@ func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t
 			testAccPreCheck(t)
 		},
 		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckAWSUnifiedOnboardingDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckAwsUnifiedOnbordingUpdateVersionStackConfogurationBasic(resourceTypeAndName, resourceName),
@@ -33,7 +33,6 @@ func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t
 					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "iam_capabilities.1", resourceTypeAndName, "iam_capabilities.1"),
 					resource.TestCheckResourceAttrPair(dataTypeAndName+variable.DataSourceSuffix, "iam_capabilities.2", resourceTypeAndName, "iam_capabilities.2"),
 				),
-				ExpectError: regexp.MustCompile(`.+00000000-0000-0000-0000-000000000000\/DeleteForce, 404.+`),
 			},
 		},
 	})

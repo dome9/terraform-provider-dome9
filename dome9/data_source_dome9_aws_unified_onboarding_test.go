@@ -17,6 +17,7 @@ func TestAccDataSourceAWSUnifiedOnboardingBasic(t *testing.T) {
 			testAccPreCheck(t)
 		},
 		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckAWSUnifiedOnboardingDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckAwsUnifiedOnboardingBasic(resourceTypeAndName, resourceName),
