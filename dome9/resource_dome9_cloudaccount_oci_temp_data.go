@@ -29,6 +29,10 @@ func resourceCloudAccountOciTempData() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"tenant_administrator_email_address": {
+				Type:     schema.TypeString,
+				Required: true,
+			},			
 			"credentials": {
 				Type:     schema.TypeMap,
 				Computed: true,
