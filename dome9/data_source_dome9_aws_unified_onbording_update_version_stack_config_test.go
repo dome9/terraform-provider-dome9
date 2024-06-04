@@ -20,7 +20,6 @@ func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t
 			testAccPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckAWSUnifiedOnboardingDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckAwsUnifiedOnbordingUpdateVersionStackConfogurationBasic(resourceTypeAndName, resourceName),

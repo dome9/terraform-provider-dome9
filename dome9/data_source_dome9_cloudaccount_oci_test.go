@@ -31,6 +31,7 @@ func TestAccDataSourceCloudAccountOciBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "organizational_unit_name", resourceTypeAndName, "organizational_unit_name"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "vendor", resourceTypeAndName, "vendor"),
 				),
+				ExpectError: regexp.MustCompile(`.+Please retry the whole onboarding process \(including downloading a new Terraform file\).+`),
 			},
 		},
 	})

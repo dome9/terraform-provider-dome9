@@ -33,6 +33,7 @@ func TestAccResourceCloudAccountOciBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciCreationResourceName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountOciVendor),
 				),
+				ExpectError: regexp.MustCompile(`.+Please retry the whole onboarding process \(including downloading a new Terraform file\)\..+`)
 			},
 		},
 	})
