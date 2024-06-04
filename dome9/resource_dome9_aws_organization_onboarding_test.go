@@ -117,7 +117,7 @@ func getAwsOrganizationOnboardingResourceHCL(resourceName string) string {
 resource "%s" "%s" {
 	role_arn = "%s"
 	secret  = "%s"
-	aws_organization_name  = "%s"
+	stack_set_arn  = "%s"
 	aws_organization_name  = "%s"
 }
 `,

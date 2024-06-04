@@ -236,5 +236,5 @@ const (
 
 // aws organization onboarding resource/data source
 const (
-	AwsOrganizationOnboardingCreationResourceName = "test_aws_organization_onboarding"
+	AwsOrganizationOnboardingCreationResourceName = "TestAwsOrganizationOnboarding"
 )
