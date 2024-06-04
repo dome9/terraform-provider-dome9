@@ -184,8 +184,8 @@ func resourceAwsOrganizationOnboardingRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("managementAccountStackRegion", resp.ManagementAccountStackRegion)
 	_ = d.Set("userId", resp.UserId)
 	_ = d.Set("organizationName", resp.OrganizationName)
-	_ = d.Set("updateTime", resp.UpdateTime)
-	_ = d.Set("creationTime", resp.CreationTime)
+	_ = d.Set("updateTime", resp.UpdateTime.Format("2006-01-02 15:04:05"))
+	_ = d.Set("creationTime", resp.CreationTime.Format("2006-01-02 15:04:05"))
 	_ = d.Set("stackSetRegions", resp.StackSetRegions)
 	_ = d.Set("stackSetOrganizationalUnitIds", resp.StackSetOrganizationalUnitIds)
 
