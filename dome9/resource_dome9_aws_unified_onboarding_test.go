@@ -66,6 +66,10 @@ func testAccCheckAwsUnifiedOnboardingBasic(resourceTypeAndName string, generated
 
 %s
 
+lifecycle {
+	prevent_destroy = true
+}
+
 data "%s" "%s" {
   id = "${%s.id}"
 }
