@@ -72,7 +72,7 @@ resource "%s" "%s" {
 	tenancy_id                         = "%s"
 	home_region                        = "%s"
 	name                               = "%s"
-	tenant_administrator_email_address = ""
+	tenant_administrator_email_address = "name@domain.c"
 }
 `,
 		// oci cloud account temp data variables
