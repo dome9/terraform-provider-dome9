@@ -120,9 +120,10 @@ func resourceCloudAccountOciTempDataUpdate(d *schema.ResourceData, meta interfac
 
 func expandCloudAccountOciTempDataRequest(d *schema.ResourceData) oci.CloudAccountRequestTempData {
 	req := oci.CloudAccountRequestTempData{
-		Name:       d.Get("name").(string),
-		TenancyId:  d.Get("tenancy_id").(string),
-		HomeRegion: d.Get("home_region").(string),
+		Name:                            d.Get("name").(string),
+		TenancyId:                       d.Get("tenancy_id").(string),
+		HomeRegion:                      d.Get("home_region").(string),
+		TenantAdministratorEmailAddress: d.Get("tenant_administrator_email_address").(string),
 	}
 	return req
 }
