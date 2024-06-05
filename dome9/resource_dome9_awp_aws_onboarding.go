@@ -3,6 +3,7 @@ package dome9
 import (
 	"errors"
 	"fmt"
+	"time"
 	"log"
 	"strconv"
 	"strings"
@@ -261,6 +262,10 @@ func resourceAWPAWSOnboardingDelete(d *schema.ResourceData, meta interface{}) er
 	_, err := d9client.awpAwsOnboarding.DeleteAWPOnboarding(d.Id(), options)
 	if err != nil {
 		return err
+	}
+	if d.Get("scan_mode").(string) == "inAccountSub" {
+		// delay for 30 seconds to allow the account to be removed from the hub
+		time.Sleep(30 * time.Second)
 	}
 	return nil
 }
