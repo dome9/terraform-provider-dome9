@@ -33,6 +33,7 @@ func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciCreationResourceName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountOciVendor),
 				),
+				ExpectError: regexp.MustCompile(`.+tried to add an oci cloud account but the account already exists\. TenancyId.+`),
 			},
 		},
 	})
