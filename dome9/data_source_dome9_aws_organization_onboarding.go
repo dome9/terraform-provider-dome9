@@ -1,15 +1,14 @@
 package dome9
 
 import (
+	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
 )
 
 func dataSourceAwsOrganizationOnboarding() *schema.Resource {
 	return &schema.Resource{
-		Read: resourceAwsOrganizationOnboardingRead,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		Read: dataSourceAwsOrganizationOnboardingRead,
 
 		Schema: map[string]*schema.Schema{
 			// OrganizationManagementViewModel object fields
@@ -98,4 +97,40 @@ func dataSourceAwsOrganizationOnboarding() *schema.Resource {
 			},
 		},
 	}
+}
+
+func dataSourceAwsOrganizationOnboardingRead(d *schema.ResourceData, meta interface{}) error {
+	d9Client := meta.(*Client)
+
+	orgId := d.Get("id").(string)
+	resp, _, err := d9Client.awsOrganizationOnboarding.Get(orgId)
+
+	if err != nil {
+		if err.(*client.ErrorResponse).IsObjectNotFound() {
+			log.Printf("[WARN] Removing Aws organization %s from state because it no longer exists in CloudGuard", d.Id())
+			d.SetId("")
+			return nil
+		}
+
+		return err
+	}
+
+	d.SetId(resp.Id)
+	_ = d.Set("accountId", resp.AccountId)
+	_ = d.Set("externalOrganizationId", resp.ExternalOrganizationId)
+	_ = d.Set("externalManagementAccountId", resp.ExternalManagementAccountId)
+	_ = d.Set("managementAccountStackId", resp.ManagementAccountStackId)
+	_ = d.Set("managementAccountStackRegion", resp.ManagementAccountStackRegion)
+	_ = d.Set("userId", resp.UserId)
+	_ = d.Set("organizationName", resp.OrganizationName)
+	_ = d.Set("updateTime", resp.UpdateTime)
+	_ = d.Set("creationTime", resp.CreationTime)
+	_ = d.Set("stackSetRegions", resp.StackSetRegions)
+	_ = d.Set("stackSetOrganizationalUnitIds", resp.StackSetOrganizationalUnitIds)
+
+	if err := d.Set("onboarding_configuration", flattenAwsOrganizationOnboardingConfiguration(resp.OnboardingConfiguration)); err != nil {
+		return err
+	}
+
+	return nil
 }

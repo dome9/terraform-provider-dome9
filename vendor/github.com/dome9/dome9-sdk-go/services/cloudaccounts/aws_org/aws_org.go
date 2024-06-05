@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"net/http"
-	"time"
 )
 
 type CloudCredentialsType string
@@ -18,7 +17,7 @@ const (
 type OnboardingPermissionRequest struct {
 	RoleArn string               `json:"roleArn" validate:"required,roleArn"`
 	Secret  string               `json:"secret" validate:"required,secret"`
-	ApiKey  *string              `json:"apiKey,omitempty"`
+	ApiKey  string               `json:"apiKey,omitempty"`
 	Type    CloudCredentialsType `json:"type" validate:"required,oneof=UserBased RoleBased"`
 }
 
@@ -29,17 +28,17 @@ type ValidateStackSetArnRequest struct {
 
 type OnboardingRequest struct {
 	ValidateStackSetArnRequest
-	AwsOrganizationName *string `json:"awsOrganizationName,omitempty"`
-	EnableStackModify   bool    `json:"enableStackModify" validate:"required"`
+	AwsOrganizationName string `json:"awsOrganizationName,omitempty"`
+	EnableStackModify   bool   `json:"enableStackModify" validate:"required"`
 }
 
 type OnboardingUpdateRequest struct {
-	AwsOrganizationName *string `json:"awsOrganizationName,omitempty"`
-	EnableStackModify   bool    `json:"enableStackModify"`
+	AwsOrganizationName string `json:"awsOrganizationName,omitempty"`
+	EnableStackModify   bool   `json:"enableStackModify"`
 }
 
 type UpdateConfigurationRequest struct {
-	OrganizationRootOuId *string                        `json:"organizationRootOuId" validate:"required"`
+	OrganizationRootOuId string                         `json:"organizationRootOuId" validate:"required"`
 	MappingStrategy      MappingStrategyType            `json:"mappingStrategy" validate:"required"`
 	PostureManagement    PostureManagementConfiguration `json:"postureManagement" validate:"required"`
 }
@@ -101,10 +100,10 @@ type OrganizationManagementViewModel struct {
 	EnableStackModify             bool                                   `json:"enableStackModify"`
 	StackSetArn                   string                                 `json:"stackSetArn"`
 	OrganizationName              string                                 `json:"organizationName"`
-	UpdateTime                    time.Time                              `json:"updateTime"`
-	CreationTime                  time.Time                              `json:"creationTime"`
-	StackSetRegions               map[string]struct{}                    `json:"stackSetRegions"`
-	StackSetOrganizationalUnitIds map[string]struct{}                    `json:"stackSetOrganizationalUnitIds"`
+	UpdateTime                    string                                 `json:"updateTime"`
+	CreationTime                  string                                 `json:"creationTime"`
+	StackSetRegions               []string                               `json:"stackSetRegions"`
+	StackSetOrganizationalUnitIds []string                               `json:"stackSetOrganizationalUnitIds"`
 }
 
 type OnboardingConfigurationOptions struct {

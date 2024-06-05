@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"encoding/json"
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -47,14 +48,15 @@ func resourceAwsOrganizationOnboarding() *schema.Resource {
 			},
 			"enable_stack_modify": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
 				Default:  false,
 			},
-			// OrganizationManagementViewModel object fields
-			"id": {
+			"type": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Optional: true,
+				Default:  aws_org.RoleBased,
 			},
+			// OrganizationManagementViewModel object fields
 			"account_id": {
 				Type:     schema.TypeInt,
 				Computed: true,
@@ -125,12 +127,12 @@ func resourceAwsOrganizationOnboarding() *schema.Resource {
 				Computed: true,
 			},
 			"stack_set_regions": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"stack_set_organizational_unit_ids": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
@@ -176,8 +178,8 @@ func resourceAwsOrganizationOnboardingRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("managementAccountStackRegion", resp.ManagementAccountStackRegion)
 	_ = d.Set("userId", resp.UserId)
 	_ = d.Set("organizationName", resp.OrganizationName)
-	_ = d.Set("updateTime", resp.UpdateTime.Format("2006-01-02 15:04:05"))
-	_ = d.Set("creationTime", resp.CreationTime.Format("2006-01-02 15:04:05"))
+	_ = d.Set("updateTime", resp.UpdateTime)
+	_ = d.Set("creationTime", resp.CreationTime)
 	_ = d.Set("stackSetRegions", resp.StackSetRegions)
 	_ = d.Set("stackSetOrganizationalUnitIds", resp.StackSetOrganizationalUnitIds)
 
@@ -218,7 +220,7 @@ func resourceAwsOrganizationOnboardingUpdate(d *schema.ResourceData, meta interf
 		log.Println("The configuration has been changed")
 
 		updateConfigReq := aws_org.UpdateConfigurationRequest{
-			OrganizationRootOuId: getOptionalString(d, "organization_root_ou_id"),
+			OrganizationRootOuId: d.Get("organization_root_ou_id").(string),
 			MappingStrategy:      aws_org.MappingStrategyType(d.Get("mapping_strategy").(string)),
 			PostureManagement: aws_org.PostureManagementConfiguration{
 				RulesetsIds:    getInt64Slice(d, "posture_management.rulesets_ids"),
@@ -254,23 +256,15 @@ func expandAwsOrganizationOnboardingRequest(d *schema.ResourceData) aws_org.Onbo
 			OnboardingPermissionRequest: aws_org.OnboardingPermissionRequest{
 				RoleArn: d.Get("role_arn").(string),
 				Secret:  d.Get("secret").(string),
-				ApiKey:  getOptionalString(d, "api_key"),
+				ApiKey:  d.Get("api_key").(string),
 				Type:    aws_org.CloudCredentialsType(d.Get("type").(string)),
 			},
 			StackSetArn: d.Get("stack_set_arn").(string),
 		},
-		AwsOrganizationName: getOptionalString(d, "aws_organization_name"),
+		AwsOrganizationName: d.Get("aws_organization_name").(string),
 		EnableStackModify:   d.Get("enable_stack_modify").(bool),
 	}
 	return req
-}
-
-func getOptionalString(d *schema.ResourceData, key string) *string {
-	if v, ok := d.GetOk(key); ok {
-		str := v.(string)
-		return &str
-	}
-	return nil
 }
 
 func flattenAwsOrganizationOnboardingConfiguration(config aws_org.AwsOrganizationOnboardingConfiguration) map[string]interface{} {
@@ -281,9 +275,24 @@ func flattenAwsOrganizationOnboardingConfiguration(config aws_org.AwsOrganizatio
 	}
 }
 
-func flattenPostureManagementConfiguration(config aws_org.PostureManagementConfiguration) map[string]interface{} {
-	return map[string]interface{}{
-		"rulesets_ids":    config.RulesetsIds,
+func flattenPostureManagementConfiguration(config aws_org.PostureManagementConfiguration) string {
+	m := map[string]interface{}{
+		"rulesets_ids":    flattenInt64Slice(config.RulesetsIds),
 		"onboarding_mode": config.OnboardingMode,
 	}
+
+	jsonData, err := json.Marshal(m)
+	if err != nil {
+		log.Fatalf("Error marshalling to JSON: %v", err)
+	}
+
+	return string(jsonData)
+}
+
+func flattenInt64Slice(input []int64) []interface{} {
+	result := make([]interface{}, len(input))
+	for i, v := range input {
+		result[i] = v
+	}
+	return result
 }
