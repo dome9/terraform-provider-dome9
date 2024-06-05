@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"regexp"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
@@ -31,6 +32,7 @@ func TestAccDataSourceCloudAccountOciBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "organizational_unit_name", resourceTypeAndName, "organizational_unit_name"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "vendor", resourceTypeAndName, "vendor"),
 				),
+				ExpectError: regexp.MustCompile(`.+Please retry the whole onboarding process \(including downloading a new Terraform file\).+`),
 			},
 		},
 	})

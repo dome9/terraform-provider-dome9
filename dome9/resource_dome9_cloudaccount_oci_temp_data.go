@@ -29,6 +29,10 @@ func resourceCloudAccountOciTempData() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"tenant_administrator_email_address": {
+				Type:     schema.TypeString,
+				Required: true,
+			},			
 			"credentials": {
 				Type:     schema.TypeMap,
 				Computed: true,
@@ -116,9 +120,10 @@ func resourceCloudAccountOciTempDataUpdate(d *schema.ResourceData, meta interfac
 
 func expandCloudAccountOciTempDataRequest(d *schema.ResourceData) oci.CloudAccountRequestTempData {
 	req := oci.CloudAccountRequestTempData{
-		Name:       d.Get("name").(string),
-		TenancyId:  d.Get("tenancy_id").(string),
-		HomeRegion: d.Get("home_region").(string),
+		Name:                            d.Get("name").(string),
+		TenancyId:                       d.Get("tenancy_id").(string),
+		HomeRegion:                      d.Get("home_region").(string),
+		TenantAdministratorEmailAddress: d.Get("tenant_administrator_email_address").(string),
 	}
 	return req
 }
