@@ -175,10 +175,6 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 		ScanMode: 					d.Get("scan_mode").(string),
 	}
 
-	if req.ScanMode == "inAccount" || req.ScanMode == "saas" {
-		req.ScanMode = ""
-	}
-
 	log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
 
 	options := awp_onboarding.CreateOptions{
