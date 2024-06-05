@@ -217,6 +217,10 @@ func resourceUnifiedOnboardingDelete(data *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	if receivedAwsUnifiedOnboardingResponse.EnvironmentId == "00000000-0000-0000-0000-000000000000" {
+		return nil
+	}
+
 	log.Printf("[INFO] Deleting AWS Cloud Account ID: %v\n", data.Id())
 	if _, err := d9Client.awsUnifiedOnboarding.ForceDelete(receivedAwsUnifiedOnboardingResponse.EnvironmentId); err != nil {
 		return err
