@@ -93,6 +93,10 @@ enable_stack_modify				= %s
 posture_management_configuration	= %s
 serverless_configuration			= %s
 intelligence_configurations		= %s
+
+lifecycle {
+    prevent_destroy = true
+}
 	}
 `,
 		resourcetype.AwsUnifiedOnboarding,
