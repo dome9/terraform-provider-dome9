@@ -3,7 +3,7 @@ package dome9
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp/awp_aws_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"

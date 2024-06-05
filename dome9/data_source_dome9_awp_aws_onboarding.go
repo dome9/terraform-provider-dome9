@@ -112,7 +112,7 @@ func dataSourceAwpAwsOnboardingRead(d *schema.ResourceData, meta interface{}) er
 	cloudguardAccountId := d.Get("id").(string)
 	log.Printf("Getting data for AWP AWS Onboarding id: %s\n", cloudguardAccountId)
 
-	resp, _, err := d9Client.awpAwsOnboarding.GetAWPOnboarding("aws", cloudguardAccountId)
+	resp, _, err := d9Client.awpAwsOnboarding.GetAWPOnboarding(cloudguardAccountId)
 	if err != nil {
 		return err
 	}

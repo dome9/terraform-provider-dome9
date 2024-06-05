@@ -8,10 +8,13 @@ import (
 	"strings"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
-	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp"
+	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
+
 )
 
 func resourceAwpAwsOnboarding() *schema.Resource {
@@ -158,36 +161,30 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 	if err != nil {
 		return err
 	}
-	options := awp_aws_onboarding.CreateOptions{
-		ShouldCreatePolicy: strconv.FormatBool(d.Get("should_create_policy").(bool)),
-	}
 	agentlessAccountSettings, err := expandAgentlessAccountSettings(d)
 	if err != nil {
 		return err
 	}
-	scanMode := d.Get("scan_mode").(string)
-	var req interface{}
-	if scanMode == "inAccountSub" || scanMode == "inAccountHub" {
-		req = awp_aws_onboarding.CreateAWPOnboardingCentralizedRequest{
-			CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
-			CentralizedCloudAccountId:  cloudGuardHubAccountID,
-			CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
-			IsTerraform:                true,
-			AgentlessAccountSettings:   agentlessAccountSettings,
-		}
-	} else {
-		req = awp_aws_onboarding.CreateAWPOnboardingRequest{
-			CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
-			CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
-			IsTerraform:                true,
-			AgentlessAccountSettings:   agentlessAccountSettings,
-			ScanMode:                   scanMode,
-		}
+
+	req := awp_aws_onboarding.CreateAWPOnboardingRequestAws{
+		CrossAccountRoleName:       d.Get("cross_account_role_name").(string),
+		CentralizedCloudAccountId:  cloudGuardHubAccountID,
+		CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
+		IsTerraform:                true,
+		AgentlessAccountSettings:   agentlessAccountSettings,
+		ScanMode: 					d.Get("scan_mode").(string),
+	}
+
+	if req.ScanMode == "inAccount" || req.ScanMode == "saas" {
+		req.ScanMode = ""
 	}
 
 	log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
 
-	_, err = d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, scanMode, options)
+	options := awp_onboarding.CreateOptions{
+		ShouldCreatePolicy: strconv.FormatBool(d.Get("should_create_policy").(bool)),
+	}
+	_, err = d9client.awpAwsOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, options)
 	if err != nil {
 		return err
 	}
@@ -207,18 +204,20 @@ func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) 
 			errorMsg := fmt.Sprintf("awp_centralized_cloud_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
 			return "", errors.New(errorMsg)
 		}
-		cgHubAccountId, _, err := d9client.awpAwsOnboarding.GetCloudAccountId(hubExternalAccountId)
+	
+		getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: hubExternalAccountId}
+		cloudAccountresp, _, err := d9client.cloudaccountAWS.Get(&getCloudAccountQueryParams)
 		if err != nil {
 			return "", err
 		}
-		return cgHubAccountId, nil
+		return cloudAccountresp.ID, nil
 	}
 	return "", nil
 }
 
 func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) error {
 	d9client := meta.(*Client)
-	resp, _, err := d9client.awpAwsOnboarding.GetAWPOnboarding("aws", d.Id())
+	resp, _, err := d9client.awpAwsOnboarding.GetAWPOnboarding(d.Id())
 	if err != nil {
 		if err.(*client.ErrorResponse).IsObjectNotFound() {
 			log.Printf("[WARN] Removing AWS cloud account %s from state because it no longer exists in Dome9", d.Id())
@@ -256,7 +255,7 @@ func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) erro
 func resourceAWPAWSOnboardingDelete(d *schema.ResourceData, meta interface{}) error {
 	d9client := meta.(*Client)
 	log.Printf("[INFO] Offboarding AWP Account with cloud guard id : %v\n", d.Id())
-	options := awp_aws_onboarding.DeleteOptions{
+	options := awp_onboarding.DeleteOptions{
 		ForceDelete: strconv.FormatBool(d.Get("force_delete").(bool)),
 	}
 	_, err := d9client.awpAwsOnboarding.DeleteAWPOnboarding(d.Id(), options)
@@ -266,7 +265,7 @@ func resourceAWPAWSOnboardingDelete(d *schema.ResourceData, meta interface{}) er
 	return nil
 }
 
-func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding.AgentlessAccountSettings, error) {
+func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.AgentlessAccountSettings, error) {
 	if _, ok := d.GetOk("agentless_account_settings"); !ok {
 		// If "agentless_account_settings" key doesn't exist, return nil (since these settings are optional)
 		return nil, nil
@@ -283,7 +282,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 	}
 
 	// Initialize the AgentlessAccountSettings struct with default values
-	agentlessAccountSettings := &awp_aws_onboarding.AgentlessAccountSettings{
+	agentlessAccountSettings := &awp_onboarding.AgentlessAccountSettings{
 		DisabledRegions:              make([]string, 0),
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
@@ -330,7 +329,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_aws_onboarding
 	return agentlessAccountSettings, nil
 }
 
-func setAgentlessAccountSettings(resp *awp_aws_onboarding.GetAWPOnboardingResponse, d *schema.ResourceData) error {
+func setAgentlessAccountSettings(resp *awp_onboarding.GetAWPOnboardingResponse, d *schema.ResourceData) error {
 	if resp.AgentlessAccountSettings != nil {
 		// Check if all fields of AgentlessAccountSettings are nil
 		if resp.AgentlessAccountSettings.DisabledRegions != nil ||
@@ -345,7 +344,7 @@ func setAgentlessAccountSettings(resp *awp_aws_onboarding.GetAWPOnboardingRespon
 	return nil
 }
 
-func flattenAgentlessAccountSettings(settings *awp_aws_onboarding.AgentlessAccountSettings) []interface{} {
+func flattenAgentlessAccountSettings(settings *awp_onboarding.AgentlessAccountSettings) []interface{} {
 
 	m := map[string]interface{}{
 		"disabled_regions":                settings.DisabledRegions,
@@ -356,7 +355,7 @@ func flattenAgentlessAccountSettings(settings *awp_aws_onboarding.AgentlessAccou
 	return []interface{}{m}
 }
 
-func flattenAccountIssues(accountIssues *awp_aws_onboarding.AccountIssues) []interface{} {
+func flattenAccountIssues(accountIssues *awp_onboarding.AccountIssues) []interface{} {
 	m := map[string]interface{}{
 		"regions": accountIssues.Regions,
 		"account": accountIssues.Account,
@@ -391,7 +390,7 @@ func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) er
 			return err
 		}
 		// Send the update request
-		_, err = d9Client.awpAwsOnboarding.UpdateAWPSettings(d.Get("cloud_provider").(string), d.Id(), *newAgentlessAccountSettings)
+		_, err = d9Client.awpAwsOnboarding.UpdateAWPSettings(d.Id(), *newAgentlessAccountSettings)
 		if err != nil {
 			return err
 		}

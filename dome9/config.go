@@ -2,7 +2,7 @@ package dome9
 
 import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
-	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
