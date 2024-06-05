@@ -217,6 +217,7 @@ func resourceUnifiedOnboardingDelete(data *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	// in case of a failing onboarding we won't actually run the deletion 
 	if receivedAwsUnifiedOnboardingResponse.EnvironmentId == "00000000-0000-0000-0000-000000000000" {
 		return nil
 	}
