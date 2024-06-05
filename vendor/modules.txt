@@ -94,7 +94,7 @@ github.com/bgentry/speakeasy
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/dome9/dome9-sdk-go v1.19.2 => D:\src\dome9-sdk-go
+# github.com/dome9/dome9-sdk-go v1.19.4
 ## explicit; go 1.13
 github.com/dome9/dome9-sdk-go/dome9
 github.com/dome9/dome9-sdk-go/dome9/client
@@ -589,4 +589,3 @@ google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
 google.golang.org/protobuf/types/pluginpb
-# github.com/dome9/dome9-sdk-go => D:\src\dome9-sdk-go

@@ -47,10 +47,11 @@ type MappingStrategyType string
 type OnboardingMode string
 
 const (
-	Flat   MappingStrategyType = "Flat"
-	Clone  MappingStrategyType = "Clone"
-	Read   OnboardingMode      = "Read"
-	Manage OnboardingMode      = "Manage"
+	Flat  MappingStrategyType = "Flat"
+	Clone MappingStrategyType = "Clone"
+
+	Read   OnboardingMode = "Read"
+	Manage OnboardingMode = "Manage"
 )
 
 type PostureManagementConfiguration struct {
