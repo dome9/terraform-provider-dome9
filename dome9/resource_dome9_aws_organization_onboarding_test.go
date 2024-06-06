@@ -10,6 +10,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"os"
+	"regexp"
 	"testing"
 )
 
@@ -32,6 +33,7 @@ func TestAccResourceAwsOrganizationOnboardingBasic(t *testing.T) {
 					testAccCheckAwsOrganizationOnboardingExists(resourceTypeAndName, &response),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "aws_organization_name", variable.AwsOrganizationOnboardingCreationResourceName),
 				),
+				ExpectError: regexp.MustCompile(`.+Failed to assume management account role.+`),
 			},
 		},
 	})
