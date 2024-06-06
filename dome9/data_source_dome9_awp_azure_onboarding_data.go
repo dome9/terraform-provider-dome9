@@ -2,7 +2,7 @@ package dome9
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/dome9/dome9-sdk-go/services/awp_azure_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
 )
 
 func dataSourceAwpAzureOnboardingData() *schema.Resource {
@@ -44,7 +44,7 @@ func dataSourceAwpAzureOnboardingDataRead(d *schema.ResourceData, meta interface
 	cloudguardAccountId := d.Get("cloud_account_id").(string)
 	req, err := expandAWPOnboardingDataRequest(d)
 
-	resp, _, err := d9Client.awpAzureOnboarding.Get(cloudguardAccountId, req)
+	resp, _, err := d9Client.awpAzureOnboarding.GetOnboardingData(cloudguardAccountId, req)
 	if err != nil {
 		return err
 	}
@@ -61,9 +61,9 @@ func dataSourceAwpAzureOnboardingDataRead(d *schema.ResourceData, meta interface
 	return nil
 }
 
-func expandAWPOnboardingDataRequest(d *schema.ResourceData) (awp_azure_onboarding.CreateAWPOnboardingDataRequest, error) {
+func expandAWPOnboardingDataRequest(d *schema.ResourceData) (awp_azure_onboarding.GetAWPOnboardingDataRequestAzure, error) {
 
-	return awp_azure_onboarding.CreateAWPOnboardingDataRequest{
+	return awp_azure_onboarding.GetAWPOnboardingDataRequestAzure{
 		CentralizedId:            d.Get("centralized_cloud_account_id").(string),
 	}, nil
 }

@@ -8,7 +8,8 @@ import (
 	"strings"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
-	"github.com/dome9/dome9-sdk-go/services/awp_azure_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
@@ -155,7 +156,7 @@ func resourceAWPAzureOnboardingCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 	log.Printf("[INFO] Creating AWP Azure Onboarding request %+v\n", req)
-	options := awp_azure_onboarding.CreateOptions{
+	options := awp_onboarding.CreateOptions{
 		ShouldCreatePolicy: strconv.FormatBool(d.Get("should_create_policy").(bool)),
 	}
 	_, err = d9client.awpAzureOnboarding.CreateAWPOnboarding(cloudguardAccountId, req, options)
@@ -168,12 +169,12 @@ func resourceAWPAzureOnboardingCreate(d *schema.ResourceData, meta interface{}) 
 	return resourceAWPAzureOnboardingRead(d, meta)
 }
 
-func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboarding.CreateAWPAzureOnboardingRequest, error) {
+func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboarding.CreateAWPOnboardingRequestAzure, error) {
 	agentlessAccountSettings, err := expandAgentlessAccountSettingsAzure(d)
 	if err != nil {
-		return awp_azure_onboarding.CreateAWPAzureOnboardingRequest{}, err
+		return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{}, err
 	}
-	return awp_azure_onboarding.CreateAWPAzureOnboardingRequest{
+	return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{
 		ScanMode:                   d.Get("scan_mode").(string),
 		IsTerraform:                true,
 		ManagementGroupId:          d.Get("management_group_id").(string),
@@ -184,7 +185,7 @@ func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboardi
 
 func resourceAWPAzureOnboardingRead(d *schema.ResourceData, meta interface{}) error {
 	d9client := meta.(*Client)
-	resp, _, err := d9client.awpAzureOnboarding.GetAWPOnboarding("azure", d.Id())
+	resp, _, err := d9client.awpAzureOnboarding.GetAWPOnboarding(d.Id())
 	if err != nil {
 		if err.(*client.ErrorResponse).IsObjectNotFound() {
 			log.Printf("[WARN] Removing Azure cloud account %s from state because it no longer exists in Dome9", d.Id())
@@ -230,7 +231,7 @@ func resourceAWPAzureOnboardingDelete(d *schema.ResourceData, meta interface{}) 
 	return nil
 }
 
-func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_azure_onboarding.AgentlessAzureAccountSettings, error) {
+func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_onboarding.AgentlessAccountSettings, error) {
 	if _, ok := d.GetOk("agentless_account_settings"); !ok {
 		// If "agentless_account_settings" key doesn't exist, return nil (since these settings are optional)
 		return nil, nil
@@ -247,7 +248,7 @@ func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_azure_onb
 	}
 
 	// Initialize the AgentlessAccountSettings struct with default values
-	agentlessAccountSettings := &awp_azure_onboarding.AgentlessAzureAccountSettings{
+	agentlessAccountSettings := &awp_onboarding.AgentlessAccountSettings{
 		DisabledRegions:              make([]string, 0),
 		SkipFunctionAppsScan:         false,
 		CustomTags:                   make(map[string]string),
@@ -299,7 +300,7 @@ func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_azure_onb
 	return agentlessAccountSettings, nil
 }
 
-func setAgentlessAccountSettingsAzure(resp *awp_azure_onboarding.GetAWPOnboardingResponse, d *schema.ResourceData) error {
+func setAgentlessAccountSettingsAzure(resp *awp_onboarding.GetAWPOnboardingResponse, d *schema.ResourceData) error {
 	if resp.AgentlessAccountSettings != nil {
 		// Check if all fields of AgentlessAccountSettings are nil
 		if resp.AgentlessAccountSettings.DisabledRegions != nil ||
@@ -314,7 +315,7 @@ func setAgentlessAccountSettingsAzure(resp *awp_azure_onboarding.GetAWPOnboardin
 	return nil
 }
 
-func flattenAgentlessAccountSettingsAzure(settings *awp_azure_onboarding.AgentlessAzureAccountSettings) []interface{} {
+func flattenAgentlessAccountSettingsAzure(settings *awp_onboarding.AgentlessAccountSettings) []interface{} {
 
 	m := map[string]interface{}{
 		"disabled_regions":                settings.DisabledRegions,
@@ -326,7 +327,7 @@ func flattenAgentlessAccountSettingsAzure(settings *awp_azure_onboarding.Agentle
 	return []interface{}{m}
 }
 
-func flattenAccountIssuesAzure(accountIssues *awp_azure_onboarding.AccountIssues) []interface{} {
+func flattenAccountIssuesAzure(accountIssues *awp_onboarding.AccountIssues) []interface{} {
 	m := map[string]interface{}{
 		"regions": accountIssues.Regions,
 		"account": accountIssues.Account,
@@ -354,7 +355,7 @@ func resourceAWPAzureOnboardingUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 		// Send the update request
-		_, err = d9Client.awpAzureOnboarding.UpdateAzureSettings(d.Get("cloud_provider").(string), d.Id(), *newAgentlessAccountSettings)
+		_, err = d9Client.awpAzureOnboarding.UpdateAWPSettings(d.Id(), *newAgentlessAccountSettings)
 		if err != nil {
 			return err
 		}
