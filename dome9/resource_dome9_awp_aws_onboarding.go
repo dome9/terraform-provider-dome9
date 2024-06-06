@@ -391,6 +391,13 @@ func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) er
 	// Check if there are changes in the AgentlessAccountSettings fields
 	if d.HasChange("agentless_account_settings") {
 		log.Println("agentless_account_settings has been changed")
+
+		_, err := checkCentralized(d, meta)
+		if err != nil {
+			return err
+		}
+
+
 		// Build the update request
 		newAgentlessAccountSettings, err := expandAgentlessAccountSettings(d)
 		if err != nil {
