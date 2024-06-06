@@ -194,9 +194,11 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 
 func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) {
 	scanMode := d.Get("scan_mode").(string)
-	if _, ok := d.GetOk("agentless_account_settings"); ok {
-		errorMsg := fmt.Sprintf("currently account settings not supported for centralized onboarding", scanMode)
-		return "", errors.New(errorMsg)
+	if scanMode == "inAccountSub" || scanMode == "inAccountHub" {
+		if _, ok := d.GetOk("agentless_account_settings"); ok {
+			errorMsg := fmt.Sprintf("currently account settings not supported for centralized onboarding (%s)", scanMode)
+			return "", errors.New(errorMsg)
+		}
 	}
 	if scanMode == "inAccountSub" {
 		d9client := meta.(*Client)
