@@ -56,7 +56,7 @@ data "%s" "%s" {
 		generatedName+variable.DataSourceSuffix,
 		resourceTypeAndName,
 	)
-	log.Printf("[INFO] testAccCheckAwsUnifiedOnbordingBasic:%+v\n", res)
+	log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingBasic:%+v\n", res)
 
 	return res
 }
