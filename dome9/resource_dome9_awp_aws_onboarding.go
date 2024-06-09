@@ -3,19 +3,18 @@ package dome9
 import (
 	"errors"
 	"fmt"
-	"time"
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/awp"
 	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
-
 )
 
 func resourceAwpAwsOnboarding() *schema.Resource {
@@ -173,7 +172,7 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 		CrossAccountRoleExternalId: d.Get("cross_account_role_external_id").(string),
 		IsTerraform:                true,
 		AgentlessAccountSettings:   agentlessAccountSettings,
-		ScanMode: 					d.Get("scan_mode").(string),
+		ScanMode:                   d.Get("scan_mode").(string),
 	}
 
 	log.Printf("[INFO] Creating AWP AWS Onboarding request %+v\n", req)
@@ -196,8 +195,11 @@ func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) 
 	scanMode := d.Get("scan_mode").(string)
 	if scanMode == "inAccountHub" || scanMode == "inAccountSub" {
 		if _, ok := d.GetOk("agentless_account_settings"); ok {
-			errorMsg := fmt.Sprintf("currently account settings not supported for centralized onboarding (%s)", scanMode)
-			return "", errors.New(errorMsg)
+			agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
+			if len(agentlessAccountSettingsList) < 1 {
+				errorMsg := fmt.Sprintf("currently account settings not supported for centralized onboarding (%s)", scanMode)
+				return "", errors.New(errorMsg)
+			}
 		}
 	}
 	if scanMode == "inAccountSub" {
@@ -207,7 +209,7 @@ func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) 
 			errorMsg := fmt.Sprintf("awp_centralized_cloud_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
 			return "", errors.New(errorMsg)
 		}
-	
+
 		getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: hubExternalAccountId}
 		cloudAccountresp, _, err := d9client.cloudaccountAWS.Get(&getCloudAccountQueryParams)
 		if err != nil {
@@ -388,15 +390,15 @@ func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) er
 			return err
 		}
 	}
+
+	_, err := checkCentralized(d, meta)
+	if err != nil {
+		return err
+	}
+
 	// Check if there are changes in the AgentlessAccountSettings fields
 	if d.HasChange("agentless_account_settings") {
 		log.Println("agentless_account_settings has been changed")
-
-		_, err := checkCentralized(d, meta)
-		if err != nil {
-			return err
-		}
-
 
 		// Build the update request
 		newAgentlessAccountSettings, err := expandAgentlessAccountSettings(d)
