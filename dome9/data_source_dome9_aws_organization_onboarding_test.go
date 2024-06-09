@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
+	"regexp"
 	"testing"
 )
 
@@ -35,6 +36,7 @@ func TestAccDataSourceAwsOrganizationOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "stack_set_regions", resourceTypeAndName, "stack_set_regions"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "stack_set_organizational_unit_ids", resourceTypeAndName, "stack_set_organizational_unit_ids"),
 				),
+				ExpectError: regexp.MustCompile(`.+Failed to assume management account role.+`),
 			},
 		},
 	})
