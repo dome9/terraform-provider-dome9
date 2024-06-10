@@ -2,6 +2,7 @@ package dome9
 
 import (
 	"fmt"
+	"regexp"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -33,6 +34,7 @@ func TestAccResourceCloudAccountOciTempDataBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciCreationResourceName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountOciVendor),
 				),
+				ExpectError: regexp.MustCompile(`.+tried to add an oci cloud account but the account already exists\. TenancyId.+`),
 			},
 		},
 	})
@@ -69,9 +71,10 @@ func testAccCheckCloudAccountOciTempDataExists(resource string, resp *oci.CloudA
 func getCloudAccountOciTempDataResourceHCL(cloudAccountName, generatedAName string) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
-	tenancy_id  = "%s"
-	home_region = "%s"
-	name        = "%s"
+	tenancy_id                         = "%s"
+	home_region                        = "%s"
+	name                               = "%s"
+	tenant_administrator_email_address = "name@domain.c"
 }
 `,
 		// oci cloud account temp data variables
