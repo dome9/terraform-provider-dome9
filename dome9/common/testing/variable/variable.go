@@ -220,7 +220,7 @@ const (
 	DisabledRegions                   = `["us-east-1", "us-west-1"]`
 	DisabledRegionsUpdate             = `["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]`
 	ScanMachineIntervalInHours        = "6"
-	ScanMachineIntervalInHoursUpdate  = "10"
+	ScanMachineIntervalInHoursUpdate  = "11"
 	MaxConcurrentScansPerRegion       = "4"
 	MaxConcurrentScansPerRegionUpdate = "8"
 	CustomTags                        = `{
@@ -232,4 +232,9 @@ const (
 			tag2 = "value2"
 			tag3 = "value3"
 		}`
+)
+
+// aws organization onboarding resource/data source
+const (
+	AwsOrganizationOnboardingCreationResourceName = "TestAwsOrganizationOnboarding"
 )
