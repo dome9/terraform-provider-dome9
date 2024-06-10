@@ -29,4 +29,5 @@ const (
 	ImageAssurancePolicy                         = "dome9_image_assurance_policy"
 	AwpAwsOnboardingData                         = "dome9_awp_aws_onboarding_data"
 	AwpAwsOnboarding                             = "dome9_awp_aws_onboarding"
+	AWSOrganizationOnboarding                    = "dome9_aws_organization_onboarding"
 )

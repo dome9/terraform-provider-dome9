@@ -233,3 +233,8 @@ const (
 			tag3 = "value3"
 		}`
 )
+
+// aws organization onboarding resource/data source
+const (
+	AwsOrganizationOnboardingCreationResourceName = "TestAwsOrganizationOnboarding"
+)
