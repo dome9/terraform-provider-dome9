@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/awp"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"os"
 	"testing"
@@ -115,26 +114,6 @@ func testAccCheckAWPAzureOnboardingBasic(awpAzureOnboardingHcl string) string {
 	)
 }
 
-func testAccCheckAwpAccountExists(resource string, awpAccount *awp_onboarding.GetAWPOnboardingResponse) resource.TestCheckFunc {
-	return func(state *terraform.State) error {
-		rs, ok := state.RootModule().Resources[resource]
-		if !ok {
-			return fmt.Errorf("didn't find resource: %s", resource)
-		}
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("no record ID is set")
-		}
-
-		apiClient := testAccProvider.Meta().(*Client)
-		receivedCloudAccountResponse, _, err := apiClient.awpAzureOnboarding.GetAWPOnboarding(rs.Primary.ID)
-
-		if err != nil {
-			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
-		}
-		*awpAccount = *receivedCloudAccountResponse
-		return nil
-	}
-}
 
 func getAwpAzureOnboardingResourceHCL(generatedResourceName string, updateAction bool) string {
 	return fmt.Sprintf(`
@@ -159,16 +138,4 @@ resource "%s" "%s" {
 		IfThenElse(updateAction, variable.MaxConcurrentScansPerRegionUpdate, variable.MaxConcurrentScansPerRegion),
 		IfThenElse(updateAction, variable.CustomTagsUpdate, variable.CustomTags),
 	)
-}
-
-func getRegionByIndex(regionsRaw string, index int) (string, error) {
-	var regions []string
-	err := json.Unmarshal([]byte(regionsRaw), &regions)
-	if err != nil {
-		return "", err
-	}
-	if index < 0 || index >= len(regions) {
-		return "", fmt.Errorf("index out of range")
-	}
-	return regions[index], nil
 }
