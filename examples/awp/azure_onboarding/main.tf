@@ -44,7 +44,7 @@ module "terraform-dome9-awp-azure" {
 	source = "github.com/dome9/terraform-dome9-awp-azure"
 	awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID> or <AZURE_SUBSCRIPTION_ID>"
 	awp_scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount", "saas", "inAccountHub" or "inAccountSub"
-    # awp_centralized_cloud_account_id = "<CENTRALIZED_CLOUAD_ACCOUNT_ID> OR <SUBSCRIPTION_ID>"
+    # awp_centralized_cloud_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> OR <CENTRALIZED_SUBSCRIPTION_ID>"
 
 	# Optional customizations:
 	# e.g:
