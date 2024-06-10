@@ -243,6 +243,6 @@ const (
 const (
 	OnboardedAzureCloudGuardAccountID   = "dd7678bf-04d9-49ab-a653-1e03ced3726c"
 	AzureDisabledRegions                   = `["eastus", "eastus2"]`
-	AzureDisabledRegionsUpdate             = `["eastus", "eastus2", "westus"]`
+	AzureDisabledRegionsUpdate             = `["eastus", "eastus2", "westus", "westus2"]`
 )
 
