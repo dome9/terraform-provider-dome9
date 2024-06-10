@@ -202,8 +202,8 @@ const (
 
 // assessment resource/data source
 const (
-	BundleID                = -6
-	CloudAccountID          = "b2b84100-a14f-4dec-ba63-d05cbb79a2d9"
+	BundleID                = 1155085
+	CloudAccountID          = "dd7678bf-04d9-49ab-a653-1e03ced3726c"
 	CloudAccountType        = "Azure"
 	RequestID               = "c7475133-33a9-4a48-8601-dc2ecf407453"
 	TriggeredBy             = "Manual"
@@ -214,13 +214,13 @@ const (
 
 // awp aws onboarding data resource/data source
 const (
-	OnboardedAwsCloudGuardAccountID   = "36f79243-5456-4aa7-88c1-6637cad1f426"
+	OnboardedAwsCloudGuardAccountID   = "b4b6e1dd-e405-47a1-b2e5-6cc49bfbad00"
 	AwpAwsCrossAccountRoleName        = "CloudGuardAWPCrossAccountRole"
 	ScanMode                          = "inAccount"
 	DisabledRegions                   = `["us-east-1", "us-west-1"]`
 	DisabledRegionsUpdate             = `["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]`
 	ScanMachineIntervalInHours        = "6"
-	ScanMachineIntervalInHoursUpdate  = "10"
+	ScanMachineIntervalInHoursUpdate  = "11"
 	MaxConcurrentScansPerRegion       = "4"
 	MaxConcurrentScansPerRegionUpdate = "8"
 	CustomTags                        = `{
@@ -234,9 +234,15 @@ const (
 		}`
 )
 
+// aws organization onboarding resource/data source
+const (
+	AwsOrganizationOnboardingCreationResourceName = "TestAwsOrganizationOnboarding"
+)
+
 // awp azure onboarding data resource/data source
 const (
 	OnboardedAzureCloudGuardAccountID   = "dd7678bf-04d9-49ab-a653-1e03ced3726c"
 	AzureDisabledRegions                   = `["eastus", "eastus2"]`
 	AzureDisabledRegionsUpdate             = `["eastus", "eastus2", "westus"]`
 )
+

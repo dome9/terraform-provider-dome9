@@ -61,7 +61,8 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.Assessment:                       resourceAssessment(),
 			resourcetype.ImageAssurancePolicy:             resourceImageAssurancePolicy(),
 			resourcetype.AwpAwsOnboarding:                 resourceAwpAwsOnboarding(),
-			resourcetype.AwpAzureOnboarding:               resourceAwpAzureOnboarding(),
+		  resourcetype.AWSOrganizationOnboarding:        resourceAwsOrganizationOnboarding(),
+      resourcetype.AwpAzureOnboarding:               resourceAwpAzureOnboarding(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
@@ -89,7 +90,8 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.ImageAssurancePolicy:                         dataSourceImageAssurancePolicy(),
 			resourcetype.AwpAwsOnboardingData:                         dataSourceAwpAwsOnboardingData(),
 			resourcetype.AwpAwsOnboarding:                             dataSourceAwpAwsOnboarding(),
-			resourcetype.AwpAzureOnboardingData:                       dataSourceAwpAzureOnboardingData(),
+			resourcetype.AWSOrganizationOnboarding:                    dataSourceAwsOrganizationOnboarding(),
+      resourcetype.AwpAzureOnboardingData:                       dataSourceAwpAzureOnboardingData(),
 			resourcetype.AwpAzureOnboarding:                           dataSourceAwpAzureOnboarding(),
 		},
 		ConfigureFunc: providerConfigure,
