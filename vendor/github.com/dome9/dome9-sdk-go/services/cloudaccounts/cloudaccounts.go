@@ -1,12 +1,19 @@
 package cloudaccounts
 
+// Single onboarding
 const (
 	RESTfulPathAWS     = "cloudaccounts"
 	RESTfulPathAzure   = "AzureCloudAccount"
 	RESTfulPathGCP     = "GoogleCloudAccount"
-	RESTfulPathK8S     = "KubernetesAccount"
+	RESTfulPathK8S     = "kubernetes/account"
 	RESTfulPathAlibaba = "AlibabaCloudAccount"
 	RESTfulPathOci     = "oci-cloud-account"
+)
+
+// Organization onboarding
+const (
+	RESTfulServicePathAwsOrgMgmtOnboarding = "aws-organization-management-onboarding"
+	RESTfulServicePathAwsOrgMgmt           = "aws-organization-management"
 )
 
 // AWS service paths
@@ -44,14 +51,15 @@ const (
 	RESTfulServicePathK8SName               = "AccountName"
 	RESTfulServicePathK8SOrganizationalUnit = "organizationalUnit"
 	RESTfulPathK8sEnable                    = "enable"
+	RESTfulPathK8sDisable                   = "disable"
 	//runtime-protection
-	RESTfulPathK8SRuntimeProtection = "runtime-protection"
+	RESTfulPathK8SRuntimeProtection = "runtimeProtection"
 	//admission-control
-	RESTfulPathK8SAdmissionControl = "admission-control"
+	RESTfulPathK8SAdmissionControl = "admissionControl"
 	//image-assurance
-	RESTfulPathK8SImageAssurance = "vulnerabilityAssessment"
+	RESTfulPathK8SImageAssurance = "imageAssurance"
 	//threat-intelligence
-	RESTfulPathK8SThreatIntelligence = "magellan-kubernetes-flowlogs"
+	RESTfulPathK8SThreatIntelligence = "threatIntelligence"
 )
 
 // Alibaba service paths
@@ -65,6 +73,14 @@ const (
 const (
 	RESTfulServicePathOciTempData           = "save-temp-data"
 	RESTfulServicePathOciOrganizationalUnit = "organizational-Unit"
+)
+
+// AWS organization onboarding service paths
+const (
+	RESTfulServicePathAwsOrgMgmtOnboardingMgmtStack          = "management-stack"
+	RESTfulServicePathAwsOrgMgmtOnboardingMemberAccountStack = "member-account-configuration"
+	RESTfulServicePathAwsOrgMgmtStacksetArn                  = "stackset-arn"
+	RESTfulServicePathAwsOrgMgmtConfiguration                = "configuration"
 )
 
 type QueryParameters struct {

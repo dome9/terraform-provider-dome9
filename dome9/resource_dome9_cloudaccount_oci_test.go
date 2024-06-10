@@ -2,6 +2,7 @@ package dome9
 
 import (
 	"fmt"
+	"regexp"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -33,6 +34,7 @@ func TestAccResourceCloudAccountOciBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountOciCreationResourceName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountOciVendor),
 				),
+				ExpectError: regexp.MustCompile(`.+Please retry the whole onboarding process \(including downloading a new Terraform file\)\..+`),
 			},
 		},
 	})
@@ -56,7 +58,7 @@ func testAccCheckCloudAccountOciDestroy(s *terraform.State) error {
 			return fmt.Errorf("cloudaccounts with id %s exists and wasn't destroyed", rs.Primary.ID)
 		}
 	}
-	
+
 	return nil
 }
 

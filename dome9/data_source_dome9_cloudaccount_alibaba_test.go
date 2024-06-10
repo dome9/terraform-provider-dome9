@@ -32,7 +32,6 @@ func TestAccDataSourceCloudAccountAlibabaBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "organizational_unit_path", resourceTypeAndName, "organizational_unit_path"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "organizational_unit_name", resourceTypeAndName, "organizational_unit_name"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "vendor", resourceTypeAndName, "vendor"),
-
 				),
 			},
 		},

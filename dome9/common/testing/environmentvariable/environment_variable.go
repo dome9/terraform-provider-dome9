@@ -20,9 +20,10 @@ const (
 
 // AWS environment variable
 const (
-	CloudAccountAWSEnvVarArn        = "ARN"
-	CloudAccountUpdatedAWSEnvVarArn = "ARN_UPDATE"
-	CloudAccountAWSEnvVarSecret     = "SECRET"
+	CloudAccountAWSEnvVarArn               = "ARN"
+	CloudAccountUpdatedAWSEnvVarArn        = "ARN_UPDATE"
+	CloudAccountAWSEnvVarSecret            = "SECRET"
+	AwpAwsCrossAccountRoleExternalIdEnvVar = "AWP_EXTERNAL_ID"
 )
 
 // Azure environment variable
@@ -52,4 +53,11 @@ const (
 const (
 	AttachIAMSafeEnvVarGroupArn  = "ATTACH_IAM_SAFE_GROUP_ARN"
 	AttachIAMSafeEnvVarPolicyArn = "ATTACH_IAM_SAFE_POLICY_ARN"
+)
+
+// Aws organization onboarding environment variable
+const (
+	AwsOrganizationOnboardingEnvVarRoleArn     = "AWS_ORG_ROLE_ARN"
+	AwsOrganizationOnboardingEnvVarSecret      = "AWS_ORG_SECRET"
+	AwsOrganizationOnboardingEnvVarStackSetArn = "AWS_ORG_STACK_SET_ARN"
 )

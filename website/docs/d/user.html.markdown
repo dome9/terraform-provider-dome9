@@ -70,6 +70,6 @@ In addition to all arguments above, the following attributes are exported:
 ### SRL 
 * `type` - (Optional) Accepted values: AWS, Azure, GCP, OrganizationalUnit.
 * `main_id` - (Optional) Cloud Account or Organizational Unit ID.
-* `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1".
+* `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3", "me_central_1", "ap_south_2", "ap_southeast_3", "ap_southeast_4", "eu_central_2", "eu_south_2", "il_central_1".
 * `security_group_id` - (Optional) AWS Security Group ID.
 * `traffic` - (Optional) Accepted values: "All Traffic", "All Services".

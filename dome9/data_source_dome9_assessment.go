@@ -8,7 +8,7 @@ import (
 
 func dataSourceAssessment() *schema.Resource {
 	return &schema.Resource{
-		Read:   dataSourceAssessmentRead,
+		Read: dataSourceAssessmentRead,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -31,7 +31,7 @@ func dataSourceAssessment() *schema.Resource {
 				Computed: true,
 			},
 			"cloud_account_type": {
-				Type:         schema.TypeString,
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"should_minimize_result": {
@@ -720,4 +720,3 @@ func dataSourceAssessmentRead(d *schema.ResourceData, meta interface{}) error {
 
 	return nil
 }
-
