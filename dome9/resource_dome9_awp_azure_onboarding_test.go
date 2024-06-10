@@ -26,8 +26,8 @@ func TestAccResourceAWPAzureOnboardingBasic(t *testing.T) {
 	disabledRegionUpdate4, _ := getRegionByIndex(variable.AzureDisabledRegionsUpdate, 3)
 
 	// Generate the Awp Azure onboarding HCL Resources
-	awpAzureOnboardingHcl := getAwpAzureOnboardingResourceHCL(generatedName, CrossAccountRoleExternalId, false)
-	awpAzureOnboardingUpdateHcl := getAwpAzureOnboardingResourceHCL(generatedName, CrossAccountRoleExternalId, true)
+	awpAzureOnboardingHcl := getAwpAzureOnboardingResourceHCL(generatedName, false)
+	awpAzureOnboardingUpdateHcl := getAwpAzureOnboardingResourceHCL(generatedName, true)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -40,8 +40,6 @@ func TestAccResourceAWPAzureOnboardingBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAwpAccountExists(resourceTypeAndName, &awpCloudAccountInfo),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloudguard_account_id", variable.OnboardedAzureCloudGuardAccountID),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_name", variable.AwpAzureCrossAccountRoleName),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_external_id", CrossAccountRoleExternalId),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
@@ -59,8 +57,6 @@ func TestAccResourceAWPAzureOnboardingBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAwpAccountExists(resourceTypeAndName, &awpCloudAccountInfo),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloudguard_account_id", variable.OnboardedAzureCloudGuardAccountID),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_name", variable.AwpAzureCrossAccountRoleName),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_external_id", CrossAccountRoleExternalId),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
