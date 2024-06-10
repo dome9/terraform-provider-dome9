@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 )
 
 func resourceAwpAzureOnboarding() *schema.Resource {
@@ -151,7 +152,7 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 func resourceAWPAzureOnboardingCreate(d *schema.ResourceData, meta interface{}) error {
 	d9client := meta.(*Client)
 	cloudguardAccountId := d.Get("cloudguard_account_id").(string)
-	req, err := expandAWPOnboardingRequestAzure(d)
+	req, err := expandAWPOnboardingRequestAzure(d, meta)
 	if err != nil {
 		return err
 	}
@@ -169,7 +170,8 @@ func resourceAWPAzureOnboardingCreate(d *schema.ResourceData, meta interface{}) 
 	return resourceAWPAzureOnboardingRead(d, meta)
 }
 
-func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboarding.CreateAWPOnboardingRequestAzure, error) {
+func expandAWPOnboardingRequestAzure(d *schema.ResourceData, meta interface{}) (awp_azure_onboarding.CreateAWPOnboardingRequestAzure, error) {
+	cloudGuardHubAccountID, err := checkCentralized(d, meta)
 	agentlessAccountSettings, err := expandAgentlessAccountSettingsAzure(d)
 	if err != nil {
 		return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{}, err
@@ -179,8 +181,37 @@ func expandAWPOnboardingRequestAzure(d *schema.ResourceData) (awp_azure_onboardi
 		IsTerraform:                true,
 		ManagementGroupId:          d.Get("management_group_id").(string),
 		AgentlessAccountSettings:   agentlessAccountSettings,
-		CentralizedCloudAccountId:  d.Get("centralized_cloud_account_id").(string),
+		CentralizedCloudAccountId:  cloudGuardHubAccountID,
 	}, nil
+}
+
+func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) {
+	scanMode := d.Get("scan_mode").(string)
+	if scanMode == "inAccountHub"{
+		if _, ok := d.GetOk("agentless_account_settings"); ok {
+			agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
+			if len(agentlessAccountSettingsList) < 1 {
+				errorMsg := fmt.Sprintf("currently account settings not supported for centralized onboarding (%s)", scanMode)
+				return "", errors.New(errorMsg)
+			}
+		}
+	}
+	if scanMode == "inAccountSub" {
+		d9client := meta.(*Client)
+		hubExternalAccountId, exist := d.Get("centralized_cloud_account_id").(string)
+		if !exist || hubExternalAccountId == "" {
+			errorMsg := fmt.Sprintf("centralized_cloud_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
+			return "", errors.New(errorMsg)
+		}
+	
+		getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: hubExternalAccountId}
+		cloudAccountresp, _, err := d9client.cloudaccountAzure.Get(&getCloudAccountQueryParams)
+		if err != nil {
+			return "", err
+		}
+		return cloudAccountresp.ID, nil
+	}
+	return "", nil
 }
 
 func resourceAWPAzureOnboardingRead(d *schema.ResourceData, meta interface{}) error {
