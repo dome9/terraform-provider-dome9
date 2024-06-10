@@ -171,7 +171,7 @@ func resourceAWPAzureOnboardingCreate(d *schema.ResourceData, meta interface{}) 
 }
 
 func expandAWPOnboardingRequestAzure(d *schema.ResourceData, meta interface{}) (awp_azure_onboarding.CreateAWPOnboardingRequestAzure, error) {
-	cloudGuardHubAccountID, err := checkCentralized(d, meta)
+	cloudGuardHubAccountID, err := checkCentralizedAzure(d, meta)
 	agentlessAccountSettings, err := expandAgentlessAccountSettingsAzure(d)
 	if err != nil {
 		return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{}, err
@@ -185,7 +185,7 @@ func expandAWPOnboardingRequestAzure(d *schema.ResourceData, meta interface{}) (
 	}, nil
 }
 
-func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) {
+func checkCentralizedAzure(d *schema.ResourceData, meta interface{}) (string, error) {
 	scanMode := d.Get("scan_mode").(string)
 	if scanMode == "inAccountHub"{
 		if _, ok := d.GetOk("agentless_account_settings"); ok {
