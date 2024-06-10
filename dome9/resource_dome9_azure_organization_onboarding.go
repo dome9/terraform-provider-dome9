@@ -2,6 +2,7 @@ package dome9
 
 import (
 	"github.com/dome9/dome9-sdk-go/dome9/client"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure_org"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -19,6 +20,7 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			// OnboardingRequest object fields
 			"tenant_id": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -54,9 +56,15 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"is_enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
+									},
 									"onboarding_mode": {
 										Type:         schema.TypeString,
-										Required:     true,
+										Optional:     true,
+										Default:      "inAccountHub",
 										ValidateFunc: validation.StringInSlice([]string{"saas", "inAccount", "inAccountHub"}, false),
 									},
 									"centralized_subscription_id": {
@@ -89,9 +97,14 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"is_enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  true,
+									},
 									"accounts": {
 										Type:     schema.TypeList,
-										Required: true,
+										Optional: true,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"storage_id": {
@@ -140,7 +153,7 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 				Optional: true,
 				Default:  true,
 			},
-			// Computed fields
+			// Computed fields - OrganizationManagementViewModel object fields
 			"account_id": {
 				Type:     schema.TypeInt,
 				Computed: true,
@@ -242,16 +255,14 @@ func resourceAzureOrganizationOnboardingRead(d *schema.ResourceData, meta interf
 
 	d.SetId(resp.Id)
 	_ = d.Set("account_id", resp.AccountId)
-	_ = d.Set("external_organization_id", resp.ExternalOrganizationId)
-	_ = d.Set("external_management_account_id", resp.ExternalManagementAccountId)
-	_ = d.Set("management_account_stack_id", resp.ManagementAccountStackId)
-	_ = d.Set("management_account_stack_region", resp.ManagementAccountStackRegion)
 	_ = d.Set("user_id", resp.UserId)
 	_ = d.Set("organization_name", resp.OrganizationName)
+	_ = d.Set("tenant_id", resp.TenantId)
+	_ = d.Set("management_group_id", resp.ManagementGroupId)
+	_ = d.Set("app_registration_name", resp.AppRegistrationName)
 	_ = d.Set("update_time", resp.UpdateTime)
 	_ = d.Set("creation_time", resp.CreationTime)
-	_ = d.Set("stack_set_regions", resp.StackSetRegions)
-	_ = d.Set("stack_set_organizational_unit_ids", resp.StackSetOrganizationalUnitIds)
+	_ = d.Set("is_auto_onboarding", resp.IsAutoOnboarding)
 
 	if err := d.Set("onboarding_configuration", flattenAzureOrganizationOnboardingConfiguration(resp.OnboardingConfiguration)); err != nil {
 		return err
@@ -274,15 +285,16 @@ func resourceAzureOrganizationOnboardingUpdate(d *schema.ResourceData, meta inte
 	d9Client := meta.(*Client)
 	log.Println("An update occurred")
 
-	if d.HasChange("management_group_id") {
+	organizationName := "organization_name"
+	if d.HasChange(organizationName) {
 		log.Println("The Management Group ID has been changed")
 
-		if resp, err := d9Client.azureOrganizationOnboarding.UpdateManagementGroupId(d.Id(), azure_org.UpdateManagementGroupIdRequest{
-			ManagementGroupId: d.Get("management_group_id").(string),
+		if resp, err := d9Client.azureOrganizationOnboarding.UpdateOrganizationManagementAsync(d.Id(), azure_org.OnboardingUpdateRequest{
+			OrganizationName: d.Get(organizationName).(string),
 		}); err != nil {
 			return err
 		} else {
-			log.Printf("resourceAzureOrganizationOnboardingUpdate ManagementGroupId response is: %+v\n", resp)
+			log.Printf("resourceAzureOrganizationOnboardingUpdate organization_name response is: %+v\n", resp)
 		}
 	}
 
@@ -299,18 +311,26 @@ func expandAzureOrganizationOnboardingRequest(d *schema.ResourceData) azure_org.
 		ClientSecret:        d.Get("client_secret").(string),
 		ActiveBlades: azure_org.Blades{
 			Awp: azure_org.AwpConfiguration{
+				BladeConfiguration: azure_org.BladeConfiguration{
+					IsEnabled: d.Get("active_blades.serverless.is_enabled").(bool),
+				},
 				OnboardingMode:            azure_org.AwpOnboardingMode(d.Get("active_blades.awp.onboarding_mode").(string)),
 				CentralizedSubscriptionId: d.Get("active_blades.awp.centralized_subscription_id").(string),
 				WithFunctionAppsScan:      d.Get("active_blades.awp.with_function_apps_scan").(bool),
 			},
 			Serverless: azure_org.ServerlessConfiguration{
-				IsEnabled: d.Get("active_blades.serverless.is_enabled").(bool),
+				BladeConfiguration: azure_org.BladeConfiguration{
+					IsEnabled: d.Get("active_blades.serverless.is_enabled").(bool),
+				},
 			},
 			Cdr: azure_org.CdrConfiguration{
+				BladeConfiguration: azure_org.BladeConfiguration{
+					IsEnabled: d.Get("active_blades.serverless.is_enabled").(bool),
+				},
 				Accounts: expandCdrAccounts(d.Get("active_blades.cdr.accounts").([]interface{})),
 			},
 			PostureManagement: azure_org.PostureManagement{
-				OnboardingMode: azure_org.OnboardingMode(d.Get("active_blades.posture_management.onboarding_mode").(string)),
+				OnboardingMode: aws_org.OnboardingMode(d.Get("active_blades.posture_management.onboarding_mode").(string)),
 			},
 		},
 		Vendor:                  azure_org.CloudVendor(d.Get("vendor").(string)),
@@ -346,19 +366,4 @@ func flattenAzureOrganizationOnboardingConfiguration(config azure_org.AzureOrgan
 		"mapping_strategy":        config.MappingStrategy,
 		"posture_management":      flattenPostureManagementConfiguration(config.PostureManagement),
 	}
-}
-
-func flattenPostureManagementConfiguration(config azure_org.PostureManagement) map[string]interface{} {
-	return map[string]interface{}{
-		"rulesets_ids":    flattenInt64Slice(config.RulesetsIds),
-		"onboarding_mode": config.OnboardingMode,
-	}
-}
-
-func flattenInt64Slice(input []int64) []interface{} {
-	result := make([]interface{}, len(input))
-	for i, v := range input {
-		result[i] = v
-	}
-	return result
 }

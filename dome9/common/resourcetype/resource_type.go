@@ -30,4 +30,5 @@ const (
 	AwpAwsOnboardingData                         = "dome9_awp_aws_onboarding_data"
 	AwpAwsOnboarding                             = "dome9_awp_aws_onboarding"
 	AWSOrganizationOnboarding                    = "dome9_aws_organization_onboarding"
+	AzureOrganizationOnboarding                  = "dome9_azure_organization_onboarding"
 )

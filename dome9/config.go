@@ -4,6 +4,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
 	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure_org"
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
@@ -56,6 +57,7 @@ type Client struct {
 	assessment                       assessment.Service
 	awpAwsOnboarding                 awp_aws_onboarding.Service
 	awsOrganizationOnboarding        aws_org.Service
+	azureOrganizationOnboarding      azure_org.Service
 }
 
 type Config struct {
@@ -93,6 +95,7 @@ func (c *Config) Client() (*Client, error) {
 		assessment:                       *assessment.New(config),
 		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
 		awsOrganizationOnboarding:        *aws_org.New(config),
+		azureOrganizationOnboarding:      *azure_org.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
