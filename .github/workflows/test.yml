@@ -8,13 +8,19 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    concurrency:
+      group: tests
+      cancel-in-progress: false
+    env:
+      ACTIONS_RUNNER_DEBUG: true
+
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.13
+          go-version: 1.19
 
       - name: Build
         run: go build -v ./...
@@ -42,4 +48,11 @@ jobs:
           CLIENT_X509_CERT_URL: ${{ secrets.TEST_GCP_CLIENT_X509_CERT_URL }}
           ALIBABA_ACCESS_KEY: ${{ secrets.TEST_ALIBABA_ACCESS_KEY }}
           ALIBABA_ACCESS_SECRET: ${{ secrets.TEST_ALIBABA_ACCESS_SECRET }}
+          OCI_TENANCY_ID: ${{ secrets.OCI_TENANCY_ID }}
+          OCI_HOME_REGION: ${{ secrets.OCI_HOME_REGION }}
+          OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
+          AWP_EXTERNAL_ID: ${{ secrets.AWP_EXTERNAL_ID }}
+          AWS_ORG_ROLE_ARN: ${{ secrets.AWS_ORG_ROLE_ARN }}
+          AWS_ORG_SECRET: ${{ secrets.AWS_ORG_SECRET }}
+          AWS_ORG_STACK_SET_ARN: ${{ secrets.AWS_ORG_STACK_SET_ARN }}
         run: go test -v -timeout 2400s ./...

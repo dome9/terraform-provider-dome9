@@ -89,6 +89,20 @@ func resourceCloudAccountKubernetes() *schema.Resource {
 					},
 				},
 			},
+			"threat_intelligence": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -141,6 +155,7 @@ func resourceCloudAccountKubernetesRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
 	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
 	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
+	_ = d.Set("threat_intelligence", expandThreatIntelligenceConfig(resp))
 
 	return nil
 }
@@ -222,6 +237,13 @@ func featuresCreate(d *schema.ResourceData, d9Client *Client, newId string) erro
 		}
 	}
 
+	ThreatIntelligence, ok := d.GetOk("threat_intelligence")
+	if ok {
+		if err := configureThreatIntelligence(ThreatIntelligence, newId, d9Client); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -252,6 +274,15 @@ func featuresUpdate(d *schema.ResourceData, d9Client *Client) error {
 			return err
 		}
 	}
+
+	if d.HasChange("threat_intelligence") {
+		log.Println("Threat Intelligence has been changed")
+
+		ThreatIntelligence := d.Get("threat_intelligence")
+		if err := configureThreatIntelligence(ThreatIntelligence, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -277,6 +308,12 @@ func featuresDelete(d *schema.ResourceData, d9Client *Client) error {
 		}
 	}
 
+	ThreatIntelligence, ok := d.GetOk("threat_intelligence")
+	if ok {
+		if err := disableThreatIntelligenceIfEnabled(ThreatIntelligence, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -313,6 +350,16 @@ func configureImageAssurance(ImageAssurance interface{}, clusterId string, d9Cli
 
 	return nil
 }
+func configureThreatIntelligence(ThreatIntelligence interface{}, clusterId string, d9Client *Client) error {
+	ThreatIntelligenceConfig := ThreatIntelligence.([]interface{})[0].(map[string]interface{})
+	req := createThreatIntelligenceEnableRequest(clusterId, ThreatIntelligenceConfig["enabled"].(bool))
+	log.Println("[INFO] Configuring Threat Intelligence for Kubernetes Cloud Account")
+	if _, err := d9Client.cloudaccountKubernetes.EnableThreatIntelligence(req); err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func createRuntimeProtectionEnableRequest(clusterId string, enabled bool) k8s.RuntimeProtectionEnableRequest {
 	return k8s.RuntimeProtectionEnableRequest{
@@ -330,6 +377,12 @@ func createAdmissionControlEnableRequest(clusterId string, enabled bool) k8s.Adm
 
 func createImageAssuranceEnableRequest(clusterId string, enabled bool) k8s.ImageAssuranceEnableRequest {
 	return k8s.ImageAssuranceEnableRequest{
+		CloudAccountId: clusterId,
+		Enabled:        enabled,
+	}
+}
+func createThreatIntelligenceEnableRequest(clusterId string, enabled bool) k8s.ThreatIntelligenceEnableRequest {
+	return k8s.ThreatIntelligenceEnableRequest{
 		CloudAccountId: clusterId,
 		Enabled:        enabled,
 	}
@@ -356,6 +409,14 @@ func expandImageAssuranceConfig(resp *k8s.CloudAccountResponse) []interface{} {
 	ImageAssuranceConfig["enabled"] = resp.ImageAssuranceEnabled
 
 	return []interface{}{ImageAssuranceConfig}
+}
+
+func expandThreatIntelligenceConfig(resp *k8s.CloudAccountResponse) []interface{} {
+	ThreatIntelligenceConfig := make(map[string]interface{})
+
+	ThreatIntelligenceConfig["enabled"] = resp.ThreatIntelligenceEnabled
+
+	return []interface{}{ThreatIntelligenceConfig}
 }
 
 func disableRuntimeProtectionIfEnabled(runtimeProtection interface{}, clusterId string, d9Client *Client) error {
@@ -393,6 +454,20 @@ func disableImageAssuranceIfEnabled(ImageAssurance interface{}, clusterId string
 		req := createImageAssuranceEnableRequest(clusterId, false)
 		log.Println("[INFO] Disabling Image Assurance for Kubernetes Cloud Account")
 		if _, err := d9Client.cloudaccountKubernetes.EnableImageAssurance(req); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func disableThreatIntelligenceIfEnabled(ThreatIntelligence interface{}, clusterId string, d9Client *Client) error {
+	ThreatIntelligenceConfig := ThreatIntelligence.([]interface{})[0].(map[string]interface{})
+
+	if ThreatIntelligenceConfig["enabled"].(bool) {
+		req := createThreatIntelligenceEnableRequest(clusterId, false)
+		log.Println("[INFO] Disabling Threat Intelligence for Kubernetes Cloud Account")
+		if _, err := d9Client.cloudaccountKubernetes.EnableThreatIntelligence(req); err != nil {
 			return err
 		}
 	}

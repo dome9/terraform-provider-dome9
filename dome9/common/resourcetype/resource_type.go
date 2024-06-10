@@ -6,6 +6,8 @@ const (
 	CloudAccountAWS                              = "dome9_cloudaccount_aws"
 	CloudAccountAzure                            = "dome9_cloudaccount_azure"
 	CloudAccountGCP                              = "dome9_cloudaccount_gcp"
+	CloudAccountOCI                              = "dome9_cloudaccount_oci"
+	CloudAccountOCITempData                      = "dome9_cloudaccount_oci_temp_data"
 	CloudAccountKubernetes                       = "dome9_cloudaccount_kubernetes"
 	IPList                                       = "dome9_iplist"
 	ContinuousCompliancePolicy                   = "dome9_continuous_compliance_policy"
@@ -25,4 +27,8 @@ const (
 	AwsUnifiedOnboarding                         = "dome9_aws_unified_onboarding"
 	AdmissionControlPolicy                       = "dome9_admission_control_policy"
 	Assessment                                   = "dome9_assessment"
+	ImageAssurancePolicy                         = "dome9_image_assurance_policy"
+	AwpAwsOnboardingData                         = "dome9_awp_aws_onboarding_data"
+	AwpAwsOnboarding                             = "dome9_awp_aws_onboarding"
+	AWSOrganizationOnboarding                    = "dome9_aws_organization_onboarding"
 )

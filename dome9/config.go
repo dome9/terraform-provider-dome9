@@ -2,6 +2,8 @@ package dome9
 
 import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
+	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
 	"log"
 
 	"github.com/dome9/dome9-sdk-go/dome9"
@@ -11,11 +13,13 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_finding"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
+	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
 	"github.com/dome9/dome9-sdk-go/services/iplist"
 	"github.com/dome9/dome9-sdk-go/services/organizationalunits"
 	"github.com/dome9/dome9-sdk-go/services/roles"
@@ -37,6 +41,7 @@ type Client struct {
 	cloudaccountGCP                  gcp.Service
 	cloudaccountKubernetes           k8s.Service
 	cloudaccountAlibaba              alibaba.Service
+	cloudaccountOci                  oci.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
 	continuousComplianceFinding      continuous_compliance_finding.Service
@@ -49,7 +54,10 @@ type Client struct {
 	serviceAccounts                  serviceaccounts.Service
 	awsUnifiedOnboarding             aws_unified_onboarding.Service
 	admissionControlPolicy           admission_policy.Service
+	imageAssurancePolicy             imageassurance_policy.Service
 	assessment                       assessment.Service
+	awpAwsOnboarding                 awp_aws_onboarding.Service
+	awsOrganizationOnboarding        aws_org.Service
 }
 
 type Config struct {
@@ -67,6 +75,7 @@ func (c *Config) Client() (*Client, error) {
 	client := &Client{
 		iplist:                           *iplist.New(config),
 		cloudaccountAlibaba:              *alibaba.New(config),
+		cloudaccountOci:                  *oci.New(config),
 		cloudaccountAWS:                  *aws.New(config),
 		cloudaccountAzure:                *azure.New(config),
 		cloudaccountGCP:                  *gcp.New(config),
@@ -83,7 +92,10 @@ func (c *Config) Client() (*Client, error) {
 		serviceAccounts:                  *serviceaccounts.New(config),
 		awsUnifiedOnboarding:             *aws_unified_onboarding.New(config),
 		admissionControlPolicy:           *admission_policy.New(config),
+		imageAssurancePolicy:             *imageassurance_policy.New(config),
 		assessment:                       *assessment.New(config),
+		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
+		awsOrganizationOnboarding:        *aws_org.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")

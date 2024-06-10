@@ -44,6 +44,7 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "runtime_protection.0.enabled"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "admission_control.0.enabled"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "image_assurance.0.enabled"),
+					resource.TestCheckResourceAttrSet(resourceTypeAndName, "threat_intelligence.0.enabled"),
 				),
 			},
 			{
@@ -81,6 +82,7 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "runtime_protection.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesRuntimeProtectionEnabled)),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "admission_control.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesAdmissionControlEnabled)),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "image_assurance.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesImageAssuranceEnabled)),
+					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "threat_intelligence.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesThreatIntelligenceEnabled)),
 				),
 			},
 			{
@@ -95,6 +97,7 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "runtime_protection.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesRuntimeProtectionUpdateEnabled)),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "admission_control.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesAdmissionControlUpdateEnabled)),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "image_assurance.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesImageAssuranceUpdateEnabled)),
+					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "threat_intelligence.0.enabled", strconv.FormatBool(variable.CloudAccountKubernetesThreatIntelligenceUpdateEnabled)),
 				),
 			},
 		},
@@ -195,16 +198,18 @@ data "%s" "%s" {
 }
 
 func testAccCheckCloudAccountKubernetesCreateOrUpdateWithFeatures(resourceTypeAndName, generatedName, resourceName string, isUpdate bool) string {
-	var ac, ia, rp bool
+	var ac, ia, rp, fl bool
 
 	if isUpdate {
 		ac = variable.CloudAccountKubernetesAdmissionControlUpdateEnabled
 		ia = variable.CloudAccountKubernetesImageAssuranceUpdateEnabled
 		rp = variable.CloudAccountKubernetesRuntimeProtectionUpdateEnabled
+		fl = variable.CloudAccountKubernetesThreatIntelligenceUpdateEnabled
 	} else {
 		ac = variable.CloudAccountKubernetesAdmissionControlEnabled
 		ia = variable.CloudAccountKubernetesImageAssuranceEnabled
 		rp = variable.CloudAccountKubernetesRuntimeProtectionEnabled
+		fl = variable.CloudAccountKubernetesThreatIntelligenceEnabled
 	}
 
 	return fmt.Sprintf(`
@@ -216,7 +221,7 @@ data "%s" "%s" {
 }
 `,
 		// Kubernetes cloud account
-		getCloudAccountKubernetesResourceHCLWithfeatures(generatedName, resourceName, rp, ac, ia),
+		getCloudAccountKubernetesResourceHCLWithfeatures(generatedName, resourceName, rp, ac, ia, fl),
 
 		// data source variables
 		resourcetype.CloudAccountKubernetes,
@@ -261,7 +266,7 @@ resource "%s" "%s" {
 	)
 }
 
-func getCloudAccountKubernetesResourceHCLWithfeatures(generatedName string, resourceName string, runtimeProtection, admissionControl, imageAssurance bool) string {
+func getCloudAccountKubernetesResourceHCLWithfeatures(generatedName string, resourceName string, runtimeProtection, admissionControl, imageAssurance, threatIntelligence bool) string {
 	return fmt.Sprintf(`
 resource "%s" "%s" {
  name                   = "%s"
@@ -274,6 +279,9 @@ resource "%s" "%s" {
   image_assurance {
 	enabled = %v
   }
+  threat_intelligence {
+	enabled = %v
+  }
 }
 `,
 		// Kubernetes cloud account variables
@@ -283,5 +291,6 @@ resource "%s" "%s" {
 		runtimeProtection,
 		admissionControl,
 		imageAssurance,
+		threatIntelligence,
 	)
 }

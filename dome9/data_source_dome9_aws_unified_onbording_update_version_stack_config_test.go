@@ -13,7 +13,7 @@ import (
 func TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic(t *testing.T) {
 	resourceTypeAndName, _, resourceName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwsUnifiedOnboarding)
 	dataTypeAndName := fmt.Sprintf("data.%s.%s", resourcetype.AwsUnifiedOnboardingUpdateVersionStackConfig, resourceName)
-	log.Println("TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic ",resourceTypeAndName, dataTypeAndName, resourceName)
+	log.Println("TestAccDataSourceAWSUnifiedOnboardingUpdateVersionStackConfogurationBasic ", resourceTypeAndName, dataTypeAndName, resourceName)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -56,7 +56,7 @@ data "%s" "%s" {
 		generatedName+variable.DataSourceSuffix,
 		resourceTypeAndName,
 	)
-	log.Printf("[INFO] testAccCheckAwsUnifiedOnbordingBasic:%+v\n", res)
+	log.Printf("[INFO] testAccCheckAwsUnifiedOnboardingBasic:%+v\n", res)
 
 	return res
 }

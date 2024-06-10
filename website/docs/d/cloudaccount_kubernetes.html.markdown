@@ -42,4 +42,5 @@ In addition to all arguments above, the following attributes exported:
     * `enabled` - Is Admission Control enabled
 * `image_assurance` - Image Assurance details
     * `enabled` - Is Image Assurance enabled
-    
+* `threat_intelligence` - Threat Intelligence details
+    * `enabled` - Is Threat Intelligence enabled

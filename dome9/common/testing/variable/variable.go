@@ -7,6 +7,12 @@ const (
 	CloudAccountAlibabaVendor               = "alibaba"
 )
 
+// oci resource/data source
+const (
+	CloudAccountOciCreationResourceName = "test_cloudaccount_oci"
+	CloudAccountOciVendor               = "oci"
+)
+
 // aws resource/data source
 const (
 	CloudAccountAWSCreationResourceName    = "test_cloudaccount_aws"
@@ -43,14 +49,16 @@ const (
 	CloudAccountKubernetesUpdatedAccountName  = "test_cloudaccount_kubernetes_updated_resource_name"
 
 	// features
-	CloudAccountKubernetesAdmissionControlEnabled  = true
-	CloudAccountKubernetesRuntimeProtectionEnabled = true
-	CloudAccountKubernetesImageAssuranceEnabled    = true
+	CloudAccountKubernetesAdmissionControlEnabled   = true
+	CloudAccountKubernetesRuntimeProtectionEnabled  = true
+	CloudAccountKubernetesImageAssuranceEnabled     = true
+	CloudAccountKubernetesThreatIntelligenceEnabled = true
 
 	// features updates
-	CloudAccountKubernetesAdmissionControlUpdateEnabled  = false
-	CloudAccountKubernetesRuntimeProtectionUpdateEnabled = false
-	CloudAccountKubernetesImageAssuranceUpdateEnabled    = false
+	CloudAccountKubernetesAdmissionControlUpdateEnabled   = false
+	CloudAccountKubernetesRuntimeProtectionUpdateEnabled  = false
+	CloudAccountKubernetesImageAssuranceUpdateEnabled     = false
+	CloudAccountKubernetesThreatIntelligenceUpdateEnabled = false
 )
 
 // ip list resource/data source
@@ -139,7 +147,6 @@ const (
 	}`
 
 	DataSourceSuffix                    = "Data"
-	AwsUnifiedOnbordingTemplateUrl      = `https://cloudguard-unified-onboarding-common.s3.amazonaws.com/4.5.0/templates/role_based/onboarding.yml`
 	AwsUnifiedOnbordingIamCapabilities0 = `CAPABILITY_IAM`
 	AwsUnifiedOnbordingIamCapabilities1 = `CAPABILITY_NAMED_IAM`
 	AwsUnifiedOnbordingIamCapabilities2 = `CAPABILITY_AUTO_EXPAND`
@@ -185,14 +192,49 @@ const (
 	AdmissionControlKubernetesAccountName  = "test_admission_control_kubernetes_resource_name"
 )
 
+const (
+	ImageAssurancePolicyDefaultRulesetId = -2002
+	ImageAssurancePolicyDetectAction     = "Detection"
+	ImageAssurancePolicyPreventAction    = "Prevention"
+	ImageAssurancePolicyTargetType       = "Environment"
+	ImageAssuranceKubernetesAccountName  = "test_image_assurance_policy_kubernetes_resource_name"
+)
+
 // assessment resource/data source
 const (
-	BundleID                = -6
-	CloudAccountID          = "b2b84100-a14f-4dec-ba63-d05cbb79a2d9"
+	BundleID                = 1155085
+	CloudAccountID          = "dd7678bf-04d9-49ab-a653-1e03ced3726c"
 	CloudAccountType        = "Azure"
 	RequestID               = "c7475133-33a9-4a48-8601-dc2ecf407453"
 	TriggeredBy             = "Manual"
 	AssessmentPassed        = "true"
 	HasErrors               = "false"
 	HasDataSyncStatusIssues = "false"
+)
+
+// awp aws onboarding data resource/data source
+const (
+	OnboardedAwsCloudGuardAccountID   = "b4b6e1dd-e405-47a1-b2e5-6cc49bfbad00"
+	AwpAwsCrossAccountRoleName        = "CloudGuardAWPCrossAccountRole"
+	ScanMode                          = "inAccount"
+	DisabledRegions                   = `["us-east-1", "us-west-1"]`
+	DisabledRegionsUpdate             = `["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]`
+	ScanMachineIntervalInHours        = "6"
+	ScanMachineIntervalInHoursUpdate  = "11"
+	MaxConcurrentScansPerRegion       = "4"
+	MaxConcurrentScansPerRegionUpdate = "8"
+	CustomTags                        = `{
+			tag1 = "value1"
+			tag2 = "value2"
+		}`
+	CustomTagsUpdate = `{
+			tag1 = "value1"
+			tag2 = "value2"
+			tag3 = "value3"
+		}`
+)
+
+// aws organization onboarding resource/data source
+const (
+	AwsOrganizationOnboardingCreationResourceName = "TestAwsOrganizationOnboarding"
 )
