@@ -11,6 +11,7 @@ const (
 	CloudAccountKubernetes                       = "dome9_cloudaccount_kubernetes"
 	IPList                                       = "dome9_iplist"
 	ContinuousCompliancePolicy                   = "dome9_continuous_compliance_policy"
+	ContinuousComplianceFinding                  = "dome9_continuous_compliance_finding"
 	ContinuousComplianceNotification             = "dome9_continuous_compliance_notification"
 	RuleSet                                      = "dome9_ruleset"
 	CloudAccountAWSSecurityGroup                 = "dome9_aws_security_group"
