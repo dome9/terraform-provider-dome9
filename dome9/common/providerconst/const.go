@@ -109,6 +109,13 @@ const (
 	AF_SOUTH_1          = "26"
 	EU_SOUTH_1          = "27"
 	AP_NORTHEAST_3      = "28"
+	ME_CENTRAL_1        = "29"
+	AP_SOUTH_2          = "30"
+	AP_SOUTHEAST_3      = "31"
+	AP_SOUTHEAST_4      = "32"
+	EU_CENTRAL_2        = "33"
+	EU_SOUTH_2          = "34"
+	IL_CENTRAL_1        = "35"
 )
 
 // Azure consts
@@ -118,7 +125,7 @@ var AzureSecurityGroupProtocol = []string{"UDP", "TCP", "ANY"}
 var AzureSecurityGroupSourceScopeTypes = []string{"CIDR", "IPList", "Tag"}
 
 // The 21 regions Dome9 manages in AWS cloud account
-var AWSRegions = []string{"us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3"}
+var AWSRegions = []string{"us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3", "me_central_1", "ap_south_2", "ap_southeast_3", "ap_southeast_4", "eu_central_2", "eu_south_2", "il_central_1"}
 
 // The 2 regions Dome9 manages in AWSGOV cloud account
 var AWSGOVRegions = []string{"us_gov_west_1", "us_gov_east_1"}
@@ -128,7 +135,7 @@ var AWSChinaRegions = []string{"cn_northwest_1", "cn_north_1"}
 
 // The 23 regions Dome9 manages in AWS & AWSGOV cloud account
 var AllAWSRegions = append(AWSGOVRegions, append(AWSRegions, AWSChinaRegions...)...)
-var CloudVendors = []string{"aws", "azure", "google"}
+var CloudVendors = []string{"aws", "azure", "google", "kubernetesruntimeassurance", "imageassurance"}
 var ProtocolTypes = []string{"ALL", "HOPOPT", "ICMP", "IGMP", "GGP", "IPV4", "ST", "TCP", "CBT", "EGP", "IGP", "BBN_RCC_MON", "NVP2", "PUP", "ARGUS", "EMCON", "XNET", "CHAOS", "UDP", "MUX", "DCN_MEAS", "HMP", "PRM", "XNS_IDP", "TRUNK1", "TRUNK2", "LEAF1", "LEAF2", "RDP", "IRTP", "ISO_TP4", "NETBLT", "MFE_NSP", "MERIT_INP", "DCCP", "ThreePC", "IDPR", "XTP", "DDP", "IDPR_CMTP", "TPplusplus", "IL", "IPV6", "SDRP", "IPV6_ROUTE", "IPV6_FRAG", "IDRP", "RSVP", "GRE", "DSR", "BNA", "ESP", "AH", "I_NLSP", "SWIPE", "NARP", "MOBILE", "TLSP", "SKIP", "ICMPV6", "IPV6_NONXT", "IPV6_OPTS", "CFTP", "SAT_EXPAK", "KRYPTOLAN", "RVD", "IPPC", "SAT_MON", "VISA", "IPCV", "CPNX", "CPHB", "WSN", "PVP", "BR_SAT_MON", "SUN_ND", "WB_MON", "WB_EXPAK", "ISO_IP", "VMTP", "SECURE_VMTP", "VINES", "TTP", "NSFNET_IGP", "DGP", "TCF", "EIGRP", "OSPFIGP", "SPRITE_RPC", "LARP", "MTP", "AX25", "IPIP", "MICP", "SCC_SP", "ETHERIP", "ENCAP", "GMTP", "IFMP", "PNNI", "PIM", "ARIS", "SCPS", "QNX", "AN", "IPCOMP", "SNP", "COMPAQ_PEER", "IPX_IN_IP", "VRRP", "PGM", "L2TP", "DDX", "IATP", "STP", "SRP", "UTI", "SMP", "SM", "PTP", "ISIS", "FIRE", "CRTP", "CRUDP", "SSCOPMCE", "IPLT", "SPS", "PIPE", "SCTP", "FC", "RSVP_E2E_IGNORE", "MOBILITY_HEADER", "UDPLITE", "MPLS_IN_IP", "MANET", "HIP", "SHIM6", "WESP", "ROHC"}
 var OperationMode = []string{"Read", "Manage"}
 var SRLTypes = []string{"AWS", "Azure", "GCP", "OrganizationalUnit"}
@@ -178,9 +185,28 @@ var AWSRegionsEnum = map[string]string{
 	"af_south_1":          AF_SOUTH_1,
 	"eu_south_1":          EU_SOUTH_1,
 	"ap_northeast_3":      AP_NORTHEAST_3,
+	"me_central_1":        ME_CENTRAL_1,
+	"ap_south_2":          AP_SOUTH_2,
+	"ap_southeast_3":      AP_SOUTHEAST_3,
+	"ap_southeast_4":      AP_SOUTHEAST_4,
+	"eu_central_2":        EU_CENTRAL_2,
+	"eu_south_2":          EU_SOUTH_2,
+	"il_central_1":        IL_CENTRAL_1,
 }
 
 var PermissionTrafficType = map[string]string{
 	"All Services": "",
 	"All Traffic":  "-1",
 }
+
+// All Assessments Cloud Accounts Types
+var AssessmentCloudAccountType = []string{"Aws", "Azure", "GCP", "Kubernetes", "Terraform", "Generic", "KubernetesRuntimeAssurance", "ShiftLeft", "SourceCodeAssurance", "ImageAssurance", "Alibaba", "Cft", "ContainerRegistry", "Ers"}
+
+// AWP AWS Constants
+const (
+	DefaultScanMachineIntervalInHoursSaas      = 24
+	DefaultScanMachineIntervalInHoursInAccount = 4
+	DefaultMaxConcurrentScansPerRegion         = 20
+	MinMaxConcurrentScansPerRegion             = 1
+	MaxScanMachineIntervalInHours              = 1000
+)

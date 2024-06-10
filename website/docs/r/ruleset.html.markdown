@@ -21,7 +21,6 @@ resource "dome9_ruleset" "ruleset" {
   cloud_vendor = "aws"
   language = "en"
   hide_in_compliance = false
-  is_template = false
   rules {
     name = "some_rule2"
     logic = "EC2 should x"
@@ -40,7 +39,7 @@ The following arguments are supported:
 
 * `name` - (Required) The name of the ruleset in Dome9.
 * `description` - (Optional) A description of the ruleset (what it represents); defaults to empty string.
-* `cloud_vendor` - (Required) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure` or `google`.
+* `cloud_vendor` - (Required) Cloud vendor that the ruleset is associated with, can be one of the following: `aws`, `azure`, `google`, or `imageassurance` (for Image Assurance rulesets).
 * `language` - (Required) Language of the rules; defaults to 'en' (English).
 * `hide_in_compliance` - (Required) hide in compliance - true/false.
 *  [`rules`](#rules) - (Optional) List of rules in the ruleset.

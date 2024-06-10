@@ -91,11 +91,11 @@ func dataSourceContinuousComplianceNotification() *schema.Resource {
 							Computed: true,
 						},
 						"slack_integration_state": {
-							Type:         schema.TypeString,
+							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"teams_integration_state": {
-							Type:         schema.TypeString,
+							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"email_data": {
@@ -317,11 +317,11 @@ func dataSourceContinuousComplianceNotificationRead(d *schema.ResourceData, meta
 		}
 	}
 
-	flattenChangeDetection, err:= flattenChangeDetection(&resp.ChangeDetection)
+	flattenChangeDetection, err := flattenChangeDetection(&resp.ChangeDetection)
 	if err != nil {
 		return err
 	}
-	if err := d.Set("change_detection", flattenChangeDetection); err != nil{
+	if err := d.Set("change_detection", flattenChangeDetection); err != nil {
 		return err
 	}
 

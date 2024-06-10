@@ -1,2 +1,7 @@
-
 .idea/
+terraform-provider-dome9*
+**/.terraform
+**/.terraform*
+**/terraform.tfstate*
+.vscode/settings.json
+examples/**/provider.tf
