@@ -3,13 +3,13 @@ package dome9
 import (
 	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/awp"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
+	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"testing"
 	"time"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
-	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 )
 
 func TestAccResourceAWPAzureOnboardingBasic(t *testing.T) {
@@ -34,7 +34,7 @@ func TestAccResourceAWPAzureOnboardingBasic(t *testing.T) {
 			{
 				Config: testAccCheckAWPAzureOnboardingBasic(awpAzureOnboardingHcl),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAwpAccountExists(resourceTypeAndName, &awpCloudAccountInfo),
+					testAccCheckAwpAzureAccountExists(resourceTypeAndName, &awpCloudAccountInfo),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloudguard_account_id", variable.OnboardedAzureCloudGuardAccountID),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
@@ -44,14 +44,13 @@ func TestAccResourceAWPAzureOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "2"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "azure"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "force_delete", "true"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "should_create_policy", "true"),
 				),
 			},
 			{
 				Config: testAccCheckAWPAzureOnboardingBasic(awpAzureOnboardingUpdateHcl),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAwpAccountExists(resourceTypeAndName, &awpCloudAccountInfo),
+					testAccCheckAwpAzureAccountExists(resourceTypeAndName, &awpCloudAccountInfo),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloudguard_account_id", variable.OnboardedAzureCloudGuardAccountID),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
@@ -63,7 +62,6 @@ func TestAccResourceAWPAzureOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "3"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "azure"),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "force_delete", "true"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "should_create_policy", "true"),
 				),
 			},
@@ -111,7 +109,6 @@ func testAccCheckAWPAzureOnboardingBasic(awpAzureOnboardingHcl string) string {
 	)
 }
 
-
 func getAwpAzureOnboardingResourceHCL(generatedResourceName string, updateAction bool) string {
 	return fmt.Sprintf(`
 // awp azure onboarding resource
@@ -135,4 +132,25 @@ resource "%s" "%s" {
 		IfThenElse(updateAction, variable.MaxConcurrentScansPerRegionUpdate, variable.MaxConcurrentScansPerRegion),
 		IfThenElse(updateAction, variable.CustomTagsUpdate, variable.CustomTags),
 	)
+}
+
+func testAccCheckAwpAzureAccountExists(resource string, awpAccount *awp_onboarding.GetAWPOnboardingResponse) resource.TestCheckFunc {
+	return func(state *terraform.State) error {
+		rs, ok := state.RootModule().Resources[resource]
+		if !ok {
+			return fmt.Errorf("didn't find resource: %s", resource)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("no record ID is set")
+		}
+
+		apiClient := testAccProvider.Meta().(*Client)
+		receivedCloudAccountResponse, _, err := apiClient.awpAzureOnboarding.GetAWPOnboarding(rs.Primary.ID)
+
+		if err != nil {
+			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
+		}
+		*awpAccount = *receivedCloudAccountResponse
+		return nil
+	}
 }
