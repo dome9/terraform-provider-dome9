@@ -3,7 +3,7 @@ package dome9
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/dome9/dome9-sdk-go/services/awp_aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
-	var awpCloudAccountInfo awp_aws_onboarding.GetAWPOnboardingResponse
+	var awpCloudAccountInfo awp_onboarding.GetAWPOnboardingResponse
 	// Generate All Required Random Names for Testing
 	resourceTypeAndName, _, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AwpAwsOnboarding)
 	CrossAccountRoleExternalId := os.Getenv(environmentvariable.AwpAwsCrossAccountRoleExternalIdEnvVar)
@@ -89,10 +89,10 @@ func testAccCheckAWPAWSOnboardingDestroy(state *terraform.State) error {
 		}
 		maxRetries := 3
 		retryInterval := time.Second * 5
-		var getOnboardingResponse *awp_aws_onboarding.GetAWPOnboardingResponse
+		var getOnboardingResponse *awp_onboarding.GetAWPOnboardingResponse
 		var err error
 		for i := 0; i < maxRetries; i++ {
-			getOnboardingResponse, _, err = apiClient.awpAwsOnboarding.GetAWPOnboarding("aws", rs.Primary.ID)
+			getOnboardingResponse, _, err = apiClient.awpAwsOnboarding.GetAWPOnboarding(rs.Primary.ID)
 			if err == nil || getOnboardingResponse != nil {
 				// If the request was successful or the resource still exists, wait for the retry interval before trying again
 				time.Sleep(retryInterval)
@@ -121,7 +121,7 @@ func testAccCheckAWPAWSOnboardingBasic(awpAwsOnboardingHcl string) string {
 	)
 }
 
-func testAccCheckAwpAccountExists(resource string, awpAccount *awp_aws_onboarding.GetAWPOnboardingResponse) resource.TestCheckFunc {
+func testAccCheckAwpAccountExists(resource string, awpAccount *awp_onboarding.GetAWPOnboardingResponse) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		rs, ok := state.RootModule().Resources[resource]
 		if !ok {
@@ -132,7 +132,7 @@ func testAccCheckAwpAccountExists(resource string, awpAccount *awp_aws_onboardin
 		}
 
 		apiClient := testAccProvider.Meta().(*Client)
-		receivedCloudAccountResponse, _, err := apiClient.awpAwsOnboarding.GetAWPOnboarding("aws", rs.Primary.ID)
+		receivedCloudAccountResponse, _, err := apiClient.awpAwsOnboarding.GetAWPOnboarding(rs.Primary.ID)
 
 		if err != nil {
 			return fmt.Errorf("failed fetching resource %s. Recevied error: %s", resource, err)
