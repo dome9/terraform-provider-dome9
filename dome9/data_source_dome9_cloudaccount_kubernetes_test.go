@@ -15,6 +15,7 @@ import (
 func TestAccDataSourceCloudAccountKubernetesBasic(t *testing.T) {
 	resourceTypeAndName, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
 	defaultOrganizationalUnitName := os.Getenv(environmentvariable.OrganizationalUnitName)
+	resourceName := variable.CloudAccountKubernetesOriginalAccountName + "_" + generatedName
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -25,7 +26,7 @@ func TestAccDataSourceCloudAccountKubernetesBasic(t *testing.T) {
 		CheckDestroy: testAccCheckCloudAccountKubernetesDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesOriginalAccountName),
+				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", variable.CloudAccountKubernetesOriginalAccountName),

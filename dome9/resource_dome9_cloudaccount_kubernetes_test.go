@@ -22,7 +22,10 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 	anotherResourceTypeAndName, _, anotherGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
 	defaultOrganizationalUnitName := os.Getenv(environmentvariable.OrganizationalUnitName)
 	organizationUnitTypeAndName, _, organizationUnitGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.OrganizationalUnit)
-	organizationUnitHCL := getOrganizationalUnitResourceHCL(organizationUnitGeneratedName, variable.OrganizationalUnitName)
+	cloudAccountK8sResourceName := variable.CloudAccountKubernetesOriginalAccountName + "_" + generatedName
+	organizationalUnitName := variable.OrganizationalUnitName + "_" + organizationUnitGeneratedName
+	organizationUnitHCL := getOrganizationalUnitResourceHCL(organizationUnitGeneratedName, organizationalUnitName)
+	cloudAccountK8sResourceNameUpdated := variable.CloudAccountKubernetesUpdatedAccountName + "_" + generatedName
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -34,10 +37,10 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				//Create Default
-				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesOriginalAccountName),
+				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, cloudAccountK8sResourceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountKubernetesExists(resourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountKubernetesOriginalAccountName),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "name", cloudAccountK8sResourceName),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "creation_date"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
@@ -49,10 +52,10 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 			},
 			{
 				//Update name
-				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesUpdatedAccountName),
+				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, cloudAccountK8sResourceNameUpdated),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountKubernetesExists(resourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountKubernetesUpdatedAccountName),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "name", cloudAccountK8sResourceNameUpdated),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "creation_date"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
@@ -60,10 +63,10 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 			},
 			{
 				//Update OU
-				Config: testAccCheckCloudAccountKubernetesBasicWithUpdatedOU(resourceTypeAndName, generatedName, variable.CloudAccountKubernetesUpdatedAccountName, organizationUnitHCL, organizationUnitTypeAndName),
+				Config: testAccCheckCloudAccountKubernetesBasicWithUpdatedOU(resourceTypeAndName, generatedName, cloudAccountK8sResourceNameUpdated, organizationUnitHCL, organizationUnitTypeAndName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountKubernetesExists(resourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "name", variable.CloudAccountKubernetesUpdatedAccountName),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "name", cloudAccountK8sResourceNameUpdated),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "creation_date"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttrPair(resourceTypeAndName, "organizational_unit_id", organizationUnitTypeAndName, "id"),
@@ -72,10 +75,10 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 			},
 			{
 				// Create with features
-				Config: testAccCheckCloudAccountKubernetesCreateWithFeatures(anotherResourceTypeAndName, anotherGeneratedName, variable.CloudAccountKubernetesOriginalAccountName),
+				Config: testAccCheckCloudAccountKubernetesCreateWithFeatures(anotherResourceTypeAndName, anotherGeneratedName, cloudAccountK8sResourceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountKubernetesExists(anotherResourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "name", variable.CloudAccountKubernetesOriginalAccountName),
+					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "name", cloudAccountK8sResourceName),
 					resource.TestCheckResourceAttrSet(anotherResourceTypeAndName, "creation_date"),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
@@ -87,10 +90,10 @@ func TestAccResourceCloudAccountKubernetesBasic(t *testing.T) {
 			},
 			{
 				// Update features
-				Config: testAccCheckCloudAccountKubernetesWithUpdateFeatures(anotherResourceTypeAndName, anotherGeneratedName, variable.CloudAccountKubernetesOriginalAccountName),
+				Config: testAccCheckCloudAccountKubernetesWithUpdateFeatures(anotherResourceTypeAndName, anotherGeneratedName, cloudAccountK8sResourceName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCloudAccountKubernetesExists(anotherResourceTypeAndName, &cloudAccountResponse),
-					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "name", variable.CloudAccountKubernetesOriginalAccountName),
+					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "name", cloudAccountK8sResourceName),
 					resource.TestCheckResourceAttrSet(anotherResourceTypeAndName, "creation_date"),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(anotherResourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
