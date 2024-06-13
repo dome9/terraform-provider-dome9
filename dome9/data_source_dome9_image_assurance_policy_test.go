@@ -24,7 +24,7 @@ func TestAccDataSourceImageAssurancePolicyBasic(t *testing.T) {
 		variable.CloudAccountKubernetesThreatIntelligenceEnabled)
 
 	// Generate Notification HCL Configurations
-	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
+	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName))
 
 	// Generate Image Assurance Policy HCL Resource
 	imageAssurancePolicyHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,

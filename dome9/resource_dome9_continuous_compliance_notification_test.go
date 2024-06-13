@@ -27,10 +27,10 @@ func TestAccResourceContinuousComplianceNotificationBasic(t *testing.T) {
 		CheckDestroy: testAccCheckContinuousComplianceNotificationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckContinuousComplianceNotificationBasic(notificationTypeAndName, notificationGeneratedName, continuousComplianceNotificationConfig()),
+				Config: testAccCheckContinuousComplianceNotificationBasic(notificationTypeAndName, notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName)),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckContinuousComplianceNotificationExists(notificationTypeAndName, &continuousComplianceNotificationResponse),
-					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationName),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationName+"_"+notificationGeneratedName),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "description", variable.ContinuousComplianceNotificationDescription),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationAlertsConsole)),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "scheduled_report.#", "1"),
@@ -39,7 +39,7 @@ func TestAccResourceContinuousComplianceNotificationBasic(t *testing.T) {
 			},
 			{
 				// update name test
-				Config: testAccCheckContinuousComplianceNotificationBasic(notificationTypeAndName, notificationGeneratedName, continuousComplianceNotificationUpdateConfig()),
+				Config: testAccCheckContinuousComplianceNotificationBasic(notificationTypeAndName, notificationGeneratedName, continuousComplianceNotificationUpdateConfig(notificationGeneratedName)),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckContinuousComplianceNotificationExists(notificationTypeAndName, &continuousComplianceNotificationResponse),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationUpdateName),
@@ -160,7 +160,7 @@ resource "%s" "%s" {
 	)
 }
 
-func continuousComplianceNotificationConfig() string {
+func continuousComplianceNotificationConfig(notificationNameSuffix string) string {
 	return fmt.Sprintf(`
 name           = "%s"
 description    = "%s"
@@ -175,7 +175,7 @@ scheduled_report {
   }
 }
 `,
-		variable.ContinuousComplianceNotificationName,
+		variable.ContinuousComplianceNotificationName+"_"+notificationNameSuffix,
 		variable.ContinuousComplianceNotificationDescription,
 		strconv.FormatBool(variable.ContinuousComplianceNotificationAlertsConsole),
 
@@ -186,13 +186,13 @@ scheduled_report {
 	)
 }
 
-func continuousComplianceNotificationUpdateConfig() string {
+func continuousComplianceNotificationUpdateConfig(notificationSuffixName string) string {
 	return fmt.Sprintf(`
 name           = "%s"
 description    = "%s"
 alerts_console = "%s"
 `,
-		variable.ContinuousComplianceNotificationUpdateName,
+		variable.ContinuousComplianceNotificationUpdateName+"_"+notificationSuffixName,
 		variable.ContinuousComplianceNotificationUpdateDescription,
 		strconv.FormatBool(variable.ContinuousComplianceNotificationUpdateAlertsConsole),
 	)

@@ -24,7 +24,7 @@ func TestAccDataSourceAdmissionControlPolicyBasic(t *testing.T) {
 		variable.CloudAccountKubernetesThreatIntelligenceEnabled)
 
 	// Generate Notification HCL Configurations
-	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
+	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName))
 
 	// Generate Admission Control Policy HCL Resource
 	admissionPolicyHCL := getAdmissionControlPolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,

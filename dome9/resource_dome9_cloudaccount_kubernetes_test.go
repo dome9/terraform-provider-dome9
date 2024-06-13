@@ -287,7 +287,7 @@ resource "%s" "%s" {
 		// Kubernetes cloud account variables
 		resourcetype.CloudAccountKubernetes,
 		generatedName,
-		resourceName,
+		resourceName+"_"+generatedName,
 		runtimeProtection,
 		admissionControl,
 		imageAssurance,
