@@ -375,7 +375,7 @@ func validateAwsGovVendor(credentials aws.CloudAccountCredentials, regions []str
 }
 
 func validateAwsVendor(credentials aws.CloudAccountCredentials, regions []string) (bool, error) {
-		validate := checkRegions(regions, providerconst.AWSRegions)
+	validate := checkRegions(regions, providerconst.AWSRegions)
 	if !validate {
 		return validate, fmt.Errorf("aws vendor has an unsutibule regions")
 	}

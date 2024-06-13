@@ -8,9 +8,10 @@ import (
 )
 
 type CloudAccountRequestTempData struct {
-	Name       string `json:"name"`
-	TenancyId  string `json:"tenancyId"`
-	HomeRegion string `json:"homeRegion"`
+	Name                            string `json:"name"`
+	TenancyId                       string `json:"tenancyId"`
+	HomeRegion                      string `json:"homeRegion"`
+	TenantAdministratorEmailAddress string `json:"tenantAdministratorEmailAddress"`
 }
 
 type CloudAccountRequest struct {

@@ -263,10 +263,10 @@ func resourceContinuousComplianceNotification() *schema.Resource {
 										Required: true,
 									},
 									"http_method": {
-										Type:     schema.TypeString,
-										Optional: true,
-										Default:  "Post",
-										ForceNew: true,
+										Type:         schema.TypeString,
+										Optional:     true,
+										Default:      "Post",
+										ForceNew:     true,
 										ValidateFunc: validation.StringInSlice([]string{"Post", "Put"}, true),
 									},
 									"auth_method": {
@@ -408,7 +408,7 @@ func resourceContinuousComplianceNotificationRead(d *schema.ResourceData, meta i
 		}
 	}
 
-	flattenChangeDetection, err:= flattenChangeDetection(&resp.ChangeDetection)
+	flattenChangeDetection, err := flattenChangeDetection(&resp.ChangeDetection)
 	if err != nil {
 		return err
 	}
@@ -612,7 +612,6 @@ func expandWebhookData(webhookData *schema.Set) (*continuous_compliance_notifica
 	if len(webhookDataLst) > 0 {
 		webhookDataItem := webhookDataLst[0]
 		webhookData := webhookDataItem.(map[string]interface{})
-
 
 		PayloadFormatJson := make(map[string]interface{})
 		err := json.Unmarshal([]byte(webhookData["payload_format"].(string)), &PayloadFormatJson)
