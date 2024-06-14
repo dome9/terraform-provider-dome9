@@ -45,7 +45,6 @@ func TestAccDataSourceAdmissionControlPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "target_id", policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
-					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.1"),
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "ruleset_id", policyTypeAndName, "ruleset_id"),
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "target_type", policyTypeAndName, "target_type"),
 				),

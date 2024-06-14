@@ -29,7 +29,7 @@ func TestAccDataSourceCloudAccountKubernetesBasic(t *testing.T) {
 				Config: testAccCheckCloudAccountKubernetesBasic(resourceTypeAndName, generatedName, resourceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
-					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", variable.CloudAccountKubernetesOriginalAccountName),
+					resource.TestCheckResourceAttr(dataSourceTypeAndName, "name", resourceName),
 					resource.TestCheckResourceAttr(dataSourceTypeAndName, "vendor", variable.CloudAccountKubernetesVendor),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "organizational_unit_name", defaultOrganizationalUnitName),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "runtime_protection.0.enabled"),

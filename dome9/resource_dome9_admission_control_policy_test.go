@@ -53,7 +53,6 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
-					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.1"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_id", strconv.Itoa(variable.AdmissionControlPolicyDefaultRulesetId)),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.AdmissionControlPolicyTargetType),

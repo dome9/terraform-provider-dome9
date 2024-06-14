@@ -42,7 +42,7 @@ func TestAccResourceContinuousComplianceNotificationBasic(t *testing.T) {
 				Config: testAccCheckContinuousComplianceNotificationBasic(notificationTypeAndName, notificationGeneratedName, continuousComplianceNotificationUpdateConfig(notificationGeneratedName)),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckContinuousComplianceNotificationExists(notificationTypeAndName, &continuousComplianceNotificationResponse),
-					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationUpdateName),
+					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationUpdateName+"_"+notificationGeneratedName),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "description", variable.ContinuousComplianceNotificationUpdateDescription),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationUpdateAlertsConsole)),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "scheduled_report.#", "0"),
