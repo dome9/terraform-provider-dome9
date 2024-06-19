@@ -140,13 +140,14 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 			},
 			"vendor": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
 				ValidateFunc: validation.StringInSlice([]string{"azure", "azuregov", "azurechina"}, false),
 				Default:      "azure",
 			},
 			"use_cloud_guard_managed_app": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
+				Default:  true,
 			},
 			"is_auto_onboarding": {
 				Type:     schema.TypeBool,

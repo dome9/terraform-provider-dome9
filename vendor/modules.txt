@@ -95,7 +95,7 @@ github.com/bgentry/speakeasy
 ## explicit
 github.com/davecgh/go-spew/spew
 # github.com/dome9/dome9-sdk-go v1.19.4 => D:\src\dome9-sdk-go
-## explicit; go 1.13
+## explicit; go 1.19
 github.com/dome9/dome9-sdk-go/dome9
 github.com/dome9/dome9-sdk-go/dome9/client
 github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy
@@ -146,8 +146,8 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/go-querystring v1.0.0
-## explicit
+# github.com/google/go-querystring v1.1.0
+## explicit; go 1.10
 github.com/google/go-querystring/query
 # github.com/google/uuid v1.1.2
 ## explicit
