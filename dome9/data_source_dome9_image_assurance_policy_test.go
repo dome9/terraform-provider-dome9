@@ -49,7 +49,6 @@ func TestAccDataSourceImageAssurancePolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "ruleset_id", policyTypeAndName, "ruleset_id"),
 					resource.TestCheckResourceAttrPair(policyDataSourceTypeAndName, "target_type", policyTypeAndName, "target_type"),
 				),
-				ExpectNonEmptyPlan: true,
 			},
 		},
 	})

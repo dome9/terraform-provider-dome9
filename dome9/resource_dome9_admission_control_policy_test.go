@@ -57,7 +57,6 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.AdmissionControlPolicyTargetType),
 				),
-				ExpectNonEmptyPlan: true,
 			},
 			{
 				// Update Policy Test Step from Detection to Prevention

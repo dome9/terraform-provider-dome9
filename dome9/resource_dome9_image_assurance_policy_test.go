@@ -59,7 +59,6 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.ImageAssurancePolicyTargetType),
 				),
-				ExpectNonEmptyPlan: true,
 			},
 			{
 				// Update Policy Test Step from Detection to Prevention
