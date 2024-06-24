@@ -31,6 +31,7 @@ func TestAccResourceAssessmentBasic(t *testing.T) {
 					testAccCheckAssessmentExists(resourceTypeAndName, &assessmentData),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "triggered_by", variable.TriggeredBy),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "assessment_passed", variable.AssessmentPassed),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "assessment_passed", variable.AssessmentPassed),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "has_errors", variable.HasErrors),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "has_data_sync_status_issues", variable.HasDataSyncStatusIssues),
 				),
