@@ -30,7 +30,7 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 		variable.CloudAccountKubernetesThreatIntelligenceEnabled)
 
 	// Generate Compliance Notification HCL Resource
-	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
+	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName))
 
 	// Generate Admission Control Policy HCL Resource
 	admissionPolicyHCL := getAdmissionControlPolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
@@ -51,14 +51,12 @@ func TestAccResourceAdmissionControlPolicyBasic(t *testing.T) {
 					testAccCheckAdmissionControlPolicyExists(policyTypeAndName, &admissionControlPolicyResponse),
 					resource.TestCheckResourceAttr(policyTypeAndName, "action", variable.AdmissionControlPolicyDetectAction),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
-					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "2"),
+					resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
-					resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.1"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_id", strconv.Itoa(variable.AdmissionControlPolicyDefaultRulesetId)),
 					resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.AdmissionControlPolicyTargetType),
 				),
-				ExpectNonEmptyPlan: true,
 			},
 			{
 				// Update Policy Test Step from Detection to Prevention
