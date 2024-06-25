@@ -20,7 +20,7 @@ func TestAccDataSourceContinuousComplianceNotificationBasic(t *testing.T) {
 		CheckDestroy: testAccCheckContinuousComplianceNotificationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckContinuousComplianceNotificationBasic(resourceTypeAndName, generatedName, continuousComplianceNotificationConfig()),
+				Config: testAccCheckContinuousComplianceNotificationBasic(resourceTypeAndName, generatedName, continuousComplianceNotificationConfig(generatedName)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "id", resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "name", resourceTypeAndName, "name"),
