@@ -159,22 +159,6 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"external_organization_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"external_management_account_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"management_account_stack_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"management_account_stack_region": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"onboarding_configuration": {
 				Type:     schema.TypeMap,
 				Computed: true,

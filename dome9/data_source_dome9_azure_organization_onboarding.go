@@ -3,7 +3,6 @@ package dome9
 import (
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"log"
 )
 
@@ -19,58 +18,45 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 			},
 			"tenant_id": {
 				Type:     schema.TypeString,
-				Required: true,
+				Computed: true,
 			},
 			"management_group_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"organization_name": {
 				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "AzureOrg",
+				Computed: true,
 			},
 			"app_registration_name": {
 				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"client_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"client_secret": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"active_blades": {
 				Type:     schema.TypeMap,
-				Required: true,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"awp": {
 							Type:     schema.TypeMap,
-							Required: true,
+							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_enabled": {
 										Type:     schema.TypeBool,
-										Optional: true,
-										Default:  false,
+										Computed: true,
 									},
 									"onboarding_mode": {
-										Type:         schema.TypeString,
-										Optional:     true,
-										Default:      "inAccountHub",
-										ValidateFunc: validation.StringInSlice([]string{"saas", "inAccount", "inAccountHub"}, false),
+										Type:     schema.TypeString,
+										Computed: true,
 									},
 									"centralized_subscription_id": {
 										Type:     schema.TypeString,
-										Optional: true,
+										Computed: true,
 									},
 									"with_function_apps_scan": {
 										Type:     schema.TypeBool,
-										Optional: true,
-										Default:  false,
+										Computed: true,
 									},
 								},
 							},
@@ -82,8 +68,7 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"is_enabled": {
 										Type:     schema.TypeBool,
-										Optional: true,
-										Default:  false,
+										Computed: true,
 									},
 								},
 							},
@@ -95,8 +80,7 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"is_enabled": {
 										Type:     schema.TypeBool,
-										Optional: true,
-										Default:  true,
+										Computed: true,
 									},
 									"accounts": {
 										Type:     schema.TypeList,
@@ -105,11 +89,11 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 											Schema: map[string]*schema.Schema{
 												"storage_id": {
 													Type:     schema.TypeString,
-													Required: true,
+													Computed: true,
 												},
 												"log_types": {
 													Type:     schema.TypeList,
-													Required: true,
+													Computed: true,
 													Elem:     &schema.Schema{Type: schema.TypeString},
 												},
 											},
@@ -124,9 +108,8 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"onboarding_mode": {
-										Type:         schema.TypeString,
-										Required:     true,
-										ValidateFunc: validation.StringInSlice([]string{"Read", "Manage"}, false),
+										Type:     schema.TypeString,
+										Computed: true,
 									},
 								},
 							},
@@ -135,38 +118,23 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 				},
 			},
 			"vendor": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validation.StringInSlice([]string{"azure", "azuregov", "azurechina"}, false),
-				Default:      "azure",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
 			},
 			"use_cloud_guard_managed_app": {
 				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Computed: true,
 			},
 			"is_auto_onboarding": {
 				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Computed: true,
 			},
 			"account_id": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"external_organization_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"external_management_account_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"management_account_stack_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"management_account_stack_region": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -223,7 +191,7 @@ func dataSourceAzureOrganizationOnboardingRead(d *schema.ResourceData, meta inte
 	d9Client := meta.(*Client)
 
 	orgId := d.Get("id").(string)
-	resp, _, err := d9Client.awsOrganizationOnboarding.Get(orgId)
+	resp, _, err := d9Client.azureOrganizationOnboarding.Get(orgId)
 
 	if err != nil {
 		if err.(*client.ErrorResponse).IsObjectNotFound() {
@@ -236,17 +204,15 @@ func dataSourceAzureOrganizationOnboardingRead(d *schema.ResourceData, meta inte
 	}
 
 	d.SetId(resp.Id)
-	_ = d.Set("accountId", resp.AccountId)
-	_ = d.Set("externalOrganizationId", resp.ExternalOrganizationId)
-	_ = d.Set("externalManagementAccountId", resp.ExternalManagementAccountId)
-	_ = d.Set("managementAccountStackId", resp.ManagementAccountStackId)
-	_ = d.Set("managementAccountStackRegion", resp.ManagementAccountStackRegion)
-	_ = d.Set("userId", resp.UserId)
-	_ = d.Set("organizationName", resp.OrganizationName)
-	_ = d.Set("updateTime", resp.UpdateTime)
-	_ = d.Set("creationTime", resp.CreationTime)
-	_ = d.Set("stackSetRegions", resp.StackSetRegions)
-	_ = d.Set("stackSetOrganizationalUnitIds", resp.StackSetOrganizationalUnitIds)
+	_ = d.Set("account_id", resp.AccountId)
+	_ = d.Set("user_id", resp.UserId)
+	_ = d.Set("organization_name", resp.OrganizationName)
+	_ = d.Set("tenant_id", resp.TenantId)
+	_ = d.Set("management_group_id", resp.ManagementGroupId)
+	_ = d.Set("app_registration_name", resp.AppRegistrationName)
+	_ = d.Set("update_time", resp.UpdateTime)
+	_ = d.Set("creation_time", resp.CreationTime)
+	_ = d.Set("is_auto_onboarding", resp.IsAutoOnboarding)
 
 	if err := d.Set("onboarding_configuration", flattenAwsOrganizationOnboardingConfiguration(resp.OnboardingConfiguration)); err != nil {
 		return err

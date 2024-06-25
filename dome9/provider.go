@@ -91,6 +91,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.AwpAwsOnboardingData:                         dataSourceAwpAwsOnboardingData(),
 			resourcetype.AwpAwsOnboarding:                             dataSourceAwpAwsOnboarding(),
 			resourcetype.AWSOrganizationOnboarding:                    dataSourceAwsOrganizationOnboarding(),
+			resourcetype.AzureOrganizationOnboarding:                  dataSourceAzureOrganizationOnboarding(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
