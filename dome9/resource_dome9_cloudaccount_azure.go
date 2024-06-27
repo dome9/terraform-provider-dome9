@@ -44,8 +44,10 @@ func resourceCloudAccountAzure() *schema.Resource {
 				ValidateFunc: validation.StringInSlice(providerconst.OperationMode, true),
 			},
 			"vendor": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "azure",
+				ValidateFunc: validation.StringInSlice(providerconst.CloudVendors, false),
 			},
 			"client_id": {
 				Type:     schema.TypeString,
@@ -190,6 +192,7 @@ func resourceCloudAccountAzureUpdate(d *schema.ResourceData, meta interface{}) e
 func expandCloudAccountAzureRequest(d *schema.ResourceData) azure.CloudAccountRequest {
 	req := azure.CloudAccountRequest{
 		Name:           d.Get("name").(string),
+		Vendor:         d.Get("vendor").(string),
 		SubscriptionID: d.Get("subscription_id").(string),
 		TenantID:       d.Get("tenant_id").(string),
 		OperationMode:  d.Get("operation_mode").(string),

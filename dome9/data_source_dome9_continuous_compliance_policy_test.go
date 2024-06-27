@@ -18,7 +18,7 @@ func TestAccDataSourceContinuousCompliancePolicyBasic(t *testing.T) {
 	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 
 	awsHCL := getCloudAccountAWSResourceHCL(awsGeneratedName, variable.CloudAccountAWSOriginalAccountName, os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn), "")
-	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
+	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName))
 	policyHCL := getContinuousCompliancePolicyResourceHCL(awsHCL, awsTypeAndName, notificationHCL, notificationTypeAndName, policyGeneratedName)
 
 	resource.Test(t, resource.TestCase{
