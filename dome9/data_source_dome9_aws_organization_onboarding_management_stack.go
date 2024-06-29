@@ -36,8 +36,8 @@ func dataSourceAwsOrganizationOnboardingManagementStack() *schema.Resource {
 func dataSourceAwsOrganizationOnboardingManagementStackRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 
-	orgId := d.Get("aws_account_id").(string)
-	resp, _, err := d9Client.awsOrganizationOnboarding.GetOnboardingConfiguration(orgId)
+	accountId := d.Get("aws_account_id").(string)
+	resp, _, err := d9Client.awsOrganizationOnboarding.GetOnboardingConfiguration(accountId)
 	if err != nil {
 		return err
 	}
