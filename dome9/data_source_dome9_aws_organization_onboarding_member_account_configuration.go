@@ -9,7 +9,6 @@ func dataSourceAwsOrganizationOnboardingMemberAccountConfiguration() *schema.Res
 		Read: dataSourceAwsOrganizationOnboardingMemberAccountConfigurationRead,
 
 		Schema: map[string]*schema.Schema{
-			// OrganizationManagementViewModel object fields
 			"external_id": {
 				Type:     schema.TypeString,
 				Computed: true,
