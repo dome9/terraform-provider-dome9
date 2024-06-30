@@ -85,6 +85,7 @@ func resourceCloudSecurityGroupAWS() *schema.Resource {
 						"inbound": {
 							Type:     schema.TypeSet,
 							Optional: true,
+							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									// required to create inbound
