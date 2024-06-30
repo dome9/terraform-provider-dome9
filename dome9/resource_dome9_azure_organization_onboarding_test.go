@@ -2,7 +2,7 @@ package dome9
 
 import (
 	"fmt"
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/Azure_org"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure_org"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
