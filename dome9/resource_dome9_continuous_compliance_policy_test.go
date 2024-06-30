@@ -25,9 +25,9 @@ func TestAccResourceContinuousCompliancePolicyBasic(t *testing.T) {
 	notificationUpdateTypeAndName, _, notificationUpdateGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
 
 	awsHCL := getCloudAccountAWSResourceHCL(awsGeneratedName, variable.CloudAccountAWSOriginalAccountName, os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn), "")
-	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig())
+	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName))
 	// notificationHCL := getUpdateContinuousCompliancePolicyResourceHCL1(awsHCL, awsTypeAndName, notificationHCL, notificationTypeAndName, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
-	notificationUpdateHCL := getContinuousComplianceNotificationResourceHCL(notificationUpdateGeneratedName, continuousComplianceNotificationUpdateConfig())
+	notificationUpdateHCL := getContinuousComplianceNotificationResourceHCL(notificationUpdateGeneratedName, continuousComplianceNotificationUpdateConfig(notificationUpdateGeneratedName))
 	policyHCL := getContinuousCompliancePolicyResourceHCL(awsHCL, awsTypeAndName, notificationHCL, notificationTypeAndName, policyGeneratedName)
 	updatePolicyHCL := getUpdateContinuousCompliancePolicyResourceHCL(awsHCL, awsTypeAndName, notificationHCL, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
 
