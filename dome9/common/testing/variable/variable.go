@@ -238,3 +238,8 @@ const (
 const (
 	AwsOrganizationOnboardingCreationResourceName = "TestAwsOrganizationOnboarding"
 )
+
+// azure organization onboarding resource/data source
+const (
+	AzureOrganizationOnboardingCreationResourceName = "TestAzureOrganizationOnboarding"
+)

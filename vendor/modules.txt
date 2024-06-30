@@ -94,8 +94,8 @@ github.com/bgentry/speakeasy
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/dome9/dome9-sdk-go v1.19.4
-## explicit; go 1.13
+# github.com/dome9/dome9-sdk-go v1.20.0
+## explicit; go 1.19
 github.com/dome9/dome9-sdk-go/dome9
 github.com/dome9/dome9-sdk-go/dome9/client
 github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy
@@ -106,6 +106,7 @@ github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure
+github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure_org
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci
@@ -145,8 +146,8 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/go-querystring v1.0.0
-## explicit
+# github.com/google/go-querystring v1.1.0
+## explicit; go 1.10
 github.com/google/go-querystring/query
 # github.com/google/uuid v1.1.2
 ## explicit
