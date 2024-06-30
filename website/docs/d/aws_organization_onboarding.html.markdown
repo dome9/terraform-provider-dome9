@@ -2,12 +2,13 @@
 layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_aws_organization_onboarding"
 sidebar_current: "docs-resource-dome9-aws-organization-onboarding"
-description: Onboard AWS organization to CloudGuard
+description: Get management stack configuration for given AWS account.
 ---
 
 # Data Source: dome9_aws_organization_onboarding
 
-Use this data source to get information about connected AWS organization to CloudGuard.
+Get management stack configuration for given AWS account.
+For empty awsAccountId, return the default configuration.
 
 ## Example Usage
 
