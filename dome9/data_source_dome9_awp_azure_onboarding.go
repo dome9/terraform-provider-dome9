@@ -1,14 +1,13 @@
 package dome9
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"log"
 )
 
-func dataSourceAwpAwsOnboarding() *schema.Resource {
+func dataSourceAwpAzureOnboarding() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceAwpAwsOnboardingRead,
+		Read: dataSourceAwpAzureOnboardingRead,
 
 		Schema: map[string]*schema.Schema{
 			"id": {
@@ -30,6 +29,11 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
+						},
+						"skip_function_apps_scan": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default:  false,
 						},
 						"scan_machine_interval_in_hours": {
 							Type:     schema.TypeInt,
@@ -98,21 +102,17 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"centralized_cloud_account_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 		},
 	}
 }
 
-func dataSourceAwpAwsOnboardingRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceAwpAzureOnboardingRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 
 	cloudguardAccountId := d.Get("id").(string)
-	log.Printf("Getting data for AWP AWS Onboarding id: %s\n", cloudguardAccountId)
+	log.Printf("Getting data for AWP Azure Onboarding id: %s\n", cloudguardAccountId)
 
-	resp, _, err := d9Client.awpAwsOnboarding.GetAWPOnboarding(cloudguardAccountId)
+	resp, _, err := d9Client.awpAzureOnboarding.GetAWPOnboarding(cloudguardAccountId)
 	if err != nil {
 		return err
 	}
@@ -126,15 +126,14 @@ func dataSourceAwpAwsOnboardingRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("cloud_provider", resp.Provider)
 	_ = d.Set("should_update", resp.ShouldUpdate)
 	_ = d.Set("is_org_onboarding", resp.IsOrgOnboarding)
-	_ = d.Set("centralized_cloud_account_id", resp.CentralizedCloudAccountId)
 
 	if resp.AgentlessAccountSettings != nil {
-		if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettings(resp.AgentlessAccountSettings)); err != nil {
+		if err := d.Set("agentless_account_settings", flattenAgentlessAccountSettingsAzure(resp.AgentlessAccountSettings)); err != nil {
 			return err
 		}
 	}
 	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssues(resp.AccountIssues)); err != nil {
+		if err := d.Set("account_issues", flattenAccountIssuesAzure(resp.AccountIssues)); err != nil {
 			return err
 		}
 	}

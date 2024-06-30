@@ -2,11 +2,12 @@ package dome9
 
 import (
 	"fmt"
+	"os"
+	"testing"
+
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/environmentvariable"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
-	"os"
-	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
