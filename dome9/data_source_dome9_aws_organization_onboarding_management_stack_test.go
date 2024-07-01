@@ -11,9 +11,9 @@ import (
 func TestAccDataSourceAwsOrganizationOnboardingManagementStack(t *testing.T) {
 	resourceTypeAndName, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AWSOrganizationOnboardingManagementStack)
 
-	hclCode := fmt.Sprintf(`data "dome9_aws_organization_onboarding_management_stack" "%s" {
+	hclCode := fmt.Sprintf(`data "%s" "%s" {
 	aws_account_id = "111111111111"
-}`, generatedName)
+}`, resourcetype.AWSOrganizationOnboardingManagementStack, generatedName)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
