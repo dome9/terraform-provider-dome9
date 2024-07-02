@@ -9,7 +9,7 @@ import (
 )
 
 func TestAccDataSourceAwsOrganizationOnboardingManagementStack(t *testing.T) {
-	resourceTypeAndName, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AWSOrganizationOnboardingManagementStack)
+	_, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AWSOrganizationOnboardingManagementStack)
 
 	hclCode := fmt.Sprintf(`data "%s" "%s" {
 	aws_account_id = "111111111111"
@@ -23,11 +23,10 @@ func TestAccDataSourceAwsOrganizationOnboardingManagementStack(t *testing.T) {
 			{
 				Config: hclCode,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "aws_account_id", resourceTypeAndName, "aws_account_id"),
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "external_id", resourceTypeAndName, "external_id"),
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "content", resourceTypeAndName, "content"),
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "management_cft_url", resourceTypeAndName, "onboarding_cft_url"),
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "is_management_onboarded", resourceTypeAndName, "onboarding_cft_status"),
+					resource.TestCheckResourceAttrSet(dataSourceTypeAndName, "external_id"),
+					resource.TestCheckResourceAttrSet(dataSourceTypeAndName, "content"),
+					resource.TestCheckResourceAttrSet(dataSourceTypeAndName, "management_cft_url"),
+					resource.TestCheckResourceAttr(dataSourceTypeAndName, "is_management_onboarded", "false"),
 				),
 			},
 		},

@@ -9,7 +9,7 @@ import (
 )
 
 func TestAccDataSourceAWSOrganizationOnboardingMemberAccountConfig(t *testing.T) {
-	resourceTypeAndName, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AWSOrganizationOnboardingMemberAccountConfig)
+	_, dataSourceTypeAndName, generatedName := method.GenerateRandomSourcesTypeAndName(resourcetype.AWSOrganizationOnboardingMemberAccountConfig)
 
 	hclCode := fmt.Sprintf(`data "dome9_aws_organization_onboarding_member_account_configuration" "%s" {}`, generatedName)
 	resource.Test(t, resource.TestCase{
@@ -21,9 +21,9 @@ func TestAccDataSourceAWSOrganizationOnboardingMemberAccountConfig(t *testing.T)
 			{
 				Config: hclCode,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "external_id", resourceTypeAndName, "external_id"),
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "content", resourceTypeAndName, "content"),
-					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "onboarding_cft_url", resourceTypeAndName, "onboarding_cft_url"),
+					resource.TestCheckResourceAttrSet(dataSourceTypeAndName, "external_id"),
+					resource.TestCheckResourceAttrSet(dataSourceTypeAndName, "content"),
+					resource.TestCheckResourceAttrSet(dataSourceTypeAndName, "onboarding_cft_url"),
 				),
 			},
 		},
