@@ -1,8 +1,9 @@
 package dome9
 
 import (
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"net/url"
+	"regexp"
 )
 
 func dataSourceAwsOrganizationOnboardingManagementStack() *schema.Resource {
@@ -57,12 +58,14 @@ func dataSourceAwsOrganizationOnboardingManagementStackRead(d *schema.ResourceDa
 }
 
 func getTemplateUrl(clickableUrl string) (string, error) {
-	parsedUrl, err := url.Parse(clickableUrl)
-	if err != nil {
-		return "", err
-	}
-	queryParameters := parsedUrl.Query()
-	singleField := queryParameters.Get("templateURL")
+	re := regexp.MustCompile(`templateURL=(?P<templateUrl>https://.+\.yml)(&|$)`)
+	match := re.FindStringSubmatch(clickableUrl)
 
-	return singleField, nil
+	for i, name := range re.SubexpNames() {
+		if name == "templateUrl" {
+			return match[i], nil
+		}
+	}
+
+	return "", fmt.Errorf("no match found")
 }
