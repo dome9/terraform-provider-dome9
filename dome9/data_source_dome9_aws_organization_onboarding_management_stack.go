@@ -42,6 +42,7 @@ func dataSourceAwsOrganizationOnboardingManagementStackRead(d *schema.ResourceDa
 		return err
 	}
 
+	d.SetId(accountId)
 	_ = d.Set("external_id", resp.ExternalId)
 	_ = d.Set("content", resp.Content)
 	_ = d.Set("management_cft_url", resp.ManagementCftUrl)

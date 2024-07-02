@@ -1,6 +1,7 @@
 package dome9
 
 import (
+	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -31,6 +32,7 @@ func dataSourceAwsOrganizationOnboardingMemberAccountConfigurationRead(d *schema
 	if err != nil {
 		return err
 	}
+	d.SetId(uuid.New().String())
 	_ = d.Set("external_id", resp.ExternalId)
 	_ = d.Set("content", resp.Content)
 	_ = d.Set("onboarding_cft_url", resp.OnboardingCftUrl)
