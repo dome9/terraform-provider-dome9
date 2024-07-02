@@ -2,6 +2,7 @@ package dome9
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"net/url"
 )
 
 func dataSourceAwsOrganizationOnboardingManagementStack() *schema.Resource {
@@ -45,7 +46,23 @@ func dataSourceAwsOrganizationOnboardingManagementStackRead(d *schema.ResourceDa
 	d.SetId(accountId)
 	_ = d.Set("external_id", resp.ExternalId)
 	_ = d.Set("content", resp.Content)
-	_ = d.Set("management_cft_url", resp.ManagementCftUrl)
 	_ = d.Set("is_management_onboarded", resp.IsManagementOnboarded)
+
+	templateUrl, err := getTemplateUrl(resp.ManagementCftUrl)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("management_cft_url", templateUrl)
 	return nil
+}
+
+func getTemplateUrl(clickableUrl string) (string, error) {
+	parsedUrl, err := url.Parse(clickableUrl)
+	if err != nil {
+		return "", err
+	}
+	queryParameters := parsedUrl.Query()
+	singleField := queryParameters.Get("templateURL")
+
+	return singleField, nil
 }
