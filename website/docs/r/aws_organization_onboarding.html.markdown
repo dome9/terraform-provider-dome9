@@ -25,31 +25,36 @@ Basic usage:
 Advanced usage:
 
 ```hcl
-  data "dome9_aws_organization_onboarding_management_stack" "example" {
-    aws_account_id = "AWS_ACCOUNT_ID"
-  }
-  
-  resource "aws_stack" "example_stack" {
-    name        = "STACK_NAME"
-    description = "STACK_DESCRIPTION"
+data "dome9_aws_organization_onboarding_management_stack" "example" {
+    aws_account_id = "111111111111"
+}
+
+resource "aws_cloudformation_stack" "example_stack" {
+    name        = "stack-name"
     template_url = data.dome9_aws_organization_onboarding_management_stack.example.management_cft_url
+    parameters = {
+        ExternalId = data.dome9_aws_organization_onboarding_management_stack.example.external_id
+    }
+    capabilities = ["CAPABILITY_NAMED_IAM"]
+}
+
+data "dome9_aws_organization_onboarding_member_account_configuration" "example_member_account_configuration" {}
+
+resource "aws_cloudformation_stack_set" "example_stack_set" {
+    name        = "STACK-SET-NAME"
+    description = "STACK-SET-DESCRIPTION"
+    template_url = data.dome9_aws_organization_onboarding_member_account_configuration.example_member_account_configuration.onboarding_cft_url
+    parameters = {
+      ExternalId = data.dome9_aws_organization_onboarding_member_account_configuration.example_member_account_configuration.external_id
+    }
     capabilities = ["CAPABILITY_IAM"]
-  }
-  
-  data "dome9_aws_organization_onboarding_member_account_configuration" "example_member_account_configuration" {}
-  
-  resource "aws_stack_set" "example_stack_set" {
-    name        = "STACK_SET_NAME"
-    description = "STACK_SET_DESCRIPTION"
-    template_url = data.dome9_aws_organization_onboarding_member_account_configuration.example.onboarding_cft_url
-    capabilities = ["CAPABILITY_IAM"]
-  }
-    
-  resource "dome9_aws_organization_onboarding" "test" {
-  role_arn              = data.dome9_aws_organization_onboarding_management_stack.example.role_arn
-  secret                = data.dome9_aws_organization_onboarding_management_stack.example.external_id
-  stack_set_arn         = resource.aws_stack_set.example_stack_set.arn
-  aws_organization_name = "AWS_ORG_NAME"
+}
+
+resource "dome9_aws_organization_onboarding" "test" {
+    role_arn              = resource.aws_cloudformation_stack.example_stack.outputs.CrossAccountRoleArn
+    secret                = data.dome9_aws_organization_onboarding_management_stack.example.external_id
+    stack_set_arn         = resource.aws_cloudformation_stack_set.example_stack_set.arn
+    aws_organization_name = "AWS_ORG_NAME"
 }
 ```
 
