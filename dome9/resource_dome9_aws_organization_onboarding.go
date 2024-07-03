@@ -171,17 +171,17 @@ func resourceAwsOrganizationOnboardingRead(d *schema.ResourceData, meta interfac
 	}
 
 	d.SetId(resp.Id)
-	_ = d.Set("accountId", resp.AccountId)
-	_ = d.Set("externalOrganizationId", resp.ExternalOrganizationId)
-	_ = d.Set("externalManagementAccountId", resp.ExternalManagementAccountId)
-	_ = d.Set("managementAccountStackId", resp.ManagementAccountStackId)
-	_ = d.Set("managementAccountStackRegion", resp.ManagementAccountStackRegion)
-	_ = d.Set("userId", resp.UserId)
-	_ = d.Set("organizationName", resp.OrganizationName)
-	_ = d.Set("updateTime", resp.UpdateTime)
-	_ = d.Set("creationTime", resp.CreationTime)
-	_ = d.Set("stackSetRegions", resp.StackSetRegions)
-	_ = d.Set("stackSetOrganizationalUnitIds", resp.StackSetOrganizationalUnitIds)
+	_ = d.Set("account_id", resp.AccountId)
+	_ = d.Set("external_organization_id", resp.ExternalOrganizationId)
+	_ = d.Set("external_management_account_id", resp.ExternalManagementAccountId)
+	_ = d.Set("management_account_stack_id", resp.ManagementAccountStackId)
+	_ = d.Set("management_account_stack_region", resp.ManagementAccountStackRegion)
+	_ = d.Set("user_id", resp.UserId)
+	_ = d.Set("organization_name", resp.OrganizationName)
+	_ = d.Set("update_time", resp.UpdateTime)
+	_ = d.Set("creation_time", resp.CreationTime)
+	_ = d.Set("stack_set_regions", resp.StackSetRegions)
+	_ = d.Set("stack_set_organizational_unit_ids", resp.StackSetOrganizationalUnitIds)
 
 	if err := d.Set("onboarding_configuration", flattenAwsOrganizationOnboardingConfiguration(resp.OnboardingConfiguration)); err != nil {
 		return err
