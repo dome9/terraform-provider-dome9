@@ -47,6 +47,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.AwsUnifiedOnboarding:             resourceAwsUnifiedOnboarding(),
 			resourcetype.ContinuousCompliancePolicy:       resourceContinuousCompliancePolicy(),
 			resourcetype.ContinuousComplianceNotification: resourceContinuousComplianceNotification(),
+			resourcetype.Notification:                     resourceNotification(),
 			resourcetype.RuleSet:                          resourceRuleSet(),
 			resourcetype.CloudAccountAWSSecurityGroup:     resourceCloudSecurityGroupAWS(),
 			resourcetype.CloudAccountAWSSecurityGroupRule: resourceCloudSecurityGroupAWSRule(),
