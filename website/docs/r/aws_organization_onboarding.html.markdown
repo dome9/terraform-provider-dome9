@@ -26,7 +26,7 @@ Advanced usage:
 
 ```hcl
 data "dome9_aws_organization_onboarding_management_stack" "example" {
-    aws_account_id = "111111111111"
+    aws_account_id = "AWS_MANAGEMENT_ACCOUNT_ID"
 }
 
 resource "aws_cloudformation_stack" "example_stack" {

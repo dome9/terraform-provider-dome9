@@ -15,7 +15,7 @@ Basic usage:
 
 ```hcl
 data "dome9_aws_organization_onboarding_management_stack" "example" {
-  aws_account_id = "ORGANIZATION_ID"
+  aws_account_id = "AWS_MANAGEMENT_ACCOUNT_ID"
 }
 ```
 
@@ -23,13 +23,13 @@ data "dome9_aws_organization_onboarding_management_stack" "example" {
 
 The following arguments are supported:
 
-* `aws_account_id` - (Required) The AWS account ID.
+* `aws_account_id` - (Required) The AWS management account ID.
 
 ## Attributes Reference
 
 The following attributes are returned:
 
-* `external_id` - Used in the CloudGuard role.
+* `external_id` - Used in the CloudGuard role (also called secret).
 * `content` - The content of the management stack.
 * `management_cft_url` - The s3 URL of the CloudFormation template for management onboarding.
 * `is_management_onboarded` - The status of management onboarding (true if onboarded, false otherwise).
