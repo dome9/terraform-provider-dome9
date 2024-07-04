@@ -63,14 +63,16 @@ resource "dome9_cloudaccount_aws" "aws_onboarding_account_test" {
 module "terraform-dome9-awp-aws" {
 	source = "github.com/dome9/terraform-dome9-awp-aws"
 	awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID> or <AWS_ACCOUNT_ID>"
-	awp_scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
+	awp_scan_mode = "<SCAN_MODE>" # Possible values: "inAccount", "saas", "inAccountHub", "inAccountSub"
+	# in case that 'inAccountSub' scan mode is selected, the following parameter is required
+	# awp_centralized_account_id = "<CENTRALIZED_ACCOUNT_ID> or <AWS_ACCOUNT_ID>"
 
 	# Optional customizations:
 	# e.g:
 	# awp_cross_account_role_name = "<CROSS_ACCOUNT_ROLE_NAME>"
 	# awp_cross_account_role_external_id = "<CROSS_ACCOUNT_ROLE_EXTERNAL_ID>"
 
-	# Optional account Settings
+	# Optional account Settings (supported for 'inAccount', 'saas' scan modes)
 	# e.g:
 	#   awp_account_settings_aws = {
 	#     scan_machine_interval_in_hours = 24

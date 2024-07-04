@@ -3,6 +3,7 @@ package dome9
 import (
 	"encoding/base64"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 )
 
 func dataSourceAwpAwsOnboardingData() *schema.Resource {
@@ -65,7 +66,7 @@ func dataSourceAwpAwsOnboardingData() *schema.Resource {
 func dataSourceAwpAwsOnboardingDataRead(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 
-	resp, _, err := d9Client.awpAwsOnboarding.Get()
+	resp, _, err := d9Client.awpAwsOnboarding.GetOnboardingData()
 	if err != nil {
 		return err
 	}
@@ -80,11 +81,13 @@ func dataSourceAwpAwsOnboardingDataRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("remote_snapshots_utils_function_run_time", resp.RemoteSnapshotsUtilsFunctionRunTime)
 	_ = d.Set("remote_snapshots_utils_function_time_out", resp.RemoteSnapshotsUtilsFunctionTimeOut)
 	_ = d.Set("awp_client_side_security_group_name", resp.AwpClientSideSecurityGroupName)
-	cloudAccountID, _, err := d9Client.awpAwsOnboarding.GetCloudAccountId(d.Get("cloud_account_id").(string))
+
+	getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: d.Get("cloud_account_id").(string)}
+	cloudAccountresp, _, err := d9Client.cloudaccountAWS.Get(&getCloudAccountQueryParams)
 	if err != nil {
 		return err
 	}
-	combinedString := resp.CloudGuardBackendAccountId + "-" + cloudAccountID
+	combinedString := resp.CloudGuardBackendAccountId + "-" + cloudAccountresp.ID
 	encodedString := base64.StdEncoding.EncodeToString([]byte(combinedString))
 	_ = d.Set("cross_account_role_external_id", encodedString)
 	_ = d.Set("remote_snapshots_utils_function_s3_pre_signed_url", resp.RemoteSnapshotsUtilsFunctionS3PreSignedUrl)
