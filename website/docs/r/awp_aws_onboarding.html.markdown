@@ -41,6 +41,8 @@ module "terraform-dome9-awp-aws" {
 	# e.g:
 	# awp_cross_account_role_name = "<CROSS_ACCOUNT_ROLE_NAME>"
 	# awp_cross_account_role_external_id = "<CROSS_ACCOUNT_ROLE_EXTERNAL_ID>"
+  # the following parameter is required for "InAccountSub" scan mode
+  # awp_centralized_account_id = "<CENTRALIZED_ACCOUNT_ID> or <AWS_ACCOUNT_ID>" # centralized account-id where AWP scanner runs
 
 	# Optional account Settings
 	# e.g:
@@ -73,8 +75,7 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
   cross_account_role_name = "<AWP Cross account role name>"
   cross_account_role_external_id = "<AWP Cross account role external id>"
   scan_mode = "<SCAN_MODE>" # Possible values: "inAccount", "saas", "inAccountHub", "inAccountSub"
-  # in case that 'inAccountSub' scan mode is selected, the following parameter is required
-	# awp_centralized_account_id = "<CENTRALIZED_ACCOUNT_ID> or <AWS_ACCOUNT_ID>"
+	awp_centralized_account_id = "<CENTRALIZED_ACCOUNT_ID> or <AWS_ACCOUNT_ID>" # required for "InAccountSub" scan mode, it is the centralized account-id where AWP scanner runs
 
   # Optional account Settings (supported for 'inAccount' and 'saas' scan modes)
   # e.g:
