@@ -243,3 +243,8 @@ const (
 const (
 	AzureOrganizationOnboardingCreationResourceName = "TestAzureOrganizationOnboarding"
 )
+
+// aws organization onboarding management stack data source
+const (
+	AwsFakeAccountId = "111111111111"
+)
