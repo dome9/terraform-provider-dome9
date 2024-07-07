@@ -14,8 +14,6 @@ const (
 const (
 	RESTfulServicePathAwsOrgMgmtOnboarding = "aws-organization-management-onboarding"
 	RESTfulServicePathAwsOrgMgmt           = "aws-organization-management"
-
-	RESTfulServicePathAzureOrgMgmt = "azure-organization-management"
 )
 
 // AWS service paths
@@ -38,8 +36,6 @@ const (
 	RESTfulServicePathAzureOperationMode      = "OperationMode"
 	RESTfulServicePathAzureOrganizationalUnit = "organizationalUnit"
 	RESTfulServicePathAzureCredentials        = "Credentials"
-
-	RESTfulServicePathAzureOnboardingExecutionCommand = "OnboardingExecutionCommand"
 )
 
 // GCP service paths
