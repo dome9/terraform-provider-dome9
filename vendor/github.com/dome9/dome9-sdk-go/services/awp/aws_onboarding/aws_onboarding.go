@@ -3,7 +3,8 @@ package awp_aws_onboarding
 import (
 	"fmt"
 	"net/http"
-	"github.com/dome9/dome9-sdk-go/services/awp"
+
+	awp_onboarding "github.com/dome9/dome9-sdk-go/services/awp"
 )
 
 const (
@@ -11,11 +12,11 @@ const (
 )
 
 type CreateAWPOnboardingRequestAws struct {
-	CentralizedCloudAccountId  string                    `json:"centralizedCloudAccountId"`
-	CrossAccountRoleName       string                    `json:"crossAccountRoleName"`
-	CrossAccountRoleExternalId string                    `json:"crossAccountRoleExternalId"`
-	ScanMode                   string                    `json:"scanMode,omitempty"`
-	IsTerraform                bool                      `json:"isTerraform"`
+	CentralizedCloudAccountId  string                                   `json:"centralizedCloudAccountId"`
+	CrossAccountRoleName       string                                   `json:"crossAccountRoleName"`
+	CrossAccountRoleExternalId string                                   `json:"crossAccountRoleExternalId"`
+	ScanMode                   string                                   `json:"scanMode,omitempty"`
+	IsTerraform                bool                                     `json:"isTerraform"`
 	AgentlessAccountSettings   *awp_onboarding.AgentlessAccountSettings `json:"agentlessAccountSettings"`
 }
 
@@ -33,28 +34,29 @@ type AgentlessTerraformOnboardingDataResponseAws struct {
 }
 
 func (service *Service) CreateAWPOnboarding(id string, req CreateAWPOnboardingRequestAws, queryParams awp_onboarding.CreateOptions) (*http.Response, error) {
-	pathPostfix := "enable"
+	pathPostfix := awp_onboarding.EnablePostfix
 	if req.ScanMode == awp_onboarding.ScanModeInAccountSub {
-		pathPostfix = "enableSubAccount"
+		pathPostfix = awp_onboarding.EnableSubPostfix
 		req.ScanMode = ""
 	} else if req.ScanMode == awp_onboarding.ScanModeInAccountHub {
-		pathPostfix = "enableCentralizedAccount"
+		pathPostfix = awp_onboarding.EnableHubPostfix
+		req.ScanMode = ""
 	}
 
-	path := fmt.Sprintf(awp_onboarding.OnboardingResourcePath, "aws", id)
-	return awp_onboarding.CreateAWPOnboarding(service.Client, req, fmt.Sprintf("%s/%s" , path, pathPostfix), queryParams)
+	path := fmt.Sprintf(awp_onboarding.OnboardingResourcePath, awp_onboarding.ProviderAWS, id)
+	return awp_onboarding.CreateAWPOnboarding(service.Client, req, fmt.Sprintf("%s/%s", path, pathPostfix), queryParams)
 }
 
 func (service *Service) GetAWPOnboarding(id string) (*awp_onboarding.GetAWPOnboardingResponse, *http.Response, error) {
-	return awp_onboarding.GetAWPOnboarding(service.Client, "aws", id)
+	return awp_onboarding.GetAWPOnboarding(service.Client, awp_onboarding.ProviderAWS, id)
 }
 
 func (service *Service) DeleteAWPOnboarding(id string, queryParams awp_onboarding.DeleteOptions) (*http.Response, error) {
-	return awp_onboarding.DeleteAWPOnboarding(service.Client, "aws", id, queryParams)
+	return awp_onboarding.DeleteAWPOnboarding(service.Client, awp_onboarding.ProviderAWS, id, queryParams)
 }
 
 func (service *Service) UpdateAWPSettings(id string, req awp_onboarding.AgentlessAccountSettings) (*http.Response, error) {
-	return awp_onboarding.UpdateAWPSettings(service.Client, "aws", id, req)
+	return awp_onboarding.UpdateAWPSettings(service.Client, awp_onboarding.ProviderAWS, id, req)
 }
 
 func (service *Service) GetOnboardingData() (*AgentlessTerraformOnboardingDataResponseAws, *http.Response, error) {

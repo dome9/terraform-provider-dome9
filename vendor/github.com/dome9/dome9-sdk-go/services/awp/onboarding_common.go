@@ -8,9 +8,20 @@ import (
 )
 
 const (
+	ProviderAWS   = "aws"
+	ProviderAzure = "azure"
+)
+
+const (
 	OnboardingResourcePath = "workload/agentless/%s/accounts/%s"
-	ScanModeInAccountSub   = "inAccountSub"
-    ScanModeInAccountHub   = "inAccountHub"
+	EnablePostfix          = "enable"
+	EnableSubPostfix       = "enableSubAccount"
+	EnableHubPostfix       = "enableCentralizedAccount"
+)
+
+const (
+	ScanModeInAccountSub = "inAccountSub"
+	ScanModeInAccountHub = "inAccountHub"
 )
 
 type CreateOptions struct {

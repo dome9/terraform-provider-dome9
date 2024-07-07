@@ -2,9 +2,9 @@ package dome9
 
 import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
-    "github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
-	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
-	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
+  "github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
+  "github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
 	"log"
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
