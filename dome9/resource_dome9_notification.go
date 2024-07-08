@@ -133,6 +133,20 @@ var assessmentFindingOriginMap = map[string]notifications.AssessmentFindingOrigi
 	"Incident":                    notifications.Incident,
 }
 
+var notificationOutputTypeMap = map[string]notifications.NotificationOutputType{
+	"Default":            notifications.Default,
+	"Detailed":           notifications.Detailed,
+	"Summary":            notifications.Summary,
+	"FullCsv":            notifications.FullCsv,
+	"FullCsvZip":         notifications.FullCsvZip,
+	"ExecutivePlatform":  notifications.ExecutivePlatform,
+	"JsonFullEntity":     notifications.JsonFullEntity,
+	"JsonSimpleEntity":   notifications.JsonSimpleEntity,
+	"PlainText":          notifications.PlainText,
+	"TemplateBased":      notifications.TemplateBased,
+	"CustomOutputFormat": notifications.CustomOutputFormat,
+}
+
 func validateAssessmentFindingOrigin(val interface{}, key string) ([]string, []error) {
 	validOrigins := []string{
 		"ComplianceEngine",
@@ -165,18 +179,17 @@ func getAssessmentFindingOrigin(originStr string) (notifications.AssessmentFindi
 	return -1, fmt.Errorf("unknown AssessmentFindingOrigin: %s", originStr)
 }
 
-func expandOutputType(str string) notifications.NotificationOutputType {
+func expandOutputType(outputType string) notifications.NotificationOutputType {
 	// Convert string to appropriate NotificationOutputType
-	//TODO - return notifications.NotificationOutputType(str)
-	return 0
+	return notificationOutputTypeMap[outputType]
 }
 
 func expandNotificationRequest(d *schema.ResourceData) (notifications.PostNotificationViewModel, error) {
-	originStr := d.Get("origin").(string)
-	origin, err := getAssessmentFindingOrigin(originStr)
-	if err != nil {
-		return notifications.PostNotificationViewModel{}, err
-	}
+	//originStr := d.Get("origin").(string)
+	//origin, err := getAssessmentFindingOrigin(originStr)
+	//if err != nil {
+	//	return notifications.PostNotificationViewModel{}, err
+	//}
 
 	integrationSettings, _ := expandIntegrationSettings(d)
 
@@ -186,13 +199,8 @@ func expandNotificationRequest(d *schema.ResourceData) (notifications.PostNotifi
 			Description:          d.Get("description").(string),
 			AlertsConsole:        d.Get("alerts_console").(bool),
 			SendOnEachOccurrence: d.Get("send_on_each_occurrence").(bool),
-			Origin:               origin,
+			Origin:               d.Get("origin").(string), //origin,
 			IntegrationSettings:  integrationSettings,
-			//	notifications.NotificationIntegrationSettingsModel{
-			//	ReportsIntegrationSettings:            []notifications.ReportNotificationIntegrationSettings{},
-			//	SingleNotificationIntegrationSettings: []notifications.SingleNotificationIntegrationSettings{},
-			//	ScheduledIntegrationSettings:          []notifications.ScheduledNotificationIntegrationSettings{},
-			//},
 		},
 	}
 
@@ -256,7 +264,7 @@ func expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSe
 		settings = append(settings, notifications.SingleNotificationIntegrationSettings{
 			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
 				IntegrationId: itemMap["integration_id"].(string),
-				OutputType:    expandOutputType(itemMap["output_type"].(string)),
+				OutputType:    itemMap["output_type"].(string), //expandOutputType(itemMap["output_type"].(string)),
 			},
 			Payload: itemMap["payload"].(string),
 		})
