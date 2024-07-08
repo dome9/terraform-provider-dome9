@@ -45,6 +45,7 @@ func resourceNotification() *schema.Resource {
 			"integration_settings": {
 				Type:     schema.TypeList,
 				Required: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"reports_integration_settings": {
@@ -164,129 +165,20 @@ func getAssessmentFindingOrigin(originStr string) (notifications.AssessmentFindi
 	return -1, fmt.Errorf("unknown AssessmentFindingOrigin: %s", originStr)
 }
 
-func expandReportsIntegrationSettings(settingsSlice []interface{}) ([]notifications.ReportNotificationIntegrationSettings, error) {
-	var settings []notifications.ReportNotificationIntegrationSettings
-
-	for _, item := range settingsSlice {
-		settingMap, ok := item.(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("invalid format for reports_integration_settings item")
-		}
-
-		integrationID, ok := settingMap["integration_id"].(string)
-		if !ok {
-			return nil, fmt.Errorf("integration_id is required and must be a string")
-		}
-
-		outputTypeStr, ok := settingMap["output_type"].(string)
-		if !ok {
-			return nil, fmt.Errorf("output_type is required and must be a string")
-		}
-
-		settings = append(settings, notifications.ReportNotificationIntegrationSettings{
-			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
-				IntegrationId: integrationID,
-				OutputType:    expandOutputType(outputTypeStr),
-				Filter:        notifications.ComplianceNotificationFilter{},
-			},
-		})
-	}
-
-	return settings, nil
-}
-
-func expandSingleNotificationIntegrationSettings(settingsSlice []interface{}) ([]notifications.SingleNotificationIntegrationSettings, error) {
-	var settings []notifications.SingleNotificationIntegrationSettings
-
-	for _, item := range settingsSlice {
-		settingMap, ok := item.(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("invalid format for single_notification_integration_settings item")
-		}
-
-		integrationID, ok := settingMap["integration_id"].(string)
-		if !ok {
-			return nil, fmt.Errorf("integration_id is required and must be a string")
-		}
-
-		outputTypeStr, ok := settingMap["output_type"].(string)
-		if !ok {
-			return nil, fmt.Errorf("output_type is required and must be a string")
-		}
-
-		payload, _ := settingMap["payload"].(string)
-
-		settings = append(settings, notifications.SingleNotificationIntegrationSettings{
-			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
-				IntegrationId: integrationID,
-				OutputType:    expandOutputType(outputTypeStr),
-				Filter:        notifications.ComplianceNotificationFilter{},
-			},
-			Payload: payload,
-		})
-	}
-
-	return settings, nil
-}
-
-func expandScheduledIntegrationSettings(settingsSlice []interface{}) ([]notifications.ScheduledNotificationIntegrationSettings, error) {
-	var settings []notifications.ScheduledNotificationIntegrationSettings
-
-	for _, item := range settingsSlice {
-		settingMap, ok := item.(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("invalid format for scheduled_integration_settings item")
-		}
-
-		integrationID, ok := settingMap["integration_id"].(string)
-		if !ok {
-			return nil, fmt.Errorf("integration_id is required and must be a string")
-		}
-
-		outputTypeStr, ok := settingMap["output_type"].(string)
-		if !ok {
-			return nil, fmt.Errorf("output_type is required and must be a string")
-		}
-
-		cronExpression, ok := settingMap["cron_expression"].(string)
-		if !ok {
-			return nil, fmt.Errorf("cron_expression is required and must be a string")
-		}
-
-		settings = append(settings, notifications.ScheduledNotificationIntegrationSettings{
-			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
-				IntegrationId: integrationID,
-				OutputType:    expandOutputType(outputTypeStr),
-				Filter:        notifications.ComplianceNotificationFilter{},
-			},
-			CronExpression: cronExpression,
-		})
-	}
-
-	return settings, nil
-}
-
 func expandOutputType(str string) notifications.NotificationOutputType {
+	// Convert string to appropriate NotificationOutputType
+	//TODO - return notifications.NotificationOutputType(str)
 	return 0
 }
 
 func expandNotificationRequest(d *schema.ResourceData) (notifications.PostNotificationViewModel, error) {
-
-	//convert origin field to AssessmentFindingOrigin
 	originStr := d.Get("origin").(string)
 	origin, err := getAssessmentFindingOrigin(originStr)
 	if err != nil {
 		return notifications.PostNotificationViewModel{}, err
 	}
 
-	integrationSettingsItem := d.Get("integration_settings").(*schema.Set).List()[0]
-	integrationSettings := integrationSettingsItem.(map[string]interface{})
-	log.Printf("[INFO] Integration settings: %+v\n", integrationSettings)
-	fmt.Printf("[INFO] Integration settings: %+v\n", integrationSettings)
-
-	reportsSettings, _ := expandReportsIntegrationSettings(integrationSettings)
-	singleNotificationSettings, _ := expandSingleNotificationIntegrationSettings(integrationSettings)
-	scheduledSettings, _ := expandScheduledIntegrationSettings(integrationSettings)
+	integrationSettings, _ := expandIntegrationSettings(d)
 
 	postModel := notifications.PostNotificationViewModel{
 		BaseNotificationViewModel: notifications.BaseNotificationViewModel{
@@ -295,16 +187,85 @@ func expandNotificationRequest(d *schema.ResourceData) (notifications.PostNotifi
 			AlertsConsole:        d.Get("alerts_console").(bool),
 			SendOnEachOccurrence: d.Get("send_on_each_occurrence").(bool),
 			Origin:               origin,
-			IntegrationSettings: notifications.NotificationIntegrationSettingsModel{
-				ReportsIntegrationSettings:            reportsSettings,
-				SingleNotificationIntegrationSettings: singleNotificationSettings,
-				ScheduledIntegrationSettings:          scheduledSettings,
-			},
+			IntegrationSettings:  integrationSettings,
+			//	notifications.NotificationIntegrationSettingsModel{
+			//	ReportsIntegrationSettings:            []notifications.ReportNotificationIntegrationSettings{},
+			//	SingleNotificationIntegrationSettings: []notifications.SingleNotificationIntegrationSettings{},
+			//	ScheduledIntegrationSettings:          []notifications.ScheduledNotificationIntegrationSettings{},
+			//},
 		},
 	}
 
 	return postModel, nil
 }
+
+func expandIntegrationSettings(d *schema.ResourceData) (notifications.NotificationIntegrationSettingsModel, error) {
+	integrationSettings := d.Get("integration_settings").([]interface{})[0].(map[string]interface{})
+
+	singleNotificationIntegrationSettings, _ := integrationSettings["single_notification_integration_settings"].([]interface{})
+	//reportsIntegrationSettings, _ := integrationSettings["reports_integration_settings"].([]interface{})
+	//scheduledIntegrationSettings, _ := integrationSettings["scheduled_integration_settings"].([]interface{})
+
+	SingleNotificationIntegrationSettingsData, _ := expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSettings)
+	//reportsIntegrationSettingsData := expandReportsIntegrationSettings(reportsIntegrationSettings)
+	//scheduledIntegrationSettingsData := expandScheduledIntegrationSettings(scheduledIntegrationSettings)
+
+	// Assuming functions to expand these settings are implemented correctly
+	return notifications.NotificationIntegrationSettingsModel{
+		ReportsIntegrationSettings:            []notifications.ReportNotificationIntegrationSettings{}, //expandReportsIntegrationSettings(reportsIntegrationSettings),
+		SingleNotificationIntegrationSettings: SingleNotificationIntegrationSettingsData,
+		ScheduledIntegrationSettings:          []notifications.ScheduledNotificationIntegrationSettings{}, //expandScheduledIntegrationSettings(scheduledIntegrationSettings),
+	}, nil
+}
+
+func expandScheduledIntegrationSettings(scheduledIntegrationSettings []interface{}) ([]notifications.ScheduledNotificationIntegrationSettings, error) {
+	var settings []notifications.ScheduledNotificationIntegrationSettings
+
+	// Process scheduled_integration_settings
+	fmt.Println("Scheduled Integration Settings:")
+	for i, item := range scheduledIntegrationSettings {
+		itemMap := item.(map[string]interface{})
+		fmt.Printf("  Item %d: integration_id=%s, output_type=%s, cron_expression=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string), itemMap["cron_expression"].(string))
+	}
+
+	return settings, nil
+}
+
+func expandReportsIntegrationSettings(reportsIntegrationSettings []interface{}) ([]notifications.ReportNotificationIntegrationSettings, error) {
+	var settings []notifications.ReportNotificationIntegrationSettings
+
+	// Process reports_integration_settings
+	fmt.Println("Reports Integration Settings:")
+	for i, item := range reportsIntegrationSettings {
+		itemMap := item.(map[string]interface{})
+		fmt.Printf("  Item %d: integration_id=%s, output_type=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string))
+	}
+
+	return settings, nil
+}
+
+func expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSettings []interface{}) ([]notifications.SingleNotificationIntegrationSettings, error) {
+	var settings []notifications.SingleNotificationIntegrationSettings
+
+	// Process single_notification_integration_settings
+	fmt.Println("Single Notification Integration Settings:")
+	for i, item := range singleNotificationIntegrationSettings {
+		itemMap := item.(map[string]interface{})
+		fmt.Printf("  Item %d: integration_id=%s, output_type=%s, payload=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string), itemMap["payload"].(string))
+
+		settings = append(settings, notifications.SingleNotificationIntegrationSettings{
+			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
+				IntegrationId: itemMap["integration_id"].(string),
+				OutputType:    expandOutputType(itemMap["output_type"].(string)),
+			},
+			Payload: itemMap["payload"].(string),
+		})
+	}
+
+	return settings, nil
+}
+
+// CRUD Functions
 
 func resourceNotificationCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
@@ -342,7 +303,18 @@ func resourceNotificationRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceNotificationUpdate(d *schema.ResourceData, meta interface{}) error {
-	// Implementation for Update
+	//d9Client := meta.(*Client)
+	//req, err := expandNotificationRequest(d)
+	//if err != nil {
+	//	return err
+	//}
+	//log.Printf("[INFO] Updating notification request\n%+v\n", req)
+	//_, _, err = d9Client.notifications.Update(d.Id(), req)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//return resourceNotificationRead(d, meta)
 	return nil
 }
 
