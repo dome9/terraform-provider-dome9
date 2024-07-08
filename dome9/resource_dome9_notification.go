@@ -293,6 +293,7 @@ func resourceNotificationRead(d *schema.ResourceData, meta interface{}) error {
 		return err
 	}
 
+	d.SetId(resp.Id)
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("description", resp.Description)
 	_ = d.Set("alerts_console", resp.AlertsConsole)

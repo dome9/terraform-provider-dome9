@@ -6,7 +6,7 @@ import (
 
 func dataSourceNotification() *schema.Resource {
 	return &schema.Resource{
-		Read: resourceNotificationRead,
+		Read: dataSourceNotificationRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeString,
@@ -98,4 +98,9 @@ func dataSourceNotification() *schema.Resource {
 			},
 		},
 	}
+}
+
+func dataSourceNotificationRead(d *schema.ResourceData, m interface{}) error {
+	d.SetId(d.Get("id").(string))
+	return resourceNotificationRead(d, m)
 }
