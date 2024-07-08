@@ -2,7 +2,8 @@
 layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_notification"
 sidebar_current: "docs-resource-dome9-notification"
-description: |- Creates and manages Dome9 notifications.
+description: |- 
+  Creates and manages Dome9 notifications.
 ---
 
 # dome9\_notification

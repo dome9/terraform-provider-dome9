@@ -2,7 +2,8 @@
 layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_notification"
 sidebar_current: "docs-data-source-dome9-notification"
-description: |- Fetches details of a specific Dome9 notification.
+description: |- 
+  Fetches details of a specific Dome9 notification.
 ---
 
 # dome9\_notification
