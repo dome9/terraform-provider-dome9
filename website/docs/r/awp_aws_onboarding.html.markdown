@@ -35,12 +35,14 @@ provider "aws" {
 module "terraform-dome9-awp-aws" {
 	source = "github.com/dome9/terraform-dome9-awp-aws"
 	awp_cloud_account_id = "<CLOUDGUARD_ACCOUNT_ID> or <AWS_ACCOUNT_ID>"
-	awp_scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
+	awp_scan_mode = "<SCAN_MODE>" # Possible values: "inAccount", "saas", "inAccountHub", "inAccountSub"
 
 	# Optional customizations:
 	# e.g:
 	# awp_cross_account_role_name = "<CROSS_ACCOUNT_ROLE_NAME>"
 	# awp_cross_account_role_external_id = "<CROSS_ACCOUNT_ROLE_EXTERNAL_ID>"
+  # the following parameter is required for "InAccountSub" scan mode
+  # awp_centralized_account_id = "<CENTRALIZED_ACCOUNT_ID> or <AWS_ACCOUNT_ID>" # centralized account-id where AWP scanner runs
 
 	# Optional account Settings
 	# e.g:
@@ -72,7 +74,11 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_aws.aws_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <EXTERNAL_AWS_ACCOUNT_NUMBER>"
   cross_account_role_name = "<AWP Cross account role name>"
   cross_account_role_external_id = "<AWP Cross account role external id>"
-  scan_mode = "<SCAN_MODE>" # Valid Values = "inAccount" or "saas"
+  scan_mode = "<SCAN_MODE>" # Possible values: "inAccount", "saas", "inAccountHub", "inAccountSub"
+	awp_centralized_account_id = "<CENTRALIZED_ACCOUNT_ID> or <AWS_ACCOUNT_ID>" # required for "InAccountSub" scan mode, it is the centralized account-id where AWP scanner runs
+
+  # Optional account Settings (supported for 'inAccount' and 'saas' scan modes)
+  # e.g:
   agentless_account_settings {
     disabled_regions = ["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]
     scan_machine_interval_in_hours = 24
@@ -99,6 +105,7 @@ The following arguments are supported:
 * `cross_account_role_name` - (Required) The name of the cross account role.
 * `cross_account_role_external_id` - (Required) The external id of the cross account role.
 * `scan_mode` - (Required) The scan mode. Valid values are "inAccount", "saas", "inAccountHub", "inAccountSub".
+* `awp_centralized_account_id` - (Optional) The centralized cloud account id, required (and only relevant) for "inAccountSub" scan mode
 * `agentless_account_settings` - (Optional) The agentless account settings.
   * `disabled_regions` - (Optional) The disabled regions. valid values are "af-south-1", "ap-south-1", "eu-north-1", "eu-west-3", "eu-south-1", "eu-west-2", "eu-west-1", "ap-northeast-3", "ap-northeast-2", "me-south-1", "ap-northeast-1", "me-central-1", "ca-central-1", "sa-east-1", "ap-east-1", "ap-southeast-1", "ap-southeast-2", "eu-central-1", "ap-southeast-3", "us-east-1", "us-east-2", "us-west-1", "us-west-2"
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours

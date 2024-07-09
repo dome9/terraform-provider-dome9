@@ -3,7 +3,7 @@ module github.com/terraform-providers/terraform-provider-dome9
 go 1.19
 
 require (
-	github.com/dome9/dome9-sdk-go v1.19.4
+	github.com/dome9/dome9-sdk-go v1.21.0
 	github.com/hashicorp/terraform-plugin-sdk v1.17.2
 )
 
@@ -26,7 +26,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/google/go-cmp v0.5.5 // indirect
-	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.0.5 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
