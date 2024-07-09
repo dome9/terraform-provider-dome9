@@ -47,7 +47,7 @@ resource "aws_cloudformation_stack_set" "example_stack_set" {
     parameters = {
       ExternalId = data.dome9_aws_organization_onboarding_member_account_configuration.example_member_account_configuration.external_id
     }
-    capabilities = ["CAPABILITY_IAM"]
+    capabilities = ["CAPABILITY_NAMED_IAM"]
     permission_model = "SERVICE_MANAGED"
 
     auto_deployment {
