@@ -48,6 +48,12 @@ resource "aws_cloudformation_stack_set" "example_stack_set" {
       ExternalId = data.dome9_aws_organization_onboarding_member_account_configuration.example_member_account_configuration.external_id
     }
     capabilities = ["CAPABILITY_IAM"]
+    permission_model = "SERVICE_MANAGED"
+
+    auto_deployment {
+      enabled = true
+      retain_stacks_on_account_removal = false
+    }
 }
 
 resource "aws_cloudformation_stack_set_instance" "example" {
