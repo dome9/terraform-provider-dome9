@@ -50,6 +50,15 @@ resource "aws_cloudformation_stack_set" "example_stack_set" {
     capabilities = ["CAPABILITY_IAM"]
 }
 
+resource "aws_cloudformation_stack_set_instance" "example" {
+  region         = "AWS-REGION"
+  stack_set_name = aws_cloudformation_stack_set.example_stack_set.name
+  deployment_targets {
+    organizational_unit_ids  = ["AWS-OU-ID"]
+  
+  }
+}
+
 resource "dome9_aws_organization_onboarding" "test" {
     role_arn              = resource.aws_cloudformation_stack.example_stack.outputs.CrossAccountRoleArn
     secret                = data.dome9_aws_organization_onboarding_management_stack.example.external_id
