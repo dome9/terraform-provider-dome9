@@ -35,7 +35,7 @@ In addition to all arguments above, the following attributes are exported:
 * `environment_name` - the aws environment name
 * `root_stack_id` - the arn of the root stack created by the onboarding
 * `cft_version` - the current Cloud Formation Template version
-* `onbording_request` - [the onboarding request](https://registry.terraform.io/providers/dome9/dome9/latest/docs/resources/aws_unified_onbording)
+* `onboarding_request` - [the onboarding request](https://registry.terraform.io/providers/dome9/dome9/latest/docs/resources/aws_unified_onbording)
 * `statuses` - list of statuses, a status per blade of the onboarding process
   * `module` - the module name (Permissions / Continuous Posture / Serverless Protection / Account Activity)
   * `feature` - the feature name (Intelligence / Workload / Posture / Onboarding / General)

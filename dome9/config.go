@@ -16,6 +16,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupaws"
 	"github.com/dome9/dome9-sdk-go/services/cloudsecuritygroup/securitygroupazure"
+	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_finding"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
@@ -43,6 +44,7 @@ type Client struct {
 	cloudaccountOci                  oci.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
+	continuousComplianceFinding      continuous_compliance_finding.Service
 	ruleSet                          rulebundles.Service
 	awsSecurityGroup                 securitygroupaws.Service
 	role                             roles.Service
@@ -80,6 +82,7 @@ func (c *Config) Client() (*Client, error) {
 		cloudaccountKubernetes:           *k8s.New(config),
 		continuousCompliancePolicy:       *continuous_compliance_policy.New(config),
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
+		continuousComplianceFinding:      *continuous_compliance_finding.New(config),
 		ruleSet:                          *rulebundles.New(config),
 		awsSecurityGroup:                 *securitygroupaws.New(config),
 		role:                             *roles.New(config),
