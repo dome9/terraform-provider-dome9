@@ -182,6 +182,14 @@ func expandIntegrationSettings(d *schema.ResourceData) (notifications.Notificati
 	return notificationSettings, nil
 }
 
+func createBaseNotification(itemMap map[string]interface{}) notifications.BaseNotificationIntegrationSettings {
+	return notifications.BaseNotificationIntegrationSettings{
+		IntegrationId: itemMap["integration_id"].(string),
+		OutputType:    itemMap["output_type"].(string),
+		Filter:        nil,
+	}
+}
+
 func expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSettings []interface{}) ([]notifications.SingleNotificationIntegrationSettings, error) {
 	settings := []notifications.SingleNotificationIntegrationSettings{}
 
@@ -196,11 +204,8 @@ func expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSe
 		fmt.Printf("  Item %d: integration_id=%s, output_type=%s, payload=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string), itemMap["payload"].(string))
 
 		settings = append(settings, notifications.SingleNotificationIntegrationSettings{
-			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
-				IntegrationId: itemMap["integration_id"].(string),
-				OutputType:    itemMap["output_type"].(string),
-			},
-			Payload: itemMap["payload"].(string),
+			BaseNotificationIntegrationSettings: createBaseNotification(itemMap),
+			Payload:                             itemMap["payload"].(string),
 		})
 	}
 
@@ -221,10 +226,7 @@ func expandReportsIntegrationSettings(reportsIntegrationSettings []interface{}) 
 		fmt.Printf("  Item %d: integration_id=%s, output_type=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string))
 
 		settings = append(settings, notifications.ReportNotificationIntegrationSettings{
-			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
-				IntegrationId: itemMap["integration_id"].(string),
-				OutputType:    itemMap["output_type"].(string),
-			},
+			BaseNotificationIntegrationSettings: createBaseNotification(itemMap),
 		})
 	}
 
@@ -245,12 +247,8 @@ func expandScheduledIntegrationSettings(scheduledIntegrationSettings []interface
 		fmt.Printf("  Item %d: integration_id=%s, output_type=%s, cron_expression=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string), itemMap["cron_expression"].(string))
 
 		settings = append(settings, notifications.ScheduledNotificationIntegrationSettings{
-			BaseNotificationIntegrationSettings: notifications.BaseNotificationIntegrationSettings{
-				IntegrationId: itemMap["integration_id"].(string),
-				OutputType:    itemMap["output_type"].(string),
-				Filter:        nil,
-			},
-			CronExpression: itemMap["cron_expression"].(string),
+			BaseNotificationIntegrationSettings: createBaseNotification(itemMap),
+			CronExpression:                      itemMap["cron_expression"].(string),
 		})
 	}
 

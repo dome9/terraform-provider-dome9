@@ -70,20 +70,20 @@ const (
 
 // continuous Compliance Notification resource/data source
 const (
-	ContinuousComplianceNotificationName               = "test_notification_tf"
-	ContinuousComplianceNotificationDescription        = "this notification for testing"
+	ContinuousComplianceNotificationName               = "test_notification_tf_old"
+	ContinuousComplianceNotificationDescription        = "this notification for testing_old"
 	ContinuousComplianceNotificationAlertsConsole      = true
 	ContinuousComplianceNotificationEnabled            = "Enabled"
 	ContinuousComplianceNotificationDisabled           = "Disabled"
 	ContinuousComplianceNotificationCronExpression     = "0 0 10 1/1 * ? *"
 	ContinuousComplianceNotificationType               = "Detailed"
-	ContinuousComplianceNotificationRecipient          = "test@test.com"
+	ContinuousComplianceNotificationRecipient          = "test-old@test.com"
 	ContinuousComplianceNotificationJsonWithFullEntity = "JsonWithFullEntity"
 
 	// update const
-	ContinuousComplianceNotificationUpdateName          = "test_notification_update"
-	ContinuousComplianceNotificationUpdateDescription   = "this notification for update testing"
-	ContinuousComplianceNotificationUpdateAlertsConsole = false
+	ContinuousComplianceNotificationUpdateName          = "test_notification_update_old"
+	ContinuousComplianceNotificationUpdateDescription   = "this notification for update testing old"
+	ContinuousComplianceNotificationUpdateAlertsConsole = true
 )
 
 // Notification resource/data source
