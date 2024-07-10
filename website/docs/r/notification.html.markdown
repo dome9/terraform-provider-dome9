@@ -1,6 +1,6 @@
 ﻿---
 layout: "dome9"
-page_title: "Check Point CloudGuard Dome9: dome9_notification"
+page_title: "Check Point CloudGuard: dome9_notification"
 sidebar_current: "docs-resource-dome9-notification"
 description: |- 
   Creates and manages Dome9 notifications.
@@ -8,7 +8,7 @@ description: |-
 
 # dome9\_notification
 
-This resource is used to create and manage Dome9 notifications. Notifications in Dome9 allow you to send alerts based on specific events or criteria to various destinations such as email, Slack, or an HTTP endpoint.
+This resource is used to create and manage CloudGuard notifications. Notifications in CloudGuard allow you to send alerts based on specific events or criteria to various destinations such as email, Slack, or an HTTP endpoint.
 
 ## Example Usage
 
@@ -47,9 +47,9 @@ The following arguments are supported:
 
 - `name` - (Required) The name of the notification.
 - `description` - (Optional) A description of the notification.
-- `alerts_console` - (Optional) Boolean flag to send alerts to the Dome9 web app alerts console. Defaults to `true`.
+- `alerts_console` - (Optional) Boolean flag to send alerts to the CloudGuard event page console. Defaults to `true`.
 - `send_on_each_occurrence` - (Optional) Boolean flag to send notifications on each occurrence. Defaults to `false`.
-- `origin` - (Optional) The origin of the notification. Defaults to `"ComplianceEngine"`.
+- `origin` - (Optional) Specifies the source of the notification. Currently, only `"ComplianceEngine"` is supported as the default value.
 - `integration_settings` - (Required) A block of integration settings for the notification. The block supports:
     - `reports_integration_settings` - (Optional) A list of report integration settings blocks.
         - `integration_id` - (Required) The ID of the integration.
