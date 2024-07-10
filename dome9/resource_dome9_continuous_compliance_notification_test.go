@@ -33,7 +33,6 @@ func TestAccResourceContinuousComplianceNotificationBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationName+"_"+notificationGeneratedName),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "description", variable.ContinuousComplianceNotificationDescription),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationAlertsConsole)),
-					resource.TestCheckResourceAttr(notificationTypeAndName, "scheduled_report.#", "1"),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "change_detection.#", "1"),
 				),
 			},
@@ -45,7 +44,6 @@ func TestAccResourceContinuousComplianceNotificationBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(notificationTypeAndName, "name", variable.ContinuousComplianceNotificationUpdateName+"_"+notificationGeneratedName),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "description", variable.ContinuousComplianceNotificationUpdateDescription),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "alerts_console", strconv.FormatBool(variable.ContinuousComplianceNotificationUpdateAlertsConsole)),
-					resource.TestCheckResourceAttr(notificationTypeAndName, "scheduled_report.#", "0"),
 					resource.TestCheckResourceAttr(notificationTypeAndName, "change_detection.#", "1"),
 				),
 			},
@@ -121,23 +119,7 @@ func getContinuousComplianceNotificationResourceHCL(generatedName, additionalBlo
 // continuous compliance notification creation
 resource "%s" "%s" {
   %s
-  change_detection {
-    email_sending_state                = "%s"
-    email_per_finding_sending_state    = "%s"
-    sns_sending_state                  = "%s"
-    external_ticket_creating_state     = "%s"
-    aws_security_hub_integration_state = "%s"
-    webhook_integration_state          = "%s"
 
-    email_data {
-      recipients = ["%s"]
-    }
-
-    email_per_finding_data {
-      recipients                 = ["%s"]
-      notification_output_format = "%s"
-    }
-  }
 }
 `,
 		// resource variables
@@ -145,18 +127,6 @@ resource "%s" "%s" {
 		generatedName,
 
 		additionalBlock,
-
-		variable.ContinuousComplianceNotificationEnabled,
-		variable.ContinuousComplianceNotificationEnabled,
-		variable.ContinuousComplianceNotificationDisabled,
-		variable.ContinuousComplianceNotificationDisabled,
-		variable.ContinuousComplianceNotificationDisabled,
-		variable.ContinuousComplianceNotificationDisabled,
-
-		variable.ContinuousComplianceNotificationRecipient,
-
-		variable.ContinuousComplianceNotificationRecipient,
-		variable.ContinuousComplianceNotificationJsonWithFullEntity,
 	)
 }
 
@@ -165,24 +135,13 @@ func continuousComplianceNotificationConfig(notificationNameSuffix string) strin
 name           = "%s"
 description    = "%s"
 alerts_console = "%s"
-
-scheduled_report {
-  email_sending_state = "%s"
-  schedule_data {
-    cron_expression = "%s"
-    type            = "%s"
-    recipients      = ["%s"]
-  }
+change_detection {
 }
+
 `,
 		variable.ContinuousComplianceNotificationName+"_"+notificationNameSuffix,
 		variable.ContinuousComplianceNotificationDescription,
 		strconv.FormatBool(variable.ContinuousComplianceNotificationAlertsConsole),
-
-		variable.ContinuousComplianceNotificationEnabled,
-		variable.ContinuousComplianceNotificationCronExpression,
-		variable.ContinuousComplianceNotificationType,
-		variable.ContinuousComplianceNotificationRecipient,
 	)
 }
 
@@ -191,6 +150,8 @@ func continuousComplianceNotificationUpdateConfig(notificationSuffixName string)
 name           = "%s"
 description    = "%s"
 alerts_console = "%s"
+change_detection {
+}
 `,
 		variable.ContinuousComplianceNotificationUpdateName+"_"+notificationSuffixName,
 		variable.ContinuousComplianceNotificationUpdateDescription,

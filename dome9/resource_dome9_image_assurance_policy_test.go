@@ -20,7 +20,7 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 
 	// Generate All Required Random Names for Testing
 	policyTypeAndName, _, policyGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ImageAssurancePolicy)
-	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
+	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.Notification)
 	kubernetesAccountResourceTypeAndName, _, kubernetesAccountGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountKubernetes)
 
 	// Generate Kubernetes Account HCL Resource
@@ -31,7 +31,7 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 		variable.CloudAccountKubernetesThreatIntelligenceEnabled)
 
 	// Generate Compliance Notification HCL Resource
-	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName))
+	notificationHCL := getNotificationResourceHCL(notificationGeneratedName, notificationConfig(notificationGeneratedName))
 
 	// Generate Image Assurance Policy HCL Resource
 	imageAssurancePolicyHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
