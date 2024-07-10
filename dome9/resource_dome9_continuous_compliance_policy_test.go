@@ -21,13 +21,13 @@ func TestAccResourceContinuousCompliancePolicyBasic(t *testing.T) {
 	var continuousCompliancePolicyResponse continuous_compliance_policy.ContinuousCompliancePolicyResponse
 	policyTypeAndName, _, policyGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousCompliancePolicy)
 	awsTypeAndName, _, awsGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.CloudAccountAWS)
-	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
-	notificationUpdateTypeAndName, _, notificationUpdateGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.ContinuousComplianceNotification)
+	notificationTypeAndName, _, notificationGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.Notification)
+	notificationUpdateTypeAndName, _, notificationUpdateGeneratedName := method.GenerateRandomSourcesTypeAndName(resourcetype.Notification)
 
 	awsHCL := getCloudAccountAWSResourceHCL(awsGeneratedName, variable.CloudAccountAWSOriginalAccountName, os.Getenv(environmentvariable.CloudAccountAWSEnvVarArn), "")
-	notificationHCL := getContinuousComplianceNotificationResourceHCL(notificationGeneratedName, continuousComplianceNotificationConfig(notificationGeneratedName))
+	notificationHCL := getNotificationResourceHCL(notificationGeneratedName, notificationConfig(notificationGeneratedName))
 	// notificationHCL := getUpdateContinuousCompliancePolicyResourceHCL1(awsHCL, awsTypeAndName, notificationHCL, notificationTypeAndName, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
-	notificationUpdateHCL := getContinuousComplianceNotificationResourceHCL(notificationUpdateGeneratedName, continuousComplianceNotificationUpdateConfig(notificationUpdateGeneratedName))
+	notificationUpdateHCL := getNotificationResourceHCL(notificationUpdateGeneratedName, notificationUpdateConfig(notificationUpdateGeneratedName))
 	policyHCL := getContinuousCompliancePolicyResourceHCL(awsHCL, awsTypeAndName, notificationHCL, notificationTypeAndName, policyGeneratedName)
 	updatePolicyHCL := getUpdateContinuousCompliancePolicyResourceHCL(awsHCL, awsTypeAndName, notificationHCL, notificationUpdateTypeAndName, notificationUpdateHCL, policyGeneratedName)
 
@@ -84,7 +84,7 @@ func testAccCheckContinuousCompliancePolicyExists(resource string, cloudAccount 
 func testAccCheckContinuousCompliancePolicyDestroy(s *terraform.State) error {
 	apiClient := testAccProvider.Meta().(*Client)
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != resourcetype.ContinuousCompliancePolicy && rs.Type != resourcetype.ContinuousComplianceNotification && rs.Type != resourcetype.CloudAccountAWS {
+		if rs.Type != resourcetype.ContinuousCompliancePolicy && rs.Type != resourcetype.Notification && rs.Type != resourcetype.CloudAccountAWS {
 			continue
 		}
 
