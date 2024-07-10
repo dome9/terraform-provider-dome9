@@ -66,7 +66,7 @@ The following arguments are supported:
 
 ## Import
 
-This resource can be imported using the continuous compliance notification ID, which can be found in the Dome9 console.
+This resource can be imported using the notification ID, which can be found in the Dome9 console.
 
 ```shell
 terraform import dome9_notification.example <NOTIFICATION_ID>

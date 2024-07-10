@@ -42,18 +42,20 @@ func resourceNotification() *schema.Resource {
 			},
 			"integration_settings": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
+				Computed: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"reports_integration_settings": {
 							Type:     schema.TypeList,
 							Optional: true,
+							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"integration_id": {
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 									},
 									"output_type": {
 										Type:     schema.TypeString,
@@ -65,11 +67,12 @@ func resourceNotification() *schema.Resource {
 						"single_notification_integration_settings": {
 							Type:     schema.TypeList,
 							Optional: true,
+							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"integration_id": {
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 									},
 									"output_type": {
 										Type:     schema.TypeString,
@@ -85,11 +88,12 @@ func resourceNotification() *schema.Resource {
 						"scheduled_integration_settings": {
 							Type:     schema.TypeList,
 							Optional: true,
+							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"integration_id": {
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 									},
 									"output_type": {
 										Type:     schema.TypeString,
@@ -97,7 +101,7 @@ func resourceNotification() *schema.Resource {
 									},
 									"cron_expression": {
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 									},
 								},
 							},
@@ -145,25 +149,45 @@ func expandNotificationUpdateRequest(id string, d *schema.ResourceData) (notific
 }
 
 func expandIntegrationSettings(d *schema.ResourceData) (notifications.NotificationIntegrationSettingsModel, error) {
-	integrationSettings := d.Get("integration_settings").([]interface{})[0].(map[string]interface{})
+	integrationSettingsRaw := d.Get("integration_settings").([]interface{})
 
-	singleNotificationIntegrationSettings, _ := integrationSettings["single_notification_integration_settings"].([]interface{})
-	reportsIntegrationSettings, _ := integrationSettings["reports_integration_settings"].([]interface{})
-	scheduledIntegrationSettings, _ := integrationSettings["scheduled_integration_settings"].([]interface{})
+	var notificationSettings = notifications.NotificationIntegrationSettingsModel{
+		SingleNotificationIntegrationSettings: []notifications.SingleNotificationIntegrationSettings{},
+		ReportsIntegrationSettings:            []notifications.ReportNotificationIntegrationSettings{},
+		ScheduledIntegrationSettings:          []notifications.ScheduledNotificationIntegrationSettings{},
+	}
 
-	SingleNotificationIntegrationSettingsData, _ := expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSettings)
-	reportsIntegrationSettingsData, _ := expandReportsIntegrationSettings(reportsIntegrationSettings)
-	scheduledIntegrationSettingsData, _ := expandScheduledIntegrationSettings(scheduledIntegrationSettings)
+	// Check if integrationSettings is not empty
+	if len(integrationSettingsRaw) == 0 {
+		return notificationSettings, nil
+	}
 
-	return notifications.NotificationIntegrationSettingsModel{
-		SingleNotificationIntegrationSettings: SingleNotificationIntegrationSettingsData,
-		ReportsIntegrationSettings:            reportsIntegrationSettingsData,
-		ScheduledIntegrationSettings:          scheduledIntegrationSettingsData,
-	}, nil
+	integrationSettings := integrationSettingsRaw[0].(map[string]interface{})
+
+	var singleNotificationIntegrationSettings, reportsIntegrationSettings, scheduledIntegrationSettings []interface{}
+	var ok bool
+
+	if singleNotificationIntegrationSettings, ok = integrationSettings["single_notification_integration_settings"].([]interface{}); ok {
+		notificationSettings.SingleNotificationIntegrationSettings, _ = expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSettings)
+	}
+
+	if reportsIntegrationSettings, ok = integrationSettings["reports_integration_settings"].([]interface{}); ok {
+		notificationSettings.ReportsIntegrationSettings, _ = expandReportsIntegrationSettings(reportsIntegrationSettings)
+	}
+
+	if scheduledIntegrationSettings, ok = integrationSettings["scheduled_integration_settings"].([]interface{}); ok {
+		notificationSettings.ScheduledIntegrationSettings, _ = expandScheduledIntegrationSettings(scheduledIntegrationSettings)
+	}
+
+	return notificationSettings, nil
 }
 
 func expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSettings []interface{}) ([]notifications.SingleNotificationIntegrationSettings, error) {
-	var settings []notifications.SingleNotificationIntegrationSettings
+	settings := []notifications.SingleNotificationIntegrationSettings{}
+
+	if singleNotificationIntegrationSettings == nil {
+		return settings, nil
+	}
 
 	// Process single_notification_integration_settings
 	fmt.Println("Single Notification Integration Settings:")
@@ -184,7 +208,11 @@ func expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSe
 }
 
 func expandReportsIntegrationSettings(reportsIntegrationSettings []interface{}) ([]notifications.ReportNotificationIntegrationSettings, error) {
-	var settings []notifications.ReportNotificationIntegrationSettings
+	settings := []notifications.ReportNotificationIntegrationSettings{}
+
+	if reportsIntegrationSettings == nil {
+		return settings, nil
+	}
 
 	// Process reports_integration_settings
 	fmt.Println("Reports Integration Settings:")
@@ -204,7 +232,11 @@ func expandReportsIntegrationSettings(reportsIntegrationSettings []interface{}) 
 }
 
 func expandScheduledIntegrationSettings(scheduledIntegrationSettings []interface{}) ([]notifications.ScheduledNotificationIntegrationSettings, error) {
-	var settings []notifications.ScheduledNotificationIntegrationSettings
+	settings := []notifications.ScheduledNotificationIntegrationSettings{}
+
+	if scheduledIntegrationSettings == nil {
+		return settings, nil
+	}
 
 	// Process scheduled_integration_settings
 	fmt.Println("Scheduled Integration Settings:")
