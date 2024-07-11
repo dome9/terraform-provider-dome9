@@ -33,10 +33,10 @@ module "terraform-dome9-awp-azure" {
 
 	# Optional customizations:
 	# e.g:
-      # management_group_id = "management group id" # relevat only for inAccountHub mode
-      # 
-      # the following parameter is required for "InAccountSub" scan mode
-      # awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # centralized account-id where AWP scanner runs
+        # management_group_id = "management group id" # relevat only for inAccountHub mode
+        # 
+        # the following parameter is required for "InAccountSub" scan mode
+        # awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # centralized account-id where AWP scanner runs
 
 	# Optional account Settings
 	# e.g:
@@ -68,7 +68,7 @@ module "terraform-dome9-awp-azure" {
 resource "dome9_awp_azure_onboarding" "awp_azure_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_azure.azure_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <AZURE_SUBSCRIPTION_ID>"
   scan_mode = "<SCAN_MODE>" # Possible values: "inAccount", "saas", "inAccountHub", "inAccountSub"
- awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # required for "InAccountSub" scan mode, it is the centralized account-id where AWP scanner runs
+  awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # required for "InAccountSub" scan mode, it is the centralized account-id where AWP scanner runs
 
   # Optional account Settings (supported for 'inAccount', 'inAccountSub' and 'saas' scan modes)
   # e.g:
