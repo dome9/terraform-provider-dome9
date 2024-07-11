@@ -33,10 +33,10 @@ module "terraform-dome9-awp-azure" {
 
 	# Optional customizations:
 	# e.g:
-  # management_group_id = "management group id" # relevat only for inAccountHub mode
-  # 
-  # the following parameter is required for "InAccountSub" scan mode
-  # awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # centralized account-id where AWP scanner runs
+    # management_group_id = "management group id" # relevat only for inAccountHub mode
+    # 
+    # the following parameter is required for "InAccountSub" scan mode
+    # awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # centralized account-id where AWP scanner runs
 
 	# Optional account Settings
 	# e.g:
@@ -68,7 +68,7 @@ module "terraform-dome9-awp-azure" {
 resource "dome9_awp_azure_onboarding" "awp_azure_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_azure.azure_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <AZURE_SUBSCRIPTION_ID>"
   scan_mode = "<SCAN_MODE>" # Possible values: "inAccount", "saas", "inAccountHub", "inAccountSub"
-	awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # required for "InAccountSub" scan mode, it is the centralized account-id where AWP scanner runs
+awp_centralized_account_id = "<CENTRALIZED_CLOUD_ACCOUNT_ID> or <CENTRALIZED_AZURE_SUBSCRIPTION_ID>" # required for "InAccountSub" scan mode, it is the centralized account-id where AWP scanner runs
 
   # Optional account Settings (supported for 'inAccount', 'inAccountSub' and 'saas' scan modes)
   # e.g:
@@ -100,7 +100,7 @@ The following arguments are supported:
 * `awp_centralized_account_id` - (Optional) The centralized cloud account id, required (and only relevant) for "inAccountSub" scan mode
 * `management_group_id` -  the management group id, relevat only for inAccountHub mode.
 * `agentless_account_settings` - (Optional) The agentless account settings.
-  * `disabled_regions` - (Optional) The disabled regions. valid values are "af-south-1", "ap-south-1", "eu-north-1", "eu-west-3", "eu-south-1", "eu-west-2", "eu-west-1", "ap-northeast-3", "ap-northeast-2", "me-south-1", "ap-northeast-1", "me-central-1", "ca-central-1", "sa-east-1", "ap-east-1", "ap-southeast-1", "ap-southeast-2", "eu-central-1", "ap-southeast-3", "us-east-1", "us-east-2", "us-west-1", "us-west-2"
+  * `disabled_regions` - (Optional) The disabled regions. valid values are "centralus", "eastus", "eastus2", "usgovlowa", "usgovvirginia", "northcentralus", "southcentralus", "westus", "westus2", "westcentralus", "northeurope", "westeurope", "eastasia", "southeastasia", "japaneast", "japanwest", "brazilsouth", "australiaeast", "australiasoutheast", "centralindia", "southindia", "westindia", "chinaeast", "chinanorth", "canadacentral", "canadaeast", "germanycentral", "germanynortheast", "koreacentral", "uksouth", "ukwest", "koreasouth"
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
   * `skip_function_apps_scan` - (Optional) Skip Azure Function Apps scan (supported for inAccount and inAccountSub scan modes)
   * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
