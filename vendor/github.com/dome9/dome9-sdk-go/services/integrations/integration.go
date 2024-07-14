@@ -10,9 +10,28 @@ const (
 	RESTfulServicePathIntegration = "integration"
 )
 
+type IntegrationType string
+
+const (
+	IntegrationTypeSNS                      IntegrationType = "SNS"
+	IntegrationTypeEmail                    IntegrationType = "Email"
+	IntegrationTypePagerDuty                IntegrationType = "PagerDuty"
+	IntegrationTypeAwsSecurityHub           IntegrationType = "AwsSecurityHub"
+	IntegrationTypeAzureDefender            IntegrationType = "AzureDefender"
+	IntegrationTypeGcpSecurityCommandCenter IntegrationType = "GcpSecurityCommandCenter"
+	IntegrationTypeWebhook                  IntegrationType = "Webhook"
+	IntegrationTypeServiceNow               IntegrationType = "ServiceNow"
+	IntegrationTypeSplunk                   IntegrationType = "Splunk"
+	IntegrationTypeJira                     IntegrationType = "Jira"
+	IntegrationTypeSumoLogic                IntegrationType = "SumoLogic"
+	IntegrationTypeQRadar                   IntegrationType = "QRadar"
+	IntegrationTypeSlack                    IntegrationType = "Slack"
+	IntegrationTypeTeams                    IntegrationType = "Teams"
+)
+
 type IntegrationPostRequestModel struct {
 	Name          string          `json:"name" validate:"required"`
-	Type          string          `json:"type" validate:"required"`
+	Type          IntegrationType `json:"type" validate:"required"`
 	Configuration json.RawMessage `json:"configuration" validate:"required"`
 }
 
@@ -23,7 +42,7 @@ func (m IntegrationPostRequestModel) String() string {
 type IntegrationUpdateRequestModel struct {
 	Id            string          `json:"id" validate:"required"`
 	Name          string          `json:"name" validate:"required"`
-	Type          string          `json:"type" validate:"required"`
+	Type          IntegrationType `json:"type" validate:"required"`
 	Configuration json.RawMessage `json:"configuration" validate:"required"`
 }
 
@@ -34,7 +53,7 @@ func (m IntegrationUpdateRequestModel) String() string {
 type IntegrationViewModel struct {
 	Id            string          `json:"id" validate:"required"`
 	Name          string          `json:"name" validate:"required"`
-	Type          string          `json:"type" validate:"required"`
+	Type          IntegrationType `json:"type" validate:"required"`
 	CreatedAt     string          `json:"createdAt"`
 	Configuration json.RawMessage `json:"configuration" validate:"required"`
 }
