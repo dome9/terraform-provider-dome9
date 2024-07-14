@@ -79,7 +79,7 @@ func expandIntegrationUpdateRequest(id string, d *schema.ResourceData) (integrat
 	putModel := integrations.IntegrationUpdateRequestModel{
 		Id:            id,
 		Name:          d.Get("name").(string),
-		Type:          d.Get("type").(string),
+		Type:          integrations.IntegrationType(d.Get("type").(string)),
 		Configuration: []byte(d.Get("configuration").(string)),
 	}
 
@@ -90,7 +90,7 @@ func expandIntegrationCreateRequest(d *schema.ResourceData) (integrations.Integr
 
 	postModel := integrations.IntegrationPostRequestModel{
 		Name:          d.Get("name").(string),
-		Type:          d.Get("type").(string),
+		Type:          integrations.IntegrationType(d.Get("type").(string)),
 		Configuration: []byte(d.Get("configuration").(string)),
 	}
 
