@@ -102,6 +102,7 @@ github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy
 github.com/dome9/dome9-sdk-go/services/assessment
 github.com/dome9/dome9-sdk-go/services/awp
 github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding
+github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding
 github.com/dome9/dome9-sdk-go/services/cloudaccounts
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws

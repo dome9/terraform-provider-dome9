@@ -3,10 +3,10 @@ package dome9
 import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
 	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
+  "github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
 	"github.com/dome9/dome9-sdk-go/services/notifications"
 	"log"
-
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
@@ -58,6 +58,7 @@ type Client struct {
 	assessment                       assessment.Service
 	awpAwsOnboarding                 awp_aws_onboarding.Service
 	awsOrganizationOnboarding        aws_org.Service
+  awpAzureOnboarding               awp_azure_onboarding.Service
 }
 
 type Config struct {
@@ -96,6 +97,7 @@ func (c *Config) Client() (*Client, error) {
 		assessment:                       *assessment.New(config),
 		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
 		awsOrganizationOnboarding:        *aws_org.New(config),
+    awpAzureOnboarding:               *awp_azure_onboarding.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
