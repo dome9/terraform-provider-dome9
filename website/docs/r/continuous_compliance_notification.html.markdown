@@ -7,6 +7,10 @@ description: |- Creates continuous compliance notification in Dome9
 
 # dome9_continuous_compliance_notification
 
+
+**Notice: This resource is obsolete due to changes in the lifecycle of the API. It will be partially supported until its end of life on January 1, 2025.
+The functionality for this resource has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/data-sources/notification).**
+
 This resource is used to create and modify Dome9 notification policies for Continuous Compliance assessments of cloud
 accounts. Continuous assessments apply bundles of compliance rules to your cloud account continuously, and send
 notifications of issues according to the Notification Policy.

@@ -8,6 +8,9 @@ description: |-
 
 # Data Source: dome9_continuous_compliance_notification
 
+**Notice: This resource is obsolete due to changes in the lifecycle of the API. It will be partially supported until its end of life on January 1, 2025.
+The functionality for this resource has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/resources/notification).**
+
 Use this data source to get information about a Dome9 continuous compliance notification policy.
 
 ## Example Usage
