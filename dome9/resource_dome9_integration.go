@@ -1,10 +1,13 @@
 ﻿package dome9
 
 import (
+	"encoding/json"
 	"github.com/dome9/dome9-sdk-go/services/integrations"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"log"
+	"sort"
+	"strings"
 )
 
 func resourceIntegration() *schema.Resource {
@@ -32,6 +35,43 @@ func resourceIntegration() *schema.Resource {
 			},
 		},
 	}
+}
+
+// Helper functions
+func trimAndSortJSONKeys(rawMessage json.RawMessage) (json.RawMessage, error) {
+	// Unmarshal the JSON into a map
+	var jsonMap map[string]interface{}
+	if err := json.Unmarshal(rawMessage, &jsonMap); err != nil {
+		return nil, err
+	}
+
+	// Create a new map with trimmed keys
+	trimmedMap := make(map[string]interface{})
+	for k, v := range jsonMap {
+		trimmedKey := strings.TrimSpace(k)
+		trimmedMap[trimmedKey] = v
+	}
+
+	// Get the keys and sort them
+	keys := make([]string, 0, len(trimmedMap))
+	for k := range trimmedMap {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	// Create a sorted map
+	sortedMap := make(map[string]interface{}, len(trimmedMap))
+	for _, k := range keys {
+		sortedMap[k] = trimmedMap[k]
+	}
+
+	// Marshal the sorted map back into a json.RawMessage
+	sortedJSON, err := json.Marshal(sortedMap)
+	if err != nil {
+		return nil, err
+	}
+
+	return json.RawMessage(sortedJSON), nil
 }
 
 // Expansion functions
@@ -89,7 +129,13 @@ func resourceIntegrationRead(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(resp.Id)
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("type", resp.Type)
-	_ = d.Set("configuration", string(resp.Configuration))
+	// _ = d.Set("configuration", string(resp.Configuration))
+
+	trimmedConfiguration, err := trimAndSortJSONKeys(resp.Configuration)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("configuration", string(trimmedConfiguration))
 
 	return nil
 }

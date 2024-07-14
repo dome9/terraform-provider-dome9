@@ -132,7 +132,7 @@ configuration = jsonencode({
     AuthType           = "%s"
     Username           = "%s"
     Password           = "%s"
-    IgnoreCertificate  = "%s"
+    IgnoreCertificate  = %s
   })
 `,
 		variable.IntegrationName+"_"+integrationNameSuffix,
@@ -157,7 +157,7 @@ configuration = jsonencode({
     AuthType           = "%s"
     Username           = "%s"
     Password           = "%s"
-    IgnoreCertificate  = "%s"
+    IgnoreCertificate  = %s
   })
 `,
 		variable.IntegrationUpdateName+"_"+integrationSuffixName,
