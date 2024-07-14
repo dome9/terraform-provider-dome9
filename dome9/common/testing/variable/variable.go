@@ -103,6 +103,27 @@ const (
 	NotificationUpdateAlertsConsole = true
 )
 
+// Integration resource/data source
+const (
+	IntegrationName              = "test_integration_tf"
+	IntegrationType              = "Webhook"
+	IntegrationUrl               = "https://webhook.site/test"
+	IntegrationMethodType        = "Post"
+	IntegrationAuthType          = "BasicAuth"
+	IntegrationUsername          = "yogev"
+	IntegrationPassword          = "password"
+	IntegrationIgnoreCertificate = true
+
+	// update const
+	IntegrationUpdateName              = "test_integration_update"
+	IntegrationUpdateUrl               = "https://webhook.site/test"
+	IntegrationUpdateMethodType        = "Post"
+	IntegrationUpdateAuthType          = "BasicAuth"
+	IntegrationUpdateUsername          = "usr"
+	IntegrationUpdatePassword          = "password123"
+	IntegrationUpdateIgnoreCertificate = false
+)
+
 // continuous Compliance Policy resource/data source
 const (
 	ContinuousCompliancePolicyRulesetId = -14

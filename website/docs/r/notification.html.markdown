@@ -70,3 +70,4 @@ This resource can be imported using the notification ID, which can be found in t
 
 ```shell
 terraform import dome9_notification.example <NOTIFICATION_ID>
+```
