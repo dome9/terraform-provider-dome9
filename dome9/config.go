@@ -2,9 +2,10 @@ package dome9
 
 import (
 	"github.com/dome9/dome9-sdk-go/services/assessment"
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
-  "github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
   "github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
+	"github.com/dome9/dome9-sdk-go/services/notifications"
 	"log"
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
@@ -43,6 +44,7 @@ type Client struct {
 	cloudaccountOci                  oci.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
+	notifications                    notifications.Service
 	ruleSet                          rulebundles.Service
 	awsSecurityGroup                 securitygroupaws.Service
 	role                             roles.Service
@@ -81,6 +83,7 @@ func (c *Config) Client() (*Client, error) {
 		cloudaccountKubernetes:           *k8s.New(config),
 		continuousCompliancePolicy:       *continuous_compliance_policy.New(config),
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
+		notifications:                    *notifications.New(config),
 		ruleSet:                          *rulebundles.New(config),
 		awsSecurityGroup:                 *securitygroupaws.New(config),
 		role:                             *roles.New(config),
