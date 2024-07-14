@@ -1,16 +1,3 @@
-terraform {
-	required_providers {
-		dome9 = {
-			source = "dome9/dome9"
-			version = ">=1.29.7"
-		}
-		aws = {
-			source  = "hashicorp/aws"
-			version = ">= 3.0"
-		}
-	}
-}
-
 # The Dome9 provider is used to interact with the resources supported by Dome9.
 # The provider needs to be configured with the proper credentials before it can be used.
 # Use the dome9_access_id and dome9_secret_key attributes of the provider to provide the Dome9 access key and secret key.
