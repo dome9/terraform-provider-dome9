@@ -10,6 +10,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"strconv"
 	"testing"
+	"time"
 )
 
 func TestAccResourceNotificationBasic(t *testing.T) {
@@ -59,6 +60,7 @@ func testAccCheckNotificationExists(resource string, notification *notifications
 		}
 
 		apiClient := testAccProvider.Meta().(*Client)
+		time.Sleep(1 * time.Second)
 		receivedNotificationResponse, _, err := apiClient.notifications.GetById(rs.Primary.ID)
 
 		if err != nil {

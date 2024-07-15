@@ -5,6 +5,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
   "github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
+	"github.com/dome9/dome9-sdk-go/services/integrations"
 	"github.com/dome9/dome9-sdk-go/services/notifications"
 	"log"
 	"github.com/dome9/dome9-sdk-go/dome9"
@@ -44,6 +45,7 @@ type Client struct {
 	cloudaccountOci                  oci.Service
 	continuousCompliancePolicy       continuous_compliance_policy.Service
 	continuousComplianceNotification continuous_compliance_notification.Service
+	integration                      integrations.Service
 	notifications                    notifications.Service
 	ruleSet                          rulebundles.Service
 	awsSecurityGroup                 securitygroupaws.Service
@@ -84,6 +86,7 @@ func (c *Config) Client() (*Client, error) {
 		continuousCompliancePolicy:       *continuous_compliance_policy.New(config),
 		continuousComplianceNotification: *continuous_compliance_notification.New(config),
 		notifications:                    *notifications.New(config),
+		integration:                      *integrations.New(config),
 		ruleSet:                          *rulebundles.New(config),
 		awsSecurityGroup:                 *securitygroupaws.New(config),
 		role:                             *roles.New(config),
