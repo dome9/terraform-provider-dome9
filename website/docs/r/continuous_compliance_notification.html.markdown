@@ -7,13 +7,151 @@ description: |- Creates continuous compliance notification in Dome9
 
 # dome9_continuous_compliance_notification
 
+---
 
 **Notice: This resource is obsolete due to changes in the lifecycle of the API. It will be partially supported until its end of life on January 1, 2025.
 The functionality for this resource has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/data-sources/notification).**
 
+
+## How to Migrate to the new resource
+
+dome9_continuous_compliance_notification to dome9_notification:
+
+### Step 1: Remove the old resource from the state
+
+Remove the old resource from the Terraform state. This step ensures that Terraform no longer tracks the existing dome9_continuous_compliance_notification resource.
+
+Run the following command to remove the old resource from the state:
+
+```
+terraform state rm dome9_continuous_compliance_notification.<old_resource_name>
+```
+
+*Replace <old_resource_name> with the actual name of your resource.
+
+To verify the resource removal using the following command:
+
+```
+terraform state list
+```
+
+### Step 2: Create the new resource in the new format
+
+Create a new dome9_notification resource that matches the old resource data but adheres to the new resource format.\
+Below is an example of how you can define the new resource based on the available documentation.
+
+Here's a template you can use:
+
+```
+resource "dome9_notification" "<new_resource_name>" {
+# Map the old resource data to the new format
+# Add other necessary fields and configurations
+
+  name                    = "<name>"
+  description             = "This is an example notification."
+  alerts_console          = true
+  send_on_each_occurrence = false
+
+  integration_settings {
+    single_notification_integration_settings {
+      integration_id = "example-integration-id-1"
+      output_type    = "Default"
+    }
+
+    reports_integration_settings {
+      integration_id = "example-integration-id-2"
+      output_type    = "Default"
+    }
+
+    scheduled_integration_settings {
+      integration_id  = "example-integration-id-3"
+      output_type     = "Detailed"
+      cron_expression = "0 0 22 * * ?"
+    }
+  }
+}
+```
+
+Replace <new_resource_name>, <name>, and any other necessary fields with the appropriate values from your old resource configuration.
+
+### Step 3: Remove the old resource from the Terraform file
+
+Open the Terraform configuration file (typically main.tf) and locate the dome9_continuous_compliance_notification resource. Remove the entire block of code that defines this resource.
+
+For example:
+
+```
+resource "dome9_continuous_compliance_notification" "<old_resource_name>" {
+  # Resource configuration
+}
+```
+
+Remove the above block from your configuration file.
+
+### Step 4: Import the state of the entity to the recreated resource
+
+Lastly, import the existing resource state into the new dome9_notification resource. This step ensures that Terraform starts managing the new resource without making unnecessary changes.
+
+Run the following command to import the state:
+
+```
+terraform import dome9_notification.<new_resource_name> <entity_id>
+```
+
+Replace <new_resource_name> with the name of your new resource and <entity_id> with the ID of the existing entity. You can find the entity ID from the CloudGuard console or the previous state file.
+
+Example
+-------
+
+Here's a complete example assuming your old resource name was compliance_alert and your new resource name is notification_alert:
+
+**Remove the old resource from the state:**
+
+```
+terraform state rm dome9_continuous_compliance_notification.compliance_alert
+```
+
+**Remove the old resource from the Terraform file:**
+
+Remove the following block:
+
+```
+resource "dome9_continuous_compliance_notification" "compliance_alert" {
+  name  = "Alert"
+  # Other configurations
+}
+```
+
+**Create the new resource in the new format:**
+
+Add the following block:
+
+```
+resource "dome9_notification" "notification_alert" {
+  name  = "Alert"
+  # Other configurations matching the new format
+}
+```
+
+**Import the state of the entity to the recreated resource:**
+
+```
+terraform import dome9_notification.notification_alert <entity_id>
+```
+
+Replace <entity_id> with the actual ID of the entity.
+
+Following these steps, you can successfully convert your Terraform resource from dome9_continuous_compliance_notification to dome9_notification. If you have any specific configurations or fields in the old resource, map them correctly to the new resource format.
+
+---
+
 This resource is used to create and modify Dome9 notification policies for Continuous Compliance assessments of cloud
 accounts. Continuous assessments apply bundles of compliance rules to your cloud account continuously, and send
 notifications of issues according to the Notification Policy.
+
+## Example Usage
+
+```hcl
 
 ## Example Usage
 

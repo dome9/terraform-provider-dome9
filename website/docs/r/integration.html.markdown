@@ -6,7 +6,7 @@ description: |-
   Creates and manages CloudGuard integrations.
 ---
 
-# dome9\_integration
+# dome9_integration
 
 This resource is used to create and manage CloudGuard integrations. Integrations in CloudGuard allow you to connect and configure supported third-party services and tools.
 

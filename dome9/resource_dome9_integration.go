@@ -97,8 +97,6 @@ func expandIntegrationCreateRequest(d *schema.ResourceData) (integrations.Integr
 	return postModel, nil
 }
 
-// CRUD API
-
 func resourceIntegrationCreate(d *schema.ResourceData, meta interface{}) error {
 	d9Client := meta.(*Client)
 	req, err := expandIntegrationCreateRequest(d)
@@ -129,7 +127,6 @@ func resourceIntegrationRead(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(resp.Id)
 	_ = d.Set("name", resp.Name)
 	_ = d.Set("type", resp.Type)
-	// _ = d.Set("configuration", string(resp.Configuration))
 
 	trimmedConfiguration, err := trimAndSortJSONKeys(resp.Configuration)
 	if err != nil {
