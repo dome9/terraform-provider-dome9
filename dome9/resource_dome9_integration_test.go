@@ -10,6 +10,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"strconv"
 	"testing"
+	"time"
 )
 
 func TestAccResourceIntegrationBasic(t *testing.T) {
@@ -55,6 +56,7 @@ func testAccCheckIntegrationExists(resource string, integration *integrations.In
 		}
 
 		apiClient := testAccProvider.Meta().(*Client)
+		time.Sleep(1 * time.Second)
 		receivedIntegrationResponse, _, err := apiClient.integration.GetById(rs.Primary.ID)
 
 		if err != nil {
