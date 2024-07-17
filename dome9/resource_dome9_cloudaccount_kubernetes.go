@@ -89,6 +89,20 @@ func resourceCloudAccountKubernetes() *schema.Resource {
 					},
 				},
 			},
+			"image_access_runtime_monitor": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+					},
+				},
+			},
 			"threat_intelligence": {
 				Type:     schema.TypeList,
 				MaxItems: 1,
@@ -155,6 +169,7 @@ func resourceCloudAccountKubernetesRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
 	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
 	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
+	_ = d.Set("image_access_runtime_monitor", expandImageAccessRuntimeMonitorConfig(resp))
 	_ = d.Set("threat_intelligence", expandThreatIntelligenceConfig(resp))
 
 	return nil
@@ -237,6 +252,13 @@ func featuresCreate(d *schema.ResourceData, d9Client *Client, newId string) erro
 		}
 	}
 
+	imageAccessRuntimeMonitor, ok := d.GetOk("image_access_runtime_monitor")
+	if ok {
+		if err := configureImageAccessRuntimeMonitor(imageAccessRuntimeMonitor, newId, d9Client); err != nil {
+			return err
+		}
+	}
+
 	ThreatIntelligence, ok := d.GetOk("threat_intelligence")
 	if ok {
 		if err := configureThreatIntelligence(ThreatIntelligence, newId, d9Client); err != nil {
@@ -275,6 +297,15 @@ func featuresUpdate(d *schema.ResourceData, d9Client *Client) error {
 		}
 	}
 
+	if d.HasChange("image_access_runtime_monitor") {
+		log.Println("Image Access Runtime Monitor has been changed")
+
+		imageAccessRuntimeMonitor := d.Get("image_access_runtime_monitor")
+		if err := configureImageAccessRuntimeMonitor(imageAccessRuntimeMonitor, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("threat_intelligence") {
 		log.Println("Threat Intelligence has been changed")
 
@@ -297,6 +328,13 @@ func featuresDelete(d *schema.ResourceData, d9Client *Client) error {
 	admissionControl, ok := d.GetOk("admission_control")
 	if ok {
 		if err := disableAdmissionControlIfEnabled(admissionControl, d.Id(), d9Client); err != nil {
+			return err
+		}
+	}
+
+	imageAccessRuntimeMonitor, ok := d.GetOk("image_access_runtime_monitor")
+	if ok {
+		if err := disableImageAccessRuntimeMonitorIfEnabled(imageAccessRuntimeMonitor, d.Id(), d9Client); err != nil {
 			return err
 		}
 	}
@@ -350,6 +388,18 @@ func configureImageAssurance(ImageAssurance interface{}, clusterId string, d9Cli
 
 	return nil
 }
+
+func configureImageAccessRuntimeMonitor(ImageAccessRuntimeMonitor interface{}, clusterId string, d9Client *Client) error {
+	ImageAccessRuntimeMonitorConfig := ImageAccessRuntimeMonitor.([]interface{})[0].(map[string]interface{})
+	req := createImageAccessRuntimeMonitorEnableRequest(clusterId, ImageAccessRuntimeMonitorConfig["enabled"].(bool))
+	log.Println("[INFO] Configuring Image Access Runtime Monitor for Kubernetes Cloud Account")
+	if _, err := d9Client.cloudaccountKubernetes.EnableImageAccessRuntimeMonitor(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func configureThreatIntelligence(ThreatIntelligence interface{}, clusterId string, d9Client *Client) error {
 	ThreatIntelligenceConfig := ThreatIntelligence.([]interface{})[0].(map[string]interface{})
 	req := createThreatIntelligenceEnableRequest(clusterId, ThreatIntelligenceConfig["enabled"].(bool))
@@ -381,6 +431,14 @@ func createImageAssuranceEnableRequest(clusterId string, enabled bool) k8s.Image
 		Enabled:        enabled,
 	}
 }
+
+func createImageAccessRuntimeMonitorEnableRequest(clusterId string, enabled bool) k8s.ImageAccessRuntimeMonitorEnableRequest {
+	return k8s.ImageAccessRuntimeMonitorEnableRequest{
+		CloudAccountId: clusterId,
+		Enabled:        enabled,
+	}
+}
+
 func createThreatIntelligenceEnableRequest(clusterId string, enabled bool) k8s.ThreatIntelligenceEnableRequest {
 	return k8s.ThreatIntelligenceEnableRequest{
 		CloudAccountId: clusterId,
@@ -409,6 +467,14 @@ func expandImageAssuranceConfig(resp *k8s.CloudAccountResponse) []interface{} {
 	ImageAssuranceConfig["enabled"] = resp.ImageAssuranceEnabled
 
 	return []interface{}{ImageAssuranceConfig}
+}
+
+func expandImageAccessRuntimeMonitorConfig(resp *k8s.CloudAccountResponse) []interface{} {
+	ImageAccessRuntimeMonitorConfig := make(map[string]interface{})
+
+	ImageAccessRuntimeMonitorConfig["enabled"] = resp.ImageAccessRuntimeMonitorEnabled
+
+	return []interface{}{ImageAccessRuntimeMonitorConfig}
 }
 
 func expandThreatIntelligenceConfig(resp *k8s.CloudAccountResponse) []interface{} {
@@ -454,6 +520,20 @@ func disableImageAssuranceIfEnabled(ImageAssurance interface{}, clusterId string
 		req := createImageAssuranceEnableRequest(clusterId, false)
 		log.Println("[INFO] Disabling Image Assurance for Kubernetes Cloud Account")
 		if _, err := d9Client.cloudaccountKubernetes.EnableImageAssurance(req); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func disableImageAccessRuntimeMonitorIfEnabled(ImageAccessRuntimeMonitor interface{}, clusterId string, d9Client *Client) error {
+	ImageAccessRuntimeMonitorConfig := ImageAccessRuntimeMonitor.([]interface{})[0].(map[string]interface{})
+
+	if ImageAccessRuntimeMonitorConfig["enabled"].(bool) {
+		req := createImageAccessRuntimeMonitorEnableRequest(clusterId, false)
+		log.Println("[INFO] Disabling Image Access Runtime Monitor for Kubernetes Cloud Account")
+		if _, err := d9Client.cloudaccountKubernetes.EnableImageAccessRuntimeMonitor(req); err != nil {
 			return err
 		}
 	}
