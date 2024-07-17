@@ -83,6 +83,19 @@ func dataSourceCloudAccountKubernetes() *schema.Resource {
 					},
 				},
 			},
+			"image_access_runtime_monitor": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+					},
+				},
+			},
 			"threat_intelligence": {
 				Type:     schema.TypeList,
 				MaxItems: 1,
@@ -122,6 +135,7 @@ func dataSourceKubernetesRead(d *schema.ResourceData, meta interface{}) error {
 	_ = d.Set("runtime_protection", expandRuntimeProtectionConfig(resp))
 	_ = d.Set("admission_control", expandAdmissionControlConfig(resp))
 	_ = d.Set("image_assurance", expandImageAssuranceConfig(resp))
+	_ = d.Set("image_access_runtime_monitor", expandImageAccessRuntimeMonitorConfig(resp))
 	_ = d.Set("threat_intelligence", expandThreatIntelligenceConfig(resp))
 	return nil
 }
