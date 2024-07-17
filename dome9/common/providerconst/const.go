@@ -79,6 +79,7 @@ const (
 	OrganizationalUnit = "12"
 )
 
+// AWS regions
 const (
 	US_EAST_1           = "0"
 	US_WEST_1           = "1"
@@ -116,6 +117,7 @@ const (
 	EU_CENTRAL_2        = "33"
 	EU_SOUTH_2          = "34"
 	IL_CENTRAL_1        = "35"
+	CA_WEST_1           = "36"
 )
 
 // Azure consts
@@ -192,6 +194,7 @@ var AWSRegionsEnum = map[string]string{
 	"eu_central_2":        EU_CENTRAL_2,
 	"eu_south_2":          EU_SOUTH_2,
 	"il_central_1":        IL_CENTRAL_1,
+	"ca_west_1":           CA_WEST_1,
 }
 
 var PermissionTrafficType = map[string]string{

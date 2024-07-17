@@ -139,6 +139,10 @@ resource "dome9_cloudaccount_aws" "test" {
       new_group_behavior = "ReadOnly"
       region             = "il_central_1"
     }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ca_west_1"
+    }
   }
 }
 ```
