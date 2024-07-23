@@ -61,7 +61,7 @@ The following arguments are supported:
 ### SRL 
 * `type` - (Optional) Accepted values: AWS, Azure, GCP, OrganizationalUnit.
 * `main_id` - (Optional) Cloud Account or Organizational Unit ID.
-* `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "il_central_1", "spain_central", "italy_north", "poland_central", "poland_central".
+* `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "il_central_1".
 * `security_group_id` - (Optional) AWS Security Group ID.
 * `traffic` - (Optional) Accepted values: "All Traffic", "All Services".
 
