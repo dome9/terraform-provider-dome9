@@ -10,7 +10,7 @@ description: |- Creates continuous compliance notification in Dome9
 ---
 
 **Notice: This resource is obsolete due to changes in the lifecycle of the API. It will be partially supported until its end of life on January 1, 2025.
-The functionality for this resource has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/data-sources/notification).**
+The functionality for this resource has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/resources/notification).**
 
 
 ## How to Migrate to the new resource
