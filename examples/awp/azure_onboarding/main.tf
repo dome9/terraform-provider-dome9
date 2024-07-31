@@ -11,7 +11,6 @@ provider "dome9" {
 	base_url            = "https://api.dome9.com/v2/"
 }
 
-
 # Onboarding Azure Account to CloudGuard Dome9 Account
 # This resource is optional and can be ignored and you need to pass CloudGuard account id to the module directly at the parameter awp_cloud_account_id.
 # to know how to get the credentials for the onboarding process, please refer to the following link:
