@@ -121,7 +121,7 @@ const (
 )
 
 // Azure consts
-var AzureSecurityGroupRegions = []string{"centralus", "eastus", "eastus2", "usgovlowa", "usgovvirginia", "northcentralus", "southcentralus", "westus", "westus2", "westcentralus", "northeurope", "westeurope", "eastasia", "southeastasia", "japaneast", "japanwest", "brazilsouth", "australiaeast", "australiasoutheast", "centralindia", "southindia", "westindia", "chinaeast", "chinanorth", "canadacentral", "canadaeast", "germanycentral", "germanynortheast", "koreacentral", "uksouth", "ukwest", "koreasouth"}
+var AzureSecurityGroupRegions = []string{"centralus", "eastus", "eastus2", "usgovlowa", "usgovvirginia", "northcentralus", "southcentralus", "westus", "westus2", "westcentralus", "northeurope", "westeurope", "eastasia", "southeastasia", "japaneast", "japanwest", "brazilsouth", "australiaeast", "australiasoutheast", "centralindia", "southindia", "westindia", "chinaeast", "chinanorth", "canadacentral", "canadaeast", "germanycentral", "germanynortheast", "koreacentral", "uksouth", "ukwest", "koreasouth", "spaincentral", "italynorth", "polandcentral", "polandcentral"}
 var AzureSecurityGroupAccess = []string{"Allow", "Deny"}
 var AzureSecurityGroupProtocol = []string{"UDP", "TCP", "ANY"}
 var AzureSecurityGroupSourceScopeTypes = []string{"CIDR", "IPList", "Tag"}
