@@ -61,64 +61,82 @@ type GetAWPOnboardingResponse struct {
 
 // Common functionality
 
-func CreateAWPOnboarding(client *client.Client, req interface{}, path string, queryParams CreateOptions) (*http.Response, error) {
-	// Define the maximum number of retries and the interval between retries
-	maxRetries := 3
-	retryInterval := time.Second * 5
-
-	// Initialize the response and error variables outside the loop
+func retryRequest(f func() (*http.Response, error), maxRetries int, retryInterval time.Duration) (*http.Response, error) {
 	var resp *http.Response
 	var err error
 
-	// Attempt the request up to maxRetries times
+
 	for i := 0; i < maxRetries; i++ {
-		// Make the request
-		resp, err = client.NewRequestDo("POST", path, queryParams, req, nil)
+		resp, err = f()
 		if err == nil {
-			// If the request was successful, return the response
+	
 			return resp, nil
 		}
 
-		// If the request failed with a 404 status code, wait for the retry interval before trying again
-		if resp != nil && resp.StatusCode == 404 {
+		if resp != nil && (resp.StatusCode >= 400 && resp.StatusCode < 500) {
 			time.Sleep(retryInterval)
 		} else {
-			// If the status code is not 404, return the response and error immediately
+		
 			return resp, err
 		}
 	}
 
-	// If the function hasn't returned after maxRetries, return an error
-	return nil, fmt.Errorf("failed to create AWP Onboarding after %d attempts: %w", maxRetries, err)
+	return nil, fmt.Errorf("request failed after %d attempts: %w", maxRetries, err)
 }
+
+
+func CreateAWPOnboarding(client *client.Client, req interface{}, path string, queryParams CreateOptions) (*http.Response, error) {
+	maxRetries := 3
+	retryInterval := time.Second * 5
+
+	f := func() (*http.Response, error) {
+		return client.NewRequestDo("POST", path, queryParams, req, nil)
+	}
+
+	return retryRequest(f, maxRetries, retryInterval)
+}
+
 
 func GetAWPOnboarding(client *client.Client, cloudProvider string, id string) (*GetAWPOnboardingResponse, *http.Response, error) {
 	v := new(GetAWPOnboardingResponse)
 	path := fmt.Sprintf(OnboardingResourcePath, cloudProvider, id)
-	resp, err := client.NewRequestDo("GET", path, nil, nil, v)
+	maxRetries := 3
+	retryInterval := time.Second * 5
+
+	f := func() (*http.Response, error) {
+		return client.NewRequestDo("GET", path, nil, nil, v)
+	}
+
+	resp, err := retryRequest(f, maxRetries, retryInterval)
 	if err != nil {
 		return nil, nil, err
 	}
+
 	return v, resp, nil
 }
 
+
 func DeleteAWPOnboarding(client *client.Client, cloudProvider string, id string, queryParams DeleteOptions) (*http.Response, error) {
 	path := fmt.Sprintf(OnboardingResourcePath, cloudProvider, id)
-	resp, err := client.NewRequestDo("DELETE", path, queryParams, nil, nil)
-	if err != nil {
-		return nil, err
+	maxRetries := 3
+	retryInterval := time.Second * 5
+
+	f := func() (*http.Response, error) {
+		return client.NewRequestDo("DELETE", path, queryParams, nil, nil)
 	}
-	return resp, nil
+
+	return retryRequest(f, maxRetries, retryInterval)
 }
 
+
 func UpdateAWPSettings(client *client.Client, cloudProvider string, id string, req AgentlessAccountSettings) (*http.Response, error) {
-	// Construct the URL path
 	path := fmt.Sprintf(OnboardingResourcePath, cloudProvider, id)
-	// Make a PATCH request with the JSON body
-	resp, err := client.NewRequestDo("PATCH", fmt.Sprintf("%s/settings", path), nil, req, nil)
-	if err != nil {
-		return nil, err
+	maxRetries := 3
+	retryInterval := time.Second * 5
+
+	f := func() (*http.Response, error) {
+		return client.NewRequestDo("PATCH", fmt.Sprintf("%s/settings", path), nil, req, nil)
 	}
 
-	return resp, nil
+	return retryRequest(f, maxRetries, retryInterval)
 }
