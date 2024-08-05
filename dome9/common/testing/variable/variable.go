@@ -239,7 +239,7 @@ const (
 )
 
 const (
-	VulnerabilityPolicyDefaultRulesetId = -2002
+	VulnerabilityPolicyDefaultRulesetId = -2007
 	VulnerabilityPolicyDetectAction     = "Detection"
 	VulnerabilityPolicyPreventAction    = "Prevention"
 	VulnerabilityPolicyTargetType       = "Environment"
