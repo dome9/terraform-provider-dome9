@@ -242,7 +242,7 @@ const (
 	VulnerabilityPolicyDefaultRulesetId = -2007
 	VulnerabilityPolicyDetectAction     = "Detection"
 	VulnerabilityPolicyPreventAction    = "Prevention"
-	VulnerabilityPolicyTargetType       = "Environment"
+	VulnerabilityPolicyTargetType       = "Kubernetes"
 	VulnerabilityKubernetesAccountName  = "test_vulnerability_policy_kubernetes_resource_name"
 )
 
