@@ -99,6 +99,7 @@ func (c *Config) Client() (*Client, error) {
 		awsUnifiedOnboarding:             *aws_unified_onboarding.New(config),
 		admissionControlPolicy:           *admission_policy.New(config),
 		imageAssurancePolicy:             *imageassurance_policy.New(config),
+		vulnerabilityPolicy:              *vulnerability_policy.New(config),
 		assessment:                       *assessment.New(config),
 		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
 		awsOrganizationOnboarding:        *aws_org.New(config),
