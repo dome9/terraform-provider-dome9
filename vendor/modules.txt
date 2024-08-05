@@ -94,7 +94,7 @@ github.com/bgentry/speakeasy
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
-# github.com/dome9/dome9-sdk-go v1.23.2
+# github.com/dome9/dome9-sdk-go v1.23.3
 ## explicit; go 1.19
 github.com/dome9/dome9-sdk-go/dome9
 github.com/dome9/dome9-sdk-go/dome9/client
@@ -125,6 +125,7 @@ github.com/dome9/dome9-sdk-go/services/rulebundles
 github.com/dome9/dome9-sdk-go/services/serviceaccounts
 github.com/dome9/dome9-sdk-go/services/unifiedonboarding/aws_unified_onboarding
 github.com/dome9/dome9-sdk-go/services/users
+github.com/dome9/dome9-sdk-go/services/vulnerability/vulnerability_policy
 # github.com/fatih/color v1.7.0
 ## explicit
 github.com/fatih/color
