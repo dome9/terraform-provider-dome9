@@ -239,7 +239,7 @@ const (
 )
 
 const (
-	VulnerabilityPolicyDefaultRulesetId = -2007
+	VulnerabilityPolicyDefaultRulesetId = -2002
 	VulnerabilityPolicyDetectAction     = "Detection"
 	VulnerabilityPolicyPreventAction    = "Prevention"
 	VulnerabilityPolicyTargetType       = "Kubernetes"
