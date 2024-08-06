@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 const (
@@ -89,9 +90,20 @@ func (service *Service) GetById(id string) (*IntegrationViewModel, *http.Respons
 		return nil, nil, fmt.Errorf("id parameter must be passed")
 	}
 
+	var resp *http.Response
+	var err error
+
 	v := new(IntegrationViewModel)
 	relativeURL := fmt.Sprintf("%s/%s", RESTfulServicePathIntegration, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+
+	for i := 1; i <= 3; i++ {
+		resp, err = service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+		if err == nil || resp == nil || resp.StatusCode <= 400 || resp.StatusCode >= 500 || i == 3 {
+			break
+		}
+		time.Sleep(time.Duration(i) * 2 * time.Second)
+	}
+
 	if err != nil {
 		return nil, nil, err
 	}
@@ -130,9 +142,15 @@ func (service *Service) Update(body IntegrationUpdateRequestModel) (*Integration
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", RESTfulServicePathIntegration, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
-	if err != nil {
-		return nil, err
+	var resp *http.Response
+	var err error
+
+	for i := 1; i <= 3; i++ {
+		resp, err = service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+		if err == nil || resp == nil || resp.StatusCode <= 400 || resp.StatusCode >= 500 || i == 3 {
+			break
+		}
+		time.Sleep(time.Duration(i) * 2 * time.Second)
 	}
 
 	return resp, nil

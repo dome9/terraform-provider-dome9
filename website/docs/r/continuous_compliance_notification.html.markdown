@@ -10,7 +10,7 @@ description: |- Creates continuous compliance notification in Dome9
 ---
 
 **Notice: This resource is obsolete due to changes in the lifecycle of the API. It will be partially supported until its end of life on January 1, 2025.
-The functionality for this resource has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/data-sources/notification).**
+The functionality for this resource has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/resources/notification).**
 
 
 ## How to Migrate to the new resource
@@ -24,10 +24,10 @@ Remove the old resource from the Terraform state. This step ensures that Terrafo
 Run the following command to remove the old resource from the state:
 
 ```
-terraform state rm dome9_continuous_compliance_notification.<old_resource_name>
+terraform state rm dome9_continuous_compliance_notification.old_resource_name
 ```
 
-*Replace <old_resource_name> with the actual name of your resource.
+*Replace old_resource_name with the actual name of your resource.
 
 To verify the resource removal using the following command:
 
@@ -37,17 +37,17 @@ terraform state list
 
 ### Step 2: Create the new resource in the new format
 
-Create a new dome9_notification resource that matches the old resource data but adheres to the new resource format.\
+Create a new dome9_notification resource that matches the old resource data but adheres to the new resource format.
 Below is an example of how you can define the new resource based on the available documentation.
 
 Here's a template you can use:
 
 ```
-resource "dome9_notification" "<new_resource_name>" {
+resource "dome9_notification" "new_resource_name" {
 # Map the old resource data to the new format
 # Add other necessary fields and configurations
 
-  name                    = "<name>"
+  name                    = "name"
   description             = "This is an example notification."
   alerts_console          = true
   send_on_each_occurrence = false
@@ -72,7 +72,7 @@ resource "dome9_notification" "<new_resource_name>" {
 }
 ```
 
-Replace <new_resource_name>, <name>, and any other necessary fields with the appropriate values from your old resource configuration.
+Replace new_resource_name, name, and any other necessary fields with the appropriate values from your old resource configuration.
 
 ### Step 3: Remove the old resource from the Terraform file
 
@@ -81,7 +81,7 @@ Open the Terraform configuration file (typically main.tf) and locate the dome9_c
 For example:
 
 ```
-resource "dome9_continuous_compliance_notification" "<old_resource_name>" {
+resource "dome9_continuous_compliance_notification" "old_resource_name" {
   # Resource configuration
 }
 ```
@@ -95,10 +95,10 @@ Lastly, import the existing resource state into the new dome9_notification resou
 Run the following command to import the state:
 
 ```
-terraform import dome9_notification.<new_resource_name> <entity_id>
+terraform import dome9_notification.new_resource_name entity_id
 ```
 
-Replace <new_resource_name> with the name of your new resource and <entity_id> with the ID of the existing entity. You can find the entity ID from the CloudGuard console or the previous state file.
+Replace new_resource_name with the name of your new resource and entity_id with the ID of the existing entity. You can find the entity ID from the CloudGuard console or the previous state file.
 
 Example
 -------
@@ -136,10 +136,10 @@ resource "dome9_notification" "notification_alert" {
 **Import the state of the entity to the recreated resource:**
 
 ```
-terraform import dome9_notification.notification_alert <entity_id>
+terraform import dome9_notification.notification_alert entity_id
 ```
 
-Replace <entity_id> with the actual ID of the entity.
+Replace entity_id with the actual ID of the entity.
 
 Following these steps, you can successfully convert your Terraform resource from dome9_continuous_compliance_notification to dome9_notification. If you have any specific configurations or fields in the old resource, map them correctly to the new resource format.
 

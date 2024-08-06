@@ -281,6 +281,10 @@ net_sec {
       new_group_behavior = "ReadOnly"
       region             = "il_central_1"
     }
+    regions {
+      new_group_behavior = "ReadOnly"
+      region             = "ca_west_1"
+    }
   }
 `,
 		groupBehavior,
