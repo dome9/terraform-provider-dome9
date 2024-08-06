@@ -239,7 +239,7 @@ const (
 )
 
 const (
-	VulnerabilityPolicyDefaultRulesetId = -2002
+	VulnerabilityPolicyDefaultRulesetId = -2008 // dont use -2007 because its breaking the tests
 	VulnerabilityPolicyDetectAction     = "Detection"
 	VulnerabilityPolicyPreventAction    = "Prevention"
 	VulnerabilityPolicyTargetType       = "Kubernetes"
