@@ -238,6 +238,14 @@ const (
 	ImageAssuranceKubernetesAccountName  = "test_image_assurance_policy_kubernetes_resource_name"
 )
 
+const (
+	VulnerabilityPolicyDefaultRulesetId = -2008 // dont use -2007 because its breaking the tests because of default policy flow
+	VulnerabilityPolicyDetectAction     = "Detection"
+	VulnerabilityPolicyPreventAction    = "Prevention"
+	VulnerabilityPolicyTargetType       = "Kubernetes"
+	VulnerabilityKubernetesAccountName  = "test_vulnerability_policy_kubernetes_resource_name"
+)
+
 // assessment resource/data source
 const (
 	BundleID                = 1155085

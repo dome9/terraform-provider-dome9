@@ -21,6 +21,7 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
+	"github.com/dome9/dome9-sdk-go/services/vulnerability/vulnerability_policy"
 	"github.com/dome9/dome9-sdk-go/services/iplist"
 	"github.com/dome9/dome9-sdk-go/services/organizationalunits"
 	"github.com/dome9/dome9-sdk-go/services/roles"
@@ -57,6 +58,7 @@ type Client struct {
 	awsUnifiedOnboarding             aws_unified_onboarding.Service
 	admissionControlPolicy           admission_policy.Service
 	imageAssurancePolicy             imageassurance_policy.Service
+	vulnerabilityPolicy              vulnerability_policy.Service
 	assessment                       assessment.Service
 	awpAwsOnboarding                 awp_aws_onboarding.Service
 	awsOrganizationOnboarding        aws_org.Service
@@ -97,6 +99,7 @@ func (c *Config) Client() (*Client, error) {
 		awsUnifiedOnboarding:             *aws_unified_onboarding.New(config),
 		admissionControlPolicy:           *admission_policy.New(config),
 		imageAssurancePolicy:             *imageassurance_policy.New(config),
+		vulnerabilityPolicy:              *vulnerability_policy.New(config),
 		assessment:                       *assessment.New(config),
 		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
 		awsOrganizationOnboarding:        *aws_org.New(config),

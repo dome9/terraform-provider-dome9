@@ -65,6 +65,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.AwpAwsOnboarding:                 resourceAwpAwsOnboarding(),
 		    resourcetype.AWSOrganizationOnboarding:        resourceAwsOrganizationOnboarding(),
             resourcetype.AwpAzureOnboarding:               resourceAwpAzureOnboarding(),
+			resourcetype.VulnerabilityPolicy:              resourceVulnerabilityPolicy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			// terraform date source name: data source schema
@@ -99,6 +100,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.AWSOrganizationOnboardingMemberAccountConfig: dataSourceAwsOrganizationOnboardingMemberAccountConfiguration(),
             resourcetype.AwpAzureOnboardingData:                       dataSourceAwpAzureOnboardingData(),
 			resourcetype.AwpAzureOnboarding:                           dataSourceAwpAzureOnboarding(),
+			resourcetype.VulnerabilityPolicy:                          dataSourceVulnerabilityPolicy(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

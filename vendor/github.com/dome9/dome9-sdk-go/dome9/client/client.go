@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/google/go-querystring/query"
 
@@ -32,6 +33,35 @@ func (client *Client) NewRequestDo(method, url string, options, body, v interfac
 	}
 	client.logRequest(req)
 	return client.do(req, v)
+}
+
+func (client *Client) NewRequestDoRetryWithOptions(method, url string, options, body, v interface{}, maxRetries int, retrySleepBetweenSecs int, shouldRetry func(*http.Response) bool) (*http.Response, error) {
+	// Initialize the response and error variables outside the loop
+	var resp *http.Response
+	var err error
+
+	// Attempt the request up to maxRetries times
+	for i := 0; i < maxRetries; i++ {
+		// Make the request
+		resp, err = client.NewRequestDo(method, url, options, body, v)
+		if err == nil {
+			// If the request was successful, return the response
+			return resp, nil
+		}
+
+		if shouldRetry(resp) {
+			time.Sleep(time.Second * time.Duration(retrySleepBetweenSecs))
+		} else {
+			return resp, err
+		}
+	}
+
+	// If the function hasn't returned after maxRetries, return an error
+	return nil, err
+}
+
+func (client *Client) NewRequestDoRetry(method, url string, options, body, v interface{}, shouldRetry func(*http.Response) bool) (*http.Response, error) {
+	return client.NewRequestDoRetryWithOptions(method, url, options, body, v, 3, 5, shouldRetry)
 }
 
 // Generating the Http request
