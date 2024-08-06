@@ -239,7 +239,7 @@ const (
 )
 
 const (
-	VulnerabilityPolicyDefaultRulesetId = -2008 // dont use -2007 because its breaking the tests
+	VulnerabilityPolicyDefaultRulesetId = -2008 // dont use -2007 because its breaking the tests because of default policy flow
 	VulnerabilityPolicyDetectAction     = "Detection"
 	VulnerabilityPolicyPreventAction    = "Prevention"
 	VulnerabilityPolicyTargetType       = "Kubernetes"
