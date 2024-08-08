@@ -192,7 +192,6 @@ func dataSourceAzureOrganizationOnboardingRead(d *schema.ResourceData, meta inte
 	return nil
 }
 
-// todo: move to resource
 func flattenAzureOrganizationOnboardingConfiguration(config azure_org.AzureOrganizationOnboardingConfiguration) map[string]interface{} {
 	return map[string]interface{}{
 		"organization_root_ou_id": config.OrganizationRootOuId,
