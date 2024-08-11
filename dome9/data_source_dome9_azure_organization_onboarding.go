@@ -71,67 +71,67 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 								},
 							},
 						},
-					},
-				},
-			},
-			"awp_configuration": {
-				Type:     schema.TypeMap,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"is_enabled": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"onboarding_mode": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"centralized_subscription_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"with_function_apps_scan": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-					},
-				},
-			},
-			"serverless_configuration": {
-				Type:     schema.TypeMap,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"is_enabled": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-					},
-				},
-			},
-			"cdr_configuration": {
-				Type:     schema.TypeMap,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"is_enabled": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"accounts": {
-							Type:     schema.TypeList,
+						"awp_configuration": {
+							Type:     schema.TypeMap,
 							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"storage_id": {
+									"is_enabled": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+									"onboarding_mode": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
-									"log_types": {
+									"centralized_subscription_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"with_function_apps_scan": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+								},
+							},
+						},
+						"serverless_configuration": {
+							Type:     schema.TypeMap,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"is_enabled": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+								},
+							},
+						},
+						"cdr_configuration": {
+							Type:     schema.TypeMap,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"is_enabled": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
+									"accounts": {
 										Type:     schema.TypeList,
 										Computed: true,
-										Elem:     &schema.Schema{Type: schema.TypeString},
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"storage_id": {
+													Type:     schema.TypeString,
+													Computed: true,
+												},
+												"log_types": {
+													Type:     schema.TypeList,
+													Computed: true,
+													Elem:     &schema.Schema{Type: schema.TypeString},
+												},
+											},
+										},
 									},
 								},
 							},
