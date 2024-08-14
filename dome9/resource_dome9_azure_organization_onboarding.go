@@ -19,7 +19,6 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			// OnboardingRequest object fields
 			"workflow_id": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -51,65 +50,80 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 			"active_blades": {
 				Type:     schema.TypeList,
 				Required: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"awp": {
-							Type:     schema.TypeMap,
+							Type:     schema.TypeList,
+							MaxItems: 1,
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_enabled": {
-										Type:    schema.TypeBool,
-										Default: false, //is it right for default value?
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
 									},
 									"onboarding_mode": {
 										Type:     schema.TypeString,
-										Computed: true,
+										Optional: true,
+										Default:  "inAccount",
+										ValidateFunc: validation.StringInSlice([]string{
+											"inAccount",
+											"inAccountHub",
+											"saas",
+										}, false),
 									},
 									"centralized_subscription_id": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
 									"with_function_apps_scan": {
-										Type:    schema.TypeBool,
-										Default: false, //is it right for default value?
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
 									},
 								},
 							},
 						},
 						"serverless": {
-							Type:     schema.TypeMap,
+							Type:     schema.TypeList,
 							Required: true,
+							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_enabled": {
-										Type:    schema.TypeBool,
-										Default: false, //is it right for default value?
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
 									},
 								},
 							},
 						},
 						"cdr": {
-							Type:     schema.TypeMap,
+							Type:     schema.TypeList,
 							Required: true,
+							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_enabled": {
-										Type:    schema.TypeBool,
-										Default: false, //is it right for default value?
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
 									},
 									"accounts": {
 										Type:     schema.TypeList,
-										Computed: true,
+										Optional: true,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"storage_id": {
 													Type:     schema.TypeString,
-													Computed: true,
+													Optional: true,
 												},
 												"log_types": {
 													Type:     schema.TypeList,
-													Computed: true,
+													Optional: true,
+													Elem:     &schema.Schema{Type: schema.TypeString},
 												},
 											},
 										},
@@ -118,13 +132,14 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 							},
 						},
 						"posture_management": {
-							Type:     schema.TypeMap,
+							Type:     schema.TypeList,
 							Required: true,
+							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"onboarding_mode": {
 										Type:     schema.TypeString,
-										Computed: true,
+										Optional: true,
 									},
 								},
 							},
@@ -142,18 +157,14 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 				}, false),
 			},
 			"use_cloud_guard_managed_app": {
-				Type:    schema.TypeBool,
-				Default: false, //is it right for default value?
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
 			},
 			"is_auto_onboarding": {
-				Type:    schema.TypeBool,
-				Default: false, //is it right for default value?
-			},
-			// OrganizationManagementViewModel object fields
-			//is it needed here? required?
-			"id": {
-				Type:     schema.TypeString,
-				Required: true, //is it right to set it to required here?
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
 			},
 			"account_id": {
 				Type:     schema.TypeInt,
@@ -211,8 +222,9 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 										Optional: true,
 									},
 									"with_function_apps_scan": {
-										Type:    schema.TypeBool,
-										Default: false, //is it right for default value?
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
 									},
 								},
 							},
@@ -315,8 +327,6 @@ func resourceAzureOrganizationOnboardingRead(d *schema.ResourceData, meta interf
 	_ = d.Set("update_time", resp.UpdateTime)
 	_ = d.Set("creation_time", resp.CreationTime)
 
-	//other error checks?
-
 	return nil
 }
 
@@ -352,6 +362,15 @@ func resourceAzureOrganizationOnboardingDelete(d *schema.ResourceData, meta inte
 }
 
 func expandAzureOrganizationOnboardingRequest(d *schema.ResourceData) azure_org.OnboardingRequest {
+
+	activeBladesList := d.Get("active_blades").([]interface{})
+	activeBlades := activeBladesList[0].(map[string]interface{})
+
+	awp := activeBlades["awp"].([]interface{})[0].(map[string]interface{})
+	serverless := activeBlades["serverless"].([]interface{})[0].(map[string]interface{})
+	cdr := activeBlades["cdr"].([]interface{})[0].(map[string]interface{})
+	postureManagement := activeBlades["posture_management"].([]interface{})[0].(map[string]interface{})
+
 	req := azure_org.OnboardingRequest{
 		WorkflowId:              d.Get("workflow_id").(string),
 		TenantId:                d.Get("tenant_id").(string),
@@ -365,33 +384,54 @@ func expandAzureOrganizationOnboardingRequest(d *schema.ResourceData) azure_org.
 		ActiveBlades: azure_org.Blades{
 			Awp: azure_org.AwpConfiguration{
 				BladeConfiguration: azure_org.BladeConfiguration{
-					IsEnabled: d.Get("active_blades.0.awp.is_enabled").(bool),
+					IsEnabled: awp["is_enabled"].(bool),
 				},
-				OnboardingMode:            azure_org.AwpOnboardingMode(d.Get("active_blades.0.awp.onboarding_mode").(string)),
-				CentralizedSubscriptionId: d.Get("active_blades.0.awp.centralized_subscription_id").(string),
-				WithFunctionAppsScan:      d.Get("active_blades.0.awp.with_function_apps_scan").(bool),
+				OnboardingMode:            azure_org.AwpOnboardingMode(awp["onboarding_mode"].(string)),
+				CentralizedSubscriptionId: awp["centralized_subscription_id"].(string),
+				WithFunctionAppsScan:      awp["with_function_apps_scan"].(bool),
 			},
 			Serverless: azure_org.ServerlessConfiguration{
 				BladeConfiguration: azure_org.BladeConfiguration{
-					IsEnabled: d.Get("active_blades.0.serverless.is_enabled").(bool),
+					IsEnabled: serverless["is_enabled"].(bool),
 				},
 			},
 			Cdr: azure_org.CdrConfiguration{
 				BladeConfiguration: azure_org.BladeConfiguration{
-					IsEnabled: d.Get("active_blades.0.cdr.is_enabled").(bool),
+					IsEnabled: cdr["is_enabled"].(bool),
 				},
-				Accounts: []azure_org.StorageAccount{
-					{
-						StorageId: d.Get("active_blades.0.cdr.accounts.0.storage_id").(string),
-					},
-				},
+				Accounts: extractCdrAccounts(cdr),
 			},
 			PostureManagement: azure_org.PostureManagement{
-				OnboardingMode: azure_org.OnboardingMode(d.Get("active_blades.0.posture_management.onboarding_mode").(string)),
+				OnboardingMode: azure_org.OnboardingMode(postureManagement["onboarding_mode"].(string)),
 			},
 		},
 		Vendor: azure_org.CloudVendor(d.Get("vendor").(string)),
 	}
 
 	return req
+}
+
+func extractCdrAccounts(cdrMap map[string]interface{}) []azure_org.StorageAccount {
+	var accounts []azure_org.StorageAccount
+
+	if accountsList, ok := cdrMap["accounts"].([]interface{}); ok {
+		for _, account := range accountsList {
+			if accountMap, ok := account.(map[string]interface{}); ok {
+				storageId := accountMap["storage_id"].(string)
+				logTypesInterface := accountMap["log_types"].([]interface{})
+				var logTypes []string
+				for _, logType := range logTypesInterface {
+					logTypes = append(logTypes, logType.(string))
+				}
+
+				storageAccount := azure_org.StorageAccount{
+					StorageId: storageId,
+					LogTypes:  logTypes,
+				}
+				accounts = append(accounts, storageAccount)
+			}
+		}
+	}
+
+	return accounts
 }

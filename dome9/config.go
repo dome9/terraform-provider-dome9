@@ -106,6 +106,7 @@ func (c *Config) Client() (*Client, error) {
 		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
 		awsOrganizationOnboarding:        *aws_org.New(config),
 		awpAzureOnboarding:               *awp_azure_onboarding.New(config),
+		azureOrganizationOnboarding:      *azure_org.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
