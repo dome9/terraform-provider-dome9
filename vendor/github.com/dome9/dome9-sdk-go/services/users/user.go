@@ -111,7 +111,7 @@ type IAMSafeEntitiesBody struct {
 func (service *Service) Get(userId string) (*UserResponse, *http.Response, error) {
 	v := new(UserResponse)
 	path := fmt.Sprintf("%s/%s", userResourcePath, userId)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", path, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -120,7 +120,7 @@ func (service *Service) Get(userId string) (*UserResponse, *http.Response, error
 
 func (service *Service) GetAll() (*[]UserResponse, *http.Response, error) {
 	v := new([]UserResponse)
-	resp, err := service.Client.NewRequestDo("GET", userResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", userResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -138,7 +138,7 @@ func (service *Service) Create(user UserRequest) (*UserResponse, *http.Response,
 		return nil, nil, err
 	}
 
-	resp, err := service.Client.NewRequestDo("POST", userResourcePath, nil, user, &v)
+	resp, err := service.Client.NewRequestDoRetry("POST", userResourcePath, nil, user, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -150,7 +150,7 @@ func (service *Service) Create(user UserRequest) (*UserResponse, *http.Response,
 // blocked by bug: https://dome9-security.atlassian.net/browse/DOME-12720
 func (service *Service) Update(userId string, user *UserUpdate) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", userResourcePath, userId)
-	resp, err := service.Client.NewRequestDo("PUT", path, nil, user, nil)
+	resp, err := service.Client.NewRequestDoRetry("PUT", path, nil, user, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +161,7 @@ func (service *Service) SetUserAsOwner(userId string) (*http.Response, error) {
 	body := SetOwnerQueryParameters{
 		UserID: userId,
 	}
-	resp, err := service.Client.NewRequestDo("PUT", userResourceOwnerPath, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("PUT", userResourceOwnerPath, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +184,7 @@ func (service *Service) Delete(userID string) (*http.Response, error) {
 	}
 
 	path := fmt.Sprintf("%s/%s", userResourcePath, userID)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -216,7 +216,7 @@ func (service *Service) ProtectWithElevationIAMSafeEntity(d9CloudAccountID, enti
 	}
 	for i, userID := range d9UsersIDToProtect {
 		relativeURL := fmt.Sprintf("%s/%s/%s/%s/%s/%s", userResourcePath, userID, userIAMSAfe, userAccounts, d9CloudAccountID, userIAMEntities)
-		_, err = service.Client.NewRequestDo("POST", relativeURL, nil, body, &v[i])
+		_, err = service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, &v[i], nil)
 		if err != nil {
 			return nil, err
 		}
@@ -257,9 +257,9 @@ func (service *Service) ProtectWithElevationIAMSafeEntityUpdate(d9CloudAccountID
 	for userID, toProtect := range protectedUnprotectedMap {
 		relativeURL := fmt.Sprintf("%s/%s/%s/%s/%s/%s", userResourcePath, userID, userIAMSAfe, userAccounts, d9CloudAccountID, userIAMEntities)
 		if toProtect {
-			_, err = service.Client.NewRequestDo("PUT", relativeURL, nil, protectIAMEntitiesBody, &v[i])
+			_, err = service.Client.NewRequestDoRetry("PUT", relativeURL, nil, protectIAMEntitiesBody, &v[i], nil)
 		} else {
-			_, err = service.Client.NewRequestDo("PUT", relativeURL, nil, unprotectIAMEntitiesBody, &v[i])
+			_, err = service.Client.NewRequestDoRetry("PUT", relativeURL, nil, unprotectIAMEntitiesBody, &v[i], nil)
 		}
 
 		if err != nil {

@@ -57,7 +57,7 @@ func (service *Service) UpdateAWPSettings(id string, req awp_onboarding.Agentles
 func (service *Service) GetOnboardingData(id string, req GetAWPOnboardingDataRequestAzure) (*AgentlessTerraformOnboardingDataResponseAzure, *http.Response, error) {
 	v := new(AgentlessTerraformOnboardingDataResponseAzure)
 	path := fmt.Sprintf("%s/%s/onboarding", GetOnboardingDataPath, id)
-	resp, err := service.Client.NewRequestDo("GET", path, req, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", path, req, nil, v, nil)
 
 	if err != nil {
 		return nil, nil, err

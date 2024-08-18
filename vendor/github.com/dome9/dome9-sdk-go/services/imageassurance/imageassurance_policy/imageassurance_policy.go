@@ -2,9 +2,9 @@ package imageassurance_policy
 
 import (
 	"fmt"
-	"net/http"
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/dome9/client"
+	"net/http"
 )
 
 const (
@@ -42,7 +42,7 @@ type ImageAssurancePolicyResponse struct {
 func (service *Service) Get(id string) (*ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new(ImageAssurancePolicyResponse)
 	path := fmt.Sprintf("%s/%s", imageAssurancePolicyResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", path, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -52,7 +52,7 @@ func (service *Service) Get(id string) (*ImageAssurancePolicyResponse, *http.Res
 
 func (service *Service) GetAll() (*[]ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new([]ImageAssurancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("GET", imageAssurancePolicyResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", imageAssurancePolicyResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -62,7 +62,7 @@ func (service *Service) GetAll() (*[]ImageAssurancePolicyResponse, *http.Respons
 
 func (service *Service) Create(body *ImageAssurancePolicyRequest) (*ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new([]ImageAssurancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", imageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", imageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -75,7 +75,7 @@ func (service *Service) Create(body *ImageAssurancePolicyRequest) (*ImageAssuran
 
 func (service *Service) Update(body *ImageAssurancePolicyRequest) (*ImageAssurancePolicyResponse, *http.Response, error) {
 	v := new([]ImageAssurancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("PUT", imageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", imageAssurancePolicyResourcePath, nil, []*ImageAssurancePolicyRequest{body}, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -88,7 +88,7 @@ func (service *Service) Update(body *ImageAssurancePolicyRequest) (*ImageAssuran
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", imageAssurancePolicyResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}

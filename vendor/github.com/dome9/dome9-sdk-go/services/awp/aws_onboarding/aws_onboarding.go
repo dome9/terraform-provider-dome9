@@ -61,7 +61,7 @@ func (service *Service) UpdateAWPSettings(id string, req awp_onboarding.Agentles
 
 func (service *Service) GetOnboardingData() (*AgentlessTerraformOnboardingDataResponseAws, *http.Response, error) {
 	v := new(AgentlessTerraformOnboardingDataResponseAws)
-	resp, err := service.Client.NewRequestDo("GET", GetOnboardingDataPath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", GetOnboardingDataPath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}

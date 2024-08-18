@@ -1,4 +1,4 @@
-﻿package notifications
+package notifications
 
 import (
 	"fmt"
@@ -66,7 +66,7 @@ type ResponseNotificationViewModel struct {
 
 func (service *Service) Create(body PostNotificationViewModel) (*ResponseNotificationViewModel, *http.Response, error) {
 	v := new(ResponseNotificationViewModel)
-	resp, err := service.Client.NewRequestDo("POST", RESTfulServicePathNotification, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", RESTfulServicePathNotification, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -76,7 +76,7 @@ func (service *Service) Create(body PostNotificationViewModel) (*ResponseNotific
 
 func (service *Service) GetAll() (*[]ResponseNotificationViewModel, *http.Response, error) {
 	v := new([]ResponseNotificationViewModel)
-	resp, err := service.Client.NewRequestDo("GET", RESTfulServicePathNotification, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", RESTfulServicePathNotification, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -91,7 +91,7 @@ func (service *Service) GetById(id string) (*ResponseNotificationViewModel, *htt
 
 	v := new(ResponseNotificationViewModel)
 	relativeURL := fmt.Sprintf("%s/%s", RESTfulServicePathNotification, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -106,7 +106,7 @@ func (service *Service) GetByName(name string) (*ResponseNotificationViewModel, 
 
 	v := new(ResponseNotificationViewModel)
 	relativeURL := fmt.Sprintf("%s?name=%s", RESTfulServicePathNotification, name)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -120,7 +120,7 @@ func (service *Service) Update(body PutNotificationViewModel) (*ResponseNotifica
 	}
 
 	v := new(ResponseNotificationViewModel)
-	resp, err := service.Client.NewRequestDo("PUT", RESTfulServicePathNotification, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", RESTfulServicePathNotification, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -130,7 +130,7 @@ func (service *Service) Update(body PutNotificationViewModel) (*ResponseNotifica
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", RESTfulServicePathNotification, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}

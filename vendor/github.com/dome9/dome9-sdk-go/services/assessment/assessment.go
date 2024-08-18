@@ -186,7 +186,7 @@ type RulesSeverity struct {
 
 func (service *Service) Run(body *RunBundleRequest) (*RunBundleResponse, *http.Response, error) {
 	v := new(RunBundleResponse)
-	resp, err := service.Client.NewRequestDo("POST", assessmentResourcePath, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", assessmentResourcePath, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -201,7 +201,7 @@ func (service *Service) Delete(id int) (*http.Response, error) {
 		HistoryId: id,
 	}
 
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, deleteRequest, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, deleteRequest, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -212,7 +212,7 @@ func (service *Service) Delete(id int) (*http.Response, error) {
 func (service *Service) Get(id string) (*RunBundleResponse, *http.Response, error) {
 	v := new(RunBundleResponse)
 	relativeURL := fmt.Sprintf("%s/%s", assessmentHistoryBasePath, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -29,7 +29,7 @@ type ContinuousCompliancePolicyResponse struct {
 func (service *Service) Get(id string) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new(ContinuousCompliancePolicyResponse)
 	path := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", path, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -39,7 +39,7 @@ func (service *Service) Get(id string) (*ContinuousCompliancePolicyResponse, *ht
 
 func (service *Service) GetAll() (*[]ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new([]ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("GET", continuousComplianceResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", continuousComplianceResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -49,7 +49,7 @@ func (service *Service) GetAll() (*[]ContinuousCompliancePolicyResponse, *http.R
 
 func (service *Service) Create(body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new([]ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest{body}, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -62,7 +62,7 @@ func (service *Service) Create(body *ContinuousCompliancePolicyRequest) (*Contin
 
 func (service *Service) Update(body *ContinuousCompliancePolicyRequest) (*ContinuousCompliancePolicyResponse, *http.Response, error) {
 	v := new([]ContinuousCompliancePolicyResponse)
-	resp, err := service.Client.NewRequestDo("PUT", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", continuousComplianceResourcePath, nil, []*ContinuousCompliancePolicyRequest{body}, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -75,7 +75,7 @@ func (service *Service) Update(body *ContinuousCompliancePolicyRequest) (*Contin
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", continuousComplianceResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
