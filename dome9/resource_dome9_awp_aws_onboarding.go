@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
-	"github.com/dome9/dome9-sdk-go/services/awp"
-	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -295,6 +293,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 		DisabledRegions:              make([]string, 0),
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
+		InAccountScannerVPC:          providerconst.DefaultInAccountScannerVPCMode,
 		MaxConcurrenceScansPerRegion: providerconst.DefaultMaxConcurrentScansPerRegion,
 	}
 
@@ -325,6 +324,10 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 			return nil, fmt.Errorf("max_concurrent_scans_per_region must be between 1 and 20")
 		}
 		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrentScans
+	}
+
+	if inAccountScannerVPC, ok := agentlessAccountSettingsMap["in_account_scanner_vpc"].(int); ok {
+		agentlessAccountSettings.InAccountScannerVPC = inAccountScannerVPC
 	}
 
 	if customTagsInterface, ok := agentlessAccountSettingsMap["custom_tags"].(map[string]interface{}); ok {
