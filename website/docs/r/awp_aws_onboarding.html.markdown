@@ -110,6 +110,7 @@ The following arguments are supported:
   * `disabled_regions` - (Optional) The disabled regions. valid values are "af-south-1", "ap-south-1", "eu-north-1", "eu-west-3", "eu-south-1", "eu-west-2", "eu-west-1", "ap-northeast-3", "ap-northeast-2", "me-south-1", "ap-northeast-1", "me-central-1", "ca-central-1", "sa-east-1", "ap-east-1", "ap-southeast-1", "ap-southeast-2", "eu-central-1", "ap-southeast-3", "us-east-1", "us-east-2", "us-west-1", "us-west-2"
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
   * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
+  * `in_account_scanner_vpc` - (Optional) The VPC mode. Valid values are "ManagedByAWP" or "ManagedByCustomer".
   * `custom_tags` - (Optional) The custom tags.
 * `should_create_policy` - (Optional) Whether to create a policy. Default is true.
     
