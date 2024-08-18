@@ -72,7 +72,7 @@ type Error struct {
 func (service *Service) Get(id string) (*AzureSecurityGroupResponse, *http.Response, error) {
 	v := new(AzureSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s", azureSgResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -82,7 +82,7 @@ func (service *Service) Get(id string) (*AzureSecurityGroupResponse, *http.Respo
 
 func (service *Service) GetAll() (*[]AzureSecurityGroupResponse, *http.Response, error) {
 	v := new([]AzureSecurityGroupResponse)
-	resp, err := service.Client.NewRequestDo("GET", azureSgResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", azureSgResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -92,7 +92,7 @@ func (service *Service) GetAll() (*[]AzureSecurityGroupResponse, *http.Response,
 
 func (service *Service) Create(body AzureSecurityGroupRequest) (*AzureSecurityGroupResponse, *http.Response, error) {
 	v := new(AzureSecurityGroupResponse)
-	resp, err := service.Client.NewRequestDo("POST", azureSgResourcePath, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", azureSgResourcePath, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -102,7 +102,7 @@ func (service *Service) Create(body AzureSecurityGroupRequest) (*AzureSecurityGr
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", azureSgResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +113,7 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 func (service *Service) Update(id string, body AzureSecurityGroupRequest) (*AzureSecurityGroupResponse, *http.Response, error) {
 	v := new(AzureSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s", azureSgResourcePath, id)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}

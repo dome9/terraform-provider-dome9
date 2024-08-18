@@ -37,7 +37,7 @@ type Permissions struct {
 
 func (service *Service) GetAll() (*[]RoleResponse, *http.Response, error) {
 	v := new([]RoleResponse)
-	resp, err := service.Client.NewRequestDo("GET", roleResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", roleResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -47,7 +47,7 @@ func (service *Service) GetAll() (*[]RoleResponse, *http.Response, error) {
 func (service *Service) Get(id string) (*RoleResponse, *http.Response, error) {
 	v := new(RoleResponse)
 	relativeURL := fmt.Sprintf("%s/%s", roleResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -57,7 +57,7 @@ func (service *Service) Get(id string) (*RoleResponse, *http.Response, error) {
 
 func (service *Service) Create(role RoleRequest) (*RoleResponse, *http.Response, error) {
 	v := new(RoleResponse)
-	resp, err := service.Client.NewRequestDo("POST", roleResourcePath, nil, role, &v)
+	resp, err := service.Client.NewRequestDoRetry("POST", roleResourcePath, nil, role, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -66,7 +66,7 @@ func (service *Service) Create(role RoleRequest) (*RoleResponse, *http.Response,
 
 func (service *Service) Update(id string, roleRequest RoleRequest) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", roleResourcePath, id)
-	resp, err := service.Client.NewRequestDo("PUT", path, nil, roleRequest, nil)
+	resp, err := service.Client.NewRequestDoRetry("PUT", path, nil, roleRequest, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (service *Service) Update(id string, roleRequest RoleRequest) (*http.Respon
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", roleResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}

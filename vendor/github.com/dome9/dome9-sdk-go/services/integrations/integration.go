@@ -1,10 +1,9 @@
-﻿package integrations
+package integrations
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 )
 
 const (
@@ -67,7 +66,7 @@ func (m IntegrationViewModel) String() string {
 
 func (service *Service) Create(body IntegrationPostRequestModel) (*IntegrationViewModel, *http.Response, error) {
 	v := new(IntegrationViewModel)
-	resp, err := service.Client.NewRequestDo("POST", RESTfulServicePathIntegration, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", RESTfulServicePathIntegration, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -77,7 +76,7 @@ func (service *Service) Create(body IntegrationPostRequestModel) (*IntegrationVi
 
 func (service *Service) GetAll() (*[]IntegrationViewModel, *http.Response, error) {
 	v := new([]IntegrationViewModel)
-	resp, err := service.Client.NewRequestDo("GET", RESTfulServicePathIntegration, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", RESTfulServicePathIntegration, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -95,14 +94,8 @@ func (service *Service) GetById(id string) (*IntegrationViewModel, *http.Respons
 
 	v := new(IntegrationViewModel)
 	relativeURL := fmt.Sprintf("%s/%s", RESTfulServicePathIntegration, id)
-
-	for i := 1; i <= 3; i++ {
-		resp, err = service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
-		if err == nil || resp == nil || resp.StatusCode <= 400 || resp.StatusCode >= 500 || i == 3 {
-			break
-		}
-		time.Sleep(time.Duration(i) * 2 * time.Second)
-	}
+	
+	resp, err = service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 
 	if err != nil {
 		return nil, nil, err
@@ -118,7 +111,7 @@ func (service *Service) GetByType(integrationType string) (*IntegrationViewModel
 
 	v := new(IntegrationViewModel)
 	relativeURL := fmt.Sprintf("%s?type=%s", RESTfulServicePathIntegration, integrationType)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -132,7 +125,7 @@ func (service *Service) Update(body IntegrationUpdateRequestModel) (*Integration
 	}
 
 	v := new(IntegrationViewModel)
-	resp, err := service.Client.NewRequestDo("PUT", RESTfulServicePathIntegration, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", RESTfulServicePathIntegration, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -145,12 +138,9 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 	var resp *http.Response
 	var err error
 
-	for i := 1; i <= 3; i++ {
-		resp, err = service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
-		if err == nil || resp == nil || resp.StatusCode <= 400 || resp.StatusCode >= 500 || i == 3 {
-			break
-		}
-		time.Sleep(time.Duration(i) * 2 * time.Second)
+	resp, err = service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
+	if err != nil {
+		return nil, err
 	}
 
 	return resp, nil

@@ -62,7 +62,7 @@ type ThreatIntelligenceEnableRequest struct {
 
 func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("POST", cloudaccounts.RESTfulPathK8S, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", cloudaccounts.RESTfulPathK8S, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -73,7 +73,7 @@ func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse,
 func (service *Service) Get(id string) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathK8S, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -83,7 +83,7 @@ func (service *Service) Get(id string) (*CloudAccountResponse, *http.Response, e
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathK8S, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 func (service *Service) UpdateName(id string, newNameParam CloudAccountUpdateNameRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, id, cloudaccounts.RESTfulServicePathK8SName)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, newNameParam, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, newNameParam, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -105,7 +105,7 @@ func (service *Service) UpdateName(id string, newNameParam CloudAccountUpdateNam
 func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdateOrganizationalIDRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathK8S, id, cloudaccounts.RESTfulServicePathK8SOrganizationalUnit)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -126,7 +126,7 @@ func GetEnableDisablePath(enabled bool) string {
 
 func (service *Service) EnableRuntimeProtection(body RuntimeProtectionEnableRequest) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SRuntimeProtection, GetEnableDisablePath(body.Enabled))
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ func (service *Service) EnableRuntimeProtection(body RuntimeProtectionEnableRequ
 
 func (service *Service) EnableAdmissionControl(body AdmissionControlEnableRequest) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SAdmissionControl, GetEnableDisablePath(body.Enabled))
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +154,7 @@ func (service *Service) EnableAdmissionControl(body AdmissionControlEnableReques
 
 func (service *Service) EnableImageAssurance(body ImageAssuranceEnableRequest) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SImageAssurance, GetEnableDisablePath(body.Enabled))
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ threat-intelligence
 */
 func (service *Service) EnableThreatIntelligence(body ThreatIntelligenceEnableRequest) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s/%s/%s", cloudaccounts.RESTfulPathK8S, body.CloudAccountId, cloudaccounts.RESTfulPathK8SThreatIntelligence, GetEnableDisablePath(body.Enabled))
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}

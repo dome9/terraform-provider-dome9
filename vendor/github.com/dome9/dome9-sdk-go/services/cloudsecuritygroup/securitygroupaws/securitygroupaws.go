@@ -93,7 +93,7 @@ func (service *Service) Get(d9SecurityGroupID string) (*CloudSecurityGroupRespon
 	v := new(CloudSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, d9SecurityGroupID)
 
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -113,7 +113,7 @@ func (service *Service) GetAllInRegion(d9CloudAccountID, awsRegionName string) (
 	}
 
 	v := new([]CloudSecurityGroupResponse)
-	resp, err := service.Client.NewRequestDo("GET", awsSgResourcePath, options, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", awsSgResourcePath, options, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -124,7 +124,7 @@ func (service *Service) GetAllInRegion(d9CloudAccountID, awsRegionName string) (
 // GetAll will return list of all the security groups in the whole regions
 func (service *Service) GetAll() (*[]CloudSecurityGroupResponse, *http.Response, error) {
 	v := new([]CloudSecurityGroupResponse)
-	resp, err := service.Client.NewRequestDo("GET", awsSgResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", awsSgResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -134,7 +134,7 @@ func (service *Service) GetAll() (*[]CloudSecurityGroupResponse, *http.Response,
 
 func (service *Service) Create(body CloudSecurityGroupRequest) (*CloudSecurityGroupResponse, *http.Response, error) {
 	v := new(CloudSecurityGroupResponse)
-	resp, err := service.Client.NewRequestDo("POST", awsSgResourcePath, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", awsSgResourcePath, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -147,7 +147,7 @@ func (service *Service) Update(d9SecurityGroupID string, body CloudSecurityGroup
 	v := new(CloudSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, d9SecurityGroupID)
 
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -167,7 +167,7 @@ func (service *Service) UpdateProtectionMode(d9SecurityGroupID, protectionMode s
 		ProtectionMode: protectionMode,
 	}
 
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -179,7 +179,7 @@ func (service *Service) UpdateBoundService(d9SecurityGroupID string, body Update
 	v := new(CloudSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, d9SecurityGroupID)
 
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -193,7 +193,7 @@ func (service *Service) HandelBoundServices(d9SecurityGroupID, policyType string
 	v := new(CloudSecurityGroupResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s/%s", awsSgResourcePath, d9SecurityGroupID, awsSgResourceServices, policyType)
 
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, boundService, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, boundService, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -203,7 +203,7 @@ func (service *Service) HandelBoundServices(d9SecurityGroupID, policyType string
 
 func (service *Service) Delete(d9SecurityGroupID string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", awsSgResourcePath, d9SecurityGroupID)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 
 	if err != nil {
 		return nil, err

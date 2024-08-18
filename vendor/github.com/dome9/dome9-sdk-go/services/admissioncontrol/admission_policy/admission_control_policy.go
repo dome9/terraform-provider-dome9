@@ -30,7 +30,7 @@ type AdmissionControlPolicyResponse struct {
 func (service *Service) Get(id string) (*AdmissionControlPolicyResponse, *http.Response, error) {
 	v := new(AdmissionControlPolicyResponse)
 	path := fmt.Sprintf("%s/%s", admissionControlPolicyResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", path, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -40,7 +40,7 @@ func (service *Service) Get(id string) (*AdmissionControlPolicyResponse, *http.R
 
 func (service *Service) GetAll() (*[]AdmissionControlPolicyResponse, *http.Response, error) {
 	v := new([]AdmissionControlPolicyResponse)
-	resp, err := service.Client.NewRequestDo("GET", admissionControlPolicyResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", admissionControlPolicyResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -50,7 +50,7 @@ func (service *Service) GetAll() (*[]AdmissionControlPolicyResponse, *http.Respo
 
 func (service *Service) Create(body *AdmissionControlPolicyRequest) (*AdmissionControlPolicyResponse, *http.Response, error) {
 	v := new([]AdmissionControlPolicyResponse)
-	resp, err := service.Client.NewRequestDo("POST", admissionControlPolicyResourcePath, nil, []*AdmissionControlPolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", admissionControlPolicyResourcePath, nil, []*AdmissionControlPolicyRequest{body}, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -63,7 +63,7 @@ func (service *Service) Create(body *AdmissionControlPolicyRequest) (*AdmissionC
 
 func (service *Service) Update(body *AdmissionControlPolicyRequest) (*AdmissionControlPolicyResponse, *http.Response, error) {
 	v := new([]AdmissionControlPolicyResponse)
-	resp, err := service.Client.NewRequestDo("PUT", admissionControlPolicyResourcePath, nil, []*AdmissionControlPolicyRequest{body}, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", admissionControlPolicyResourcePath, nil, []*AdmissionControlPolicyRequest{body}, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -76,7 +76,7 @@ func (service *Service) Update(body *AdmissionControlPolicyRequest) (*AdmissionC
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", admissionControlPolicyResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}

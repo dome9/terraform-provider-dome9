@@ -43,25 +43,25 @@ type RuleBundleResponse struct {
 }
 
 type Rule struct {
-	Name          string   `json:"name,omitempty"`
-	Severity      string   `json:"severity,omitempty"`
-	Logic         string   `json:"logic,omitempty"`
-	Description   string   `json:"description,omitempty"`
-	Remediation   string   `json:"remediation,omitempty"`
-	ComplianceTag string   `json:"complianceTag,omitempty"`
-	Domain        string   `json:"domain,omitempty"`
-	Priority      string   `json:"priority,omitempty"`
-	ControlTitle  string   `json:"controlTitle,omitempty"`
-	RuleID        string   `json:"ruleId,omitempty"`
-	Category      string   `json:"category,omitempty"`
-	LogicHash     string   `json:"logicHash,omitempty"`
-	IsDefault     bool     `json:"isDefault,omitempty"`
+	Name          string `json:"name,omitempty"`
+	Severity      string `json:"severity,omitempty"`
+	Logic         string `json:"logic,omitempty"`
+	Description   string `json:"description,omitempty"`
+	Remediation   string `json:"remediation,omitempty"`
+	ComplianceTag string `json:"complianceTag,omitempty"`
+	Domain        string `json:"domain,omitempty"`
+	Priority      string `json:"priority,omitempty"`
+	ControlTitle  string `json:"controlTitle,omitempty"`
+	RuleID        string `json:"ruleId,omitempty"`
+	Category      string `json:"category,omitempty"`
+	LogicHash     string `json:"logicHash,omitempty"`
+	IsDefault     bool   `json:"isDefault,omitempty"`
 }
 
 func (service *Service) Get(id string) (*RuleBundleResponse, *http.Response, error) {
 	v := new(RuleBundleResponse)
 	relativeURL := fmt.Sprintf("%s/%s", ruleBundleResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -71,7 +71,7 @@ func (service *Service) Get(id string) (*RuleBundleResponse, *http.Response, err
 
 func (service *Service) GetAccountRuleBundles() (*[]RuleBundleResponse, *http.Response, error) {
 	v := new([]RuleBundleResponse)
-	resp, err := service.Client.NewRequestDo("GET", ruleBundleResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", ruleBundleResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -81,7 +81,7 @@ func (service *Service) GetAccountRuleBundles() (*[]RuleBundleResponse, *http.Re
 
 func (service *Service) Create(body *RuleBundleRequest) (*RuleBundleResponse, *http.Response, error) {
 	v := new(RuleBundleResponse)
-	resp, err := service.Client.NewRequestDo("POST", ruleBundleResourcePath, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", ruleBundleResourcePath, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -93,7 +93,7 @@ func (service *Service) Update(body *RuleBundleRequest) (*RuleBundleResponse, *h
 	// Rule bundle ID passed within the request body
 	v := new(RuleBundleResponse)
 	relativeURL := fmt.Sprintf("%s/%s", ruleBundleResourcePath, strconv.Itoa(body.ID))
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -103,7 +103,7 @@ func (service *Service) Update(body *RuleBundleRequest) (*RuleBundleResponse, *h
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", ruleBundleResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}

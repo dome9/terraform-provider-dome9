@@ -139,7 +139,7 @@ func (service *Service) Get(options interface{}) (*CloudAccountResponse, *http.R
 	}
 
 	v := new(CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulPathAWS, options, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", cloudaccounts.RESTfulPathAWS, options, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -149,7 +149,7 @@ func (service *Service) Get(options interface{}) (*CloudAccountResponse, *http.R
 
 func (service *Service) GetAll() (*[]CloudAccountResponse, *http.Response, error) {
 	v := new([]CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulPathAWS, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", cloudaccounts.RESTfulPathAWS, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -163,7 +163,7 @@ func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse,
 	if ven != "aws" && ven != "awsgov" && ven != "awschina" {
 		return nil, nil, errors.New("vendor must be aws/awsgov/awschina")
 	}
-	resp, err := service.Client.NewRequestDo("POST", cloudaccounts.RESTfulPathAWS, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", cloudaccounts.RESTfulPathAWS, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -173,7 +173,7 @@ func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse,
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -187,13 +187,7 @@ func (service *Service) ForceDelete(id string) (*http.Response, error) {
 	var resp *http.Response
 	var err error
 
-	for i := 1; i <= 3; i++ {
-		resp, err = service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
-		if err == nil || resp == nil || resp.StatusCode <= 400 || resp.StatusCode >= 500 || i == 3 {
-			break
-		}
-		time.Sleep(time.Duration(i) * 2 * time.Second)
-	}
+	resp, err = service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -205,7 +199,7 @@ func (service *Service) ForceDelete(id string) (*http.Response, error) {
 func (service *Service) UpdateName(body CloudAccountUpdateNameRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, cloudaccounts.RESTfulServicePathAWSName)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -216,7 +210,7 @@ func (service *Service) UpdateName(body CloudAccountUpdateNameRequest) (*CloudAc
 func (service *Service) UpdateRegionConfig(body CloudAccountUpdateRegionConfigRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, cloudaccounts.RESTfulServicePathAWSRegionConfig)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -227,7 +221,7 @@ func (service *Service) UpdateRegionConfig(body CloudAccountUpdateRegionConfigRe
 func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdateOrganizationalIDRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, id, cloudaccounts.RESTfulServicePathAWSOrganizationalUnit)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -238,7 +232,7 @@ func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdat
 func (service *Service) UpdateCredentials(body CloudAccountUpdateCredentialsRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, cloudaccounts.RESTfulServicePathAWSCredentials)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -253,7 +247,7 @@ func (service *Service) UpdateCredentials(body CloudAccountUpdateCredentialsRequ
 func (service *Service) AttachIAMSafeToCloudAccount(body AttachIamSafeRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	path := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAWSCloudAccounts, cloudaccounts.RESTfulServicePathAWSIAMSafe)
-	resp, err := service.Client.NewRequestDo("PUT", path, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", path, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -262,7 +256,7 @@ func (service *Service) AttachIAMSafeToCloudAccount(body AttachIamSafeRequest) (
 
 func (service *Service) DetachIAMSafeToCloudAccount(id string) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulServicePathAWSCloudAccounts, id, cloudaccounts.RESTfulServicePathAWSIAMSafe)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -278,7 +272,7 @@ func (service *Service) ProtectIAMSafeEntity(d9CloudAccountID string, body Restr
 	var arn string
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, d9CloudAccountID, cloudaccounts.RESTfulPathRestrictedIamEntities)
 
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, &arn)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, &arn, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -290,7 +284,7 @@ func (service *Service) GetAllProtectIAMSafeEntityStatus(d9CloudAccountID string
 	v := new(ProtectIAMEntitiesResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAWS, d9CloudAccountID, cloudaccounts.RESTfulPathIAM)
 
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -328,7 +322,7 @@ func (service *Service) UnprotectIAMSafeEntity(d9CloudAccountID, entityName, ent
 		EntityName: entityName,
 	}
 
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, unprotectAWSIAMEntityOptions, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, unprotectAWSIAMEntityOptions, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
