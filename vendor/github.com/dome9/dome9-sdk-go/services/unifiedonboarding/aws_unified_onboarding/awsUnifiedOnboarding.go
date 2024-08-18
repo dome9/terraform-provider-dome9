@@ -72,7 +72,7 @@ type Statuses []struct {
 func (service *Service) Get(id string) (*UnifiedOnboardingResponse, *http.Response, error) {
 	v := new(UnifiedOnboardingResponse)
 	relativeURL := fmt.Sprintf("%s/%s", UnifiedOnboardingResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -83,7 +83,7 @@ func (service *Service) Get(id string) (*UnifiedOnboardingResponse, *http.Respon
 func (service *Service) GetUpdateStackConfig(id string) (*UnifiedOnboardingConfigurationResponse, *http.Response, error) {
 	v := new(UnifiedOnboardingConfigurationResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s/%s", UnifiedOnboardingResourcePath, UpdateVersion, StackConfig, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -94,7 +94,7 @@ func (service *Service) GetUpdateStackConfig(id string) (*UnifiedOnboardingConfi
 func (service *Service) Create(onboardingRequest UnifiedOnboardingRequest) (*UnifiedOnboardingConfigurationResponse, *http.Response, error) {
 	v := new(UnifiedOnboardingConfigurationResponse)
 	relativeURL := fmt.Sprintf("%s/%s", UnifiedOnboardingResourcePath, StackConfig)
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, onboardingRequest, &v)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, onboardingRequest, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -103,7 +103,7 @@ func (service *Service) Create(onboardingRequest UnifiedOnboardingRequest) (*Uni
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAWS, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 
 func (service *Service) ForceDelete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s/DeleteForce", cloudaccounts.RESTfulPathAWS, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 
 	if err != nil {
 		return nil, err

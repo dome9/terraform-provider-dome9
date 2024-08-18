@@ -65,7 +65,7 @@ func (service *Service) Get(options interface{}) (*CloudAccountResponse, *http.R
 		return nil, nil, fmt.Errorf("options parameter must be passed")
 	}
 	v := new(CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulPathGCP, options, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", cloudaccounts.RESTfulPathGCP, options, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -75,7 +75,7 @@ func (service *Service) Get(options interface{}) (*CloudAccountResponse, *http.R
 
 func (service *Service) GetAll() (*[]CloudAccountResponse, *http.Response, error) {
 	v := new([]CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulPathGCP, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", cloudaccounts.RESTfulPathGCP, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -85,7 +85,7 @@ func (service *Service) GetAll() (*[]CloudAccountResponse, *http.Response, error
 
 func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("POST", cloudaccounts.RESTfulPathGCP, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", cloudaccounts.RESTfulPathGCP, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -95,7 +95,7 @@ func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse,
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathGCP, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -107,7 +107,7 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 func (service *Service) UpdateName(id string, body CloudAccountUpdateNameRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathGCP, id, cloudaccounts.RESTfulServicePathGCPName)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -118,7 +118,7 @@ func (service *Service) UpdateName(id string, body CloudAccountUpdateNameRequest
 func (service *Service) UpdateAccountGSuite(id string, body GSuite) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathGCP, id, cloudaccounts.RESTfulServicePathGCPCredentialsGSuite)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -129,7 +129,7 @@ func (service *Service) UpdateAccountGSuite(id string, body GSuite) (*CloudAccou
 func (service *Service) UpdateCredentials(id string, body CloudAccountUpdateCredentialsRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathGCP, id, cloudaccounts.RESTfulServicePathGCPCredentials)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -140,7 +140,7 @@ func (service *Service) UpdateCredentials(id string, body CloudAccountUpdateCred
 func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdateOrganizationalIDRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathGCP, id, cloudaccounts.RESTfulServicePathGCPOrganizationalUnit)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}

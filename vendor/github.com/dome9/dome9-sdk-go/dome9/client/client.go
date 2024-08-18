@@ -48,7 +48,11 @@ func (client *Client) NewRequestDoRetryWithOptions(method, url string, options, 
 			// If the request was successful, return the response
 			return resp, nil
 		}
-
+		// If status code is 429 (API throttling), set the retrySleepBetweenSecs to 10 and maxRetries to fit 5 minutes of retries
+		if resp.StatusCode == http.StatusTooManyRequests {
+			retrySleepBetweenSecs = 10
+			maxRetries = (5 * 60) / retrySleepBetweenSecs
+		}
 		if shouldRetry(resp) {
 			time.Sleep(time.Second * time.Duration(retrySleepBetweenSecs))
 		} else {
@@ -61,6 +65,12 @@ func (client *Client) NewRequestDoRetryWithOptions(method, url string, options, 
 }
 
 func (client *Client) NewRequestDoRetry(method, url string, options, body, v interface{}, shouldRetry func(*http.Response) bool) (*http.Response, error) {
+	if shouldRetry == nil {
+		// Default retry only on 4xx and 5xx status codes
+		shouldRetry = func(resp *http.Response) bool {
+			return resp != nil && resp.StatusCode >= 400 && resp.StatusCode < 600
+		}
+	}
 	return client.NewRequestDoRetryWithOptions(method, url, options, body, v, 3, 5, shouldRetry)
 }
 

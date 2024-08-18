@@ -113,7 +113,7 @@ type OnboardingConfigurationOptions struct {
 
 func (service *Service) Create(body OnboardingRequest) (*OrganizationManagementViewModel, *http.Response, error) {
 	v := new(OrganizationManagementViewModel)
-	resp, err := service.Client.NewRequestDo("POST", cloudaccounts.RESTfulServicePathAwsOrgMgmt, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", cloudaccounts.RESTfulServicePathAwsOrgMgmt, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -127,7 +127,7 @@ func (service *Service) UpdateStackSetArn(id string, body UpdateStackSetArnReque
 	}
 
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulServicePathAwsOrgMgmt, id, cloudaccounts.RESTfulServicePathAwsOrgMgmtStacksetArn)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +141,7 @@ func (service *Service) UpdateConfiguration(id string, body UpdateConfigurationR
 	}
 
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulServicePathAwsOrgMgmt, id, cloudaccounts.RESTfulServicePathAwsOrgMgmtConfiguration)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func (service *Service) UpdateConfiguration(id string, body UpdateConfigurationR
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAwsOrgMgmt, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +166,7 @@ func (service *Service) Get(id string) (*OrganizationManagementViewModel, *http.
 
 	v := new(OrganizationManagementViewModel)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAwsOrgMgmt, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -176,7 +176,7 @@ func (service *Service) Get(id string) (*OrganizationManagementViewModel, *http.
 
 func (service *Service) GetAll() (*[]OrganizationManagementViewModel, *http.Response, error) {
 	v := new([]OrganizationManagementViewModel)
-	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulServicePathAwsOrgMgmt, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", cloudaccounts.RESTfulServicePathAwsOrgMgmt, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -195,7 +195,7 @@ func (service *Service) GetOnboardingConfiguration(awsAccountId string) (*Manage
 		AwsAccountId: awsAccountId,
 	}
 
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, onboardingConfigurationOptions, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, onboardingConfigurationOptions, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -206,7 +206,7 @@ func (service *Service) GetOnboardingConfiguration(awsAccountId string) (*Manage
 func (service *Service) GetMemberAccountConfiguration() (*OnboardingMemberCft, *http.Response, error) {
 	v := new(OnboardingMemberCft)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAwsOrgMgmtOnboarding, cloudaccounts.RESTfulServicePathAwsOrgMgmtOnboardingMemberAccountStack)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}

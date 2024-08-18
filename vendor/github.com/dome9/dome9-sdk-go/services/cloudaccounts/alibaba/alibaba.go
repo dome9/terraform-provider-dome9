@@ -44,7 +44,7 @@ type CloudAccountUpdateOrganizationalIDRequest struct {
 
 func (service *Service) GetAll() (*[]CloudAccountResponse, *http.Response, error) {
 	v := new([]CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulPathAlibaba, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", cloudaccounts.RESTfulPathAlibaba, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -59,7 +59,7 @@ func (service *Service) Get(id string) (*CloudAccountResponse, *http.Response, e
 
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAlibaba, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -69,7 +69,7 @@ func (service *Service) Get(id string) (*CloudAccountResponse, *http.Response, e
 
 func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
-	resp, err := service.Client.NewRequestDo("POST", cloudaccounts.RESTfulPathAlibaba, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", cloudaccounts.RESTfulPathAlibaba, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -79,7 +79,7 @@ func (service *Service) Create(body CloudAccountRequest) (*CloudAccountResponse,
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAlibaba, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 func (service *Service) UpdateName(id string, body CloudAccountUpdateNameRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAlibaba, id, cloudaccounts.RESTfulServicePathAlibabaName)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -102,7 +102,7 @@ func (service *Service) UpdateName(id string, body CloudAccountUpdateNameRequest
 func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdateOrganizationalIDRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAlibaba, id, cloudaccounts.RESTfulServicePathAlibabaOrganizationalUnit)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -113,7 +113,7 @@ func (service *Service) UpdateOrganizationalID(id string, body CloudAccountUpdat
 func (service *Service) UpdateCredentials(id string, body CloudAccountCredentialsRequest) (*CloudAccountResponse, *http.Response, error) {
 	v := new(CloudAccountResponse)
 	relativeURL := fmt.Sprintf("%s/%s/%s", cloudaccounts.RESTfulPathAlibaba, id, cloudaccounts.RESTfulServicePathAlibabaCredentials)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
