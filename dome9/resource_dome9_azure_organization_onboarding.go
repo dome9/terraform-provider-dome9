@@ -34,10 +34,12 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 			"organization_name": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"app_registration_name": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"client_id": {
 				Type:     schema.TypeString,
