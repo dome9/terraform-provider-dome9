@@ -2,6 +2,7 @@ package dome9
 
 import (
 	"github.com/dome9/dome9-sdk-go/dome9/client"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure_org"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -404,7 +405,7 @@ func expandAzureOrganizationOnboardingRequest(d *schema.ResourceData) azure_org.
 				Accounts: extractCdrAccounts(cdr),
 			},
 			PostureManagement: azure_org.PostureManagement{
-				OnboardingMode: azure_org.OnboardingMode(postureManagement["onboarding_mode"].(string)),
+				OnboardingMode: aws_org.OnboardingMode(postureManagement["onboarding_mode"].(string)),
 			},
 		},
 		Vendor: azure_org.CloudVendor(d.Get("vendor").(string)),
