@@ -42,7 +42,7 @@ type OUResponse struct {
 func (service *Service) Get(ouId string) (*OUResponse, *http.Response, error) {
 	v := new(OUResponse)
 	path := fmt.Sprintf("%s/%s", ouResourcePath, ouId)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", path, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -51,7 +51,7 @@ func (service *Service) Get(ouId string) (*OUResponse, *http.Response, error) {
 
 func (service *Service) GetAll() (*[]OUResponse, *http.Response, error) {
 	v := new([]OUResponse)
-	resp, err := service.Client.NewRequestDo("GET", ouResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", ouResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -60,7 +60,7 @@ func (service *Service) GetAll() (*[]OUResponse, *http.Response, error) {
 
 func (service *Service) Create(ou *OURequest) (*OUResponse, *http.Response, error) {
 	v := new(OUResponse)
-	resp, err := service.Client.NewRequestDo("POST", ouResourcePath, nil, ou, &v)
+	resp, err := service.Client.NewRequestDoRetry("POST", ouResourcePath, nil, ou, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -69,7 +69,7 @@ func (service *Service) Create(ou *OURequest) (*OUResponse, *http.Response, erro
 
 func (service *Service) Update(ouId string, ou *OURequest) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", ouResourcePath, ouId)
-	resp, err := service.Client.NewRequestDo("PUT", path, nil, ou, nil)
+	resp, err := service.Client.NewRequestDoRetry("PUT", path, nil, ou, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (service *Service) Update(ouId string, ou *OURequest) (*http.Response, erro
 
 func (service *Service) Delete(ouId string) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", ouResourcePath, ouId)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -52,7 +52,7 @@ type GenerateKeyResponse struct {
 
 func (service *Service) Create(serviceAccount *ServiceAccountRequest) (*ServiceAccountResponse, *http.Response, error) {
 	v := new(ServiceAccountResponse)
-	resp, err := service.Client.NewRequestDo("POST", serviceAccountResourcePath, nil, serviceAccount, &v)
+	resp, err := service.Client.NewRequestDoRetry("POST", serviceAccountResourcePath, nil, serviceAccount, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -62,7 +62,7 @@ func (service *Service) Create(serviceAccount *ServiceAccountRequest) (*ServiceA
 func (service *Service) Update(serviceAccount *UpdateServiceAccountRequest) (*ServiceAccountResponse, *http.Response, error) {
 	v := new(ServiceAccountResponse)
 	path := fmt.Sprintf("%s/%s", serviceAccountResourcePath, updateServiceAccountResourcePath)
-	resp, err := service.Client.NewRequestDo("POST", path, nil, serviceAccount, &v)
+	resp, err := service.Client.NewRequestDoRetry("POST", path, nil, serviceAccount, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -71,7 +71,7 @@ func (service *Service) Update(serviceAccount *UpdateServiceAccountRequest) (*Se
 
 func (service *Service) GetAll() (*[]GetServiceAccountResponse, *http.Response, error) {
 	v := new([]GetServiceAccountResponse)
-	resp, err := service.Client.NewRequestDo("GET", serviceAccountResourcePath, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", serviceAccountResourcePath, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -81,7 +81,7 @@ func (service *Service) GetAll() (*[]GetServiceAccountResponse, *http.Response, 
 func (service *Service) Get(id string) (*GetServiceAccountResponse, *http.Response, error) {
 	v := new(GetServiceAccountResponse)
 	path := fmt.Sprintf("%s/%s", serviceAccountResourcePath, id)
-	resp, err := service.Client.NewRequestDo("GET", path, nil, nil, &v)
+	resp, err := service.Client.NewRequestDoRetry("GET", path, nil, nil, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -90,7 +90,7 @@ func (service *Service) Get(id string) (*GetServiceAccountResponse, *http.Respon
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	path := fmt.Sprintf("%s/%s", serviceAccountResourcePath, id)
-	resp, err := service.Client.NewRequestDo("DELETE", path, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", path, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (service *Service) Delete(id string) (*http.Response, error) {
 }
 
 func (service *Service) DeleteAll() (*http.Response, error) {
-	resp, err := service.Client.NewRequestDo("DELETE", serviceAccountResourcePath, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", serviceAccountResourcePath, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (service *Service) DeleteAll() (*http.Response, error) {
 func (service *Service) GenerateKey(req *GenerateKeyRequest) (*GenerateKeyResponse, *http.Response, error) {
 	v := new(GenerateKeyResponse)
 	path := fmt.Sprintf("%s/%s", serviceAccountResourcePath, generateKeyServiceAccountResourcePath)
-	resp, err := service.Client.NewRequestDo("POST", path, nil, req, &v)
+	resp, err := service.Client.NewRequestDoRetry("POST", path, nil, req, &v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
