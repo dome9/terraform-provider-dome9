@@ -167,7 +167,7 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 			"is_auto_onboarding": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
+				Default:  true,
 			},
 			"account_id": {
 				Type:     schema.TypeInt,

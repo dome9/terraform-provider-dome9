@@ -133,8 +133,8 @@ resource "%s" "%s" {
 		//Resource variables
 		resourcetype.AzureOrganizationOnboarding,
 		resourceName,
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId),
-		os.Getenv(environmentvariable.CloudAccountAzureEnvVarManagementGroupId),
+		os.Getenv(environmentvariable.CloudAccountOrgAzureEnvVarTenantId),
+		os.Getenv(environmentvariable.CloudAccountOrgAzureEnvVarManagementGroupId),
 		variable.AzureOrganizationOnboardingVendorName,
 	)
 }

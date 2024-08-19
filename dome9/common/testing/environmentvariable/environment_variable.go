@@ -64,5 +64,6 @@ const (
 
 // Azure organization onboarding environment variable
 const (
-	CloudAccountAzureEnvVarManagementGroupId = "MGMT_GROUP_ID"
+	CloudAccountOrgAzureEnvVarManagementGroupId = "AZURE_ORG_MGMT_GROUP_ID"
+	CloudAccountOrgAzureEnvVarTenantId          = "AZURE_ORG_TENANT_ID"
 )

@@ -55,4 +55,6 @@ jobs:
           AWS_ORG_ROLE_ARN: ${{ secrets.AWS_ORG_ROLE_ARN }}
           AWS_ORG_SECRET: ${{ secrets.AWS_ORG_SECRET }}
           AWS_ORG_STACK_SET_ARN: ${{ secrets.AWS_ORG_STACK_SET_ARN }}
+          AZURE_ORG_MGMT_GROUP_ID: ${{ secrets.AZURE_ORG_MGMT_GROUP_ID }}
+          AZURE_ORG_TENANT_ID: ${{ secrets.AZURE_ORG_TENANT_ID }}
         run: go test -v -timeout 2400s ./...
