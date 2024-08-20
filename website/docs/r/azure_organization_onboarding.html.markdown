@@ -83,7 +83,7 @@ The following arguments are supported:
 
 * `workflow_id` - (Optional) The workflow ID.
 * `tenant_id` - (Required) The Tenant ID to onboard.
-* `management_group_id` - (Optional) The Management Group ID to onboard.
+* `management_group_id` - (Optional) The Management Group ID to onboard. To onboard the whole tenant, use the `tenant_id` parameter here.
 * `organization_name` - (Optional) Organization name in CloudGuard. Default is `AzureOrg`.
 * `app_registration_name` - (Optional) The name of the application created in the script. Required only if non UseCloudGuardManagedApp mode is used.
 * `client_id` - (Optional) Application (client) ID. Required only if non UseCloudGuardManagedApp mode is used.

@@ -33,7 +33,7 @@ func TestAccResourceAzureOrganizationOnboardingBasic(t *testing.T) {
 					testAccCheckAzureOrganizationOnboardingExists(resourceTypeAndName, &response),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "tenant_id", os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId)),
 				),
-				ExpectError: regexp.MustCompile(`.+The onboarding process failed to retrieve the Azure Service Principal ID.+`),
+				ExpectError: regexp.MustCompile(`.+Please ensure that the shell script has completed successfully.+`),
 			},
 		},
 	})
@@ -128,7 +128,7 @@ resource "%s" "%s" {
     }
   }
   use_cloud_guard_managed_app = true
-  is_auto_onboarding = false
+  is_auto_onboarding = true
   vendor = "%s"
 }
 `,

@@ -31,7 +31,7 @@ func TestAccDataSourceAzureOrganizationOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "app_registration_name", resourceTypeAndName, "app_registration_name"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "onboarding_configuration", resourceTypeAndName, "onboarding_configuration"),
 				),
-				ExpectError: regexp.MustCompile(`.+The onboarding process failed to retrieve the Azure Service Principal ID.+`),
+				ExpectError: regexp.MustCompile(`.+Please ensure that the shell script has completed successfully.+`),
 			},
 		},
 	})
