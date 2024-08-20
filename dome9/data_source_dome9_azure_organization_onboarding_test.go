@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/resourcetype"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
+	"regexp"
 	"testing"
 )
 
@@ -30,6 +31,7 @@ func TestAccDataSourceAzureOrganizationOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "app_registration_name", resourceTypeAndName, "app_registration_name"),
 					resource.TestCheckResourceAttrPair(dataSourceTypeAndName, "onboarding_configuration", resourceTypeAndName, "onboarding_configuration"),
 				),
+				ExpectError: regexp.MustCompile(`.+The onboarding process failed to retrieve the Azure Service Principal ID.+`),
 			},
 		},
 	})

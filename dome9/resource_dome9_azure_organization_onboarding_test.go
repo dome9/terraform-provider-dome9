@@ -10,6 +10,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/method"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/testing/variable"
 	"os"
+	"regexp"
 	"testing"
 )
 
@@ -32,6 +33,7 @@ func TestAccResourceAzureOrganizationOnboardingBasic(t *testing.T) {
 					testAccCheckAzureOrganizationOnboardingExists(resourceTypeAndName, &response),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "tenant_id", os.Getenv(environmentvariable.CloudAccountAzureEnvVarTenantId)),
 				),
+				ExpectError: regexp.MustCompile(`.+The onboarding process failed to retrieve the Azure Service Principal ID.+`),
 			},
 		},
 	})
