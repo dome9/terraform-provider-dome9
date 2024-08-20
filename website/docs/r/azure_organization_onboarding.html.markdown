@@ -9,6 +9,7 @@ description: Onboard Azure organization to CloudGuard
 
 Connect an Azure organization to CloudGuard in one quick process.
 
+### Important
 First you need to fill all onboarding configuration in the CloudGuard portal in the [Azure onboarding page](https://secure.dome9.com/v2/azure-onboarding) to get the Cloud Shell script.
 The script should be run and complete before applying the `dome9_azure_organization_onboarding` resource.
 
@@ -99,7 +100,7 @@ The following arguments are supported:
             * `storage_id` - (Required) Storage account ID.
             * `log_types` - (Optional) List of log types.
     * `serverless` - (Required) Serverless configuration.
-        * `is_enabled` - (Required) Boolean flag to enable serverless protection.
+        * `is_enabled` - (Required) Boolean flag to enable serverless protection. - Not supported yet.
         * `accounts` - (Optional) List of serverless accounts.
             * `storage_id` - (Required) Storage account ID.
             * `log_types` - (Optional) List of log types.
@@ -108,7 +109,7 @@ The following arguments are supported:
         * `rulesets_ids` - (Optional) List of ruleset IDs that will run automatically on the organization cloud accounts.
 * `vendor` - (Required) Vendor name. Can be: `azure`, `azurechina`, `azuregov`. Default is `azure`.
 * `use_cloud_guard_managed_app` - (Optional) Specifies whether to use the Check Point application to connect the subscriptions to CloudGuard. Default is false.
-* `is_auto_onboarding` - (Optional) Declares if the onboarding pipeline automatically onboards newly discovered subscriptions after the initial onboarding. Default is true.
+* `is_auto_onboarding` - (Optional) Declares if the onboarding pipeline automatically onboards newly discovered subscriptions after the initial onboarding. Default is true and cannot change to false.
 
 
 ## Attributes Reference

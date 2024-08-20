@@ -49,7 +49,7 @@ The following arguments are supported:
         * `accounts` - List of serverless accounts.
             * `storage_id` - Storage account ID.
             * `log_types` - List of log types.
-* `is_auto_onboarding` - Boolean flag to enable auto onboarding.
+* `is_auto_onboarding` - Declares if the onboarding pipeline automatically onboards newly discovered subscriptions after the initial onboarding.
 * `update_time` - last update time of the stackSet.
 * `creation_time` - Creation time of the organization.
 

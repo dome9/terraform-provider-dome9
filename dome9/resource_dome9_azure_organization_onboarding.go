@@ -325,10 +325,13 @@ func resourceAzureOrganizationOnboardingRead(d *schema.ResourceData, meta interf
 	_ = d.Set("tenant_id", resp.TenantId)
 	_ = d.Set("management_group_id", resp.ManagementGroupId)
 	_ = d.Set("app_registration_name", resp.AppRegistrationName)
-	_ = d.Set("onboarding_configuration", flattenAzureOrganizationOnboardingConfiguration(resp.OnboardingConfiguration))
 	_ = d.Set("is_auto_onboarding", resp.IsAutoOnboarding)
 	_ = d.Set("update_time", resp.UpdateTime)
 	_ = d.Set("creation_time", resp.CreationTime)
+
+	if err := d.Set("onboarding_configuration", flattenAzureOrganizationOnboardingConfiguration(resp.OnboardingConfiguration)); err != nil {
+		return err
+	}
 
 	return nil
 }
