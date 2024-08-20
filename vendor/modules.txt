@@ -108,6 +108,7 @@ github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure
+github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure_org
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s
 github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci

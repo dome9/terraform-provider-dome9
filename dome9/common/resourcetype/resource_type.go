@@ -33,8 +33,9 @@ const (
 	AwpAwsOnboardingData                         = "dome9_awp_aws_onboarding_data"
 	AwpAwsOnboarding                             = "dome9_awp_aws_onboarding"
 	AWSOrganizationOnboarding                    = "dome9_aws_organization_onboarding"
+	AzureOrganizationOnboarding                  = "dome9_azure_organization_onboarding"
 	AWSOrganizationOnboardingManagementStack     = "dome9_aws_organization_onboarding_management_stack"
 	AWSOrganizationOnboardingMemberAccountConfig = "dome9_aws_organization_onboarding_member_account_configuration"
-  AwpAzureOnboardingData                       = "dome9_awp_azure_onboarding_data"
+	AwpAzureOnboardingData                       = "dome9_awp_azure_onboarding_data"
 	AwpAzureOnboarding                           = "dome9_awp_azure_onboarding"
 )
