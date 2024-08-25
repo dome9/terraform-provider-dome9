@@ -37,6 +37,7 @@ type AgentlessAccountSettings struct {
 	ScanMachineIntervalInHours   int               `json:"scanMachineIntervalInHours"`
 	MaxConcurrenceScansPerRegion int               `json:"maxConcurrenceScansPerRegion"`
 	SkipFunctionAppsScan         bool              `json:"skipFunctionAppsScan"`
+	InAccountScannerVPC          string            `json:"inAccountScannerVPC"`
 	CustomTags                   map[string]string `json:"customTags"`
 }
 
