@@ -41,6 +41,10 @@ type AgentlessAccountSettings struct {
 	CustomTags                   map[string]string `json:"customTags"`
 }
 
+type AgentlessCentralizedAccountSettings struct {
+	InAccountScannerVPC string `json:"inAccountScannerVPC"`
+}
+
 type AccountIssues struct {
 	Regions map[string]interface{}  `json:"regions"`
 	Account *map[string]interface{} `json:"account"`
@@ -100,6 +104,17 @@ func UpdateAWPSettings(client *client.Client, cloudProvider string, id string, r
 	return resp, nil
 }
 
+func UpdateAWPCentralizedSettings(client *client.Client, cloudProvider string, id string, req AgentlessCentralizedAccountSettings) (*http.Response, error) {
+	// Construct the URL path
+	path := fmt.Sprintf(OnboardingResourcePath, cloudProvider, id)
+	// Make a PATCH request with the JSON body
+	resp, err := client.NewRequestDoRetry("PATCH", fmt.Sprintf("%s/settings", path), nil, req, nil, shouldRetry)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func shouldRetry(resp *http.Response) bool {
-    return resp != nil && resp.StatusCode >= 400 && resp.StatusCode < 600
+	return resp != nil && resp.StatusCode >= 400 && resp.StatusCode < 600
 }

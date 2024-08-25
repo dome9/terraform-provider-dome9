@@ -39,6 +39,10 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
+						"in_account_scanner_vpc": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Computed: true,

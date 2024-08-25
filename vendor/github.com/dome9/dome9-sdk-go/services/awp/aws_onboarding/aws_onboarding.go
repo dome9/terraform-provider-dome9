@@ -59,6 +59,10 @@ func (service *Service) UpdateAWPSettings(id string, req awp_onboarding.Agentles
 	return awp_onboarding.UpdateAWPSettings(service.Client, awp_onboarding.ProviderAWS, id, req)
 }
 
+func (service *Service) UpdateAWPCentralizedSettings(id string, req awp_onboarding.AgentlessCentralizedAccountSettings) (*http.Response, error) {
+	return awp_onboarding.UpdateAWPCentralizedSettings(service.Client, awp_onboarding.ProviderAWS, id, req)
+}
+
 func (service *Service) GetOnboardingData() (*AgentlessTerraformOnboardingDataResponseAws, *http.Response, error) {
 	v := new(AgentlessTerraformOnboardingDataResponseAws)
 	resp, err := service.Client.NewRequestDoRetry("GET", GetOnboardingDataPath, nil, nil, v, nil)
