@@ -328,7 +328,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrentScans
 	}
 
-	if inAccountScannerVPC, ok := agentlessAccountSettingsMap["in_account_scanner_vpc"].(int); ok {
+	if inAccountScannerVPC, ok := agentlessAccountSettingsMap["in_account_scanner_vpc"].(string); ok {
 		agentlessAccountSettings.InAccountScannerVPC = inAccountScannerVPC
 	}
 
