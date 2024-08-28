@@ -17,6 +17,8 @@ const (
 	EnablePostfix          = "enable"
 	EnableSubPostfix       = "enableSubAccount"
 	EnableHubPostfix       = "enableCentralizedAccount"
+	UpdatePostfix          = "settings"
+	UpdateHubPostfix       = "centralizedAccountSettings"
 )
 
 const (
@@ -93,22 +95,9 @@ func DeleteAWPOnboarding(client *client.Client, cloudProvider string, id string,
 	return resp, nil
 }
 
-func UpdateAWPSettings(client *client.Client, cloudProvider string, id string, req AgentlessAccountSettings) (*http.Response, error) {
-	// Construct the URL path
-	path := fmt.Sprintf(OnboardingResourcePath, cloudProvider, id)
+func UpdateAWPSettings(client *client.Client, path string, req AgentlessAccountSettings) (*http.Response, error) {
 	// Make a PATCH request with the JSON body
-	resp, err := client.NewRequestDoRetry("PATCH", fmt.Sprintf("%s/settings", path), nil, req, nil, shouldRetry)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
-}
-
-func UpdateAWPCentralizedSettings(client *client.Client, cloudProvider string, id string, req AgentlessCentralizedAccountSettings) (*http.Response, error) {
-	// Construct the URL path
-	path := fmt.Sprintf(OnboardingResourcePath, cloudProvider, id)
-	// Make a PATCH request with the JSON body
-	resp, err := client.NewRequestDoRetry("PATCH", fmt.Sprintf("%s/settings", path), nil, req, nil, shouldRetry)
+	resp, err := client.NewRequestDoRetry("PATCH", path, nil, req, nil, shouldRetry)
 	if err != nil {
 		return nil, err
 	}
