@@ -410,8 +410,11 @@ func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) er
 		if err != nil {
 			return err
 		}
+
+		scanMode := d.Get("scan_mode").(string)
+
 		// Send the update request
-		_, err = d9Client.awpAwsOnboarding.UpdateAWPSettings(d.Id(), *newAgentlessAccountSettings)
+		_, err = d9Client.awpAwsOnboarding.UpdateAWPSettings(d.Id(), scanMode, *newAgentlessAccountSettings)
 		if err != nil {
 			return err
 		}
