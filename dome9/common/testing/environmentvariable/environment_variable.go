@@ -61,3 +61,9 @@ const (
 	AwsOrganizationOnboardingEnvVarSecret      = "AWS_ORG_SECRET"
 	AwsOrganizationOnboardingEnvVarStackSetArn = "AWS_ORG_STACK_SET_ARN"
 )
+
+// Azure organization onboarding environment variable
+const (
+	CloudAccountOrgAzureEnvVarManagementGroupId = "AZURE_ORG_MGMT_GROUP_ID"
+	CloudAccountOrgAzureEnvVarTenantId          = "AZURE_ORG_TENANT_ID"
+)

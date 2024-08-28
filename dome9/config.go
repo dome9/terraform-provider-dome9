@@ -1,18 +1,16 @@
 package dome9
 
 import (
-	"github.com/dome9/dome9-sdk-go/services/assessment"
-	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
-  "github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
-	"github.com/dome9/dome9-sdk-go/services/integrations"
-	"github.com/dome9/dome9-sdk-go/services/notifications"
-	"log"
 	"github.com/dome9/dome9-sdk-go/dome9"
 	"github.com/dome9/dome9-sdk-go/services/admissioncontrol/admission_policy"
+	"github.com/dome9/dome9-sdk-go/services/assessment"
+	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/alibaba"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/aws_org"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/azure_org"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/gcp"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/k8s"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts/oci"
@@ -21,14 +19,17 @@ import (
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_notification"
 	"github.com/dome9/dome9-sdk-go/services/compliance/continuous_compliance_policy"
 	"github.com/dome9/dome9-sdk-go/services/imageassurance/imageassurance_policy"
-	"github.com/dome9/dome9-sdk-go/services/vulnerability/vulnerability_policy"
+	"github.com/dome9/dome9-sdk-go/services/integrations"
 	"github.com/dome9/dome9-sdk-go/services/iplist"
+	"github.com/dome9/dome9-sdk-go/services/notifications"
 	"github.com/dome9/dome9-sdk-go/services/organizationalunits"
 	"github.com/dome9/dome9-sdk-go/services/roles"
 	"github.com/dome9/dome9-sdk-go/services/rulebundles"
 	"github.com/dome9/dome9-sdk-go/services/serviceaccounts"
 	"github.com/dome9/dome9-sdk-go/services/unifiedonboarding/aws_unified_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/users"
+	"github.com/dome9/dome9-sdk-go/services/vulnerability/vulnerability_policy"
+	"log"
 )
 
 func init() {
@@ -62,7 +63,8 @@ type Client struct {
 	assessment                       assessment.Service
 	awpAwsOnboarding                 awp_aws_onboarding.Service
 	awsOrganizationOnboarding        aws_org.Service
-  awpAzureOnboarding               awp_azure_onboarding.Service
+	azureOrganizationOnboarding      azure_org.Service
+	awpAzureOnboarding               awp_azure_onboarding.Service
 }
 
 type Config struct {
@@ -103,7 +105,8 @@ func (c *Config) Client() (*Client, error) {
 		assessment:                       *assessment.New(config),
 		awpAwsOnboarding:                 *awp_aws_onboarding.New(config),
 		awsOrganizationOnboarding:        *aws_org.New(config),
-    awpAzureOnboarding:               *awp_azure_onboarding.New(config),
+		awpAzureOnboarding:               *awp_azure_onboarding.New(config),
+		azureOrganizationOnboarding:      *azure_org.New(config),
 	}
 
 	log.Println("[INFO] initialized Dome9 client")
