@@ -386,7 +386,9 @@ func resourceAWPAzureOnboardingUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 		// Send the update request
-		_, err = d9Client.awpAzureOnboarding.UpdateAWPSettings(d.Id(), *newAgentlessAccountSettings)
+		scanMode := d.Get("scan_mode").(string)
+
+		_, err = d9Client.awpAzureOnboarding.UpdateAWPSettings(d.Id(), scanMode, *newAgentlessAccountSettings)
 		if err != nil {
 			return err
 		}

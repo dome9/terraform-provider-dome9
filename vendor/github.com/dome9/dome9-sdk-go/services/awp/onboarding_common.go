@@ -43,10 +43,6 @@ type AgentlessAccountSettings struct {
 	CustomTags                   map[string]string `json:"customTags"`
 }
 
-type AgentlessCentralizedAccountSettings struct {
-	InAccountScannerVPC string `json:"inAccountScannerVPC"`
-}
-
 type AccountIssues struct {
 	Regions map[string]interface{}  `json:"regions"`
 	Account *map[string]interface{} `json:"account"`
