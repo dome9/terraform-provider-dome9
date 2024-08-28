@@ -156,6 +156,7 @@ resource "%s" "%s" {
 		disabled_regions = %s
 		scan_machine_interval_in_hours = "%s"
 		max_concurrent_scans_per_region = "%s"
+		in_account_scanner_vpc = "%s"
 		custom_tags = %s
 	}
 }
