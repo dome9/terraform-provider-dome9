@@ -269,6 +269,8 @@ const (
 	ScanMachineIntervalInHoursUpdate  = "11"
 	MaxConcurrentScansPerRegion       = "4"
 	MaxConcurrentScansPerRegionUpdate = "8"
+	InAccountScannerVPC               = "ManagedByAWP"
+	InAccountScannerVPCUpdate         = "ManagedByCustomer"
 	CustomTags                        = `{
 			tag1 = "value1"
 			tag2 = "value2"
