@@ -198,7 +198,7 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 
 func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) {
 	scanMode := d.Get("scan_mode").(string)
-	if scanMode == "inAccountHub" || scanMode == "inAccountSub" {
+	if scanMode == "inAccountSub" {
 		if _, ok := d.GetOk("agentless_account_settings"); ok {
 			agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
 			if len(agentlessAccountSettingsList) < 1 {
