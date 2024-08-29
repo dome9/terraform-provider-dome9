@@ -10,7 +10,7 @@ import (
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
 	"github.com/dome9/dome9-sdk-go/services/awp"
-    "github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/awp/aws_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -80,6 +80,11 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Optional: true,
 							Default:  20,
+						},
+						"in_account_scanner_vpc": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "ManagedByAWP",
 						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
