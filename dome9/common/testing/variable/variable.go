@@ -271,6 +271,8 @@ const (
 	MaxConcurrentScansPerRegionUpdate = "8"
 	InAccountScannerVPC               = "ManagedByAWP"
 	InAccountScannerVPCUpdate         = "ManagedByCustomer"
+	SseCmkEncryptedDisksScan          = "true"
+	SseCmkEncryptedDisksScanUpdate    = "false"
 	CustomTags                        = `{
 			tag1 = "value1"
 			tag2 = "value2"

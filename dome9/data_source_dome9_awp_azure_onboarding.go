@@ -43,6 +43,15 @@ func dataSourceAwpAzureOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
+						"in_account_scanner_vpc": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"sse_cmk_encrypted_disks_scan": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default:  false,
+						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Computed: true,

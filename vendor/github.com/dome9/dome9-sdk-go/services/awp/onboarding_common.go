@@ -40,6 +40,7 @@ type AgentlessAccountSettings struct {
 	MaxConcurrenceScansPerRegion int               `json:"maxConcurrenceScansPerRegion"`
 	SkipFunctionAppsScan         bool              `json:"skipFunctionAppsScan"`
 	InAccountScannerVPC          string            `json:"inAccountScannerVPC"`
+	SseCmkEncryptedDisksScan     bool              `json:"sseCmkEncryptedDisksScan"`
 	CustomTags                   map[string]string `json:"customTags"`
 }
 
