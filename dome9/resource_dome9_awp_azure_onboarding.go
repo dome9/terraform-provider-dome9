@@ -242,12 +242,6 @@ func resourceAWPAzureOnboardingRead(d *schema.ResourceData, meta interface{}) er
 		return err
 	}
 
-	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssuesAzure(resp.AccountIssues)); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
@@ -355,15 +349,6 @@ func flattenAgentlessAccountSettingsAzure(settings *awp_onboarding.AgentlessAcco
 		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
 		"custom_tags":                     settings.CustomTags,
 	}
-	return []interface{}{m}
-}
-
-func flattenAccountIssuesAzure(accountIssues *awp_onboarding.AccountIssues) []interface{} {
-	m := map[string]interface{}{
-		"regions": accountIssues.Regions,
-		"account": accountIssues.Account,
-	}
-
 	return []interface{}{m}
 }
 

@@ -137,10 +137,6 @@ func dataSourceAwpAwsOnboardingRead(d *schema.ResourceData, meta interface{}) er
 			return err
 		}
 	}
-	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssues(resp.AccountIssues)); err != nil {
-			return err
-		}
-	}
+
 	return nil
 }
