@@ -8,12 +8,12 @@ import (
 	"strings"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
-	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/awp"
+	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 )
 
 func resourceAwpAzureOnboarding() *schema.Resource {
@@ -45,12 +45,12 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 			"centralized_cloud_account_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default: nil,
+				Default:  nil,
 			},
-			"management_group_id":{
+			"management_group_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default: nil,
+				Default:  nil,
 			},
 			"agentless_account_settings": {
 				Type:     schema.TypeList,
@@ -69,7 +69,6 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Default:  false,
-
 						},
 						"scan_machine_interval_in_hours": {
 							Type:     schema.TypeInt,
@@ -95,30 +94,6 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-			"account_issues": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"regions": {
-							Type:     schema.TypeMap,
-							Optional: true,
-						},
-						"account": {
-							Type:     schema.TypeMap,
-							Optional: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"issue_type": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-								},
-							},
-						},
-					},
-				},
 			},
 			"cloud_account_id": {
 				Type:     schema.TypeString,
@@ -177,17 +152,17 @@ func expandAWPOnboardingRequestAzure(d *schema.ResourceData, meta interface{}) (
 		return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{}, err
 	}
 	return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{
-		ScanMode:                   d.Get("scan_mode").(string),
-		IsTerraform:                true,
-		ManagementGroupId:          d.Get("management_group_id").(string),
-		AgentlessAccountSettings:   agentlessAccountSettings,
-		CentralizedCloudAccountId:  cloudGuardHubAccountID,
+		ScanMode:                  d.Get("scan_mode").(string),
+		IsTerraform:               true,
+		ManagementGroupId:         d.Get("management_group_id").(string),
+		AgentlessAccountSettings:  agentlessAccountSettings,
+		CentralizedCloudAccountId: cloudGuardHubAccountID,
 	}, nil
 }
 
 func checkCentralizedAzure(d *schema.ResourceData, meta interface{}) (string, error) {
 	scanMode := d.Get("scan_mode").(string)
-	if scanMode == "inAccountHub"{
+	if scanMode == "inAccountHub" {
 		if _, ok := d.GetOk("agentless_account_settings"); ok {
 			agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
 			if len(agentlessAccountSettingsList) < 1 {
@@ -203,7 +178,7 @@ func checkCentralizedAzure(d *schema.ResourceData, meta interface{}) (string, er
 			errorMsg := fmt.Sprintf("centralized_cloud_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
 			return "", errors.New(errorMsg)
 		}
-	
+
 		getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: hubExternalAccountId}
 		cloudAccountresp, _, err := d9client.cloudaccountAzure.Get(&getCloudAccountQueryParams)
 		if err != nil {

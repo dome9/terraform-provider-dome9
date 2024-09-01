@@ -110,7 +110,6 @@ The following arguments are supported:
 ## Attributes Reference
 
 * `missing_awp_private_network_regions` - The missing AWP private network regions.
-* `account_issues` - The account issues.
 * `cloud_account_id` - The cloud guard account id.
 * `agentless_protection_enabled` - Whether agentless protection is enabled.
 * `cloud_provider` - The cloud provider.
