@@ -43,15 +43,9 @@ type AgentlessAccountSettings struct {
 	CustomTags                   map[string]string `json:"customTags"`
 }
 
-type AccountIssues struct {
-	Regions map[string]interface{}  `json:"regions"`
-	Account *map[string]interface{} `json:"account"`
-}
-
 type GetAWPOnboardingResponse struct {
 	AgentlessAccountSettings        *AgentlessAccountSettings `json:"agentlessAccountSettings"`
 	MissingAwpPrivateNetworkRegions *[]string                 `json:"missingAwpPrivateNetworkRegions"`
-	AccountIssues                   *AccountIssues            `json:"accountIssues"`
 	CloudAccountId                  string                    `json:"cloudAccountId"`
 	AgentlessProtectionEnabled      bool                      `json:"agentlessProtectionEnabled"`
 	ScanMode                        string                    `json:"scanMode"`
