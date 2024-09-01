@@ -132,10 +132,6 @@ func dataSourceAwpAzureOnboardingRead(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 	}
-	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssuesAzure(resp.AccountIssues)); err != nil {
-			return err
-		}
-	}
+
 	return nil
 }

@@ -248,12 +248,6 @@ func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
-	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssues(resp.AccountIssues)); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
@@ -361,15 +355,6 @@ func flattenAgentlessAccountSettings(settings *awp_onboarding.AgentlessAccountSe
 		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
 		"custom_tags":                     settings.CustomTags,
 	}
-	return []interface{}{m}
-}
-
-func flattenAccountIssues(accountIssues *awp_onboarding.AccountIssues) []interface{} {
-	m := map[string]interface{}{
-		"regions": accountIssues.Regions,
-		"account": accountIssues.Account,
-	}
-
 	return []interface{}{m}
 }
 
