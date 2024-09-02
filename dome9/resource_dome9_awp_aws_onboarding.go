@@ -101,30 +101,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"account_issues": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"regions": {
-							Type:     schema.TypeMap,
-							Optional: true,
-						},
-						"account": {
-							Type:     schema.TypeMap,
-							Optional: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"issue_type": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-								},
-							},
-						},
-					},
-				},
-			},
 			"cloud_account_id": {
 				Type:     schema.TypeString,
 				Computed: true,
