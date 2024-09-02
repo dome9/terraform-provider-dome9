@@ -52,7 +52,7 @@ func (service *Service) DeleteAWPOnboarding(id string) (*http.Response, error) {
 
 func (service *Service) UpdateAWPSettings(id string, scan_mode string, req awp_onboarding.AgentlessAccountSettings) (*http.Response, error) {
 	pathPostfix := awp_onboarding.UpdatePostfix
-	path := fmt.Sprintf(awp_onboarding.OnboardingResourcePath, awp_onboarding.ProviderAWS, id)
+	path := fmt.Sprintf(awp_onboarding.OnboardingResourcePath, awp_onboarding.ProviderAzure, id)
 	return awp_onboarding.UpdateAWPSettings(service.Client, fmt.Sprintf("%s/%s", path, pathPostfix), req)
 }
 

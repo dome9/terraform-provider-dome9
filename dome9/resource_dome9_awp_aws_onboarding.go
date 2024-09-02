@@ -363,6 +363,7 @@ func flattenAgentlessAccountSettings(settings *awp_onboarding.AgentlessAccountSe
 		"disabled_regions":                settings.DisabledRegions,
 		"scan_machine_interval_in_hours":  settings.ScanMachineIntervalInHours,
 		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
+		"in_account_scanner_vpc":          settings.InAccountScannerVPC,
 		"custom_tags":                     settings.CustomTags,
 	}
 	return []interface{}{m}

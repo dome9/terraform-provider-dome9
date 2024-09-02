@@ -8,12 +8,12 @@ import (
 	"strings"
 
 	"github.com/dome9/dome9-sdk-go/dome9/client"
-	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
 	"github.com/dome9/dome9-sdk-go/services/awp"
+	"github.com/dome9/dome9-sdk-go/services/awp/azure_onboarding"
+	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/terraform-providers/terraform-provider-dome9/dome9/common/providerconst"
-	"github.com/dome9/dome9-sdk-go/services/cloudaccounts"
 )
 
 func resourceAwpAzureOnboarding() *schema.Resource {
@@ -45,12 +45,12 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 			"centralized_cloud_account_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default: nil,
+				Default:  nil,
 			},
-			"management_group_id":{
+			"management_group_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default: nil,
+				Default:  nil,
 			},
 			"agentless_account_settings": {
 				Type:     schema.TypeList,
@@ -69,7 +69,6 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Default:  false,
-
 						},
 						"scan_machine_interval_in_hours": {
 							Type:     schema.TypeInt,
@@ -80,6 +79,11 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Optional: true,
 							Default:  20,
+						},
+						"in_account_scanner_vpc": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "ManagedByAWP",
 						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
@@ -177,25 +181,16 @@ func expandAWPOnboardingRequestAzure(d *schema.ResourceData, meta interface{}) (
 		return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{}, err
 	}
 	return awp_azure_onboarding.CreateAWPOnboardingRequestAzure{
-		ScanMode:                   d.Get("scan_mode").(string),
-		IsTerraform:                true,
-		ManagementGroupId:          d.Get("management_group_id").(string),
-		AgentlessAccountSettings:   agentlessAccountSettings,
-		CentralizedCloudAccountId:  cloudGuardHubAccountID,
+		ScanMode:                  d.Get("scan_mode").(string),
+		IsTerraform:               true,
+		ManagementGroupId:         d.Get("management_group_id").(string),
+		AgentlessAccountSettings:  agentlessAccountSettings,
+		CentralizedCloudAccountId: cloudGuardHubAccountID,
 	}, nil
 }
 
 func checkCentralizedAzure(d *schema.ResourceData, meta interface{}) (string, error) {
 	scanMode := d.Get("scan_mode").(string)
-	if scanMode == "inAccountHub"{
-		if _, ok := d.GetOk("agentless_account_settings"); ok {
-			agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
-			if len(agentlessAccountSettingsList) < 1 {
-				errorMsg := fmt.Sprintf("currently account settings not supported for centralized onboarding (%s)", scanMode)
-				return "", errors.New(errorMsg)
-			}
-		}
-	}
 	if scanMode == "inAccountSub" {
 		d9client := meta.(*Client)
 		hubExternalAccountId, exist := d.Get("centralized_cloud_account_id").(string)
@@ -203,7 +198,7 @@ func checkCentralizedAzure(d *schema.ResourceData, meta interface{}) (string, er
 			errorMsg := fmt.Sprintf("centralized_cloud_account_id is required when scan_mode is inAccountSub, got '%s'", hubExternalAccountId)
 			return "", errors.New(errorMsg)
 		}
-	
+
 		getCloudAccountQueryParams := cloudaccounts.QueryParameters{ID: hubExternalAccountId}
 		cloudAccountresp, _, err := d9client.cloudaccountAzure.Get(&getCloudAccountQueryParams)
 		if err != nil {
@@ -278,6 +273,7 @@ func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_onboardin
 		SkipFunctionAppsScan:         false,
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
+		InAccountScannerVPC:          providerconst.DefaultInAccountScannerVPCMode,
 		MaxConcurrenceScansPerRegion: providerconst.DefaultMaxConcurrentScansPerRegion,
 	}
 
@@ -308,6 +304,10 @@ func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_onboardin
 			return nil, fmt.Errorf("max_concurrent_scans_per_region must be between 1 and 20")
 		}
 		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrentScans
+	}
+
+	if inAccountScannerVPC, ok := agentlessAccountSettingsMap["in_account_scanner_vpc"].(string); ok {
+		agentlessAccountSettings.InAccountScannerVPC = inAccountScannerVPC
 	}
 
 	if customTagsInterface, ok := agentlessAccountSettingsMap["custom_tags"].(map[string]interface{}); ok {
@@ -347,6 +347,7 @@ func flattenAgentlessAccountSettingsAzure(settings *awp_onboarding.AgentlessAcco
 		"skip_function_apps_scan":         settings.SkipFunctionAppsScan,
 		"scan_machine_interval_in_hours":  settings.ScanMachineIntervalInHours,
 		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
+		"in_account_scanner_vpc":          settings.InAccountScannerVPC,
 		"custom_tags":                     settings.CustomTags,
 	}
 	return []interface{}{m}

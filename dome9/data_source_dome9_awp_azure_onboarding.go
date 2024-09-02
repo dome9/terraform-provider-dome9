@@ -43,6 +43,11 @@ func dataSourceAwpAzureOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
+						"in_account_scanner_vpc": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "ManagedByAWP",
+						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Computed: true,
