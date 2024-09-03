@@ -45,6 +45,7 @@ module "terraform-dome9-awp-azure" {
 	#     skip_function_apps_scan = false
 	#     disabled_regions = ["eastus", "westus", ...] # List of regions to disable
 	#     max_concurrent_scans_per_region = 20
+	#     in_account_scanner_vpc = "ManagedByAWP"
 	#     custom_tags = {
 	#       tag1 = "value1"
 	#       tag2 = "value2"
@@ -64,6 +65,7 @@ module "terraform-dome9-awp-azure" {
 # The skip_function_apps_scan attribute is used to specify if skip Azure Function Apps scan in the agentless account settings of the Dome9 AWP Azure Onboarding.
 # The scan_machine_interval_in_hours attribute is used to specify the scan machine interval in hours of the agentless account settings of the Dome9 AWP Azure Onboarding.
 # The max_concurrent_scans_per_region attribute is used to specify the max concurrent scans per region of the agentless account settings of the Dome9 AWP Azure Onboarding.
+# The in_account_scanner_vpc attribute is used to specify the scanner VPC mode of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP Azure Onboarding.
 resource "dome9_awp_azure_onboarding" "awp_azure_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_azure.azure_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <AZURE_SUBSCRIPTION_ID>"
@@ -77,6 +79,7 @@ resource "dome9_awp_azure_onboarding" "awp_azure_onboarding_test" {
     skip_function_apps_scan = false
     scan_machine_interval_in_hours = 24
     max_concurrent_scans_per_region = 20
+    in_account_scanner_vpc = "ManagedByAWP"
     custom_tags = {
       tag1 = "value1"
       tag2 = "value2"
@@ -104,6 +107,7 @@ The following arguments are supported:
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
   * `skip_function_apps_scan` - (Optional) Skip Azure Function Apps scan (supported for inAccount and inAccountSub scan modes)
   * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
+  * `in_account_scanner_vpc` = optional(string) # The VPC Mode. Valid values: "ManagedByAWP", "ManagedByCustomer" (supported for inAccount and inAccountHub scan modes)
   * `custom_tags` - (Optional) The custom tags.
 * `should_create_policy` - (Optional) Whether to create a policy. Default is true.
     
