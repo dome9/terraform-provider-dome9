@@ -17,6 +17,8 @@ const (
 	EnablePostfix          = "enable"
 	EnableSubPostfix       = "enableSubAccount"
 	EnableHubPostfix       = "enableCentralizedAccount"
+	UpdatePostfix          = "settings"
+	UpdateHubPostfix       = "centralizedAccountSettings"
 )
 
 const (
@@ -37,18 +39,13 @@ type AgentlessAccountSettings struct {
 	ScanMachineIntervalInHours   int               `json:"scanMachineIntervalInHours"`
 	MaxConcurrenceScansPerRegion int               `json:"maxConcurrenceScansPerRegion"`
 	SkipFunctionAppsScan         bool              `json:"skipFunctionAppsScan"`
+	InAccountScannerVPC          string            `json:"inAccountScannerVPC"`
 	CustomTags                   map[string]string `json:"customTags"`
-}
-
-type AccountIssues struct {
-	Regions map[string]interface{}  `json:"regions"`
-	Account *map[string]interface{} `json:"account"`
 }
 
 type GetAWPOnboardingResponse struct {
 	AgentlessAccountSettings        *AgentlessAccountSettings `json:"agentlessAccountSettings"`
 	MissingAwpPrivateNetworkRegions *[]string                 `json:"missingAwpPrivateNetworkRegions"`
-	AccountIssues                   *AccountIssues            `json:"accountIssues"`
 	CloudAccountId                  string                    `json:"cloudAccountId"`
 	AgentlessProtectionEnabled      bool                      `json:"agentlessProtectionEnabled"`
 	ScanMode                        string                    `json:"scanMode"`
@@ -88,11 +85,9 @@ func DeleteAWPOnboarding(client *client.Client, cloudProvider string, id string,
 	return resp, nil
 }
 
-func UpdateAWPSettings(client *client.Client, cloudProvider string, id string, req AgentlessAccountSettings) (*http.Response, error) {
-	// Construct the URL path
-	path := fmt.Sprintf(OnboardingResourcePath, cloudProvider, id)
+func UpdateAWPSettings(client *client.Client, path string, req AgentlessAccountSettings) (*http.Response, error) {
 	// Make a PATCH request with the JSON body
-	resp, err := client.NewRequestDoRetry("PATCH", fmt.Sprintf("%s/settings", path), nil, req, nil, shouldRetry)
+	resp, err := client.NewRequestDoRetry("PATCH", path, nil, req, nil, shouldRetry)
 	if err != nil {
 		return nil, err
 	}
@@ -100,5 +95,5 @@ func UpdateAWPSettings(client *client.Client, cloudProvider string, id string, r
 }
 
 func shouldRetry(resp *http.Response) bool {
-    return resp != nil && resp.StatusCode >= 400 && resp.StatusCode < 600
+	return resp != nil && resp.StatusCode >= 400 && resp.StatusCode < 600
 }

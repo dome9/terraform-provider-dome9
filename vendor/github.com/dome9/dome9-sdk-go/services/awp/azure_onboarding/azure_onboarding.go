@@ -50,8 +50,15 @@ func (service *Service) DeleteAWPOnboarding(id string) (*http.Response, error) {
 	return awp_onboarding.DeleteAWPOnboarding(service.Client, awp_onboarding.ProviderAzure, id, awp_onboarding.DeleteOptions{})
 }
 
-func (service *Service) UpdateAWPSettings(id string, req awp_onboarding.AgentlessAccountSettings) (*http.Response, error) {
-	return awp_onboarding.UpdateAWPSettings(service.Client, awp_onboarding.ProviderAzure, id, req)
+func (service *Service) UpdateAWPSettings(id string, scan_mode string, req awp_onboarding.AgentlessAccountSettings) (*http.Response, error) {
+	pathPostfix := awp_onboarding.UpdatePostfix
+	if scan_mode == awp_onboarding.ScanModeInAccountHub {
+		pathPostfix = awp_onboarding.UpdateHubPostfix
+	}
+
+	path := fmt.Sprintf(awp_onboarding.OnboardingResourcePath, awp_onboarding.ProviderAzure, id)
+
+	return awp_onboarding.UpdateAWPSettings(service.Client, fmt.Sprintf("%s/%s", path, pathPostfix), req)
 }
 
 func (service *Service) GetOnboardingData(id string, req GetAWPOnboardingDataRequestAzure) (*AgentlessTerraformOnboardingDataResponseAzure, *http.Response, error) {

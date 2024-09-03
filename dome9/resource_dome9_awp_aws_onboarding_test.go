@@ -49,6 +49,7 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHours),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrent_scans_per_region", variable.MaxConcurrentScansPerRegion),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.in_account_scanner_vpc", variable.InAccountScannerVPC),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "2"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
@@ -70,6 +71,7 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.3", disabledRegionUpdate4),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHoursUpdate),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.max_concurrent_scans_per_region", variable.MaxConcurrentScansPerRegionUpdate),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.in_account_scanner_vpc", variable.InAccountScannerVPCUpdate),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.custom_tags.%", "3"),
 					resource.TestCheckResourceAttrSet(resourceTypeAndName, "id"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloud_provider", "aws"),
@@ -154,6 +156,7 @@ resource "%s" "%s" {
 		disabled_regions = %s
 		scan_machine_interval_in_hours = "%s"
 		max_concurrent_scans_per_region = "%s"
+		in_account_scanner_vpc = "%s"
 		custom_tags = %s
 	}
 }
@@ -167,6 +170,7 @@ resource "%s" "%s" {
 		IfThenElse(updateAction, variable.DisabledRegionsUpdate, variable.DisabledRegions),
 		IfThenElse(updateAction, variable.ScanMachineIntervalInHoursUpdate, variable.ScanMachineIntervalInHours),
 		IfThenElse(updateAction, variable.MaxConcurrentScansPerRegionUpdate, variable.MaxConcurrentScansPerRegion),
+		IfThenElse(updateAction, variable.InAccountScannerVPCUpdate, variable.InAccountScannerVPC),
 		IfThenElse(updateAction, variable.CustomTagsUpdate, variable.CustomTags),
 	)
 }

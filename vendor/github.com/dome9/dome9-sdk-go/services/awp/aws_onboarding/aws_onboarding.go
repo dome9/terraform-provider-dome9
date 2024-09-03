@@ -55,8 +55,15 @@ func (service *Service) DeleteAWPOnboarding(id string, queryParams awp_onboardin
 	return awp_onboarding.DeleteAWPOnboarding(service.Client, awp_onboarding.ProviderAWS, id, queryParams)
 }
 
-func (service *Service) UpdateAWPSettings(id string, req awp_onboarding.AgentlessAccountSettings) (*http.Response, error) {
-	return awp_onboarding.UpdateAWPSettings(service.Client, awp_onboarding.ProviderAWS, id, req)
+func (service *Service) UpdateAWPSettings(id string, scan_mode string, req awp_onboarding.AgentlessAccountSettings) (*http.Response, error) {
+	pathPostfix := awp_onboarding.UpdatePostfix
+	if scan_mode == awp_onboarding.ScanModeInAccountHub {
+		pathPostfix = awp_onboarding.UpdateHubPostfix
+	}
+
+	path := fmt.Sprintf(awp_onboarding.OnboardingResourcePath, awp_onboarding.ProviderAWS, id)
+
+	return awp_onboarding.UpdateAWPSettings(service.Client, fmt.Sprintf("%s/%s", path, pathPostfix), req)
 }
 
 func (service *Service) GetOnboardingData() (*AgentlessTerraformOnboardingDataResponseAws, *http.Response, error) {

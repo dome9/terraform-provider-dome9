@@ -39,6 +39,10 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
+						"in_account_scanner_vpc": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Computed: true,
@@ -53,30 +57,6 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-			"account_issues": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"regions": {
-							Type:     schema.TypeMap,
-							Optional: true,
-						},
-						"account": {
-							Type:     schema.TypeMap,
-							Optional: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"issue_type": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-								},
-							},
-						},
-					},
-				},
 			},
 			"cloud_account_id": {
 				Type:     schema.TypeString,
@@ -133,10 +113,6 @@ func dataSourceAwpAwsOnboardingRead(d *schema.ResourceData, meta interface{}) er
 			return err
 		}
 	}
-	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssues(resp.AccountIssues)); err != nil {
-			return err
-		}
-	}
+
 	return nil
 }

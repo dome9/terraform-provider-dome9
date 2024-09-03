@@ -212,4 +212,5 @@ const (
 	DefaultMaxConcurrentScansPerRegion         = 20
 	MinMaxConcurrentScansPerRegion             = 1
 	MaxScanMachineIntervalInHours              = 1000
+	DefaultInAccountScannerVPCMode             = "ManagedByAWP"
 )

@@ -81,6 +81,11 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 							Optional: true,
 							Default:  20,
 						},
+						"in_account_scanner_vpc": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "ManagedByAWP",
+						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Optional: true,
@@ -95,30 +100,6 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-			"account_issues": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"regions": {
-							Type:     schema.TypeMap,
-							Optional: true,
-						},
-						"account": {
-							Type:     schema.TypeMap,
-							Optional: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"issue_type": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-								},
-							},
-						},
-					},
-				},
 			},
 			"cloud_account_id": {
 				Type:     schema.TypeString,
@@ -193,7 +174,7 @@ func resourceAWPAWSOnboardingCreate(d *schema.ResourceData, meta interface{}) er
 
 func checkCentralized(d *schema.ResourceData, meta interface{}) (string, error) {
 	scanMode := d.Get("scan_mode").(string)
-	if scanMode == "inAccountHub" || scanMode == "inAccountSub" {
+	if scanMode == "inAccountSub" {
 		if _, ok := d.GetOk("agentless_account_settings"); ok {
 			agentlessAccountSettingsList := d.Get("agentless_account_settings").([]interface{})
 			if len(agentlessAccountSettingsList) < 1 {
@@ -248,12 +229,6 @@ func resourceAWPAWSOnboardingRead(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
-	if resp.AccountIssues != nil {
-		if err := d.Set("account_issues", flattenAccountIssues(resp.AccountIssues)); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
@@ -295,6 +270,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 		DisabledRegions:              make([]string, 0),
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
+		InAccountScannerVPC:          providerconst.DefaultInAccountScannerVPCMode,
 		MaxConcurrenceScansPerRegion: providerconst.DefaultMaxConcurrentScansPerRegion,
 	}
 
@@ -325,6 +301,10 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 			return nil, fmt.Errorf("max_concurrent_scans_per_region must be between 1 and 20")
 		}
 		agentlessAccountSettings.MaxConcurrenceScansPerRegion = maxConcurrentScans
+	}
+
+	if inAccountScannerVPC, ok := agentlessAccountSettingsMap["in_account_scanner_vpc"].(string); ok {
+		agentlessAccountSettings.InAccountScannerVPC = inAccountScannerVPC
 	}
 
 	if customTagsInterface, ok := agentlessAccountSettingsMap["custom_tags"].(map[string]interface{}); ok {
@@ -359,17 +339,9 @@ func flattenAgentlessAccountSettings(settings *awp_onboarding.AgentlessAccountSe
 		"disabled_regions":                settings.DisabledRegions,
 		"scan_machine_interval_in_hours":  settings.ScanMachineIntervalInHours,
 		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
+		"in_account_scanner_vpc":          settings.InAccountScannerVPC,
 		"custom_tags":                     settings.CustomTags,
 	}
-	return []interface{}{m}
-}
-
-func flattenAccountIssues(accountIssues *awp_onboarding.AccountIssues) []interface{} {
-	m := map[string]interface{}{
-		"regions": accountIssues.Regions,
-		"account": accountIssues.Account,
-	}
-
 	return []interface{}{m}
 }
 
@@ -405,8 +377,11 @@ func resourceAWPAWSOnboardingUpdate(d *schema.ResourceData, meta interface{}) er
 		if err != nil {
 			return err
 		}
+
+		scanMode := d.Get("scan_mode").(string)
+
 		// Send the update request
-		_, err = d9Client.awpAwsOnboarding.UpdateAWPSettings(d.Id(), *newAgentlessAccountSettings)
+		_, err = d9Client.awpAwsOnboarding.UpdateAWPSettings(d.Id(), scanMode, *newAgentlessAccountSettings)
 		if err != nil {
 			return err
 		}
