@@ -50,6 +50,7 @@ module "terraform-dome9-awp-aws" {
 	#     scan_machine_interval_in_hours = 24
 	#     disabled_regions = ["ap-northeast-1", "ap-northeast-2", ...] # List of regions to disable
 	#     max_concurrent_scans_per_region = 20
+	#     in_account_scanner_vpc = "ManagedByAWP"
 	#     custom_tags = {
 	#       tag1 = "value1"
 	#       tag2 = "value2"
@@ -69,6 +70,7 @@ module "terraform-dome9-awp-aws" {
 # The disabled_regions attribute is used to specify the disabled regions of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The scan_machine_interval_in_hours attribute is used to specify the scan machine interval in hours of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The max_concurrent_scans_per_region attribute is used to specify the max concurrent scans per region of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The in_account_scanner_vpc attribute is used to specify the scanner VPC mode of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP AWS Onboarding.
 resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_aws.aws_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <EXTERNAL_AWS_ACCOUNT_NUMBER>"
@@ -83,6 +85,7 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
     disabled_regions = ["us-east-1", "us-west-1", "ap-northeast-1", "ap-southeast-2"]
     scan_machine_interval_in_hours = 24
     max_concurrent_scans_per_region = 20
+    in_account_scanner_vpc = "ManagedByAWP"
     custom_tags = {
       tag1 = "value1"
       tag2 = "value2"
@@ -117,7 +120,6 @@ The following arguments are supported:
 ## Attributes Reference
 
 * `missing_awp_private_network_regions` - The missing AWP private network regions.
-* `account_issues` - The account issues.
 * `cloud_account_id` - The cloud guard account id.
 * `agentless_protection_enabled` - Whether agentless protection is enabled.
 * `cloud_provider` - The cloud provider.

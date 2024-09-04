@@ -33,7 +33,6 @@ In addition to all arguments above, the following attributes exported:
 * `scan_mode` - The scan mode of the onboarding process
 * `agentless_account_settings` - The settings for the agentless account that the awp scanner will be configured with.
 * `missing_awp_private_network_regions` - The regions missing AWP private network.
-* `account_issues` - The issues related to the awp account.
 * `cloud_account_id` - The CloudGuard account ID.
 * `agentless_protection_enabled` - Whether agentless protection is enabled or not.
 * `cloud_provider` - The cloud provider for the onboarding process.
