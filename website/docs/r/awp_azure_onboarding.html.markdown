@@ -46,6 +46,7 @@ module "terraform-dome9-awp-azure" {
 	#     disabled_regions = ["eastus", "westus", ...] # List of regions to disable
 	#     max_concurrent_scans_per_region = 20
 	#     in_account_scanner_vpc = "ManagedByAWP"
+	#     sse_cmk_encrypted_disks_scan = false
 	#     custom_tags = {
 	#       tag1 = "value1"
 	#       tag2 = "value2"
@@ -80,6 +81,7 @@ resource "dome9_awp_azure_onboarding" "awp_azure_onboarding_test" {
     scan_machine_interval_in_hours = 24
     max_concurrent_scans_per_region = 20
     in_account_scanner_vpc = "ManagedByAWP"
+    sse_cmk_encrypted_disks_scan = false
     custom_tags = {
       tag1 = "value1"
       tag2 = "value2"
@@ -101,13 +103,14 @@ The following arguments are supported:
 * `cloudguard_account_id` - (Required) The CloudGuard account id.
 * `scan_mode` - (Required) The scan mode. Valid values are "inAccount", "saas", "inAccountHub", "inAccountSub".
 * `awp_centralized_account_id` - (Optional) The centralized cloud account id, required (and only relevant) for "inAccountSub" scan mode
-* `management_group_id` -  the management group id, relevat only for inAccountHub mode.
+* `management_group_id` -  the management group id, relevant only for inAccountHub mode.
 * `agentless_account_settings` - (Optional) The agentless account settings.
   * `disabled_regions` - (Optional) The disabled regions. valid values are "centralus", "eastus", "eastus2", "usgovlowa", "usgovvirginia", "northcentralus", "southcentralus", "westus", "westus2", "westcentralus", "northeurope", "westeurope", "eastasia", "southeastasia", "japaneast", "japanwest", "brazilsouth", "australiaeast", "australiasoutheast", "centralindia", "southindia", "westindia", "chinaeast", "chinanorth", "canadacentral", "canadaeast", "germanycentral", "germanynortheast", "koreacentral", "uksouth", "ukwest", "koreasouth"
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
   * `skip_function_apps_scan` - (Optional) Skip Azure Function Apps scan (supported for inAccount and inAccountSub scan modes)
   * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
-  * `in_account_scanner_vpc` = optional(string) # The VPC Mode. Valid values: "ManagedByAWP", "ManagedByCustomer" (supported for inAccount and inAccountHub scan modes)
+  * `in_account_scanner_vpc` = (optional) # The VPC Mode. Valid values: "ManagedByAWP", "ManagedByCustomer" (supported for inAccount and inAccountHub scan modes)
+  * `sse_cmk_encrypted_disks_scan` = (optional # Enable SSE CMK scanning, relevant only for inAccountHub mode.
   * `custom_tags` - (Optional) The custom tags.
 * `should_create_policy` - (Optional) Whether to create a policy. Default is true.
     
