@@ -124,6 +124,7 @@ resource "%s" "%s" {
 		scan_machine_interval_in_hours = "%s"
 		max_concurrent_scans_per_region = "%s"
 		in_account_scanner_vpc = "%s"
+		sse_cmk_encrypted_disks_scan = "%s"
 		custom_tags = %s
 	}
 }
@@ -136,6 +137,7 @@ resource "%s" "%s" {
 		IfThenElse(updateAction, variable.ScanMachineIntervalInHoursUpdate, variable.ScanMachineIntervalInHours),
 		IfThenElse(updateAction, variable.MaxConcurrentScansPerRegionUpdate, variable.MaxConcurrentScansPerRegion),
 		IfThenElse(updateAction, variable.InAccountScannerVPCUpdate, variable.InAccountScannerVPC),
+		IfThenElse(updateAction, variable.SseCmkEncryptedDisksScanUpdate, variable.SseCmkEncryptedDisksScan),
 		IfThenElse(updateAction, variable.CustomTagsUpdate, variable.CustomTags),
 	)
 }
