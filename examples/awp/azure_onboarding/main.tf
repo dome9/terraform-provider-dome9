@@ -46,6 +46,7 @@ module "terraform-dome9-awp-azure" {
 	#     disabled_regions = ["eastus", "westus", ...] # List of regions to disable
 	#     max_concurrent_scans_per_region = 20
 	#     in_account_scanner_vpc = "ManagedByAWP"
+	#     sse_cmk_encrypted_disks_scan = false
 	#     custom_tags = {
 	#       tag1 = "value1"
 	#       tag2 = "value2"

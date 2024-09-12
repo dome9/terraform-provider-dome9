@@ -48,6 +48,11 @@ func dataSourceAwpAzureOnboarding() *schema.Resource {
 							Optional: true,
 							Default:  "ManagedByAWP",
 						},
+						"sse_cmk_encrypted_disks_scan": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default:  false,
+						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Computed: true,

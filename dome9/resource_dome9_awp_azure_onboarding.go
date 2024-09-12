@@ -85,6 +85,11 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 							Optional: true,
 							Default:  "ManagedByAWP",
 						},
+						"sse_cmk_encrypted_disks_scan": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default:  false,
+						},
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Optional: true,
@@ -250,6 +255,7 @@ func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_onboardin
 		CustomTags:                   make(map[string]string),
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
 		InAccountScannerVPC:          providerconst.DefaultInAccountScannerVPCMode,
+		SseCmkEncryptedDisksScan:     false,
 		MaxConcurrenceScansPerRegion: providerconst.DefaultMaxConcurrentScansPerRegion,
 	}
 
@@ -284,6 +290,10 @@ func expandAgentlessAccountSettingsAzure(d *schema.ResourceData) (*awp_onboardin
 
 	if inAccountScannerVPC, ok := agentlessAccountSettingsMap["in_account_scanner_vpc"].(string); ok {
 		agentlessAccountSettings.InAccountScannerVPC = inAccountScannerVPC
+	}
+
+	if sseCmkEncryptedDisksScan, ok := agentlessAccountSettingsMap["sse_cmk_encrypted_disks_scan"].(bool); ok {
+		agentlessAccountSettings.SseCmkEncryptedDisksScan = sseCmkEncryptedDisksScan
 	}
 
 	if customTagsInterface, ok := agentlessAccountSettingsMap["custom_tags"].(map[string]interface{}); ok {
@@ -324,6 +334,7 @@ func flattenAgentlessAccountSettingsAzure(settings *awp_onboarding.AgentlessAcco
 		"scan_machine_interval_in_hours":  settings.ScanMachineIntervalInHours,
 		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
 		"in_account_scanner_vpc":          settings.InAccountScannerVPC,
+		"sse_cmk_encrypted_disks_scan":    settings.SseCmkEncryptedDisksScan,
 		"custom_tags":                     settings.CustomTags,
 	}
 	return []interface{}{m}
