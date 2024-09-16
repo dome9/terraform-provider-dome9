@@ -113,7 +113,7 @@ type AzureSimplifiedOnboardingExecCmdRequest struct {
 
 func (service *Service) Create(body OnboardingRequest) (*OrganizationManagementViewModel, *http.Response, error) {
 	v := new(OrganizationManagementViewModel)
-	resp, err := service.Client.NewRequestDo("POST", cloudaccounts.RESTfulServicePathAzureOrgMgmt, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", cloudaccounts.RESTfulServicePathAzureOrgMgmt, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -127,7 +127,7 @@ func (service *Service) UpdateOrganizationManagementAsync(id string, body Onboar
 	}
 
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAzureOrgMgmt, id)
-	resp, err := service.Client.NewRequestDo("PUT", relativeURL, nil, body, nil)
+	resp, err := service.Client.NewRequestDoRetry("PUT", relativeURL, nil, body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +137,7 @@ func (service *Service) UpdateOrganizationManagementAsync(id string, body Onboar
 
 func (service *Service) Delete(id string) (*http.Response, error) {
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAzureOrgMgmt, id)
-	resp, err := service.Client.NewRequestDo("DELETE", relativeURL, nil, nil, nil)
+	resp, err := service.Client.NewRequestDoRetry("DELETE", relativeURL, nil, nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (service *Service) Get(id string) (*OrganizationManagementViewModel, *http.
 
 	v := new(OrganizationManagementViewModel)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulServicePathAzureOrgMgmt, id)
-	resp, err := service.Client.NewRequestDo("GET", relativeURL, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", relativeURL, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -162,7 +162,7 @@ func (service *Service) Get(id string) (*OrganizationManagementViewModel, *http.
 
 func (service *Service) GetAll() (*[]OrganizationManagementViewModel, *http.Response, error) {
 	v := new([]OrganizationManagementViewModel)
-	resp, err := service.Client.NewRequestDo("GET", cloudaccounts.RESTfulServicePathAzureOrgMgmt, nil, nil, v)
+	resp, err := service.Client.NewRequestDoRetry("GET", cloudaccounts.RESTfulServicePathAzureOrgMgmt, nil, nil, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -174,7 +174,7 @@ func (service *Service) GenerateOnboardingExecutionCommand(body AzureSimplifiedO
 	v := new(string)
 	relativeURL := fmt.Sprintf("%s/%s", cloudaccounts.RESTfulPathAzure, cloudaccounts.RESTfulServicePathAzureOnboardingExecutionCommand)
 
-	resp, err := service.Client.NewRequestDo("POST", relativeURL, nil, body, v)
+	resp, err := service.Client.NewRequestDoRetry("POST", relativeURL, nil, body, v, nil)
 	if err != nil {
 		return nil, nil, err
 	}

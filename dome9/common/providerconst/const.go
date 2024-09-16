@@ -73,10 +73,16 @@ const (
 
 // Azure security group
 const (
-	AWS                = "1"
-	Azure              = "2"
-	GCP                = "3"
-	OrganizationalUnit = "12"
+	AWS                      = "1"
+	Azure                    = "2"
+	GCP                      = "3"
+	OrganizationalUnit       = "12"
+	CloudGuardResources      = "200"
+	CSPMResources            = "201"
+	NetworkSecurityResources = "202"
+	CIEMResources            = "203"
+	CDRResources             = "204"
+	CodeSecurityResources    = "210"
 )
 
 // AWS regions
@@ -140,7 +146,7 @@ var AllAWSRegions = append(AWSGOVRegions, append(AWSRegions, AWSChinaRegions...)
 var CloudVendors = []string{"aws", "azure", "google", "kubernetesruntimeassurance", "imageassurance"}
 var ProtocolTypes = []string{"ALL", "HOPOPT", "ICMP", "IGMP", "GGP", "IPV4", "ST", "TCP", "CBT", "EGP", "IGP", "BBN_RCC_MON", "NVP2", "PUP", "ARGUS", "EMCON", "XNET", "CHAOS", "UDP", "MUX", "DCN_MEAS", "HMP", "PRM", "XNS_IDP", "TRUNK1", "TRUNK2", "LEAF1", "LEAF2", "RDP", "IRTP", "ISO_TP4", "NETBLT", "MFE_NSP", "MERIT_INP", "DCCP", "ThreePC", "IDPR", "XTP", "DDP", "IDPR_CMTP", "TPplusplus", "IL", "IPV6", "SDRP", "IPV6_ROUTE", "IPV6_FRAG", "IDRP", "RSVP", "GRE", "DSR", "BNA", "ESP", "AH", "I_NLSP", "SWIPE", "NARP", "MOBILE", "TLSP", "SKIP", "ICMPV6", "IPV6_NONXT", "IPV6_OPTS", "CFTP", "SAT_EXPAK", "KRYPTOLAN", "RVD", "IPPC", "SAT_MON", "VISA", "IPCV", "CPNX", "CPHB", "WSN", "PVP", "BR_SAT_MON", "SUN_ND", "WB_MON", "WB_EXPAK", "ISO_IP", "VMTP", "SECURE_VMTP", "VINES", "TTP", "NSFNET_IGP", "DGP", "TCF", "EIGRP", "OSPFIGP", "SPRITE_RPC", "LARP", "MTP", "AX25", "IPIP", "MICP", "SCC_SP", "ETHERIP", "ENCAP", "GMTP", "IFMP", "PNNI", "PIM", "ARIS", "SCPS", "QNX", "AN", "IPCOMP", "SNP", "COMPAQ_PEER", "IPX_IN_IP", "VRRP", "PGM", "L2TP", "DDX", "IATP", "STP", "SRP", "UTI", "SMP", "SM", "PTP", "ISIS", "FIRE", "CRTP", "CRUDP", "SSCOPMCE", "IPLT", "SPS", "PIPE", "SCTP", "FC", "RSVP_E2E_IGNORE", "MOBILITY_HEADER", "UDPLITE", "MPLS_IN_IP", "MANET", "HIP", "SHIM6", "WESP", "ROHC"}
 var OperationMode = []string{"Read", "Manage"}
-var SRLTypes = []string{"AWS", "Azure", "GCP", "OrganizationalUnit"}
+var SRLTypes = []string{"AWS", "Azure", "GCP", "OrganizationalUnit", "CloudGuardResources", "CSPMResources", "NetworkSecurityResources", "CIEMResources", "CDRResources", "CodeSecurityResources"}
 
 var IAMEntityProtectType = []string{IAMSafeEntityTypeUser, IAMSafeEntityTypeRole}
 var IAMEntityProtectionMode = []string{IAMSafeEntityProtect, IAMSafeEntityProtectWithElevation}
@@ -151,10 +157,16 @@ var SRLStructure = []string{"type", "main_id", "rg", "region", "sg", "security_g
 
 // SRL construction variables
 var SRlType = map[string]string{
-	"AWS":                AWS,
-	"Azure":              Azure,
-	"GCP":                GCP,
-	"OrganizationalUnit": OrganizationalUnit,
+	"AWS":                      AWS,
+	"Azure":                    Azure,
+	"GCP":                      GCP,
+	"OrganizationalUnit":       OrganizationalUnit,
+	"CloudGuardResources":      CloudGuardResources,
+	"CSPMResources":            CSPMResources,
+	"NetworkSecurityResources": NetworkSecurityResources,
+	"CIEMResources":            CIEMResources,
+	"CDRResources":             CDRResources,
+	"CodeSecurityResources":    CodeSecurityResources,
 }
 
 var AWSRegionsEnum = map[string]string{

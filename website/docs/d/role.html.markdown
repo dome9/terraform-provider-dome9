@@ -8,7 +8,7 @@ description: |-
 
 # Data Source: dome9_role
 
-Use this data source to get information about a role in Dome9.
+Use this data source to get information about a role in CloudGuard.
 
 ## Example Usage
 
@@ -29,13 +29,13 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `name` - (Required) Dome9 role name.
-* `description` - (Required) Dome9 role description. 
+* `name` - (Required) CloudGuard role name.
+* `description` - (Required) CloudGuard role description. 
 * `permit_rulesets` - Is permitted permit rulesets (Optional) .
 * `permit_notifications` - Is permitted permit notifications (Optional) .
 * `permit_policies` - Is permitted permit policies (Optional) .
 * `permit_alert_actions` - Is permitted permit alert actions (Optional) .
-* `permit_on_boarding` - Is permitted permit on boarding (Optional)  .
+* `permit_on_boarding` - Is permitted permit onboarding (Optional)  .
 * `cross_account_access` - (Optional) Cross account access.
 * `create` - (Optional) Create permission list.
 * `access` - (Optional) Access permission list ([SRL](#SRL) Type).
@@ -43,8 +43,8 @@ In addition to all arguments above, the following attributes are exported:
 * `manage` - (Optional) Manage permission list ([SRL](#SRL) Type).
 
 ### SRL 
-* `type` - (Optional) Accepted values: AWS, Azure, GCP, OrganizationalUnit.
-* `main_id` - (Optional) Cloud Account or Organizational Unit ID.
+* `type` - (Optional) Accepted values: AWS, Azure, GCP, OrganizationalUnit, CloudGuardResources, CodeSecurityResources.
+* `main_id` - (Optional) Cloud Account, Organizational Unit ID or CodeSecurity Access Level (Admin, Member).
 * `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "ap_east_1", "me_south_1", "af_south_1", "eu_south_1", "ap_northeast_3", "me_central_1", "ap_south_2", "ap_southeast_3", "ap_southeast_4", "eu_central_2", "eu_south_2", "il_central_1", "ca_west_1".
 * `security_group_id` - (Optional) AWS Security Group ID.
 * `traffic` - (Optional) Accepted values: "All Traffic", "All Services".
