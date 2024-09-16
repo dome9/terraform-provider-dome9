@@ -8,7 +8,7 @@ description: |-
 
 # dome9_role
 
-The Role resource is used to create and manage Dome9 roles. Roles are used to manage access permissions for Dome9 users.
+The Role resource is used to create and manage CloudGuard roles. Roles are used to manage access permissions for CloudGuard users.
 
 ## Example Usage
 
@@ -45,13 +45,13 @@ resource "dome9_role" "role_rs" {
 
 The following arguments are supported:
 
-* `name` - (Required) Dome9 role name.
-* `description` - (Required) Dome9 role description. 
+* `name` - (Required) CloudGuard role name.
+* `description` - (Required) CloudGuard role description. 
 * `permit_rulesets` - Is permitted permit rulesets (Optional) .
 * `permit_notifications` - Is permitted permit notifications (Optional) .
 * `permit_policies` - Is permitted permit policies (Optional) .
 * `permit_alert_actions` - Is permitted permit alert actions (Optional) .
-* `permit_on_boarding` - Is permitted permit on boarding (Optional)  .
+* `permit_on_boarding` - Is permitted permit onboarding (Optional)  .
 * `cross_account_access` - (Optional) Cross account access.
 * `create` - (Optional) Create permission list.
 * `access` - (Optional) Access permission list ([SRL](#SRL) Type).
@@ -59,8 +59,8 @@ The following arguments are supported:
 * `manage` - (Optional) Manage permission list ([SRL](#SRL) Type).
 
 ### SRL 
-* `type` - (Optional) Accepted values: AWS, Azure, GCP, OrganizationalUnit.
-* `main_id` - (Optional) Cloud Account or Organizational Unit ID.
+* `type` - (Optional) Accepted values: AWS, Azure, GCP, OrganizationalUnit, CloudGuardResources, CodeSecurityResources.
+* `main_id` - (Optional) Cloud Account, Organizational Unit ID or CodeSecurity Access Level (Admin, Member).
 * `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "il_central_1", "ca_west_1".
 * `security_group_id` - (Optional) AWS Security Group ID.
 * `traffic` - (Optional) Accepted values: "All Traffic", "All Services".

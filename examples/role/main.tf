@@ -13,6 +13,15 @@ resource "dome9_role" "role_rs" {
     main_id = "00000000-0000-0000-0000-000000000000"
   }
 
+  manage {
+      type = "CodeSecurityResources"
+      main_id = "Member"
+    }
+
+  view {
+      type = "CloudGuardResources"
+  }
+
   permit_notifications = false
   permit_rulesets      = false
   permit_policies      = false
