@@ -94,6 +94,7 @@ The following arguments are supported:
         * `onboarding_mode` - (Optional) Onboarding mode. Can be: `saas`, `inAccount`, `inAccountHub`.
         * `centralized_subscription_id` - (Optional) Centralized subscription ID.
         * `with_function_apps_scan` - (Optional) Boolean flag to enable function apps scan.
+        * `with_sse_cmk_encrypted_disks_scan` - (Optional) Boolean flag to enable sse cmk apps scan.
     * `cdr` - (Required) CloudGuard Data Protection configuration.
         * `is_enabled` - (Required) Boolean flag to enable CloudGuard Data Protection.
         * `accounts` - (Optional) List of storage accounts.
