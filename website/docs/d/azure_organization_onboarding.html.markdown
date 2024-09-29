@@ -44,7 +44,7 @@ The following arguments are supported:
         * `onboarding_mode` - Onboarding mode. Can be: `saas`, `inAccount`, `inAccountHub`.
         * `centralized_subscription_id` - Centralized subscription ID.
         * `with_function_apps_scan` - Boolean flag to enable function apps scan.
-        * `with_sse_cmk_encrypted_disks_scan` - Boolean flag to enable sse cmk scan.
+        * `with_sse_cmk_encrypted_disks_scan` - (Optional) Boolean flag to enable sse cmk scan. Default: `false`.
     * `serverless_configuration` - Serverless configuration.
         * `is_enabled` - Boolean flag to enable serverless protection.
         * `accounts` - List of serverless accounts.
