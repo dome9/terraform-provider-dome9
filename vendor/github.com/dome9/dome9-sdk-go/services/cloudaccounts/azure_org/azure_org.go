@@ -36,9 +36,10 @@ type BladeConfiguration struct {
 
 type AwpConfiguration struct {
 	BladeConfiguration
-	OnboardingMode            AwpOnboardingMode `json:"onboardingMode"`
-	CentralizedSubscriptionId string            `json:"centralizedSubscriptionId,omitempty"`
-	WithFunctionAppsScan      bool              `json:"withFunctionAppsScan"`
+	OnboardingMode               AwpOnboardingMode `json:"onboardingMode"`
+	CentralizedSubscriptionId    string            `json:"centralizedSubscriptionId,omitempty"`
+	WithFunctionAppsScan         bool              `json:"withFunctionAppsScan"`
+	WithSseCmkEncryptedDisksScan bool              `json:"withSseCmkEncryptedDisksScan"`
 }
 
 type ServerlessConfiguration struct {
