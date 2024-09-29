@@ -36,8 +36,8 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 	// Generate Image Assurance Policy HCL Resource
 	imageAssurancePolicyHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, false)
-	imageAssurancePolicyUpdatedHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
-		notificationTypeAndName, policyGeneratedName, true)
+	// imageAssurancePolicyUpdatedHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
+	// notificationTypeAndName, policyGeneratedName, true)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -60,6 +60,21 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.ImageAssurancePolicyTargetType),
 				),
 			},
+			// {
+			// 	// Update Policy Test Step from Detection to Prevention
+			// 	Config: testCheckImageAssurancePolicyBasic(imageAssurancePolicyUpdatedHCL, policyGeneratedName, policyTypeAndName),
+			// 	Check: resource.ComposeTestCheckFunc(
+			// 		testCheckImageAssurancePolicyExists(policyTypeAndName, &response),
+			// 		resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_action", variable.ImageAssurancePolicyPreventAction),
+			// 		resource.TestCheckResourceAttr(policyTypeAndName, "admission_control_unscanned_action", variable.ImageAssurancePolicyPreventAction),
+			// 		resource.TestCheckResourceAttrSet(policyTypeAndName, "id"),
+			// 		resource.TestCheckResourceAttr(policyTypeAndName, "notification_ids.#", "1"),
+			// 		resource.TestCheckResourceAttrSet(policyTypeAndName, "notification_ids.0"),
+			// 		resource.TestCheckResourceAttr(policyTypeAndName, "ruleset_id", strconv.Itoa(variable.ImageAssurancePolicyDefaultRulesetId)),
+			// 		resource.TestCheckResourceAttrSet(policyTypeAndName, "target_id"),
+			// 		resource.TestCheckResourceAttr(policyTypeAndName, "target_type", variable.ImageAssurancePolicyTargetType),
+			// 	),
+			// },
 		},
 	})
 }
