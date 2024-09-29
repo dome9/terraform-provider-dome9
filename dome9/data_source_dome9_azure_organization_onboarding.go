@@ -92,6 +92,10 @@ func dataSourceAzureOrganizationOnboarding() *schema.Resource {
 										Type:     schema.TypeBool,
 										Computed: true,
 									},
+									"with_sse_cmk_encrypted_disks_scan": {
+										Type:     schema.TypeBool,
+										Computed: true,
+									},
 								},
 							},
 						},

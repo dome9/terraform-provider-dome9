@@ -86,6 +86,11 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 										Optional: true,
 										Default:  false,
 									},
+									"with_sse_cmk_encrypted_disks_scan": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
+									},
 								},
 							},
 						},
@@ -225,6 +230,11 @@ func resourceAzureOrganizationOnboarding() *schema.Resource {
 										Optional: true,
 									},
 									"with_function_apps_scan": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
+									},
+									"with_sse_cmk_encrypted_disks_scan": {
 										Type:     schema.TypeBool,
 										Optional: true,
 										Default:  false,
@@ -392,9 +402,10 @@ func expandAzureOrganizationOnboardingRequest(d *schema.ResourceData) azure_org.
 				BladeConfiguration: azure_org.BladeConfiguration{
 					IsEnabled: awp["is_enabled"].(bool),
 				},
-				OnboardingMode:            azure_org.AwpOnboardingMode(awp["onboarding_mode"].(string)),
-				CentralizedSubscriptionId: awp["centralized_subscription_id"].(string),
-				WithFunctionAppsScan:      awp["with_function_apps_scan"].(bool),
+				OnboardingMode:               azure_org.AwpOnboardingMode(awp["onboarding_mode"].(string)),
+				CentralizedSubscriptionId:    awp["centralized_subscription_id"].(string),
+				WithFunctionAppsScan:         awp["with_function_apps_scan"].(bool),
+				WithSseCmkEncryptedDisksScan: awp["with_sse_cmk_encrypted_disks_scan"].(bool),
 			},
 			Serverless: azure_org.ServerlessConfiguration{
 				BladeConfiguration: azure_org.BladeConfiguration{
