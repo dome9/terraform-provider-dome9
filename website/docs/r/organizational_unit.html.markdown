@@ -6,7 +6,7 @@ description: |-
   Create organizational unit in Dome9
 ---
 
-# dome9_ruleset
+# dome9_organizational_unit
 
 This resource is used to create and manage Organizational Unit in Dome9. An Organizational Unit is a group of cloud accounts representing, for example, a business unit or geographical region.
 

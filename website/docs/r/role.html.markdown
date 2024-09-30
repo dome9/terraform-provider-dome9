@@ -67,7 +67,7 @@ The following arguments are supported:
 
 * Note: to create a role, create it with no permissions, then updated it with the desired permissions.
     
-    To understand the roles/permissions [CLICK HERE](https://gist.github.com/froyke/70ea7d91d01c3ba765a604edf910ebd5).
+    To understand the roles/permissions [CLICK HERE](https://support.checkpoint.com/results/sk/sk147835).
 
 ## Import
 
