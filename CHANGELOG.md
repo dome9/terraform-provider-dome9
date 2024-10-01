@@ -1,3 +1,184 @@
+## 1.36.1 (September 29, 2024)
+* Add support for Azure Org AWP SSE CMK encrypted disks scan to Azure org ([#226](https://github.com/dome9/terraform-provider-dome9/pull/226))
+
+## 1.36.0 (September 16, 2024)
+* Added support for CloudGuardResources and CodeSecurityResources permission at dome9_role resource
+
+## 1.35.9 (September 12, 2024)
+* Add support to AWP SSE CMK scanning
+
+## 1.35.8 (September 03, 2024)
+* Add support to AWP custom VPC
+
+## 1.35.7 (August 20, 2024)
+
+
+## 1.35.6 (August 18, 2024)
+* Add retry mechanism to API calls
+
+## 1.35.5 (August 06, 2024)
+* Add dome9_vulnerability_policy resource and data
+
+## 1.35.4 (August 01, 2024)
+* Add support for 4 new Azure regions - Spain Central, Italy North, Poland Central, Poland Central
+
+## 1.35.3 (August 01, 2024)
+* Add support for a new AWS region ca-west-1(Calgary)
+
+## 1.35.2 (July 30, 2024)
+* Added retry for Integration Delete
+
+## 1.35.1 (July 29, 2024)
+* Added retry for dome9_cloudaccount_aws delete
+
+## 1.35.0 (July 15, 2024)
+* Add CloudGuard Integration support:
+- `dome9_integration` (resource + data-source)
+* **Notice:
+* `dome9_continuous_compliance_notification` functionality has been replaced and the new implementation for this resource is `dome9_notification`[Learn more](https://registry.terraform.io/providers/dome9/dome9/latest/docs/data-sources/notification).**
+
+## 1.34.0 (July 14, 2024)
+* Add AWP Azure Onboarding Support
+
+## 1.33.0 (July 10, 2024)
+* Add support for the new Notification model:
+- dome9_notification (data+resource)
+
+## 1.32.0 (July 07, 2024)
+* Al-2382-support-aws-centralized-scan-mode ([#182](https://github.com/dome9/terraform-provider-dome9/pull/182))
+
+## 1.31.0 (July 04, 2024)
+* Add AWS Organization Onboarding Support:
+- dome9_aws_organization_onboarding (Resource + Data source)
+- dome9_aws_organization_onboarding_management_stack (Data source)
+- dome9_aws_organization_onboarding_member_account_configuration  (Data source)
+* Bug fixes
+
+## 1.30.1 (June 05, 2024)
+- Added new "tenant_administrator_email_address" in OCI save temp data.
+- Fixed an issue that caused an error while destroying a faulty unified onboarding.
+
+## 1.30.0 (June 03, 2024)
+* Go: 1.13.0 -> 1.19.2
+* Terraform Plugin SDK: 1.11.0 -> 1.17.2
+
+## 1.29.8 (May 30, 2024)
+* Add support for Aws Unified Onboarding DELETE API
+
+## 1.29.7 (April 04, 2024)
+* CON-8179 : Onbaording AWS AWP ([#176](https://github.com/dome9/terraform-provider-dome9/pull/176))
+* This pull request introduces changes related to the AWP AWS onboarding process in the Dome9 Terraform provider.
+* Implementing AWP Onboarding API (https://github.com/dome9/dome9-sdk-go/releases/tag/v1.18.4)
+* resource - dome9_awp_aws_onboarding
+* data - dome9_awp_aws_onboarding
+* data - dome9_awp_aws_onboarding_data
+
+## 1.29.6 (February 05, 2024)
+* Add Israel region
+
+## 1.29.5 (August 02, 2023)
+* Use new Dome9 SDK version
+
+## 1.29.4 (June 14, 2023)
+* fixed issue with regions names
+
+## 1.29.3 (June 13, 2023)
+* Added Support for a new Aws regions ("me-central-1", "ap-south-2", "ap-southeast-3", "ap-southeast-4", "eu-central-2", "eu-south-2")
+
+## 1.29.2 (June 05, 2023)
+* Added Support for a new Aws region me-central-1 (UAE)
+
+## 1.29.0 (March 30, 2023)
+* Added support for OCI vendor
+
+## 1.28.6 (March 06, 2023)
+* CON-4885 - K8s | TF Support for creating image assurance rulesets ([#166](https://github.com/dome9/terraform-provider-dome9/pull/166))
+
+## 1.28.5 (November 20, 2022)
+* CON-3826 - Add Support for IA Policy ([#160](https://github.com/dome9/terraform-provider-dome9/pull/160))
+
+## 1.28.4 (October 13, 2022)
+* Change SDK Version ([#157](https://github.com/dome9/terraform-provider-dome9/pull/157))
+* Con 3824 k8s tf support for enabling ti within onboarding module ([#158](https://github.com/dome9/terraform-provider-dome9/pull/158))
+
+## 1.28.2 (October 13, 2022)
+* CON-3824 K8s TF Support for enabling TI within onboarding module ([#155](https://github.com/dome9/terraform-provider-dome9/pull/155))
+
+## 1.28.1 (October 11, 2022)
+* K8s | TF Support for enabling TI within onboarding module
+
+## 1.28.0 (August 09, 2022)
+* Added new Assessment resource and data source for Continuous Compliance
+
+## 1.27.4 (August 04, 2022)
+
+
+## 1.27.3 (August 04, 2022)
+* Fix Dome9_cloudaccount_aws resource documentation
+
+## 1.27.1 (June 24, 2022)
+* Remove the `is_template` property from the `dome9_ruleset` resource documentation
+
+## 1.27.0 (June 22, 2022)
+
+
+## 1.26.0 (June 12, 2022)
+* Support Canada Region
+
+## 1.25.4 (May 04, 2022)
+* fix some links, and explanations in the documentation
+
+## 1.25.3 (April 25, 2022)
+
+
+## 1.25.2 (April 24, 2022)
+
+
+## 1.25.1 (April 24, 2022)
+* Aws Unified Onboarding Resource Support
+- dome9_aws_unified_onboarding resource
+- dome9_aws_unified_onboarding data source
+- aws_unified_onboarding_update_version_stack_config data source
+
+## 1.25.0 (April 24, 2022)
+* Aws Unified Onboarding Resource Support
+- dome9_aws_unified_onboarding resource
+- dome9_aws_unified_onboarding data source
+- aws_unified_onboarding_update_version_stack_config data source
+
+## 1.24.5 (January 03, 2022)
+* Improve continuous_compliance_notification resource
+- Added integration of Webhook notification with QRadar, Sumo, Jira.
+
+## 1.24.4 (December 16, 2021)
+* Improve  continuous_compliance_notification resource
+- Added support for Teams integration
+- Added support for Slack integration
+- Added support for Webhook integration
+
+## 1.24.3 (December 06, 2021)
+* Update Ruleset recourse to work with the latest API
+
+## 1.24.2 (November 29, 2021)
+* Documentation fixes
+
+## 1.24.1 (November 25, 2021)
+* Documentation bug fix
+
+## 1.24.0 (November 25, 2021)
+* New AlibabaCloudAccount Resource
+
+## 1.23.2 (August 25, 2021)
+* Extend the dome9_cloudaccount_aws resource to support AWS china CloudAccount
+
+## 1.23.1 (August 24, 2021)
+* Extend the dome9_cloudaccount_aws resource to support AWS gov CloudAccount
+
+## 1.23.0 (August 23, 2021)
+- ServiceAccount Resource
+- Adding new AWS region support (ap_northeast_3)
+- Adding support for all CloudGuard DataCenters
+
 ## 1.22.0 (July 5, 2021)
 * IMPROVEMENTS:
 * Schema structure change for `resource_dome9_cloudaccount_kubernetes`,`data_source_dome9_cloudaccount_kubernetes`, ([#109](https://github.com/dome9/terraform-provider-dome9/pull/109))
