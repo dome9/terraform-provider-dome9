@@ -1,5 +1,5 @@
 ## 1.36.1 (September 29, 2024)
-* Add support for Azure Org AWP SSE CMK encrypted disks scan by to Azure org by @DanamoCP in ([#226](https://github.com/dome9/terraform-provider-dome9/pull/226))
+* Add support for Azure Org AWP SSE CMK encrypted disks scan to Azure org ([#226](https://github.com/dome9/terraform-provider-dome9/pull/226))
 
 ## 1.36.0 (September 16, 2024)
 * Added support for CloudGuardResources and CodeSecurityResources permission at dome9_role resource
@@ -45,7 +45,7 @@
 - dome9_notification (data+resource)
 
 ## 1.32.0 (July 07, 2024)
-* Al-2382-support-aws-centralized-scan-mode by @shayde78 in ([#182](https://github.com/dome9/terraform-provider-dome9/pull/182))
+* Al-2382-support-aws-centralized-scan-mode ([#182](https://github.com/dome9/terraform-provider-dome9/pull/182))
 
 ## 1.31.0 (July 04, 2024)
 * Add AWS Organization Onboarding Support:
@@ -66,7 +66,7 @@
 * Add support for Aws Unified Onboarding DELETE API
 
 ## 1.29.7 (April 04, 2024)
-* CON-8179 : Onbaording AWS AWP by @omartawfeeq in ([#176](https://github.com/dome9/terraform-provider-dome9/pull/176))
+* CON-8179 : Onbaording AWS AWP ([#176](https://github.com/dome9/terraform-provider-dome9/pull/176))
 * This pull request introduces changes related to the AWP AWS onboarding process in the Dome9 Terraform provider.
 * Implementing AWP Onboarding API (https://github.com/dome9/dome9-sdk-go/releases/tag/v1.18.4)
 * resource - dome9_awp_aws_onboarding
@@ -98,11 +98,11 @@
 * CON-3826 - Add Support for IA Policy ([#160](https://github.com/dome9/terraform-provider-dome9/pull/160))
 
 ## 1.28.4 (October 13, 2022)
-* Change SDK Version by @OmerCo9 in ([#157](https://github.com/dome9/terraform-provider-dome9/pull/157))
-* Con 3824 k8s tf support for enabling ti within onboarding module by @OmerCo9 in ([#158](https://github.com/dome9/terraform-provider-dome9/pull/158))
+* Change SDK Version ([#157](https://github.com/dome9/terraform-provider-dome9/pull/157))
+* Con 3824 k8s tf support for enabling ti within onboarding module ([#158](https://github.com/dome9/terraform-provider-dome9/pull/158))
 
 ## 1.28.2 (October 13, 2022)
-* CON-3824 K8s TF Support for enabling TI within onboarding module by @OmerCo9 in ([#155](https://github.com/dome9/terraform-provider-dome9/pull/155))
+* CON-3824 K8s TF Support for enabling TI within onboarding module ([#155](https://github.com/dome9/terraform-provider-dome9/pull/155))
 
 ## 1.28.1 (October 11, 2022)
 * K8s | TF Support for enabling TI within onboarding module
