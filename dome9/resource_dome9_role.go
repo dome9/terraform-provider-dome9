@@ -84,6 +84,10 @@ func resourceRoleCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(strconv.Itoa(role.ID))
 
+	if _, err := d9Client.role.Update(d.Id(), req); err != nil {
+		return err
+	}
+
 	return resourceRoleRead(d, meta)
 }
 
