@@ -3,7 +3,7 @@ layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_organizational_unit"
 sidebar_current: "docs-datasource-dome9-organizational-unit"
 description: |-
-  Get information about an Organizational Unit in Dome9.
+  Get information about all Organizational Units in Dome9.
 ---
 
 # Data Source: dome9_all_organizational_units
