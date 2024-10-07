@@ -17,7 +17,7 @@ func TestAccDataSourceOrganizationalUnitAllBasic(t *testing.T) {
 			{
 				Config: testAccCheckOrganizationalUnitAllBasic(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.dome9_all_organizational_unit.all_units", "items.#"),
+					resource.TestCheckResourceAttrSet("data.dome9_all_organizational_units.all_units", "items.#"),
 				),
 			},
 		},
@@ -26,9 +26,9 @@ func TestAccDataSourceOrganizationalUnitAllBasic(t *testing.T) {
 
 func testAccCheckOrganizationalUnitAllBasic() string {
 	return `
-data "dome9_all_organizational_unit" "all_units" {}
+data "dome9_all_organizational_units" "all_units" {}
 
-output "all_organizational_unit" {
+output "all_organizational_units" {
   value = data.dome9_all_organizational_unit.all_units
 }
 `
