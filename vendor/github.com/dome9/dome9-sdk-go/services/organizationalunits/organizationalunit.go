@@ -17,26 +17,36 @@ type OURequest struct {
 
 type OUResponse struct {
 	Item struct {
-		AccountID                         int       `json:"accountId"`
-		ID                                string    `json:"id"`
-		Name                              string    `json:"name"`
-		Path                              string    `json:"path"`
-		ParentID                          string    `json:"parentId"`
-		Created                           time.Time `json:"created"`
-		Updated                           time.Time `json:"updated"`
-		AwsCloudAcountsCount              int       `json:"awsCloudAcountsCount"`
-		AzureCloudAccountsCount           int       `json:"azureCloudAccountsCount"`
-		GoogleCloudAccountsCount          int       `json:"googleCloudAccountsCount"`
-		AwsAggregatedCloudAcountsCount    int       `json:"awsAggregatedCloudAcountsCount"`
-		AzureAggregateCloudAccountsCount  int       `json:"azureAggregateCloudAccountsCount"`
-		GoogleAggregateCloudAccountsCount int       `json:"googleAggregateCloudAccountsCount"`
-		SubOrganizationalUnitsCount       int       `json:"subOrganizationalUnitsCount"`
-		IsRoot                            bool      `json:"isRoot"`
-		IsParentRoot                      bool      `json:"isParentRoot"`
-		PathStr                           string    `json:"pathStr"`
+		AccountID                                    int       `json:"accountId"`
+		ID                                           string    `json:"id"`
+		Name                                         string    `json:"name"`
+		Path                                         string    `json:"path"`
+		ParentID                                     string    `json:"parentId"`
+		Created                                      time.Time `json:"created"`
+		Updated                                      time.Time `json:"updated"`
+		AwsCloudAcountsCount                         int       `json:"awsCloudAcountsCount"`
+		AzureCloudAccountsCount                      int       `json:"azureCloudAccountsCount"`
+		OciCloudAccountsCount                        int       `json:"ociCloudAccountsCount"`
+		GoogleCloudAccountsCount                     int       `json:"googleCloudAccountsCount"`
+		K8sCloudAccountsCount                        int       `json:"k8sCloudAccountsCount"`
+		ShiftLeftCloudAccountsCount                  int       `json:"shiftLeftCloudAccountsCount"`
+		AlibabaCloudAccountsCount                    int       `json:"alibabaCloudAccountsCount"`
+		ContainerRegistryAccountsCount               int       `json:"containerRegistryAccountsCount"`
+		AwsAggregatedCloudAcountsCount               int       `json:"awsAggregatedCloudAcountsCount"`
+		AzureAggregateCloudAccountsCount             int       `json:"azureAggregateCloudAccountsCount"`
+		OciAggregateCloudAccountsCount               int       `json:"ociAggregateCloudAccountsCount"`
+		GoogleAggregateCloudAccountsCount            int       `json:"googleAggregateCloudAccountsCount"`
+		K8sAggregateCloudAccountsCount               int       `json:"k8sAggregateCloudAccountsCount"`
+		ShiftLeftAggregateCloudAccountsCount         int       `json:"shiftLeftAggregateCloudAccountsCount"`
+		AlibabaAggregateCloudAccountsCount           int       `json:"alibabaAggregateCloudAccountsCount"`
+		ContainerRegistryAggregateCloudAccountsCount int       `json:"containerRegistryAggregateCloudAccountsCount"`
+		SubOrganizationalUnitsCount                  int       `json:"subOrganizationalUnitsCount"`
+		IsRoot                                       bool      `json:"isRoot"`
+		IsParentRoot                                 bool      `json:"isParentRoot"`
+		PathStr                                      string    `json:"pathStr"`
 	} `json:"item"`
-	ParentID string        `json:"parentId"`
-	Children []interface{} `json:"children"`
+	ParentID string       `json:"parentId"`
+	Children []OUResponse `json:"children"`
 }
 
 func (service *Service) Get(ouId string) (*OUResponse, *http.Response, error) {

@@ -88,6 +88,7 @@ func Provider() terraform.ResourceProvider {
 			resourcetype.CloudAccountAWSSecurityGroupRule:             dataSourceCloudSecurityGroupAWSRule(),
 			resourcetype.Role:                                         dataSourceRole(),
 			resourcetype.OrganizationalUnit:                           dataSourceOrganizationalUnit(),
+			resourcetype.OrganizationalUnitAll:                        dataSourceOrganizationalUnitAll(),
 			resourcetype.CloudAccountAzureSecurityGroup:               dataSourceSecurityGroupAzure(),
 			resourcetype.User:                                         dataSourceUser(),
 			resourcetype.ServiceAccount:                               dataSourceServiceAccount(),
