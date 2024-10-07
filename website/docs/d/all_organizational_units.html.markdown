@@ -1,37 +1,32 @@
 ---
 layout: "dome9"
 page_title: "Check Point CloudGuard Dome9: dome9_organizational_unit"
-sidebar_current: "docs-resource-dome9-organizational-unit"
+sidebar_current: "docs-datasource-dome9-organizational-unit"
 description: |-
-  Create organizational unit in Dome9
+  Get information about an Organizational Unit in Dome9.
 ---
 
-# dome9_organizational_unit
+# Data Source: dome9_all_organizational_units
 
-This resource is used to create and manage Organizational Unit in Dome9. An Organizational Unit is a group of cloud accounts representing, for example, a business unit or geographical region.
+Use this data source to get information about all Organizational Units in Dome9.
 
 ## Example Usage
 
-Basic usage:
-
 ```hcl
-resource "dome9_organizational_unit" "test_ou" {
-  name      = "some_organizational_unit"
-  parent_id = "00000000-0000-0000-0000-000000000000"
-}
-
+data "dome9_all_organizational_units" "test" {}
 ```
 
 ## Argument Reference
 
-The following arguments are supported:
-
-* `name` - (Required) The name of the organizational unit in Dome9.
-* `parent_id` - (Optional) The organizational unit parent ID.
+No arguments are needed.
 
 ## Attributes Reference
 
-* `id` - Organizational unit Id
+Returns a list of `dome9_organizational_unit`.
+
+* `id` - The ID of the Organizational Unit in Dome9.
+* `name` - The name of the Organizational Unit in Dome9.
+* `parent_id` - The Organizational Unit parent ID.
 * `account_id` - Dome9 internal account ID.
 * `path` - Organizational Unit full path (IDs).
 * `path_str` - Organizational Unit full path (names).
@@ -57,13 +52,4 @@ The following arguments are supported:
 * `is_root` - Is Organizational Unit root.
 * `is_parent_root` - Is the parent of Organizational Unit root.
 
-
-## Import
-
-Organizational unit can be imported; use `<ORGANIZATIONAL UNIT ID>` as the import ID. 
-
-For example:
-
-```shell
-terraform import dome9_organizational_unit.test 00000
-```
+For more details, see the [dome9_organizational_unit documentation](./organizational_unit.html.markdown).
