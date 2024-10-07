@@ -29,7 +29,7 @@ func testAccCheckOrganizationalUnitAllBasic() string {
 data "dome9_all_organizational_units" "all_units" {}
 
 output "all_organizational_units" {
-  value = data.dome9_all_organizational_unit.all_units
+  value = data.dome9_all_organizational_units.all_units
 }
 `
 }
