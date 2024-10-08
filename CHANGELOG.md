@@ -1,3 +1,14 @@
+## 1.38.0 (October 08, 2024)
+* Added `all_organizational_units` to retrieve all Organizational Units in Dome9 in ([#230](https://github.com/dome9/terraform-provider-dome9/pull/230))
+
+## 1.37.0 (October 06, 2024)
+* On Role creation, permissions are populated after a single call in ([#229](https://github.com/dome9/terraform-provider-dome9/pull/229))
+
+## 1.36.2 (October 06, 2024)
+* Fixed typo in organizational_unit.html.markdown
+* Fixed URL in role.html.markdown
+* In ([#228](https://github.com/dome9/terraform-provider-dome9/pull/228))
+
 ## 1.36.1 (September 29, 2024)
 * Add support for Azure Org AWP SSE CMK encrypted disks scan to Azure org ([#226](https://github.com/dome9/terraform-provider-dome9/pull/226))
 
