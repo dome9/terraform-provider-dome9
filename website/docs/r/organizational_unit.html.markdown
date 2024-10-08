@@ -39,10 +39,21 @@ The following arguments are supported:
 * `updated` - Organizational Unit update time.
 * `aws_cloud_accounts_count` - Number of AWS cloud accounts in the Organizational Unit.
 * `azure_cloud_accounts_count` - Number of Azure cloud accounts in the Organizational Unit.
+* `oci_cloud_accounts_count` - Number of OCI cloud accounts in the Organizational Unit.
 * `google_cloud_accounts_count` - Number of GCP cloud accounts in the Organizational Unit.
+* `k8s_cloud_accounts_count` - Number of K8S cloud accounts in the Organizational Unit.
+* `shift_left_cloud_accounts_count` - Number of Shift Left cloud accounts in the Organizational Unit.
+* `alibaba_cloud_accounts_count` - Number of Alibaba cloud accounts in the Organizational Unit.
+* `container_registry_cloud_accounts_count` - Number of Container Registry cloud accounts in the Organizational Unit.
 * `aws_aggregated_cloud_accounts_count` - Number of AWS cloud accounts in the Organizational Unit and its children.
 * `azure_aggregate_cloud_accounts_count` - Number of Azure cloud accounts in the Organizational Unit and its children.
+* `oci_aggregate_cloud_accounts_count` - Number of OCI cloud accounts in the Organizational Unit and its children.
 * `google_aggregate_cloud_accounts_count` - Number of GCP cloud accounts in the Organizational Unit and its children.
+* `k8s_aggregate_cloud_accounts_count` - Number of K8S cloud accounts in the Organizational Unit and its children.
+* `shift_left_aggregate_cloud_accounts_count` - Number of Shift Left cloud accounts in the Organizational Unit and its children.
+* `alibaba_aggregate_cloud_accounts_count` - Number of Alibaba cloud accounts in the Organizational Unit and its children.
+* `container_registry_aggregate_cloud_accounts_count` - Number of Container Registry cloud accounts in the Organizational Unit and its children.
+* `sub_organizational_units_count` - Number of sub Organizational Units.
 * `is_root` - Is Organizational Unit root.
 * `is_parent_root` - Is the parent of Organizational Unit root.
 

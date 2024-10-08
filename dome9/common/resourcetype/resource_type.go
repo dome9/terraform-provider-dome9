@@ -19,6 +19,7 @@ const (
 	CloudAccountAWSSecurityGroupRule             = "dome9_cloud_security_group_rule"
 	Role                                         = "dome9_role"
 	OrganizationalUnit                           = "dome9_organizational_unit"
+	OrganizationalUnitAll                        = "dome9_all_organizational_units"
 	CloudAccountAzureSecurityGroup               = "dome9_azure_security_group"
 	AttachIAMSafeToAwsCloudAccount               = "dome9_attach_iam_safe"
 	User                                         = "dome9_user"

@@ -51,7 +51,27 @@ func resourceOrganizationalUnit() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
+			"oci_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
 			"google_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"k8s_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"shift_left_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"alibaba_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"container_registry_cloud_accounts_count": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
@@ -63,7 +83,27 @@ func resourceOrganizationalUnit() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
+			"oci_aggregate_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
 			"google_aggregate_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"k8s_aggregate_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"shift_left_aggregate_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"alibaba_aggregate_cloud_accounts_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"container_registry_aggregate_cloud_accounts_count": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
@@ -130,6 +170,16 @@ func resourceOrganizationalUnitRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("azure_aggregate_cloud_accounts_count", resp.Item.AzureAggregateCloudAccountsCount)
 	_ = d.Set("google_cloud_accounts_count", resp.Item.GoogleCloudAccountsCount)
 	_ = d.Set("google_aggregate_cloud_accounts_count", resp.Item.GoogleAggregateCloudAccountsCount)
+	_ = d.Set("oci_cloud_accounts_count", resp.Item.OciCloudAccountsCount)
+	_ = d.Set("oci_aggregate_cloud_accounts_count", resp.Item.OciAggregateCloudAccountsCount)
+	_ = d.Set("k8s_cloud_accounts_count", resp.Item.K8sCloudAccountsCount)
+	_ = d.Set("k8s_aggregate_cloud_accounts_count", resp.Item.K8sAggregateCloudAccountsCount)
+	_ = d.Set("shift_left_cloud_accounts_count", resp.Item.ShiftLeftCloudAccountsCount)
+	_ = d.Set("shift_left_aggregate_cloud_accounts_count", resp.Item.ShiftLeftAggregateCloudAccountsCount)
+	_ = d.Set("alibaba_cloud_accounts_count", resp.Item.AlibabaCloudAccountsCount)
+	_ = d.Set("alibaba_aggregate_cloud_accounts_count", resp.Item.AlibabaAggregateCloudAccountsCount)
+	_ = d.Set("container_registry_cloud_accounts_count", resp.Item.ContainerRegistryAccountsCount)
+	_ = d.Set("container_registry_aggregate_cloud_accounts_count", resp.Item.ContainerRegistryAggregateCloudAccountsCount)
 	_ = d.Set("sub_organizational_units_count", resp.Item.SubOrganizationalUnitsCount)
 	_ = d.Set("is_root", resp.Item.IsRoot)
 	_ = d.Set("is_parent_root", resp.Item.IsParentRoot)
