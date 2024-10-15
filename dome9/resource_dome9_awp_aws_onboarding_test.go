@@ -44,7 +44,8 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cloudguard_account_id", variable.OnboardedAwsCloudGuardAccountID),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_name", variable.AwpAwsCrossAccountRoleName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_external_id", CrossAccountRoleExternalId),
-					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "awp_version", "10"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.scan_machine_interval_in_hours", variable.ScanMachineIntervalInHours),
@@ -65,6 +66,7 @@ func TestAccResourceAWPAWSOnboardingBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_name", variable.AwpAwsCrossAccountRoleName),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "cross_account_role_external_id", CrossAccountRoleExternalId),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "scan_mode", variable.ScanMode),
+					resource.TestCheckResourceAttr(resourceTypeAndName, "awp_version", "10"),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.0", disabledRegion1),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.1", disabledRegion2),
 					resource.TestCheckResourceAttr(resourceTypeAndName, "agentless_account_settings.0.disabled_regions.2", disabledRegionUpdate3),
@@ -159,6 +161,7 @@ resource "%s" "%s" {
 		in_account_scanner_vpc = "%s"
 		custom_tags = %s
 	}
+	awp_version = "%s"
 }
 `,
 		resourcetype.AwpAwsOnboarding,
