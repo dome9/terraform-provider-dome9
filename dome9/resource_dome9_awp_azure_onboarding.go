@@ -102,6 +102,7 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 			},
 			"awp_version": {
 				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"missing_awp_private_network_regions": {
 				Type:     schema.TypeList,
