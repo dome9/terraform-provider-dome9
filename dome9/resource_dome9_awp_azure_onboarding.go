@@ -100,10 +100,6 @@ func resourceAwpAzureOnboarding() *schema.Resource {
 					},
 				},
 			},
-			"awp_version": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"missing_awp_private_network_regions": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -355,7 +351,7 @@ func resourceAWPAzureOnboardingUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 	// Check if there are changes in the AgentlessAccountSettings fields
-	if d.HasChange("agentless_account_settings") || d.HasChange("awp_version") {
+	if d.HasChange("agentless_account_settings") {
 		log.Println("agentless_account_settings has been changed")
 		// Build the update request
 		newAgentlessAccountSettings, err := expandAgentlessAccountSettingsAzure(d)
