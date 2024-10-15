@@ -138,7 +138,7 @@ resource "%s" "%s" {
 		IfThenElse(updateAction, variable.MaxConcurrentScansPerRegionUpdate, variable.MaxConcurrentScansPerRegion),
 		IfThenElse(updateAction, variable.InAccountScannerVPCUpdate, variable.InAccountScannerVPC),
 		IfThenElse(updateAction, variable.CustomTagsUpdate, variable.CustomTags),
-		"3"
+		"3",
 	)
 }
 
