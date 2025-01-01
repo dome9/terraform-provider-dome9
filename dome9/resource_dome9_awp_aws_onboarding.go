@@ -86,6 +86,11 @@ func resourceAwpAwsOnboarding() *schema.Resource {
 							Optional: true,
 							Default:  "ManagedByAWP",
 						},
+						"scan_aws_licensed_images": {
+                            Type:     schema.TypeBool,
+                            Optional: true,
+                            Default:  false,
+                        },
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Optional: true,
@@ -276,6 +281,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 		ScanMachineIntervalInHours:   scanMachineIntervalInHours,
 		InAccountScannerVPC:          providerconst.DefaultInAccountScannerVPCMode,
 		MaxConcurrenceScansPerRegion: providerconst.DefaultMaxConcurrentScansPerRegion,
+		ScanAWSLicensedImages:        false,
 	}
 
 	// Check if the key exists and is not nil
@@ -311,6 +317,10 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 		agentlessAccountSettings.InAccountScannerVPC = inAccountScannerVPC
 	}
 
+	if ScanAWSLicensedImages, ok := agentlessAccountSettingsMap["scan_aws_licensed_images"].(string); ok {
+		agentlessAccountSettings.ScanAWSLicensedImages = ScanAWSLicensedImages
+	}
+
 	if customTagsInterface, ok := agentlessAccountSettingsMap["custom_tags"].(map[string]interface{}); ok {
 		customTags := make(map[string]string)
 		for k, v := range customTagsInterface {
@@ -344,6 +354,7 @@ func flattenAgentlessAccountSettings(settings *awp_onboarding.AgentlessAccountSe
 		"scan_machine_interval_in_hours":  settings.ScanMachineIntervalInHours,
 		"max_concurrent_scans_per_region": settings.MaxConcurrenceScansPerRegion,
 		"in_account_scanner_vpc":          settings.InAccountScannerVPC,
+		"scan_aws_licensed_images":        settings.ScanAWSLicensedImages,
 		"custom_tags":                     settings.CustomTags,
 	}
 	return []interface{}{m}

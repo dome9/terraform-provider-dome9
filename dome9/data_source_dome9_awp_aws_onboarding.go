@@ -43,6 +43,11 @@ func dataSourceAwpAwsOnboarding() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"scan_aws_licensed_images": {
+                            Type:     schema.TypeBool,
+                            Optional: true,
+                            Default:  false,
+                        },
 						"custom_tags": {
 							Type:     schema.TypeMap,
 							Computed: true,
