@@ -317,7 +317,7 @@ func expandAgentlessAccountSettings(d *schema.ResourceData) (*awp_onboarding.Age
 		agentlessAccountSettings.InAccountScannerVPC = inAccountScannerVPC
 	}
 
-	if ScanAWSLicensedImages, ok := agentlessAccountSettingsMap["scan_aws_licensed_images"].(string); ok {
+	if ScanAWSLicensedImages, ok := agentlessAccountSettingsMap["scan_aws_licensed_images"].(bool); ok {
 		agentlessAccountSettings.ScanAWSLicensedImages = ScanAWSLicensedImages
 	}
 
