@@ -106,6 +106,65 @@ func resourceNotification() *schema.Resource {
 								},
 							},
 						},
+						"filter": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"severities": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"rule_entity_types": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"entity_tags": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"key": {
+													Type:     schema.TypeString,
+													Required: true,
+												},
+												"value": {
+													Type:     schema.TypeString,
+													Required: true,
+												},
+											},
+										},
+									},
+									"entity_names": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"entity_ids": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"entity_categories": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -179,7 +238,52 @@ func expandIntegrationSettings(d *schema.ResourceData) (notifications.Notificati
 		notificationSettings.ScheduledIntegrationSettings, _ = expandScheduledIntegrationSettings(scheduledIntegrationSettings)
 	}
 
+	if filter, ok := integrationSettings["filter"].([]interface{}); ok {
+		notificationSettings.Filter = expandFilterSettings(filter)
+	}
+
 	return notificationSettings, nil
+}
+
+func expandFilterSettings(filter []interface{}) *notifications.FilterSettings {
+	if len(filter) == 0 {
+		return nil
+	}
+
+	filterMap := filter[0].(map[string]interface{})
+
+	entityTags := []notifications.TagRuleEntity{}
+	if tags, ok := filterMap["entity_tags"].([]interface{}); ok {
+		for _, tag := range tags {
+			tagMap := tag.(map[string]interface{})
+			entityTags = append(entityTags, notifications.TagRuleEntity{
+				Key:   tagMap["key"].(string),
+				Value: tagMap["value"].(string),
+			})
+		}
+	}
+
+	return &notifications.FilterSettings{
+		Severities:       expandStringList(filterMap["severities"]),
+		RuleEntityTypes:  expandStringList(filterMap["rule_entity_types"]),
+		EntityTags:       entityTags,
+		EntityNames:      expandStringList(filterMap["entity_names"]),
+		EntityIds:        expandStringList(filterMap["entity_ids"]),
+		EntityCategories: expandStringList(filterMap["entity_categories"]),
+	}
+}
+
+func expandStringList(raw interface{}) []string {
+	if raw == nil {
+		return nil
+	}
+
+	rawList := raw.([]interface{})
+	result := make([]string, len(rawList))
+	for i, v := range rawList {
+		result[i] = v.(string)
+	}
+	return result
 }
 
 func createBaseNotification(itemMap map[string]interface{}) notifications.BaseNotificationIntegrationSettings {
@@ -290,8 +394,36 @@ func expandIntegrationSettingsForRead(settings notifications.NotificationIntegra
 	}
 	result["scheduled_integration_settings"] = scheduledSettings
 
+	if settings.Filter != nil {
+		result["filter"] = []interface{}{
+			map[string]interface{}{
+				"severities":        settings.Filter.Severities,
+				"rule_entity_types": settings.Filter.RuleEntityTypes,
+				"entity_tags":       flattenEntityTags(settings.Filter.EntityTags),
+				"entity_names":      settings.Filter.EntityNames,
+				"entity_ids":        settings.Filter.EntityIds,
+				"entity_categories": settings.Filter.EntityCategories,
+			},
+		}
+	}
+
 	// Wrap the result in a slice since the Terraform schema expects a TypeList
 	return []interface{}{result}, nil
+}
+
+func flattenEntityTags(tags []notifications.TagRuleEntity) []interface{} {
+	if tags == nil {
+		return nil
+	}
+
+	flattened := make([]interface{}, len(tags))
+	for i, tag := range tags {
+		flattened[i] = map[string]interface{}{
+			"key":   tag.Key,
+			"value": tag.Value,
+		}
+	}
+	return flattened
 }
 
 // CRUD Functions
