@@ -8,6 +8,8 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk v1.17.2
 )
 
+replace github.com/dome9/dome9-sdk-go v1.23.10 => /Users/yogevktuvim/src/dome9-sdk-go
+
 require (
 	cloud.google.com/go v0.65.0 // indirect
 	cloud.google.com/go/storage v1.10.0 // indirect
