@@ -360,7 +360,14 @@ func expandIntegrationSettings(d *schema.ResourceData) (notifications.Notificati
 
 func expandFilterSettings(filter []interface{}) *notifications.ComplianceNotificationFilter {
 	if len(filter) == 0 {
-		return nil
+		return &notifications.ComplianceNotificationFilter{
+			Severities:       []string{},
+			RuleEntityTypes:  []string{},
+			EntityTags:       []notifications.TagRuleEntity{},
+			EntityNames:      []string{},
+			EntityIds:        []string{},
+			EntityCategories: []string{},
+		}
 	}
 
 	filterMap, ok := filter[0].(map[string]interface{})
