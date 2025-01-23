@@ -34,7 +34,7 @@ func resourceContinuousCompliancePolicy() *schema.Resource {
 				Optional: true,
 			},
 			"notification_ids": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Required: true,
 				// ForceNew: true,
 				Elem: &schema.Schema{Type: schema.TypeString},
