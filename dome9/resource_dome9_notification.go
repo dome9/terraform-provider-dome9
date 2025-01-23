@@ -1,7 +1,6 @@
 ﻿package dome9
 
 import (
-	"fmt"
 	"github.com/dome9/dome9-sdk-go/services/notifications"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
@@ -61,6 +60,65 @@ func resourceNotification() *schema.Resource {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
+									"filter": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"severities": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"rule_entity_types": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_tags": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"key": {
+																Type:     schema.TypeString,
+																Required: true,
+															},
+															"value": {
+																Type:     schema.TypeString,
+																Required: true,
+															},
+														},
+													},
+												},
+												"entity_names": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_ids": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_categories": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -82,6 +140,65 @@ func resourceNotification() *schema.Resource {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
+									"filter": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"severities": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"rule_entity_types": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_tags": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"key": {
+																Type:     schema.TypeString,
+																Required: true,
+															},
+															"value": {
+																Type:     schema.TypeString,
+																Required: true,
+															},
+														},
+													},
+												},
+												"entity_names": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_ids": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_categories": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -102,6 +219,65 @@ func resourceNotification() *schema.Resource {
 									"cron_expression": {
 										Type:     schema.TypeString,
 										Optional: true,
+									},
+									"filter": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"severities": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"rule_entity_types": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_tags": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"key": {
+																Type:     schema.TypeString,
+																Required: true,
+															},
+															"value": {
+																Type:     schema.TypeString,
+																Required: true,
+															},
+														},
+													},
+												},
+												"entity_names": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_ids": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"entity_categories": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
 									},
 								},
 							},
@@ -182,6 +358,61 @@ func expandIntegrationSettings(d *schema.ResourceData) (notifications.Notificati
 	return notificationSettings, nil
 }
 
+func expandFilterSettings(filter []interface{}) *notifications.ComplianceNotificationFilter {
+	if len(filter) == 0 {
+		return &notifications.ComplianceNotificationFilter{
+			Severities:       []string{},
+			RuleEntityTypes:  []string{},
+			EntityTags:       []notifications.TagRuleEntity{},
+			EntityNames:      []string{},
+			EntityIds:        []string{},
+			EntityCategories: []string{},
+		}
+	}
+
+	filterMap, ok := filter[0].(map[string]interface{})
+	if !ok {
+		log.Printf("[WARN] Unable to process filter: not a valid map")
+		return nil
+	}
+
+	entityTags := []notifications.TagRuleEntity{}
+	if tags, ok := filterMap["entity_tags"].([]interface{}); ok {
+		for _, tag := range tags {
+			if tagMap, ok := tag.(map[string]interface{}); ok {
+				entityTags = append(entityTags, notifications.TagRuleEntity{
+					Key:   tagMap["key"].(string),
+					Value: tagMap["value"].(string),
+				})
+			} else {
+				log.Printf("[WARN] Skipping invalid tag in entity_tags")
+			}
+		}
+	}
+
+	return &notifications.ComplianceNotificationFilter{
+		Severities:       expandStringList(filterMap["severities"]),
+		RuleEntityTypes:  expandStringList(filterMap["rule_entity_types"]),
+		EntityTags:       entityTags,
+		EntityNames:      expandStringList(filterMap["entity_names"]),
+		EntityIds:        expandStringList(filterMap["entity_ids"]),
+		EntityCategories: expandStringList(filterMap["entity_categories"]),
+	}
+}
+
+func expandStringList(raw interface{}) []string {
+	if raw == nil {
+		return nil
+	}
+
+	rawList := raw.([]interface{})
+	result := make([]string, len(rawList))
+	for i, v := range rawList {
+		result[i] = v.(string)
+	}
+	return result
+}
+
 func createBaseNotification(itemMap map[string]interface{}) notifications.BaseNotificationIntegrationSettings {
 	return notifications.BaseNotificationIntegrationSettings{
 		IntegrationId: itemMap["integration_id"].(string),
@@ -197,16 +428,20 @@ func expandSingleNotificationIntegrationSettings(singleNotificationIntegrationSe
 		return settings, nil
 	}
 
-	// Process single_notification_integration_settings
-	fmt.Println("Single Notification Integration Settings:")
-	for i, item := range singleNotificationIntegrationSettings {
+	for _, item := range singleNotificationIntegrationSettings {
 		itemMap := item.(map[string]interface{})
-		fmt.Printf("  Item %d: integration_id=%s, output_type=%s, payload=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string), itemMap["payload"].(string))
 
-		settings = append(settings, notifications.SingleNotificationIntegrationSettings{
+		singleSetting := notifications.SingleNotificationIntegrationSettings{
 			BaseNotificationIntegrationSettings: createBaseNotification(itemMap),
 			Payload:                             itemMap["payload"].(string),
-		})
+		}
+
+		// Handle filter for Single Notification Integration Settings
+		if filterRaw, ok := itemMap["filter"].([]interface{}); ok && len(filterRaw) > 0 {
+			singleSetting.Filter = expandFilterSettings(filterRaw)
+		}
+
+		settings = append(settings, singleSetting)
 	}
 
 	return settings, nil
@@ -219,15 +454,19 @@ func expandReportsIntegrationSettings(reportsIntegrationSettings []interface{}) 
 		return settings, nil
 	}
 
-	// Process reports_integration_settings
-	fmt.Println("Reports Integration Settings:")
-	for i, item := range reportsIntegrationSettings {
+	for _, item := range reportsIntegrationSettings {
 		itemMap := item.(map[string]interface{})
-		fmt.Printf("  Item %d: integration_id=%s, output_type=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string))
 
-		settings = append(settings, notifications.ReportNotificationIntegrationSettings{
+		reportSetting := notifications.ReportNotificationIntegrationSettings{
 			BaseNotificationIntegrationSettings: createBaseNotification(itemMap),
-		})
+		}
+
+		// Handle filter for Reports Integration Settings
+		if filterRaw, ok := itemMap["filter"].([]interface{}); ok && len(filterRaw) > 0 {
+			reportSetting.Filter = expandFilterSettings(filterRaw)
+		}
+
+		settings = append(settings, reportSetting)
 	}
 
 	return settings, nil
@@ -240,16 +479,20 @@ func expandScheduledIntegrationSettings(scheduledIntegrationSettings []interface
 		return settings, nil
 	}
 
-	// Process scheduled_integration_settings
-	fmt.Println("Scheduled Integration Settings:")
-	for i, item := range scheduledIntegrationSettings {
+	for _, item := range scheduledIntegrationSettings {
 		itemMap := item.(map[string]interface{})
-		fmt.Printf("  Item %d: integration_id=%s, output_type=%s, cron_expression=%s\n", i, itemMap["integration_id"].(string), itemMap["output_type"].(string), itemMap["cron_expression"].(string))
 
-		settings = append(settings, notifications.ScheduledNotificationIntegrationSettings{
+		scheduledSetting := notifications.ScheduledNotificationIntegrationSettings{
 			BaseNotificationIntegrationSettings: createBaseNotification(itemMap),
 			CronExpression:                      itemMap["cron_expression"].(string),
-		})
+		}
+
+		// Handle filter for Scheduled Integration Settings
+		if filterRaw, ok := itemMap["filter"].([]interface{}); ok && len(filterRaw) > 0 {
+			scheduledSetting.Filter = expandFilterSettings(filterRaw)
+		}
+
+		settings = append(settings, scheduledSetting)
 	}
 
 	return settings, nil
@@ -261,37 +504,94 @@ func expandIntegrationSettingsForRead(settings notifications.NotificationIntegra
 	// Convert Reports Integration Settings
 	reportsSettings := make([]interface{}, len(settings.ReportsIntegrationSettings))
 	for i, setting := range settings.ReportsIntegrationSettings {
-		reportsSettings[i] = map[string]interface{}{
+		reportSetting := map[string]interface{}{
 			"integration_id": setting.IntegrationId,
 			"output_type":    setting.OutputType,
 		}
+
+		if setting.Filter != nil {
+			reportSetting["filter"] = []interface{}{
+				map[string]interface{}{
+					"severities":        setting.Filter.Severities,
+					"rule_entity_types": setting.Filter.RuleEntityTypes,
+					"entity_tags":       flattenEntityTags(setting.Filter.EntityTags),
+					"entity_names":      setting.Filter.EntityNames,
+					"entity_ids":        setting.Filter.EntityIds,
+					"entity_categories": setting.Filter.EntityCategories,
+				},
+			}
+		}
+		reportsSettings[i] = reportSetting
 	}
 	result["reports_integration_settings"] = reportsSettings
 
 	// Convert Single Notification Integration Settings
 	singleSettings := make([]interface{}, len(settings.SingleNotificationIntegrationSettings))
 	for i, setting := range settings.SingleNotificationIntegrationSettings {
-		singleSettings[i] = map[string]interface{}{
+		singleSetting := map[string]interface{}{
 			"integration_id": setting.IntegrationId,
 			"output_type":    setting.OutputType,
 			"payload":        setting.Payload,
 		}
+
+		if setting.Filter != nil {
+			singleSetting["filter"] = []interface{}{
+				map[string]interface{}{
+					"severities":        setting.Filter.Severities,
+					"rule_entity_types": setting.Filter.RuleEntityTypes,
+					"entity_tags":       flattenEntityTags(setting.Filter.EntityTags),
+					"entity_names":      setting.Filter.EntityNames,
+					"entity_ids":        setting.Filter.EntityIds,
+					"entity_categories": setting.Filter.EntityCategories,
+				},
+			}
+		}
+		singleSettings[i] = singleSetting
 	}
 	result["single_notification_integration_settings"] = singleSettings
 
 	// Convert Scheduled Integration Settings
 	scheduledSettings := make([]interface{}, len(settings.ScheduledIntegrationSettings))
 	for i, setting := range settings.ScheduledIntegrationSettings {
-		scheduledSettings[i] = map[string]interface{}{
+		scheduledSetting := map[string]interface{}{
 			"integration_id":  setting.IntegrationId,
 			"output_type":     setting.OutputType,
 			"cron_expression": setting.CronExpression,
 		}
+
+		if setting.Filter != nil {
+			scheduledSetting["filter"] = []interface{}{
+				map[string]interface{}{
+					"severities":        setting.Filter.Severities,
+					"rule_entity_types": setting.Filter.RuleEntityTypes,
+					"entity_tags":       flattenEntityTags(setting.Filter.EntityTags),
+					"entity_names":      setting.Filter.EntityNames,
+					"entity_ids":        setting.Filter.EntityIds,
+					"entity_categories": setting.Filter.EntityCategories,
+				},
+			}
+		}
+		scheduledSettings[i] = scheduledSetting
 	}
 	result["scheduled_integration_settings"] = scheduledSettings
 
 	// Wrap the result in a slice since the Terraform schema expects a TypeList
 	return []interface{}{result}, nil
+}
+
+func flattenEntityTags(tags []notifications.TagRuleEntity) []interface{} {
+	if tags == nil {
+		return nil
+	}
+
+	flattened := make([]interface{}, len(tags))
+	for i, tag := range tags {
+		flattened[i] = map[string]interface{}{
+			"key":   tag.Key,
+			"value": tag.Value,
+		}
+	}
+	return flattened
 }
 
 // CRUD Functions
