@@ -48,11 +48,11 @@ type ScheduledNotificationIntegrationSettings struct {
 
 type ComplianceNotificationFilter struct {
 	Severities       []string        `json:"severities"`
-	RuleEntityTypes  []string        `json:"rule_entity_types"`
-	EntityTags       []TagRuleEntity `json:"entity_tags"`
-	EntityNames      []string        `json:"entity_names"`
-	EntityIds        []string        `json:"entity_ids"`
-	EntityCategories []string        `json:"entity_categories"`
+	RuleEntityTypes  []string        `json:"ruleEntityTypes"`
+	EntityTags       []TagRuleEntity `json:"entityTags"`
+	EntityNames      []string        `json:"entityNames"`
+	EntityIds        []string        `json:"entityIds"`
+	EntityCategories []string        `json:"entityCategories"`
 }
 
 type TagRuleEntity struct {
