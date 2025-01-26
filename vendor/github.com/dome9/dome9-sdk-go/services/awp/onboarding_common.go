@@ -41,6 +41,7 @@ type AgentlessAccountSettings struct {
 	SkipFunctionAppsScan         bool              `json:"skipFunctionAppsScan"`
 	InAccountScannerVPC          string            `json:"inAccountScannerVPC"`
 	SseCmkEncryptedDisksScan     bool              `json:"sseCmkEncryptedDisksScan"`
+	ScanAWSLicensedImages        bool              `json:"scanAWSLicensedImages"`
 	CustomTags                   map[string]string `json:"customTags"`
 }
 
