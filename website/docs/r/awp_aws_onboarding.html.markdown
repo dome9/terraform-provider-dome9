@@ -51,6 +51,7 @@ module "terraform-dome9-awp-aws" {
 	#     disabled_regions = ["ap-northeast-1", "ap-northeast-2", ...] # List of regions to disable
 	#     max_concurrent_scans_per_region = 20
 	#     in_account_scanner_vpc = "ManagedByAWP"
+	#     scan_aws_licensed_images = false
 	#     custom_tags = {
 	#       tag1 = "value1"
 	#       tag2 = "value2"
@@ -71,6 +72,7 @@ module "terraform-dome9-awp-aws" {
 # The scan_machine_interval_in_hours attribute is used to specify the scan machine interval in hours of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The max_concurrent_scans_per_region attribute is used to specify the max concurrent scans per region of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The in_account_scanner_vpc attribute is used to specify the scanner VPC mode of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The scan_aws_licensed_images attribute is used to specify if aws licensed images should be scanned of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP AWS Onboarding.
 resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_aws.aws_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <EXTERNAL_AWS_ACCOUNT_NUMBER>"
@@ -86,6 +88,7 @@ resource "dome9_awp_aws_onboarding" "awp_aws_onboarding_test" {
     scan_machine_interval_in_hours = 24
     max_concurrent_scans_per_region = 20
     in_account_scanner_vpc = "ManagedByAWP"
+    scan_aws_licensed_images = false
     custom_tags = {
       tag1 = "value1"
       tag2 = "value2"
@@ -114,6 +117,7 @@ The following arguments are supported:
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
   * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
   * `in_account_scanner_vpc` - (Optional) The VPC mode. Valid values are "ManagedByAWP" or "ManagedByCustomer".
+  * `in_account_scanner_vpc` - (Optional) Scan AWS licensed images. Valid value is "inAccount"
   * `custom_tags` - (Optional) The custom tags.
 * `should_create_policy` - (Optional) Whether to create a policy. Default is true.
     
