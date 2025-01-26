@@ -117,7 +117,7 @@ The following arguments are supported:
   * `scan_machine_interval_in_hours` - (Optional) The scan machine interval in hours
   * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
   * `in_account_scanner_vpc` - (Optional) The VPC mode. Valid values are "ManagedByAWP" or "ManagedByCustomer".
-  * `in_account_scanner_vpc` - (Optional) Scan AWS licensed images. Valid value is "inAccount"
+  * `scan_aws_licensed_images` - (Optional) Scan AWS licensed images. Valid value is "inAccount"
   * `custom_tags` - (Optional) The custom tags.
 * `should_create_policy` - (Optional) Whether to create a policy. Default is true.
     
