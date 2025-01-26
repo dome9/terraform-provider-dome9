@@ -46,7 +46,19 @@ type ScheduledNotificationIntegrationSettings struct {
 	CronExpression string `json:"cronExpression" validate:"required,cron"`
 }
 
-type ComplianceNotificationFilter struct{}
+type ComplianceNotificationFilter struct {
+	Severities       []string        `json:"severities"`
+	RuleEntityTypes  []string        `json:"ruleEntityTypes"`
+	EntityTags       []TagRuleEntity `json:"entityTags"`
+	EntityNames      []string        `json:"entityNames"`
+	EntityIds        []string        `json:"entityIds"`
+	EntityCategories []string        `json:"entityCategories"`
+}
+
+type TagRuleEntity struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
 
 type PutNotificationViewModel struct {
 	BaseNotificationViewModel
