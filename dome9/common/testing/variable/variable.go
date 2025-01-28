@@ -271,6 +271,8 @@ const (
 	MaxConcurrentScansPerRegionUpdate = "8"
 	InAccountScannerVPC               = "ManagedByAWP"
 	InAccountScannerVPCUpdate         = "ManagedByCustomer"
+	ScanAWSLicensedImages             = "false"
+	ScanAWSLicensedImagesUpdate       = "true"
 	CustomTags                        = `{
 			tag1 = "value1"
 			tag2 = "value2"

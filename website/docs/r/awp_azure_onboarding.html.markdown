@@ -67,6 +67,7 @@ module "terraform-dome9-awp-azure" {
 # The scan_machine_interval_in_hours attribute is used to specify the scan machine interval in hours of the agentless account settings of the Dome9 AWP Azure Onboarding.
 # The max_concurrent_scans_per_region attribute is used to specify the max concurrent scans per region of the agentless account settings of the Dome9 AWP Azure Onboarding.
 # The in_account_scanner_vpc attribute is used to specify the scanner VPC mode of the agentless account settings of the Dome9 AWP AWS Onboarding.
+# The sse_cmk_encrypted_disks_scan attribute is used to specify if SSE CMK scanning is enabled of the agentless account settings of the Dome9 AWP AWS Onboarding.
 # The custom_tags attribute is used to specify the custom tags of the agentless account settings of the Dome9 AWP Azure Onboarding.
 resource "dome9_awp_azure_onboarding" "awp_azure_onboarding_test" {
   cloudguard_account_id = "dome9_cloudaccount_azure.azure_onboarding_account_test.id | <CLOUDGUARD_ACCOUNT_ID> | <AZURE_SUBSCRIPTION_ID>"
@@ -110,7 +111,7 @@ The following arguments are supported:
   * `skip_function_apps_scan` - (Optional) Skip Azure Function Apps scan (supported for inAccount and inAccountSub scan modes)
   * `max_concurrent_scans_per_region` - (Optional) The max concurrent scans per region
   * `in_account_scanner_vpc` = (optional) # The VPC Mode. Valid values: "ManagedByAWP", "ManagedByCustomer" (supported for inAccount and inAccountHub scan modes)
-  * `sse_cmk_encrypted_disks_scan` = (optional # Enable SSE CMK scanning, relevant only for inAccountHub mode.
+  * `sse_cmk_encrypted_disks_scan` = (optional) # Enable SSE CMK scanning, relevant only for inAccountHub mode.
   * `custom_tags` - (Optional) The custom tags.
 * `should_create_policy` - (Optional) Whether to create a policy. Default is true.
     
