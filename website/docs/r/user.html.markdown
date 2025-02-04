@@ -51,9 +51,16 @@ The following arguments are supported:
     * `view` - (Optional) View permission list ([SRL](#SRL) Type).
     * `manage` - (Optional) Manage permission list ([SRL](#SRL) Type).
 
-Note: The filed that can be updated are `is_owner`, `role_ids` and "permission" fields. The update occur in two steps:
-* Create user.
-* Then update the desired field.
+### Note
+* The filed that can be updated are `is_owner`, `role_ids` and "permission" fields. The update occur in two steps:
+  * Create user.
+  * Then update the desired field.
+* In order to grant "All System Resources" permissions you must specify an empty block following the permission
+  access level, manage or view, in your Terraform configuration. This instructs the provider to apply the permission access level to ‘All System Resources’.
+
+
+For more about [Roles and Permissions](https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Documentation/Settings/Users-Roles.htm?tocpath=Settings%20%7C_____4)
+
 
 ## Attributes Reference
 

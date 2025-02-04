@@ -41,6 +41,29 @@ resource "dome9_role" "role_rs" {
 
 ```
 
+Granting "view" permissions for All System Resources:
+
+```hcl
+resource "dome9_role" "role_rs" {
+  name        = "ROLE_NAME"
+  description = "ROLE_DESC"
+  
+  view {}  // Grants "view" permissions on All System Resources
+}
+```
+
+Granting "manage" permissions for All System Resources:
+
+```hcl
+resource "dome9_role" "role_rs" {
+  name        = "ROLE_NAME"
+  description = "ROLE_DESC"
+  
+  manage {}  // Grants "manage" permissions on All System Resources
+}
+```
+
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -65,9 +88,15 @@ The following arguments are supported:
 * `security_group_id` - (Optional) AWS Security Group ID.
 * `traffic` - (Optional) Accepted values: "All Traffic", "All Services".
 
-* Note: to create a role, create it with no permissions, then updated it with the desired permissions.
-    
-    To understand the roles/permissions [CLICK HERE](https://support.checkpoint.com/results/sk/sk147835).
+
+### Note
+* To create a role, create it with no permissions, then updated it with the desired permissions.
+* In order to grant "All System Resources" permissions you must specify an empty block following the permission
+access level, manage or view, in your Terraform configuration. This instructs the provider to apply the permission access level to ‘All System Resources’.
+
+
+For more about [Roles and Permissions](https://sc1.checkpoint.com/documents/CloudGuard_Dome9/Documentation/Settings/Users-Roles.htm?tocpath=Settings%20%7C_____4)
+
 
 ## Import
 
