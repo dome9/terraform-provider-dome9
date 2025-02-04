@@ -37,6 +37,9 @@ The following arguments are supported:
 
 * `id` - Id of the compliance policy.
 
+## Limitation
+The order in which notifications are added to policies may appear differently in the Terraform configuration compared to the actual resource state. Terraform may continuously rearrange the order based on the state it retrieves, but this does not affect execution.
+
 ## Import
 
 The policy can be imported; use `<POLICY ID>` as the import ID. 
