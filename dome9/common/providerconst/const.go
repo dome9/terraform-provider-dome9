@@ -125,8 +125,8 @@ const (
 	IL_CENTRAL_1        = "35"
 	CA_WEST_1           = "36"
 	MX_CENTRAL_1		= "37"
-	AP_SOTHEAST_5		= "38"
-	AP_SOTHEAST_7		= "39"
+	AP_SOUTHEAST_5		= "38"
+	AP_SOUTHEAST_7		= "39"
 )
 
 // Azure consts

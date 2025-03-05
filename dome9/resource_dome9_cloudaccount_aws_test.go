@@ -291,11 +291,11 @@ net_sec {
     }
     regions {
       new_group_behavior = "ReadOnly"
-      region             = "ap_sotheast_5"
+      region             = "ap_southeast_5"
     }
     regions {
       new_group_behavior = "ReadOnly"
-      region             = "ap_sotheast_7"
+      region             = "ap_southeast_7"
     }
   }
 `,
