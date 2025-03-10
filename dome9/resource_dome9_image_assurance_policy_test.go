@@ -38,6 +38,7 @@ func TestAccResourceImagePolicyPolicyBasic(t *testing.T) {
 		notificationTypeAndName, policyGeneratedName, false)
 	imageAssurancePolicyUpdatedHCL := getImageAssurancePolicyResourceHCL(kubernetesAccountHCL, kubernetesAccountResourceTypeAndName, notificationHCL,
 		notificationTypeAndName, policyGeneratedName, true)
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
