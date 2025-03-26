@@ -84,7 +84,7 @@ The following arguments are supported:
 ### SRL 
 * `type` - (Optional) Accepted values: AWS, Azure, GCP, OrganizationalUnit, CloudGuardResources, CodeSecurityResources.
 * `main_id` - (Optional) Cloud Account, Organizational Unit ID or CodeSecurity Access Level (Admin, Member).
-* `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "il_central_1", "ca_west_1".
+* `region` - (Optional) Accepted values: "us_east_1", "us_west_1", "eu_west_1", "ap_southeast_1", "ap_northeast_1", "us_west_2", "sa_east_1", "ap_southeast_2", "eu_central_1", "ap_northeast_2", "ap_south_1", "us_east_2", "ca_central_1", "eu_west_2", "eu_west_3", "eu_north_1", "il_central_1", "ca_west_1", "mx_central_1", "ap_southeast_5", "ap_southeast_7".
 * `security_group_id` - (Optional) AWS Security Group ID.
 * `traffic` - (Optional) Accepted values: "All Traffic", "All Services".
 
