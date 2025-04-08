@@ -35,7 +35,7 @@ func resourceAdmissionPolicy() *schema.Resource {
 				Required: true,
 			},
 			"notification_ids": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Required: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
